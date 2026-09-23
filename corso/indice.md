@@ -27,10 +27,10 @@ Fonte: [`fonti/programma-lezioni-scuola.xlsx`](fonti/programma-lezioni-scuola.xl
 | 3 | Ormeggi, cartografia e primi calcoli | Attracchi, ormeggi, ancoraggi (4b) · Cartografia (7) · Carteggio: navigazione stimata, miglia, velocità, carburante (7) |
 | 4 | Ancoraggio, prora e rotta | Attracchi, ormeggi, ancoraggi (4b) · Carteggio: prora e rotta, scarroccio, deriva, declinazione, deviazione (7) |
 | 5 | Punto nave e fanali | Carteggio: navigazione costiera, punto nave, GPS (7) · Prevenzione abbordi: fanali e precedenze (5) |
-| 6 | Segnalamento, segnali sonori e sicurezza | Cartografia e segnalamento: fari, IALA (5) · Segnali sonori (5) · Sicurezza (3) |
+| 6 | Segnalamento, segnali sonori e sicurezza | Cartografia e segnalamento: fari, IALA (5) · Segnali sonori (5) · Sicurezza parte 1: dotazioni, mezzi di soccorso, incendio (3) |
 | 7 | Meteorologia e normativa | Meteorologia (6) · Normativa (8) |
 | 8 | Vela | Attrezzatura · Teoria e manovre (1c) |
-| 9 | Vela, correnti e normativa: ripasso | Vela (1c) · Carteggio: Pv, Vp, Rv, Ve, primo problema di corrente (7) · Normativa (8) |
+| 9 | Emergenze, ripasso vela e correnti | Vela: ripasso (1c) · Carteggio: Pv, Vp, Rv, Ve, primo problema di corrente (7) · Sicurezza parte 2: incendio, falla, incaglio, collisione, abbandono, uomo a mare, VHF, soccorso, tempo cattivo (3) |
 
 ### Argomenti dell'Allegato A da aggiungere
 
@@ -39,14 +39,14 @@ Fonte: [`fonti/programma-lezioni-scuola.xlsx`](fonti/programma-lezioni-scuola.xl
 | Alcol e sostanze stupefacenti o psicotrope | 3a | 12 | 6 |
 | Dotazioni obbligatorie per distanza dalla costa (DM 133/2024) | 3b | 48 | 6 |
 | Visite, periodicità e certificazioni | 3b | 19 | 7 |
-| CIRM | 3b | 1 | 6 |
+| CIRM | 3b | 1 | 9 |
 | Navigazione sottocosta, limiti di velocità, balneazione | 4a | 32 | 4 |
 | Precauzioni all'ingresso e all'uscita dei porti | 4a | 21 | 6 |
 | Stabilità dell'unità (oggi solo nelle lezioni di vela) | 1b | 50* | 1 |
 | Segnali diurni: pallone, cilindro, rombo | 5 | 67* | 5 |
 | Autorità marittima e ordinanze | 8b | 98* | 7 |
 
-\* quesiti dell'intera voce che comprende l'argomento. Nel file la normativa si ripete nelle lezioni 7 e 9 e la vela nelle 8 e 9: trattate come ripasso.
+\* quesiti dell'intera voce che comprende l'argomento. Rispetto al file: la normativa ripetuta nella lezione 9 è stata tolta (resta nella 7) e al suo posto c'è la seconda parte della sicurezza; la vela nella lezione 9 è un ripasso della 8.
 
 ## Lezioni di carteggio (135 esercizi)
 
