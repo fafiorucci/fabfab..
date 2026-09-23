@@ -51,12 +51,19 @@ def dash(x1,y1,x2,y2,c=SOFT):
 def line(x1,y1,x2,y2,c=NAVY,w=2):
     return f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" stroke="{c}" stroke-width="{w}" stroke-linecap="round"/>'
 def card(inner,bg=CARD,pad=32,gap=12,flex=1):
-    return f'<div style="flex:{flex}; display:flex; flex-direction:column; gap:{gap}px; background:{bg}; padding:{pad}px; border-radius:16px">{inner}</div>'
-def h3(t,size=32): return f'<h3 style="font-family:{H}; font-size:{size}px; font-weight:700; line-height:1.2; color:{INK}">{t}</h3>'
+    return f'<div style="flex:{flex}; display:flex; flex-direction:column; gap:{gap}px; background:{bg}; padding:{pad}px; border-radius:24px">{inner}</div>'
+def h3(t,size=32): return f'<h3 style="font-family:{H}; font-size:{size}px; font-weight:600; line-height:1.2; color:{INK}">{t}</h3>'
 def p(t,size=24,color=BODY,weight=400,lh=1.4): return f'<p style="font-size:{size}px; line-height:{lh}; color:{color}; font-weight:{weight}">{t}</p>'
 def tag(t,c=ACC): return f'<p style="font-size:24px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:{c}">{t}</p>'
 def term(t,d): return f'<div style="display:flex; flex-direction:column; gap:4px">{p(t,28,INK,700,1.3)}{p(d,26,BODY)}</div>'
 
+from template import H,B,HAND,header,badge,wave,lockup,note,FACES,footer,logo
+ICON_T={'La lezione di oggi':'lifebuoy','Natanti, imbarcazioni e navi da diporto':'hull','Opera viva, opera morta e lunghezza':'hull','Baglio, bordo libero e pescaggio':'hull',
+ 'Prua, poppa, dritta e sinistra':'compass','Chiglia, ordinate, paratie e sovrastrutture':'hull','Sentina, pagliolo e boccaporto':'hull','La ferramenta di bordo':'anchor',
+ 'Passascafo, prese a mare e zinchi':'propeller','Dislocante, planante, semiplanante':'hull','Dislocamento, peso e spinta':'lifebuoy','Rollio, beccheggio e accostata':'compass',
+ 'Baricentro, centro di carena e metacentro':'sail','I flaps':'hull','Il trim del fuoribordo':'propeller'}
+def head(e,t,c=ACC):
+    return header(e,t,'quiz' if t.startswith(('Quiz','Verifica')) else ICON_T.get(t,'hull'),c)
 # ---------- barca di profilo ----------
 def P(x0,wl,L,x,y): return (x0+x*L, wl+y*L)
 def fmt(pt): return f'{pt[0]:.1f} {pt[1]:.1f}'
@@ -98,10 +105,10 @@ def section_hull(cx=330, deck=170, half=230, keel=450, fin=540, wl=310, uw=True,
 cover_boat = svgp(900,520,892,380, water(892,300,380,0.10)+profile(90,300,760,hull='none',uw=ACC,st='#F5F1E8',sw=3,fly=True).replace(f'fill="none" stroke="#F5F1E8"','fill="none" stroke="#F5F1E8"'), 'Disegno al tratto di un motoscafo con la carena immersa')
 slides.append(('cover', f'''<section id="cover" data-transition="fade" style="background:{NAVY}; color:{PAPER}; font-family:{B}; padding:128px; display:flex; flex-direction:column; justify-content:space-between">
 {backdrop(True)}
-<div style="display:flex; gap:32px; align-items:center">{logo(True,'width:112px; height:112px','Logo Fabrizio Fiorucci: sloop a vela dentro una bussola')}<div style="display:flex; flex-direction:column; gap:8px"><p style="font-family:{H}; font-size:40px; font-weight:700; color:{PAPER}">Fabrizio Fiorucci</p><p style="font-size:24px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:{DACC}">Skipper e istruttore di vela</p></div></div>
+{lockup(True,112)}
 <div style="display:flex; flex-direction:column; gap:24px; width:820px">
-<p style="font-size:28px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:{DACC}">Lezione 01 · 2 ore</p>
-<h1 style="font-family:{H}; font-size:112px; font-weight:700; line-height:1.1; color:{PAPER}">Teoria dello scafo</h1>
+<p style="font-family:{HAND}; font-size:48px; font-weight:700; line-height:1.1; color:{DACC}">Lezione 01 · 2 ore</p>
+<h1 style="font-family:{H}; font-size:112px; font-weight:600; line-height:1.1; color:{PAPER}">Teoria dello scafo</h1>{wave(DACC,330)}
 <p style="font-size:36px; line-height:1.4; color:{DSOFT}">Classificazione, nomenclatura, carene, assetto e stabilità</p>
 </div>
 <p style="font-size:24px; color:{DSOFT}">Patente nautica Vela/Motore senza limiti dalla costa</p>
@@ -377,7 +384,7 @@ ul=''.join(f'<li>{x}</li>' for x in pts)
 n=len(slides)+1
 slides.append(('chiusura', f'''<section id="chiusura" data-transition="fade" style="background:{NAVY}; color:{PAPER}; font-family:{B}; padding:128px 128px 160px; display:flex; flex-direction:column; gap:40px">
 {backdrop(True)}
-<div style="display:flex; flex-direction:column; gap:16px"><p style="font-size:24px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:{DACC}">In sintesi</p><h2 style="font-family:{H}; font-size:64px; font-weight:700; line-height:1.15; color:{PAPER}">Cinque cose da ricordare</h2></div>
+{header('In sintesi','Cinque cose da ricordare','flag',ACC,True)}
 <ol style="font-size:30px; line-height:1.45; color:{DSOFT}; display:flex; flex-direction:column; gap:14px; width:1500px">{ul}</ol>
 <p style="font-size:28px; font-weight:700; color:{DACC}">Prossima lezione · 02 · Motori, elica e timone</p>
 {footer(n,True)}
@@ -393,8 +400,7 @@ deck={"v":4,"createdOnFiles":{"v":1,"at":datetime.datetime.utcnow().strftime('%Y
   "s3":{"description":"Carene, dislocamento, assi e movimenti","start":"carene"},
   "s4":{"description":"Stabilità, flaps e trim","start":"stabilita"},
   "s5":{"description":"Verifica finale con i quiz ufficiali e sintesi","start":"finale1"}},
- "faces":{"libre-baskerville":{"family":"Libre Baskerville","href":"https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap"},
-  "public-sans":{"family":"Public Sans","href":"https://fonts.googleapis.com/css2?family=Public+Sans:wght@400..700&display=swap"}},"designSystems":[]}
+ "faces":FACES,"designSystems":[]}
 json.dump(deck,open(OUT+'/deck.json','w'),ensure_ascii=False,indent=1)
 print(len(slides)); print(json.dumps({f'project/slides/{i}.html':f'project/slides/{i}.html' for i,_ in slides}))
 import re

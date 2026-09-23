@@ -17,11 +17,16 @@ Formato 16:9, 1920×1080.
 | Accento carteggio | `#1F6F78` |
 | Piè di pagina | `#5C6874` |
 
-## Caratteri
+## Caratteri (stile informale)
 
-- Titoli: **Libre Baskerville** 700 (Google Fonts)
-- Testo: **Public Sans** 400–700 (Google Fonts)
-- Scala: 96 copertina · 64 titoli · 32–36 titoli di riquadro · 24–28 testo · 24 piè di pagina e occhielli
+- Titoli: **Fredoka** 600 (Google Fonts), 60 px, con un'onda disegnata sotto
+- Occhielli e note: **Caveat** 700, scritto a mano
+- Testo: **Nunito Sans** 400–800
+- Ogni intestazione ha un **bollino colorato con un'icona** dell'argomento (terracotta per la teoria, verde acqua per il carteggio): scafo, elica, carta, ancora, fanale, faro, nuvola, vela, salvagente, compasso, tanica, vento, corrente, quiz…
+- Riquadri con angoli arrotondati a 24 px
+- Grafici: coppia di colori validata `#008C9E` (carta 5/D) e `#C0582C` (carta 42/D)
+
+Tutto è in `template.py` (`header()`, `badge()`, `footer()`, `lockup()`).
 
 ## Impaginazione
 

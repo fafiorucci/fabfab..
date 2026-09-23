@@ -6,14 +6,14 @@ def backdrop(dark=False):
     ticks=''
     for i in range(72):
         a=math.radians(i*5); l = 18 if i%18==0 else (12 if i%2==0 else 6)
-        ticks+=f'<line x1="{cx+R*math.cos(a):.1f}" y1="{cy+R*math.sin(a):.1f}" x2="{cx+(R-l)*math.cos(a):.1f}" y2="{cy+(R-l)*math.sin(a):.1f}"/>'
+        ticks+=f'M{cx+R*math.cos(a):.1f} {cy+R*math.sin(a):.1f}L{cx+(R-l)*math.cos(a):.1f} {cy+(R-l)*math.sin(a):.1f}'
     def star(r1,r2,rot):
         pts=[]
         for i in range(8):
             a=math.radians(rot+i*45); r = r1 if i%2==0 else r2
             pts.append(f'{cx+r*math.sin(a):.1f},{cy-r*math.cos(a):.1f}')
         return ' '.join(pts)
-    rosebody=(f'<g fill="none" stroke="{rose}" stroke-opacity="{0.07*k:.3f}" stroke-width="2"><circle cx="{cx}" cy="{cy}" r="{R}"/><circle cx="{cx}" cy="{cy}" r="{R-26}"/>{ticks}</g>'
+    rosebody=(f'<g fill="none" stroke="{rose}" stroke-opacity="{0.07*k:.3f}" stroke-width="2"><circle cx="{cx}" cy="{cy}" r="{R}"/><circle cx="{cx}" cy="{cy}" r="{R-26}"/><path d="{ticks}"/></g>'
       f'<polygon points="{star(200,40,0)}" fill="{rose}" fill-opacity="{0.05*k:.3f}"/>'
       f'<polygon points="{star(130,30,45)}" fill="{rose}" fill-opacity="{0.04*k:.3f}"/>')
     waves=''
