@@ -16,27 +16,37 @@
 
 Il carteggio apre l'esame ed è propedeutico. Quiz base e vela in un blocco unico da 45 minuti. Carte 5/D e 42/D integre, consegnate all'appello.
 
-## Lezioni di teoria e di vela
+## Lezioni 1-9: teoria e vela (programma della scuola)
 
-| # | Lezione | All. A | All'esame |
+Fonte: [`fonti/programma-lezioni-scuola.xlsx`](fonti/programma-lezioni-scuola.xlsx). Per ogni capitolo il riferimento all'Allegato A al DM 323/2021.
+
+| # | Lezione | Capitoli (All. A) |
+|---|---|---|
+| 1 | Teoria dello scafo | Teoria dello scafo (1a, 1b) |
+| 2 | Motori, elica e timone | Motori (2) · Elica e timone (1b) |
+| 3 | Ormeggi, cartografia e primi calcoli | Attracchi, ormeggi, ancoraggi (4b) · Cartografia (7) · Carteggio: navigazione stimata, miglia, velocità, carburante (7) |
+| 4 | Ancoraggio, prora e rotta | Attracchi, ormeggi, ancoraggi (4b) · Carteggio: prora e rotta, scarroccio, deriva, declinazione, deviazione (7) |
+| 5 | Punto nave e fanali | Carteggio: navigazione costiera, punto nave, GPS (7) · Prevenzione abbordi: fanali e precedenze (5) |
+| 6 | Segnalamento, segnali sonori e sicurezza | Cartografia e segnalamento: fari, IALA (5) · Segnali sonori (5) · Sicurezza (3) |
+| 7 | Meteorologia e normativa | Meteorologia (6) · Normativa (8) |
+| 8 | Vela | Attrezzatura · Teoria e manovre (1c) |
+| 9 | Vela, correnti e normativa: ripasso | Vela (1c) · Carteggio: Pv, Vp, Rv, Ve, primo problema di corrente (7) · Normativa (8) |
+
+### Argomenti dell'Allegato A da aggiungere
+
+| Argomento | Punto | Quesiti in banca | Lezione |
 |---|---|---|---|
-| 1 | Esame, scafo e motori | 1a, 1b, 2 | quiz base: 1 scafo + 1 motori |
-| 2 | **Vela** — Teoria della vela | 1c | quiz vela (voce «Teoria della vela», 99 quesiti) |
-| 3 | **Vela** — Attrezzatura e manovre a vela | 1c | quiz vela (voci «Attrezzatura» 86 e «Manovre» 65) |
-| 4 | Sicurezza della navigazione | 3a, 3b | quiz base: 3 |
-| 5 | Manovre e condotta | 4a, 4b, 4c | quiz base: 4 |
-| 6 | COLREG e segnalamento | 5 | quiz base: 2 |
-| 7 | Meteorologia | 6 | quiz base: 2 |
-| 8 | Normativa e ambiente | 8a, 8b | quiz base: 3 |
-| 9 | Navigazione cartografica ed elettronica | 7 | quiz base: 4 |
+| Alcol e sostanze stupefacenti o psicotrope | 3a | 12 | 6 |
+| Dotazioni obbligatorie per distanza dalla costa (DM 133/2024) | 3b | 48 | 6 |
+| Visite, periodicità e certificazioni | 3b | 19 | 7 |
+| CIRM | 3b | 1 | 6 |
+| Navigazione sottocosta, limiti di velocità, balneazione | 4a | 32 | 4 |
+| Precauzioni all'ingresso e all'uscita dei porti | 4a | 21 | 6 |
+| Stabilità dell'unità (oggi solo nelle lezioni di vela) | 1b | 50* | 1 |
+| Segnali diurni: pallone, cilindro, rombo | 5 | 67* | 5 |
+| Autorità marittima e ordinanze | 8b | 98* | 7 |
 
-### Vela (lezioni 2 e 3)
-
-Il quiz vela è una prova separata: 5 quesiti su 250, massimo 1 errore, 15 minuti (insieme al quiz base: 45 minuti).
-Chi non supera il solo quiz vela può proseguire per la patente limitata alle unità a motore (DM 323/2021, art. 6 c. 10 lett. c).
-
-- **Lezione 2 — Teoria della vela:** vento reale, di velocità e apparente; la vela come profilo (portanza, resistenza, angolo di incidenza, grasso); andature; orzare, poggiare, stringere il vento, raffiche; centro velico e centro di deriva, barca orziera e poggiera; sbandamento e stabilità (zavorra, bulbo, deriva).
-- **Lezione 3 — Attrezzatura e manovre a vela:** armi (sloop, cutter, ketch, yawl; in testa e frazionato); manovre fisse (stralli, sartie, paterazzo, crocette, lande, arridatori); manovre correnti (drizze, scotte, vang, tesabase, winch, paranchi); vele (randa, fiocco, genoa, spinnaker, gennaker); virata, strambata, terzaroli, sventare, uomo in mare a vela; precedenze fra unità a vela; nodi e impiombature.
+\* quesiti dell'intera voce che comprende l'argomento. Nel file la normativa si ripete nelle lezioni 7 e 9 e la vela nelle 8 e 9: trattate come ripasso.
 
 ## Lezioni di carteggio (135 esercizi)
 
