@@ -244,9 +244,10 @@ b+=f'<path d="{cl} L760 {cp[-1][1]+90} ' + ' '.join(f'L{a} {b_+90}' for a,b_ in 
 b+=f'<path d="{cl} L760 0 L0 0 Z" fill="{LAND}" stroke="{LAND_S}" stroke-width="4"/>'
 b+=''.join(f'<path d="M'+' L'.join(f'{a} {b_+off}' for a,b_ in cp)+f'" fill="none" stroke="{BLUE}" stroke-width="2.5" stroke-dasharray="10 7"/>' for off in (90,200))
 b+=light(640,90,1.3)+awash(300,230)+sub(520,350)+wreck(170,470)+anch(620,520,1.2)+noanch(360,540,1.2)
-lbl=''.join(lab(128+x,Y+y,60,t,NAVY,24,700) for x,y,t in [(80,220,'3'),(440,250,'7'),(250,360,'12'),(640,380,'18'),(90,560,'25'),(520,470,'30')])
-lbl+=''.join(f'<p style="position:absolute; left:{128+x}px; top:{Y+y}px; font-size:26px; font-style:italic; font-weight:700; color:{NAVY}">{t}</p>' for x,y,t in [(200,300,'r'),(560,250,'s'),(400,420,'f')])
-lbl+=lab(128+660,Y+60,90,'F',MAG,26,900)
+SX=1032
+lbl=''.join(lab(SX+x,Y+y,60,t,NAVY,24,700) for x,y,t in [(80,220,'3'),(440,250,'7'),(250,360,'12'),(640,380,'18'),(90,560,'25'),(520,470,'30')])
+lbl+=''.join(f'<p style="position:absolute; left:{SX+x}px; top:{Y+y}px; font-size:26px; font-style:italic; font-weight:700; color:{NAVY}">{t}</p>' for x,y,t in [(200,300,'r'),(560,250,'s'),(400,420,'f')])
+lbl+=lab(SX+660,Y+60,90,'F',MAG,26,900)
 def leg(ic,t,d): return f'<div style="display:flex; gap:14px; align-items:center; background:#FFFFFF; {SHADOW}; padding:12px 16px; border-radius:22px">{ic}<div style="display:flex; flex-direction:column; gap:2px">{p(t,24,INK,800,1.2)}{p(d,22,BODY,400,1.3)}</div></div>'
 ico=lambda body: f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" style="width:64px; height:64px; flex:none">{body}</svg>'
 txtic=lambda t,c=NAVY,it=False: f'<p style="width:64px; flex:none; font-size:30px; font-weight:800; text-align:center; color:{c};{" font-style:italic;" if it else ""}">{t}</p>'
@@ -258,8 +259,8 @@ L8=[(ico(f'<path d="M4 40 Q20 24 32 34 T60 28" fill="none" stroke="{BLUE}" strok
     (ico(wreck(32,40,1.1)),'Relitto','Qui in parte emergente.'),
     (ico(anch(20,34,0.9)+noanch(46,34,0.9)),'Fonda · divieto','Ancoraggio, ancoraggio vietato.'),
     (ico(light(24,48,1.1)),'Luce · «F»','F = luce fissa; P.A. = posizione approssimata.')]
-grid=f'<div style="display:flex"><div style="width:792px; flex:none"></div><div style="flex:1; display:grid; grid-template-columns:1fr 1fr; gap:14px">{"".join(leg(*x) for x in L8)}</div></div>'
-sec('simboli', head('Cartografia · simboli','Cosa c\'è sulla carta')+grid, pinned=svgp(128,Y,760,620,b,'Carta nautica di fantasia con costa, isobate tratteggiate, scandagli, natura del fondo, scoglio affiorante, scogli sommersi, relitto, zona di fonda e di divieto e un faro')+lbl, gap=24,
+grid=f'<div style="width:860px; display:grid; grid-template-columns:1fr 1fr; gap:14px">{"".join(leg(*x) for x in L8)}</div>'
+sec('simboli', head('Cartografia · simboli','Cosa c\'è sulla carta')+grid, pinned=svgp(SX,Y,760,620,b,'Carta nautica di fantasia con costa, isobate tratteggiate, scandagli, natura del fondo, scoglio affiorante, scogli sommersi, relitto, zona di fonda e di divieto e un faro')+lbl, gap=24,
  notes='Quiz 1.7.2-8, -48 (isobate), -24 (profondità, elevazioni, segnali), -15, -29 (natura del fondo), -38 (r = roccioso), -39 (f = fangoso), -41 (scoglio affiorante), -42 (scogli sommersi), -52 (relitto in parte emergente), -45, -51, -54 (ancoraggio, divieto, punto di fonda), -32 (F = luce fissa), -44 (P.A.). Altri simboli in figura: -40 (zona regolamentata), -43 (cavo abbandonato), -50 (schema di separazione del traffico), -53 (condotta). I numeri e le lettere sulla carta sono in corsivo.')
 
 # ============ PUBBLICAZIONI ============
@@ -299,18 +300,19 @@ for i in range(16):
 b+='<polygon points="'+' '.join(f'{x:.1f},{y:.1f}' for x,y in star)+f'" fill="{NAVY}" fill-opacity="0.88"/>'
 b+=f'<circle cx="{rc}" cy="{ry}" r="12" fill="{SUN}"/>'
 tip=pt(157,215); b+=arrow(rc,ry,tip[0],tip[1],CORAL,8,26)
+RX=1092
 lbl=''
 for a,t in [(0,'N'),(45,'NE'),(90,'E'),(135,'SE'),(180,'S'),(225,'SW'),(270,'W'),(315,'NW')]:
-    x,y=pt(a,262); lbl+=big(128+x-50,Y+y-18,100,t,NAVY if a%90==0 else SOFT,34 if a%90==0 else 26)
+    x,y=pt(a,262); lbl+=big(RX+x-50,Y+y-18,100,t,NAVY if a%90==0 else SOFT,34 if a%90==0 else 26)
 for a,t,c in [(45,'I','#B77900'),(135,'II',SEA),(225,'III',CORAL),(315,'IV',PURPLE)]:
-    x,y=pt(a,178); lbl+=big(128+x-40,Y+y-24,80,t,c,44)
-x,y=pt(157,215); lbl+=lab(128+x+14,Y+y-10,120,'157°',CORAL,30,900,bg='#FFFFFF')
+    x,y=pt(a,178); lbl+=big(RX+x-40,Y+y-24,80,t,c,44)
+x,y=pt(157,215); lbl+=lab(RX+x+14,Y+y-10,120,'157°',CORAL,30,900,bg='#FFFFFF')
 chips=''.join(f'<p style="font-size:22px; font-weight:800; color:{INK}; background:{bg}; padding:8px 14px; border-radius:18px">{t}</p>' for t,bg in [('N · Tramontana',SUN_T),('NE · Grecale',SUN_T),('E · Levante',SEA_T),('SE · Scirocco',SEA_T),('S · Ostro',CORAL_T),('SW · Libeccio',CORAL_T),('W · Ponente',LILAC_T),('NW · Maestrale',LILAC_T)])
 right=(term('Angoli da 000° a 360°','Si contano dal Nord in senso orario, sempre con tre cifre: 045°, 157°, 320°.')
       +term('Quattro quadranti','I NE 000-090 · II SE 090-180 · III SW 180-270 · IV NW 270-360. Esempio: 157° è nel II.')
       +term('Cardinali e intercardinali','N, E, S, W e NE, SE, SW, NW. Sulla carta il Nord è in alto.')
       +f'<div style="display:flex; flex-wrap:wrap; gap:10px">{chips}</div>')
-sec('rosa', head('Orientarsi','La rosa dei venti')+f'<div style="display:flex"><div style="width:760px; flex:none"></div><div style="flex:1; display:flex; flex-direction:column; gap:20px">{right}</div></div>', pinned=svgp(128,Y,700,620,b,'Rosa dei venti con i quattro quadranti colorati, le direzioni cardinali e intercardinali e una freccia verso 157 gradi nel secondo quadrante')+lbl,
+sec('rosa', head('Orientarsi','La rosa dei venti')+f'<div style="width:920px; display:flex; flex-direction:column; gap:20px">{right}</div>', pinned=svgp(RX,Y,700,620,b,'Rosa dei venti con i quattro quadranti colorati, le direzioni cardinali e intercardinali e una freccia verso 157 gradi nel secondo quadrante')+lbl,
  notes='Quiz 1.7.4-1, -4, -5, -6, -7 (in quale quadrante: 157° II, 224° III, 320° IV, 038° I, 099° II), -2 e -3 (sulla carta: 048° in alto a destra, 167° in basso a destra, 301° in alto a sinistra, 249° in basso a sinistra), -8 (senso orario), -9, -10, -11 (cardinali e intercardinali). I nomi dei venti tornano in meteorologia (lezione 7) e nel Portolano. Bussola, declinazione e deviazione: lezione 4.')
 
 # ============ STRUMENTI ============
@@ -352,12 +354,13 @@ sec('stimata', head('Primi calcoli','La navigazione stimata')+col(txt+note('Inso
 
 # ============ FORMULA ============
 b=f'<path d="M280 40 L40 440 L520 440 Z" fill="{SUN_T}" stroke="{SUN}" stroke-width="10" stroke-linejoin="round"/>'+line(160,240,400,240,SUN,8)+line(280,240,280,440,SUN,8)
-lbl=big(128+230,Y+110,100,'S',CORAL,120)+big(128+110,Y+300,120,'V',SEA,120)+big(128+330,Y+300,120,'T',PURPLE,120)+big(128+250,Y+320,60,'×',INK,70)
+TX=1232
+lbl=big(TX+230,Y+110,100,'S',CORAL,120)+big(TX+110,Y+300,120,'V',SEA,120)+big(TX+330,Y+300,120,'T',PURPLE,120)+big(TX+250,Y+320,60,'×',INK,70)
 def chip2(t,c,u): return f'<div style="display:flex; align-items:center; gap:18px"><p style="font-family:{H}; font-size:44px; font-weight:700; color:#FFFFFF; background:{c}; padding:10px 28px; border-radius:40px; flex:none">{t}</p>{p(u,26,INK,700)}</div>'
 mins=''.join(f'<div style="display:flex; flex-direction:column; align-items:center; background:#FFFFFF; {SHADOW}; padding:10px 14px; border-radius:18px"><p style="font-family:{H}; font-size:30px; font-weight:700; color:{INK}">{a}</p><p style="font-size:22px; font-weight:800; color:{SEA}">{b_} h</p></div>' for a,b_ in [('6′','0,1'),('12′','0,2'),('15′','0,25'),('18′','0,3'),('20′','0,33'),('30′','0,5'),('45′','0,75')])
 right=(chip2('S = V × T',CORAL,'spazio in <b>miglia</b>')+chip2('V = S ÷ T',SEA,'velocità in <b>nodi</b> (miglia all\'ora)')+chip2('T = S ÷ V',PURPLE,'tempo in <b>ore e decimi</b>')
        +p('<b>Minuti in ore:</b> dividi per 60. <b>Decimi in minuti:</b> moltiplica per 60 (0,4 h = 24′).',26,INK)+f'<div style="display:flex; gap:12px">{mins}</div>')
-sec('formula', head('Primi calcoli','Spazio, velocità, tempo')+f'<div style="display:flex"><div style="width:640px; flex:none"></div><div style="flex:1; display:flex; flex-direction:column; gap:22px">{right}</div></div>', pinned=svgp(128,Y,560,480,b,'Il triangolo S sopra, V e T sotto: coprendo una lettera restano le altre due')+lbl+note('Copri la lettera che cerchi!',CORAL,40).replace('<p style="','<p style="position:absolute; left:160px; top:790px; width:500px; ',1),
+sec('formula', head('Primi calcoli','Spazio, velocità, tempo')+f'<div style="display:flex; flex-direction:column; gap:22px; width:1040px">{right}</div>', pinned=svgp(TX,Y,560,480,b,'Il triangolo S sopra, V e T sotto: coprendo una lettera restano le altre due')+lbl+note('Copri la lettera che cerchi!',CORAL,40).replace('<p style="','<p style="position:absolute; left:'+str(TX+40)+'px; top:790px; width:500px; ',1),
  notes='Quiz 1.7.5-13, -14, -25, -51 (nodo = un miglio all\'ora), -15, -16, -17 (le tre formule), -26 (miglio per le distanze), -35 (ricalcolare a ogni cambio di velocità), -54 (4,4 h = 4 h 24′). Il triangolo è un aiuto per la memoria: coprendo S restano V × T, coprendo V resta S ÷ T, coprendo T resta S ÷ V.')
 
 # ============ ESEMPI ============
