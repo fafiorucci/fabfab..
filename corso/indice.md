@@ -1,4 +1,6 @@
-# Corso patente nautica senza limiti dalla costa — vela e motore
+# Patente nautica Vela/Motore senza limiti dalla costa
+
+Corso di **Fabrizio Fiorucci**, skipper e istruttore di vela. Logo in [`logo/`](logo/) (SVG positivo e negativo, PNG).
 
 15 lezioni da 2 ore (30 ore). Riferimenti:
 
