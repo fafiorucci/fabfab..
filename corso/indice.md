@@ -22,21 +22,23 @@ Fonte: [`fonti/programma-lezioni-scuola.xlsx`](fonti/programma-lezioni-scuola.xl
 
 | # | Lezione | Capitoli (All. A) |
 |---|---|---|
-| 1 | Teoria dello scafo | Teoria dello scafo (1a, 1b) |
+| 1 | Teoria dello scafo | Teoria dello scafo (1a, 1b) · **+ stabilità dell'unità (1b)** |
 | 2 | Motori, elica e timone | Motori (2) · Elica e timone (1b) |
 | 3 | Ormeggi, cartografia e primi calcoli | Attracchi, ormeggi, ancoraggi (4b) · Cartografia (7) · Carteggio: navigazione stimata, miglia, velocità, carburante (7) |
-| 4 | Ancoraggio, prora e rotta | Attracchi, ormeggi, ancoraggi (4b) · Carteggio: prora e rotta, scarroccio, deriva, declinazione, deviazione (7) |
-| 5 | Punto nave e fanali | Carteggio: navigazione costiera, punto nave, GPS (7) · Prevenzione abbordi: fanali e precedenze (5) |
-| 6 | Segnalamento, segnali sonori e sicurezza | Cartografia e segnalamento: fari, IALA (5) · Segnali sonori (5) · Sicurezza parte 1: dotazioni, mezzi di soccorso, incendio (3) |
-| 7 | Meteorologia e normativa | Meteorologia (6) · Normativa (8) |
+| 4 | Ancoraggio, prora e rotta | Attracchi, ormeggi, ancoraggi (4b) · Carteggio: prora e rotta, scarroccio, deriva, declinazione, deviazione (7) · **+ Condotta sottocosta: velocità, balneazione, corridoi di lancio (4a)** |
+| 5 | Punto nave e fanali | Carteggio: navigazione costiera, punto nave, GPS (7) · Prevenzione abbordi: fanali e precedenze (5) · **+ segnali diurni (5)** |
+| 6 | Segnalamento, segnali sonori e sicurezza | Cartografia e segnalamento: fari, IALA (5) · Segnali sonori (5) · Sicurezza parte 1: dotazioni, mezzi di soccorso, incendio (3) · **+ dotazioni obbligatorie DM 133/2024 (3b) · + precauzioni in porto (4a)** |
+| 7 | Meteorologia e normativa | Meteorologia (6) · Normativa (8) · **+ visite e certificazioni (3b) · + autorità marittima e ordinanze (8b)** |
 | 8 | Vela | Attrezzatura · Teoria e manovre (1c) |
-| 9 | Emergenze, ripasso vela e correnti | Vela: ripasso (1c) · Carteggio: Pv, Vp, Rv, Ve, primo problema di corrente (7) · Sicurezza parte 2: incendio, falla, incaglio, collisione, abbandono, uomo a mare, VHF, soccorso, tempo cattivo (3) |
+| 9 | Emergenze, ripasso vela e correnti | Vela: ripasso (1c) · Carteggio: Pv, Vp, Rv, Ve, primo problema di corrente (7) · Sicurezza parte 2: incendio, falla, incaglio, collisione, abbandono, uomo a mare, VHF, soccorso, tempo cattivo (3) · **+ CIRM (3b) · + alcol e sostanze (3a)** |
 
-### Argomenti dell'Allegato A da aggiungere
+### Argomenti dell'Allegato A aggiunti al programma della scuola
+
+In grassetto nella tabella sopra; con questi inserimenti tutto l'Allegato A è coperto.
 
 | Argomento | Punto | Quesiti in banca | Lezione |
 |---|---|---|---|
-| Alcol e sostanze stupefacenti o psicotrope | 3a | 12 | 6 |
+| Alcol e sostanze stupefacenti o psicotrope | 3a | 12 | 9 |
 | Dotazioni obbligatorie per distanza dalla costa (DM 133/2024) | 3b | 48 | 6 |
 | Visite, periodicità e certificazioni | 3b | 19 | 7 |
 | CIRM | 3b | 1 | 9 |
