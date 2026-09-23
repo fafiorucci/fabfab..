@@ -1,41 +1,23 @@
 import json, math, os, sys, datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from gen_bg import backdrop
 SP=os.path.dirname(os.path.abspath(__file__))
 OUT=SP+'/lez01/project'
 Q={x['p']:x for x in json.load(open(SP+'/rotta-giusta/site/dati/quiz.json'))}
 
-NAVY='#10263A'; PAPER='#F5F1E8'; CARD='#EAE4D6'; ACC='#A8432A'; TEAL='#1F6F78'; TEALCARD='#DCE8E6'
-INK='#14212E'; BODY='#3A4652'; SOFT='#5C6874'; DSOFT='#B9C7D2'; DACC='#E9A07F'; BOAT='#FBF9F4'
-RED='#B23A3A'; GREEN='#2E7D4F'; WATER='#1F6F78'
-H="'Libre Baskerville', Georgia, serif"; B="'Public Sans', Arial, sans-serif"
+from template import *
+RED='#D63B3B'; GREEN_S='#2E9E5B'; WATER='#12A4B5'
 TITLE='Lezione 01 · Teoria dello scafo'
 
-def logo(dark=False, style='', label='Logo Fabrizio Fiorucci'):
-    ring,acc,wave = ('#F5F1E8','#E9A07F','#7FB8BF') if dark else (NAVY,ACC,TEAL)
-    ticks=''.join(f'<line x1="{100+78*math.cos(a):.1f}" y1="{100+78*math.sin(a):.1f}" x2="{100+86*math.cos(a):.1f}" y2="{100+86*math.sin(a):.1f}" stroke="{ring}" stroke-width="4" stroke-linecap="round"/>'
-                  for a in [math.radians(d) for d in range(0,360,45) if d!=270])
-    return (f'<svg aria-label="{label}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" style="{style}">'
-      f'<circle cx="100" cy="100" r="92" fill="none" stroke="{ring}" stroke-width="7"/>{ticks}'
-      f'<path d="M100 16 L109 34 L91 34 Z" fill="{acc}"/><path d="M97 42 L97 132 L46 132 Q66 92 97 42 Z" fill="{ring}"/>'
-      f'<path d="M104 54 L104 132 L148 132 Q128 96 104 54 Z" fill="{acc}"/><path d="M44 140 L156 140 Q148 156 126 158 L74 158 Q52 156 44 140 Z" fill="{ring}"/>'
-      f'<path d="M50 173 Q62.5 165 75 173 T100 173 T125 173 T150 173" fill="none" stroke="{wave}" stroke-width="6" stroke-linecap="round"/></svg>')
 
 slides=[]
-def footer(n, dark=False):
-    c = DSOFT if dark else SOFT
-    return (logo(dark,'position:absolute; left:128px; bottom:56px; width:48px; height:48px')
-      +f'<p style="position:absolute; left:192px; bottom:64px; width:1200px; font-size:24px; color:{c}">Fabrizio Fiorucci · Patente nautica Vela/Motore senza limiti dalla costa</p>'
-      +f'<p style="position:absolute; right:128px; bottom:64px; width:200px; font-size:24px; color:{c}; text-align:right">{n:02d}</p>')
 def sec(id, inner, notes='', dark=False, gap=32, pinned=''):
     n=len(slides)+1; bg = NAVY if dark else PAPER; col = PAPER if dark else BODY
-    slides.append((id, f'<section id="{id}" data-transition="fade" style="background:{bg}; color:{col}; font-family:{B}; padding:128px 128px 160px; display:flex; flex-direction:column; gap:{gap}px">\n{backdrop(dark)}\n{inner}\n{pinned}{footer(n,dark)}\n<aside>{notes}</aside>\n</section>\n'))
-def head(e,t,c=ACC):
-    return f'<div style="display:flex; flex-direction:column; gap:16px"><p style="font-size:24px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:{c}">{e}</p><h2 style="font-family:{H}; font-size:64px; font-weight:700; line-height:1.15; color:{INK}">{t}</h2></div>'
+    slides.append((id, f'<section id="{id}" data-transition="fade" style="background:{bg}; color:{col}; font-family:{B}; padding:128px 128px 160px; display:flex; flex-direction:column; gap:{gap}px">\n{backdrop(dark,n)}\n{inner}\n{pinned}{footer(n,dark)}\n<aside>{notes}</aside>\n</section>\n'))
 def lab(x,y,w,t,color=INK,size=24,weight=600,align='left',bg=None):
     b=f' background:{bg}; padding:2px 10px; border-radius:6px;' if bg else ''
     return f'<p style="position:absolute; left:{x:.0f}px; top:{y:.0f}px; width:{w}px; font-size:{size}px; line-height:1.3; font-weight:{weight}; color:{color}; text-align:{align};{b}">{t}</p>'
-def svgp(x,y,w,h,body,alt):
+def svgp(x,y,w,h,body,alt,pan=True):
+    if pan: body=panel(w,h,body,wind=False)
     return f'<svg aria-label="{alt}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" style="position:absolute; left:{x}px; top:{y}px; width:{w}px; height:{h}px">{body}</svg>'
 def svgi(w,h,body,alt,dw=None,dh=None):
     return f'<svg aria-label="{alt}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" style="width:{dw or w}px; height:{dh or h}px">{body}</svg>'
@@ -50,19 +32,13 @@ def dash(x1,y1,x2,y2,c=SOFT):
     return f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" stroke="{c}" stroke-width="2" stroke-dasharray="8 6"/>'
 def line(x1,y1,x2,y2,c=NAVY,w=2):
     return f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" stroke="{c}" stroke-width="{w}" stroke-linecap="round"/>'
-def card(inner,bg=CARD,pad=32,gap=12,flex=1):
-    return f'<div style="flex:{flex}; display:flex; flex-direction:column; gap:{gap}px; background:{bg}; padding:{pad}px; border-radius:24px">{inner}</div>'
-def h3(t,size=32): return f'<h3 style="font-family:{H}; font-size:{size}px; font-weight:600; line-height:1.2; color:{INK}">{t}</h3>'
-def p(t,size=24,color=BODY,weight=400,lh=1.4): return f'<p style="font-size:{size}px; line-height:{lh}; color:{color}; font-weight:{weight}">{t}</p>'
-def tag(t,c=ACC): return f'<p style="font-size:24px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:{c}">{t}</p>'
 def term(t,d): return f'<div style="display:flex; flex-direction:column; gap:4px">{p(t,28,INK,700,1.3)}{p(d,26,BODY)}</div>'
 
-from template import H,B,HAND,header,badge,wave,lockup,note,FACES,footer,logo
 ICON_T={'La lezione di oggi':'lifebuoy','Natanti, imbarcazioni e navi da diporto':'hull','Opera viva, opera morta e lunghezza':'hull','Baglio, bordo libero e pescaggio':'hull',
  'Prua, poppa, dritta e sinistra':'compass','Chiglia, ordinate, paratie e sovrastrutture':'hull','Sentina, pagliolo e boccaporto':'hull','La ferramenta di bordo':'anchor',
- 'Passascafo, prese a mare e zinchi':'propeller','Dislocante, planante, semiplanante':'hull','Dislocamento, peso e spinta':'lifebuoy','Rollio, beccheggio e accostata':'compass',
+ 'Passascafo, prese a mare e zinchi':'propeller','Dislocante, planante, semiplanante':'hull','Dislocamento, stazza e portata':'lifebuoy','Lo scafo in legno':'hull','Antivegetativa, zinchi e prese a mare':'propeller','Rollio, beccheggio e accostata':'compass',
  'Baricentro, centro di carena e metacentro':'sail','I flaps':'hull','Il trim del fuoribordo':'propeller'}
-def head(e,t,c=ACC):
+def head(e,t,c=None):
     return header(e,t,'quiz' if t.startswith(('Quiz','Verifica')) else ICON_T.get(t,'hull'),c)
 # ---------- barca di profilo ----------
 def P(x0,wl,L,x,y): return (x0+x*L, wl+y*L)
@@ -77,7 +53,7 @@ def profile(x0,wl,L,hull=BOAT,uw=ACC,st=NAVY,sw=3,fly=False,deck2=False,sil=Fals
         if deck2: s+=f'<path d="M{f(0.40,-0.19)} L{f(0.60,-0.19)} L{f(0.57,-0.25)} L{f(0.44,-0.25)} Z" fill="{st}"/>'
         return s
     s=f'<path d="{hullp}" fill="{hull}" stroke="{st}" stroke-width="{sw}" stroke-linejoin="round"/>'
-    s+=f'<path d="{uwp}" fill="{uw}" fill-opacity="0.85"/>'
+    s+=f'<path d="{uwp}" fill="{uw}" fill-opacity="0.95"/>'+f'<path d="M{f(0.02,-0.012)} L{f(0.955,-0.012)}" stroke="{BLUE}" stroke-width="{sw+4}"/>'
     s+=f'<path d="{hullp}" fill="none" stroke="{st}" stroke-width="{sw}" stroke-linejoin="round"/>'
     s+=f'<path d="{sup}" fill="{hull}" stroke="{st}" stroke-width="{sw}" stroke-linejoin="round"/>'
     for i in range(4):
@@ -102,7 +78,7 @@ def section_hull(cx=330, deck=170, half=230, keel=450, fin=540, wl=310, uw=True,
     return s
 
 # =============== 1 COVER ===============
-cover_boat = svgp(900,520,892,380, water(892,300,380,0.10)+profile(90,300,760,hull='none',uw=ACC,st='#F5F1E8',sw=3,fly=True).replace(f'fill="none" stroke="#F5F1E8"','fill="none" stroke="#F5F1E8"'), 'Disegno al tratto di un motoscafo con la carena immersa')
+cover_boat = svgp(1000,470,792,450, sea_scene(792,450),pan=False,alt='Illustrazione: barca a vela e motoscafo sul mare con sole, nuvole e gabbiani')
 slides.append(('cover', f'''<section id="cover" data-transition="fade" style="background:{NAVY}; color:{PAPER}; font-family:{B}; padding:128px; display:flex; flex-direction:column; justify-content:space-between">
 {backdrop(True)}
 {lockup(True,112)}
@@ -118,21 +94,21 @@ slides.append(('cover', f'''<section id="cover" data-transition="fade" style="ba
 '''))
 
 # =============== 2 AGENDA ===============
-blocks=[('0:00','15′','Classificazione delle unità',ACC),('0:15','35′','Dimensioni, orientamento, struttura, ferramenta',ACC),('0:50','25′','Carene, dislocamento, assi e movimenti',ACC),('1:15','20′','Stabilità, flaps e trim',ACC),('1:35','25′','Verifica finale con i quiz ufficiali',TEAL)]
+blocks=[('0:00','15′','Classificazione e dimensioni',ACC),('0:15','30′','Pesi, carene e protezione · quiz 1',ACC),('0:45','30′','Parti, struttura e coperta · quiz 2',ACC),('1:15','25′','Assi, stabilità e assetto · quiz 3 e 4',ACC),('1:40','20′','Verifica finale',TEAL)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:8px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:700; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.35; font-weight:600; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
 right=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:96px; font-weight:700; line-height:1.1; color:{INK}">1 / 20</p>'+p('domanda di Teoria dello scafo nella scheda del quiz base',26,INK,600)+p('125 quiz ufficiali sul tema: 75 di nomenclatura dello scafo, 50 su elica, timone e stabilità (elica e timone nella lezione 2).',24))
 left=card(tag('Dopo questa lezione sai','#1F6F78')+'<ul style="font-size:26px; line-height:1.4; color:#3A4652; display:flex; flex-direction:column; gap:10px"><li>riconoscere natanti, imbarcazioni e navi</li><li>chiamare per nome ogni parte dello scafo</li><li>distinguere le carene e i movimenti della barca</li><li>spiegare stabilità, flaps e trim</li></ul>',TEALCARD,flex=1.4)
 sec('agenda', head('Lezione 01 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:16px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
- notes='Tre verifiche intermedie da 3 quiz e una finale da 6: sono tutti quiz ufficiali dell\'elenco del DD 131/2022, con la risposta esatta nella slide successiva.')
+ notes='Ordine degli argomenti come nel capitolo 1 del manuale Il Frangente (Teoria della nave): classificazione e caratteristiche, parti principali, attrezzatura di coperta, struttura in legno, assi, assetto, stabilità. Quattro verifiche intermedie da 3 quiz e una finale da 6: tutti quiz ufficiali del DD 131/2022, con la risposta esatta nella slide successiva.')
 
 # =============== 3 CLASSIFICAZIONE ===============
-def clscard(tagt, name, meters, Lpx, text, deck2=False):
+def clscard(tagt, name, meters, Lpx, text, deck2=False, col=NAVY):
     wl=112; x0=(500-Lpx)/2
-    body=f'<rect x="0" y="{wl}" width="500" height="38" fill="{WATER}" fill-opacity="0.12"/>'+line(0,wl,500,wl,TEAL,2)+profile(x0,wl,Lpx,sil=True,st=NAVY,deck2=deck2)
+    body=f'<rect x="0" y="{wl}" width="500" height="38" fill="{WATER}" fill-opacity="0.12"/>'+line(0,wl,500,wl,TEAL,2)+profile(x0,wl,Lpx,sil=True,st=col,deck2=deck2)
     body+=line(x0,142,x0+Lpx,142,SOFT,2)+line(x0,134,x0,150,SOFT,2)+line(x0+Lpx,134,x0+Lpx,150,SOFT,2)
     return card(tag(tagt)+svgi(500,150,body,f'Sagoma di {name.lower()} di {meters} metri, in scala con le altre',dw=474,dh=142)+p(f'Esempio: {meters} m',24,SOFT)+h3(name)+p(text,24))
 k=13
-cards=clscard('fino a 10 m','Natante',8,8*k,'Non iscritto nei registri. Se iscritto a richiesta, segue le regole delle imbarcazioni.')+clscard('oltre 10 m e fino a 24 m','Imbarcazione',18,18*k,'Iscritta nei registri delle imbarcazioni da diporto.')+clscard('oltre 24 m','Nave da diporto',34,34*k,'Iscritta nei registri delle navi da diporto.',True)
+cards=clscard('fino a 10 m','Natante',8,8*k,'Non iscritto nei registri. Se iscritto a richiesta, segue le regole delle imbarcazioni.',col=CORAL)+clscard('oltre 10 m e fino a 24 m','Imbarcazione',18,18*k,'Iscritta nei registri delle imbarcazioni da diporto.',col=SEA)+clscard('oltre 24 m','Nave da diporto',34,34*k,'Iscritta nei registri delle navi da diporto.',True,col=PURPLE)
 sec('classificazione', head('Classificazione · D.Lgs. 171/2005, art. 3','Natanti, imbarcazioni e navi da diporto')+f'<div style="display:flex; gap:24px">{cards}</div>'+p('Conta la <b>lunghezza dello scafo</b>. Per la forma: monocarena, catamarano (due scafi), battello pneumatico e RIB (chiglia rigida e tubolari).',26,BODY),
  notes='Codice della nautica, art. 3: unità da diporto con scafo fino a 10 m = natante; oltre 10 e fino a 24 m = imbarcazione; oltre 24 m = nave da diporto. Lunghezza misurata secondo le norme armonizzate (EN ISO 8666). Quiz: un\'unità di 9,90 m o di 7 m può essere iscritta, e allora subisce il regime giuridico delle imbarcazioni. Un natante è un\'unità non iscritta. Le sagome sono in scala tra loro.')
 
@@ -165,15 +141,15 @@ X,Y,W,Hh=128,290,1664,610
 hull=f'M330 165 L1080 150 Q1330 170 1450 305 Q1330 440 1080 460 L330 445 Q312 305 330 165 Z'
 b=f'<path d="{hull}" fill="{BOAT}" stroke="{NAVY}" stroke-width="4"/>'
 b+=f'<path d="M330 165 L1080 150 Q1330 170 1450 305" fill="none" stroke="{RED}" stroke-width="10" stroke-linecap="round"/>'
-b+=f'<path d="M330 445 L1080 460 Q1330 440 1450 305" fill="none" stroke="{GREEN}" stroke-width="10" stroke-linecap="round"/>'
+b+=f'<path d="M330 445 L1080 460 Q1330 440 1450 305" fill="none" stroke="{GREEN_S}" stroke-width="10" stroke-linecap="round"/>'
 b+=f'<rect x="620" y="235" width="460" height="140" rx="40" fill="{CARD}" stroke="{NAVY}" stroke-width="3"/>'+dash(290,305,1500,305)
 for (x1,y1,x2,y2) in [(1420,60,1310,182),(1420,550,1310,428),(820,50,820,146),(820,560,820,464),(285,72,352,162),(285,545,352,448),(250,305,318,305)]:
     b+=arrow(x1,y1,x2,y2,INK,3)
-lbls=lab(X+1430,Y+30,230,'Mascone di sinistra',RED,24,700)+lab(X+1430,Y+540,230,'Mascone di dritta',GREEN,24,700)
-lbls+=lab(X+840,Y+20,300,'Traverso di sinistra',RED,24,700)+lab(X+840,Y+556,300,'Traverso di dritta',GREEN,24,700)
-lbls+=lab(X+10,Y+20,260,'Giardinetto di sinistra',RED,24,700)+lab(X+10,Y+556,260,'Giardinetto di dritta',GREEN,24,700)
+lbls=lab(X+1430,Y+30,230,'Mascone di sinistra',RED,24,700)+lab(X+1430,Y+540,230,'Mascone di dritta',GREEN_S,24,700)
+lbls+=lab(X+840,Y+20,300,'Traverso di sinistra',RED,24,700)+lab(X+840,Y+556,300,'Traverso di dritta',GREEN_S,24,700)
+lbls+=lab(X+10,Y+20,260,'Giardinetto di sinistra',RED,24,700)+lab(X+10,Y+556,260,'Giardinetto di dritta',GREEN_S,24,700)
 lbls+=lab(X+20,Y+240,220,'Specchio di poppa',INK,24,700,'right')+lab(X+1480,Y+286,170,'PRUA',INK,26,700)
-lbls+=lab(X+380,Y+180,400,'Murata di sinistra',RED,24,700)+lab(X+380,Y+396,400,'Murata di dritta',GREEN,24,700)+lab(X+640,Y+268,420,'asse longitudinale',SOFT,24,700,'center')
+lbls+=lab(X+380,Y+180,400,'Murata di sinistra',RED,24,700)+lab(X+380,Y+396,400,'Murata di dritta',GREEN_S,24,700)+lab(X+640,Y+268,420,'asse longitudinale',SOFT,24,700,'center')
 sec('orientamento', head('Orientarsi a bordo · vista dall\'alto','Prua, poppa, dritta e sinistra'), pinned=svgp(X,Y,W,Hh,b,'Pianta di uno scafo con prua a destra: murata di sinistra in rosso, murata di dritta in verde, frecce su masconi, traversi e giardinetti')+lbls,
  notes='Guardando verso prua: dritta a destra, sinistra a sinistra. Colori come i fanali: rosso a sinistra, verde a dritta. Masconi: ai lati della prua; giardinetti: ai lati della poppa; traverso: a metà nave, perpendicolare all\'asse longitudinale. Murate: la parte esterna e laterale dello scafo (opera morta) da prua a poppa. Specchio di poppa: la porzione esterna e superiore della poppa. Nei quiz con figura (1.1.1-20, -21, -24, -25, -58, -60) la freccia indica proprio questi punti.')
 
@@ -195,8 +171,7 @@ def quiz_slide(id_, title, ps, reveal):
     notes = ('Risposte: ' + '; '.join(f'{pp} → {"abc"[Q[pp]["x"]]}) {Q[pp]["r"][Q[pp]["x"]].strip()}' for pp in ps)) if reveal else 'Leggere le domande, lasciare un minuto per rispondere, poi passare alla slide con le risposte esatte.'
     sec(id_, head(e, title, TEAL if reveal else ACC)+f'<div style="display:flex; gap:24px; align-items:stretch">{cards}</div>', notes=notes)
 
-quiz_slide('quiz1','Quiz 1 · Dimensioni e orientamento',['1.1.1-1','1.1.1-22','1.1.1-47'],False)
-quiz_slide('quiz1r','Quiz 1 · Le risposte',['1.1.1-1','1.1.1-22','1.1.1-47'],True)
+
 
 # =============== 7 STRUTTURA ===============
 X,Y,W,Hh=128,290,1664,610
@@ -218,6 +193,21 @@ lbls=lab(X+220,Y+10,240,'Ponte di coperta',INK,24,700)+lab(X+700,Y+4,260,'Flying
 lbls+=lab(X+360,Y+562,160,'Ordinate',INK,24,700)+lab(X+590,Y+562,140,'Chiglia',INK,24,700)+lab(X+780,Y+562,260,'Ordinata maestra',ACC,24,700)+lab(X+1150,Y+562,200,'Paratie',INK,24,700)
 sec('struttura', head('Nomenclatura · la struttura','Chiglia, ordinate, paratie e sovrastrutture'), pinned=svgp(X,Y,W,Hh,b,'Spaccato longitudinale di uno scafo: chiglia sul fondo, ordinate verticali, ordinata maestra evidenziata al centro, due paratie, ponte di coperta, tuga e flying bridge')+lbls,
  notes='Chiglia: la trave longitudinale sul fondo, spina dorsale dello scafo. Ordinate: le costole trasversali; l\'ordinata maestra corrisponde alla sezione maestra. Paratie: strutture verticali che suddividono lo scafo in senso trasversale (quiz 1.1.1-13, -36). Ponte di coperta: il ponte continuo che chiude superiormente lo scafo. Sovrastruttura: ciò che si eleva sopra il ponte di coperta; la tuga è la sovrastruttura abitabile che non occupa tutta la larghezza. Flying bridge (fly): ponte superiore delle unità a motore, con la seconda timoneria. Dritto di poppa: la parte strutturale a cui si incardina il timone esterno; lo specchio di poppa è la parte della poppa sopra il dritto. Losca: l\'apertura nella poppa da cui passa l\'asse del timone.')
+
+
+# =============== SCAFO IN LEGNO ===============
+X,Y,W,Hh=1000,290,792,620
+WOOD='#9C6B3F'; WOOD2='#6E4A2A'
+hp='M100 170 C 100 330, 190 420, 330 450 C 470 420, 560 330, 560 170'
+b=f'<path d="{hp} Z" fill="{BOAT}"/><path d="{hp}" fill="none" stroke="{WOOD}" stroke-width="18" stroke-dasharray="46 5"/>'
+b+=f'<path d="M122 176 C 122 318, 205 400, 330 428 C 455 400, 538 318, 538 176" fill="none" stroke="{WOOD2}" stroke-width="10"/>'
+b+=f'<path d="M232 398 L428 398 L400 432 L260 432 Z" fill="{WOOD2}"/><rect x="306" y="440" width="48" height="52" rx="4" fill="{WOOD2}"/>'
+b+=f'<rect x="96" y="176" width="468" height="16" fill="{WOOD2}"/>'+''.join(f'<rect x="{96+i*52}" y="160" width="48" height="14" fill="{WOOD}"/>' for i in range(9))
+for (lx,ly,tx,ty) in [(610,40,450,165),(610,150,548,185),(610,270,556,262),(610,370,520,330),(610,470,420,414),(610,560,356,466)]: b+=arrow(lx,ly,tx,ty,INK,2.5)
+lbls=lab(X+615,Y+22,177,'Ponte',INK,24,700)+lab(X+615,Y+132,177,'Bagli',INK,24,700)+lab(X+615,Y+252,177,'Fasciame',INK,24,700)+lab(X+615,Y+352,177,'Ordinate',INK,24,700)+lab(X+615,Y+452,177,'Madieri',INK,24,700)+lab(X+615,Y+542,177,'Chiglia',INK,24,700)
+txt=term('Chiglia','La trave longitudinale sul fondo: prosegue a prua nella <b>ruota di prua</b> e a poppa nel <b>dritto di poppa</b>.')+term('Ordinate e madieri','Le costole trasversali dello scafo; i madieri le collegano alla chiglia sul fondo.')+term('Bagli','Le travi trasversali che reggono il ponte di coperta.')+term('Fasciame','Il rivestimento esterno di tavole fissato sulle ordinate.')
+sec('legno', head('Nomenclatura · la costruzione','Lo scafo in legno')+f'<div style="display:flex; flex-direction:column; gap:26px; width:800px">{txt}</div>', pinned=svgp(X,Y,W,Hh,b,'Sezione di uno scafo in legno: chiglia sul fondo, madieri, ordinate, fasciame esterno, bagli e ponte di coperta')+lbls,
+ notes='Nel manuale Il Frangente (cap. 1, «struttura dello scafo in legno») la costruzione tradizionale spiega i nomi usati anche per gli scafi moderni in vetroresina: chiglia, ordinate, madieri, bagli, fasciame, ruota di prua e dritto di poppa.')
 
 # =============== 8 SOTTO COPERTA ===============
 X,Y,W,Hh=1000,290,792,620
@@ -255,13 +245,15 @@ skin=f'<rect x="0" y="0" width="120" height="200" fill="{WATER}" fill-opacity="0
 pas=skin+f'<rect x="96" y="80" width="24" height="40" fill="{NAVY}"/><rect x="146" y="88" width="120" height="24" fill="{SOFT}"/>'+''.join(line(160+i*14,88,166+i*14,112,NAVY,2) for i in range(7))+f'<rect x="146" y="76" width="18" height="48" fill="{NAVY}"/>'
 pre=skin+f'<rect x="96" y="80" width="24" height="40" fill="{NAVY}"/><rect x="146" y="88" width="50" height="24" fill="{SOFT}"/><circle cx="222" cy="100" r="30" fill="{NAVY}"/><rect x="214" y="30" width="16" height="44" rx="6" fill="{ACC}"/><rect x="252" y="90" width="60" height="20" fill="{TEAL}" fill-opacity="0.8"/>'
 zin=f'<rect x="0" y="0" width="320" height="200" fill="{WATER}" fill-opacity="0.12"/>'+line(0,100,230,100,SOFT,14)+f'<rect x="120" y="82" width="46" height="36" rx="8" fill="#9AA5AE" stroke="{NAVY}" stroke-width="3"/><ellipse cx="250" cy="100" rx="14" ry="70" fill="{NAVY}"/><ellipse cx="250" cy="100" rx="40" ry="12" fill="{NAVY}"/>'
-cc=card(svgi(320,200,pas,'Passascafo: raccordo filettato che attraversa lo spessore della carena')+h3('Passascafo',30)+p('La parte filettata che attraversa lo spessore della carena e si collega alla presa a mare.',24),CARD,28)
-cc+=card(svgi(320,200,pre,'Presa a mare: valvola con leva montata sul passascafo, collegata al tubo')+h3('Presa a mare',30)+p('La valvola sul passascafo che permette di chiudere l\'ingresso dell\'acqua in barca.',24),CARD,28)
-cc+=card(svgi(320,200,zin,'Zinco a collare montato sull\'asse dell\'elica')+h3('Zinchi',30)+p('Anodi sacrificali: si consumano al posto delle altre parti metalliche ed evitano le corrosioni galvaniche.',24),CARD,28)
-sec('carena_imp', head('Nomenclatura · sotto la linea di galleggiamento','Passascafo, prese a mare e zinchi')+f'<div style="display:flex; gap:24px">{cc}</div>'+p('<b>Buona pratica:</b> controllare prese a mare e zinchi a ogni alaggio. Una presa a mare che perde è una falla.',26,BODY),
- notes='Quiz 1.1.1-64 (passascafo), -67 (prese a mare), -43 (zinchi: evitare le corrosioni galvaniche, non aumentare la zavorra).')
+ant=f'<rect x="0" y="0" width="320" height="200" fill="{WATER}" fill-opacity="0.12"/><path d="M0 60 Q160 150 320 60 L320 0 L0 0 Z" fill="{BOAT}" stroke="{NAVY}" stroke-width="3"/><path d="M0 60 Q160 150 320 60 L320 84 Q160 174 0 84 Z" fill="{ACC}"/><rect x="150" y="128" width="90" height="30" rx="12" fill="{NAVY}" transform="rotate(-18 195 143)"/><path d="M232 160 L262 196" stroke="{NAVY}" stroke-width="8" stroke-linecap="round"/>'
+cc=card(svgi(320,200,ant,'Rullo che stende la vernice antivegetativa rossa sull\'opera viva',dw=342,dh=214)+h3('Antivegetativa',30)+p('Vernice speciale per l\'opera viva: impedisce ad alghe e organismi marini di attaccarsi alla carena.',24),CARD,28)
+cc+=card(svgi(320,200,pas,'Passascafo: raccordo filettato che attraversa lo spessore della carena',dw=342,dh=214)+h3('Passascafo',30)+p('La parte filettata che attraversa lo spessore della carena e si collega alla presa a mare.',24),CARD,28)
+cc+=card(svgi(320,200,pre,'Presa a mare: valvola con leva montata sul passascafo, collegata al tubo',dw=342,dh=214)+h3('Presa a mare',30)+p('La valvola sul passascafo che permette di chiudere l\'ingresso dell\'acqua in barca.',24),CARD,28)
+cc+=card(svgi(320,200,zin,'Zinco a collare montato sull\'asse dell\'elica',dw=342,dh=214)+h3('Zinchi',30)+p('Anodi sacrificali: si consumano al posto delle altre parti metalliche ed evitano le corrosioni galvaniche.',24),CARD,28)
+sec('carena_imp', head('Protezione dello scafo e della carena','Antivegetativa, zinchi e prese a mare')+f'<div style="display:flex; gap:24px">{cc}</div>'+p('<b>Buona pratica:</b> controllare prese a mare e zinchi a ogni alaggio. Una presa a mare che perde è una falla.',26,BODY),
+ notes='Il manuale Il Frangente tratta la protezione dello scafo e della carena insieme alle caratteristiche dell\'unità. Antivegetativa (antifouling): per questo nei disegni la carena è rossa. Quiz 1.1.1-64 (passascafo), -67 (prese a mare), -43 (zinchi: evitare le corrosioni galvaniche, non aumentare la zavorra).')
 
-quiz_slide('quiz2','Quiz 2 · Struttura e coperta',['1.1.1-13','1.1.1-27','1.1.1-43'],False)
+quiz_slide('quiz2','Quiz 2 · Parti dello scafo e coperta',['1.1.1-13','1.1.1-27','1.1.1-43'],False)
 quiz_slide('quiz2r','Quiz 2 · Le risposte',['1.1.1-13','1.1.1-27','1.1.1-43'],True)
 
 # =============== 11 CARENE ===============
@@ -292,9 +284,9 @@ b+=f'<rect x="200" y="110" width="260" height="60" rx="10" fill="{BOAT}" stroke=
 b+=arrow(330,250,330,380,NAVY,6,22)+f'<circle cx="330" cy="250" r="14" fill="{NAVY}"/>'
 b+=arrow(330,420,330,300,TEAL,6,22)+f'<circle cx="330" cy="420" r="14" fill="{TEAL}"/>'
 lbls=lab(X+360,Y+200,300,'G · baricentro: qui agisce il <b>peso</b>',INK,24,600,'left',PAPER)+lab(X+360,Y+410,300,'C · centro di carena: qui agisce la <b>spinta</b>',TEAL,24,600,'left',PAPER)
-txt=term('Dislocamento','Il peso dell\'unità: è uguale al peso dell\'acqua spostata dalla carena (principio di Archimede).')+term('Equilibrio','Peso e spinta sono uguali e agiscono sulla stessa verticale: la barca galleggia ferma.')+term('Se carico la barca','Aumenta il dislocamento: la carena si immerge di più, cresce il pescaggio e cala il bordo libero.')
-sec('dislocamento', head('Galleggiamento','Dislocamento, peso e spinta')+f'<div style="display:flex; flex-direction:column; gap:28px; width:800px">{txt}</div>', pinned=svgp(X,Y,W,Hh,b,'Sezione dello scafo con il baricentro G e la freccia del peso verso il basso, il centro di carena C e la freccia della spinta verso l\'alto')+lbls,
- notes='Quiz 1.1.2-50: il peso della nave corrisponde al dislocamento (non alla portata né alla stazza). Il centro di carena è il baricentro del volume immerso.')
+txt=term('Dislocamento','Il <b>peso</b> dell\'unità: uguale al peso dell\'acqua spostata dalla carena (principio di Archimede).')+term('Stazza','Il <b>volume</b> interno dell\'unità, cioè la sua capacità. Non è un peso.')+term('Portata','Il <b>carico</b> che l\'unità può trasportare: persone, carburante, acqua, provviste.')+term('Equilibrio','Peso e spinta sono uguali e stanno sulla stessa verticale. Se carico la barca, cresce il pescaggio e cala il bordo libero.')
+sec('dislocamento', head('Caratteristiche dell\'unità','Dislocamento, stazza e portata')+f'<div style="display:flex; flex-direction:column; gap:28px; width:800px">{txt}</div>', pinned=svgp(X,Y,W,Hh,b,'Sezione dello scafo con il baricentro G e la freccia del peso verso il basso, il centro di carena C e la freccia della spinta verso l\'alto')+lbls,
+ notes='Nel manuale Il Frangente (cap. 1) lunghezza, dislocamento, stazza e portata sono le caratteristiche dell\'unità. Quiz 1.1.2-50: il peso della nave corrisponde al dislocamento, non alla portata né alla stazza (distrattori del quiz). La stazza si esprime in tonnellate di stazza (GT) ed è una misura di volume. Il centro di carena è il baricentro del volume immerso.')
 
 # =============== 13 ASSI E MOVIMENTI ===============
 def curved(cx,cy,r,a0,a1,c=ACC):
@@ -311,8 +303,8 @@ ac+=card(svgi(480,240,yaw,'Vista dall\'alto: freccia curva attorno all\'asse ver
 sec('assi', head('Assi e movimenti','Rollio, beccheggio e accostata')+f'<div style="display:flex; gap:24px">{ac}</div>'+p('<b>Assetto:</b> la posizione di equilibrio della barca nel piano longitudinale, prua–poppa.',26,BODY),
  notes='Quiz 1.1.1-69 (rollio: asse longitudinale), -34 (beccheggio: asse trasversale), 1.1.2-47, -48, -49 e -46 (assetto). L\'asse longitudinale passa per prua e poppa, parallelo alla chiglia (1.1.1-2). L\'accostata è detta anche imbardata.')
 
-quiz_slide('quiz3','Quiz 3 · Carene e movimenti',['1.1.1-52','1.1.2-50','1.1.1-34'],False)
-quiz_slide('quiz3r','Quiz 3 · Le risposte',['1.1.1-52','1.1.2-50','1.1.1-34'],True)
+quiz_slide('quiz1','Quiz 1 · Dimensioni, pesi e carene',['1.1.1-1','1.1.2-50','1.1.1-52'],False)
+quiz_slide('quiz1r','Quiz 1 · Le risposte',['1.1.1-1','1.1.2-50','1.1.1-52'],True)
 
 # =============== 14 STABILITA ===============
 def stab(heeled, cid):
@@ -320,10 +312,10 @@ def stab(heeled, cid):
     hp='M100 170 C 100 330, 190 420, 330 450 C 470 420, 560 330, 560 170 Z'
     grp=f'<path d="{hp}" fill="{BOAT}" stroke="{NAVY}" stroke-width="4"/><path d="M318 448 L322 520 L338 520 L342 448 Z" fill="{NAVY}"/><rect x="200" y="110" width="260" height="60" rx="10" fill="{BOAT}" stroke="{NAVY}" stroke-width="4"/>'+dash(330,60,330,500,SOFT)
     if heeled:
-        s+=f'<g transform="rotate(20 330 300)">{grp}</g>'
-        G=(343.7,262.4); C=(392,378); M=(391,132)
+        s+=f'<g transform="translate(-50 0) rotate(20 330 300)">{grp}</g>'
+        G=(293.7,262.4); C=(342,378); M=(341,132)
         s+=line(0,300,660,300,TEAL,3)+dash(C[0],C[1],M[0],M[1],TEAL)
-        s+=f'<path d="M190 250 A150 150 0 0 1 250 160" fill="none" stroke="{ACC}" stroke-width="6"/><polygon points="262,150 238,158 252,176" fill="{ACC}"/>'
+        s+=f'<path d="M140 250 A150 150 0 0 1 200 160" fill="none" stroke="{ACC}" stroke-width="6"/><polygon points="212,150 188,158 202,176" fill="{ACC}"/>'
     else:
         s+=grp+line(0,300,660,300,TEAL,3); G=(330,262); C=(330,380); M=(330,132)
     s+=arrow(G[0],G[1],G[0],G[1]+110,NAVY,5,20)+f'<circle cx="{G[0]}" cy="{G[1]}" r="12" fill="{NAVY}"/>'
@@ -371,12 +363,14 @@ tc+=card(svgi(480,200,trimsvg(14,-5),'Trim positivo: piede del motore lontano da
 sec('trim', head('Assetto in navigazione','Il trim del fuoribordo')+p('Il trim è il <b>pistone idraulico</b> che cambia l\'angolo tra lo specchio di poppa e il gambo del motore fuoribordo.',26,INK)+f'<div style="display:flex; gap:24px">{tc}</div>',
  notes='Quiz 1.1.1-72 (definizione del trim), 1.4.4-39 (trim tutto basso = assetto tutto negativo, per la spinta iniziale verso la planata), base-391 (trim negativo abbassa la prua e attutisce gli impatti con mare formato), base-595 (il trim determina l\'innalzamento della prua).')
 
-quiz_slide('quiz4','Quiz 4 · Stabilità, flaps e trim',['1.1.1-12','1.1.1-73','1.4.4-39'],False)
-quiz_slide('quiz4r','Quiz 4 · Le risposte',['1.1.1-12','1.1.1-73','1.4.4-39'],True)
-quiz_slide('finale1','Verifica finale · 1 di 2',['1.1.1-45','1.1.1-17','1.1.1-69'],False)
-quiz_slide('finale1r','Verifica finale · 1 di 2 · risposte',['1.1.1-45','1.1.1-17','1.1.1-69'],True)
-quiz_slide('finale2','Verifica finale · 2 di 2',['1.1.1-68','1.1.1-63','1.1.2-46'],False)
-quiz_slide('finale2r','Verifica finale · 2 di 2 · risposte',['1.1.1-68','1.1.1-63','1.1.2-46'],True)
+quiz_slide('quiz3','Quiz 3 · Assi e stabilità',['1.1.1-34','1.1.1-69','1.1.1-12'],False)
+quiz_slide('quiz3r','Quiz 3 · Le risposte',['1.1.1-34','1.1.1-69','1.1.1-12'],True)
+quiz_slide('quiz4','Quiz 4 · Assetto: flaps e trim',['1.1.1-73','1.4.4-39','1.1.2-46'],False)
+quiz_slide('quiz4r','Quiz 4 · Le risposte',['1.1.1-73','1.4.4-39','1.1.2-46'],True)
+quiz_slide('finale1','Verifica finale · 1 di 2',['1.1.1-45','1.1.1-17','1.1.1-22'],False)
+quiz_slide('finale1r','Verifica finale · 1 di 2 · risposte',['1.1.1-45','1.1.1-17','1.1.1-22'],True)
+quiz_slide('finale2','Verifica finale · 2 di 2',['1.1.1-68','1.1.1-63','1.1.1-47'],False)
+quiz_slide('finale2r','Verifica finale · 2 di 2 · risposte',['1.1.1-68','1.1.1-63','1.1.1-47'],True)
 
 # =============== CHIUSURA ===============
 pts=['Natante fino a 10 m, imbarcazione fino a 24 m, nave oltre','Opera viva sotto la linea di galleggiamento, opera morta sopra','Rosso a sinistra, verde a dritta: masconi a prua, giardinetti a poppa','Carena tonda = dislocante; V profonda per il mare formato','G basso e carena larga = barca stabile; flaps e trim regolano l\'assetto']
@@ -392,13 +386,19 @@ slides.append(('chiusura', f'''<section id="chiusura" data-transition="fade" sty
 </section>
 '''))
 
+ORDER=['cover','agenda','classificazione','profilo','sezione','dislocamento','carene','carena_imp','quiz1','quiz1r','orientamento','struttura','legno','sottocoperta','ferramenta','quiz2','quiz2r','assi','stabilita','quiz3','quiz3r','flaps','trim','quiz4','quiz4r','finale1','finale1r','finale2','finale2r','chiusura']
+import re as _re
+d=dict(slides); assert sorted(d)==sorted(ORDER),(set(d)^set(ORDER))
+slides=[(i,d[i]) for i in ORDER]
 os.makedirs(OUT+'/slides',exist_ok=True)
-for id_,h in slides: open(f'{OUT}/slides/{id_}.html','w').write(h)
+for k,(id_,h) in enumerate(slides,1):
+    h=_re.sub(r'(border-radius:20px">)\d\d(</p>)', lambda m: f'{m.group(1)}{k:02d}{m.group(2)}', h)
+    open(f'{OUT}/slides/{id_}.html','w').write(h)
 deck={"v":4,"createdOnFiles":{"v":1,"at":datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')},"title":TITLE,"order":[i for i,_ in slides],"cover":"cover",
- "sections":{"s1":{"description":"Apertura, obiettivi e classificazione delle unità da diporto","start":"cover"},
-  "s2":{"description":"Nomenclatura: dimensioni, orientamento, struttura, coperta e opera viva","start":"profilo"},
-  "s3":{"description":"Carene, dislocamento, assi e movimenti","start":"carene"},
-  "s4":{"description":"Stabilità, flaps e trim","start":"stabilita"},
+ "sections":{"s1":{"description":"Apertura e obiettivi della lezione","start":"cover"},
+  "s2":{"description":"Classificazione e caratteristiche: dimensioni, pesi, carene e loro protezione","start":"classificazione"},
+  "s3":{"description":"Parti dello scafo, struttura e attrezzatura di coperta","start":"orientamento"},
+  "s4":{"description":"Assi, stabilità e assetto di navigazione","start":"assi"},
   "s5":{"description":"Verifica finale con i quiz ufficiali e sintesi","start":"finale1"}},
  "faces":FACES,"designSystems":[]}
 json.dump(deck,open(OUT+'/deck.json','w'),ensure_ascii=False,indent=1)

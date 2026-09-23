@@ -3,30 +3,18 @@
 Vale per tutte le slide del corso «Patente nautica Vela/Motore senza limiti dalla costa» di Fabrizio Fiorucci.
 Formato 16:9, 1920×1080.
 
-## Colori
+## Stile (creativo, colorato)
 
-| Uso | Colore |
-|---|---|
-| Fondo chiaro (slide di contenuto) | `#F5F1E8` |
-| Fondo scuro (copertina, chiusure) | `#10263A` |
-| Riquadri teoria | `#EAE4D6` |
-| Riquadri carteggio | `#DCE8E6` |
-| Titoli | `#14212E` (su scuro `#F5F1E8`) |
-| Testo | `#3A4652` (su scuro `#B9C7D2`) |
-| Accento teoria, occhielli | `#A8432A` (su scuro `#E9A07F`) |
-| Accento carteggio | `#1F6F78` |
-| Piè di pagina | `#5C6874` |
+Ispirato ai pannelli illustrati del «Corso di vela · Manovre, condotta e sicurezza», rielaborato.
 
-## Caratteri (stile informale)
+- **Fondo** crema `#FFF8EE` con forme morbide colorate negli angoli e onde tenui in basso; copertine blu notte `#16324F` con una scena illustrata (sole, nuvole, gabbiani, barca a vela, motoscafo).
+- **Intestazioni**: bollino a forma morbida con icona, etichetta a capsula colorata, **titolo colorato** (Fredoka 700, 64 px). I colori ruotano: corallo `#E4572E`, mare `#0B8A99`, viola `#7B5CD6`, blu `#2F6FDB`, verde `#2E9E5B`; giallo sole `#F4A300` per gli accenti.
+- **Schede** bianche con barretta colorata a sinistra e ombra morbida (raggio 28 px); schede tinte per i riquadri di carteggio (`#D5F3F5`).
+- **Disegni** su pannelli arrotondati verde mare `#E4F3F1` con onde disegnate; carena rossa antivegetativa, linea di galleggiamento blu, scafi bianchi con contorno blu notte.
+- **Caratteri**: Fredoka (titoli), Nunito Sans (testo), Caveat (note scritte a mano).
+- **Grafici**: coppia validata `#008C9E` (carta 5/D) e `#C0582C` (carta 42/D).
 
-- Titoli: **Fredoka** 600 (Google Fonts), 60 px, con un'onda disegnata sotto
-- Occhielli e note: **Caveat** 700, scritto a mano
-- Testo: **Nunito Sans** 400–800
-- Ogni intestazione ha un **bollino colorato con un'icona** dell'argomento (terracotta per la teoria, verde acqua per il carteggio): scafo, elica, carta, ancora, fanale, faro, nuvola, vela, salvagente, compasso, tanica, vento, corrente, quiz…
-- Riquadri con angoli arrotondati a 24 px
-- Grafici: coppia di colori validata `#008C9E` (carta 5/D) e `#C0582C` (carta 42/D)
-
-Tutto è in `template.py` (`header()`, `badge()`, `footer()`, `lockup()`).
+Tutto è in `template.py`; `anteprima.py` genera un'immagine di controllo delle slide.
 
 ## Impaginazione
 
