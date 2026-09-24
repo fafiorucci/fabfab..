@@ -1,11 +1,12 @@
 """Logo Fabrizio Fiorucci con la frase in inglese «Sailing with passion, teaching with heart».
 Crea in questa cartella la versione orizzontale (chiara, trasparente, negativa) e quella quadrata per i social (chiara e negativa).
-Uso: python3 genera_logo_frase.py ["altra frase"]   (serve Chromium; i font Google vengono scaricati una volta in fonts/)"""
+Uso: python3 genera_logo_frase.py ["frase inglese" ["frase sotto il nome"]]   (serve Chromium; i font Google vengono scaricati una volta in fonts/)"""
 import os, sys, re, base64, subprocess, math
 from PIL import Image
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 INK='#1B2A41'; NAVY='#16324F'; CORAL='#E4572E'; SEA='#0B8A99'; PAPER='#FFF8EE'; DACC='#FFC145'
 TAG = sys.argv[1] if len(sys.argv) > 1 else 'Sailing with passion, teaching with heart'
+ROLE = sys.argv[2] if len(sys.argv) > 2 else 'Il mare, a vele spiegate'
 OUT = '.'
 CHROME = os.environ.get('CHROME', '/opt/pw-browsers/chromium-1194/chrome-linux/chrome')
 H = "'Fredoka', 'Trebuchet MS', sans-serif"; B = "'Nunito Sans', Arial, sans-serif"; HAND = "'Caveat', 'Brush Script MT', cursive"
@@ -46,7 +47,7 @@ def horizontal(dark=False, bg=None):
 {logo(dark, 'width:340px; height:340px; flex:none')}
 <div style="display:flex; flex-direction:column; gap:10px">
 <p style="margin:0; font-family:{H}; font-size:108px; font-weight:700; line-height:1.05; color:{name}; white-space:nowrap">Fabrizio Fiorucci</p>
-<p style="margin:0; font-family:{B}; font-size:30px; font-weight:800; letter-spacing:7px; text-transform:uppercase; color:{role}">Skipper e istruttore di vela</p>
+<p style="margin:0; font-family:{B}; font-size:40px; font-weight:800; letter-spacing:1px; color:{role}">{ROLE}</p>
 <div style="margin-top:6px">{squiggle(tag, 440)}</div>
 <p style="margin:0; font-family:{HAND}; font-size:66px; font-weight:700; line-height:1.15; color:{tag}; white-space:nowrap">{TAG}</p>
 </div></div>''')
@@ -57,7 +58,7 @@ def square(dark=False):
     return (1080, 1080, f'''<div style="width:1080px; height:1080px; background:{back}; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; box-sizing:border-box">
 {logo(dark, 'width:440px; height:440px')}
 <p style="margin:26px 0 0 0; font-family:{H}; font-size:92px; font-weight:700; line-height:1.05; color:{name}">Fabrizio Fiorucci</p>
-<p style="margin:0; font-family:{B}; font-size:28px; font-weight:800; letter-spacing:7px; text-transform:uppercase; color:{role}">Skipper e istruttore di vela</p>
+<p style="margin:0; font-family:{B}; font-size:38px; font-weight:800; letter-spacing:1px; color:{role}">{ROLE}</p>
 <div style="margin-top:8px">{squiggle(tag, 352)}</div>
 <p style="margin:0; font-family:{HAND}; font-size:64px; font-weight:700; line-height:1.15; color:{tag}; text-align:center; width:900px">{TAG.replace(', ', ',<br>')}</p>
 </div>''')
