@@ -27,4 +27,4 @@ Tutto è in `template.py`; `anteprima.py` genera un'immagine di controllo delle 
 1. **Sfondo marino** (`sfondo-chiaro.svg` / `sfondo-scuro.svg`, generati da `sfondo.py`): rosa dei venti in filigrana in alto a destra e onde tenui lungo il bordo basso. Va messo come primo elemento della slide, a tutta pagina.
 2. **Piè di pagina a sinistra**: logo piccolo (48 px, `../logo/logo-fiorucci.svg`, negativo sulle slide scure) e la scritta «Fabrizio Fiorucci · Patente nautica Vela/Motore senza limiti dalla costa».
 3. **Numero di pagina** in basso a destra.
-4. **Copertina**: logo grande con nome e «Skipper e istruttore di vela» in alto a sinistra.
+4. **Copertina**: logo grande con nome e «il mare, a vele spiegate» in alto a sinistra.

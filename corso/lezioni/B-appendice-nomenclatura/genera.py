@@ -123,7 +123,7 @@ def yacht(x0,wl,L,head='genoa',rig='sloop',main_c='#FFFFFF',head_c=SUN,st=NAVY,s
 # ============ COPERTINA ============
 cover(0,'I nomi della barca a vela','La nomenclatura completa per lo studio: scafo, coperta, alberatura, vele, manovre e ferramenta, con un disegno per ogni gruppo di nomi',
  'Appendice B al corso. Raccoglie la nomenclatura della barca a vela: i termini dei quiz ufficiali 1.1.1 (scafo) e 2.2.1 (attrezzatura della vela) del DD 131/2022, con un disegno per ogni gruppo di nomi, due verifiche e un glossario dalla A alla Z.')
-LB.slides[-1]=('cover',LB.slides[-1][1].replace('Lezione 00 · 2 ore','Appendice B · studio').replace('skipper e istruttore di vela','il mare, a vele spiegate'))
+LB.slides[-1]=('cover',LB.slides[-1][1].replace('Lezione 00 · 2 ore','Appendice B · studio'))
 assert 'vele spiegate' in LB.slides[-1][1]
 
 # ============ INDICE ============

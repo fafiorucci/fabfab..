@@ -107,7 +107,7 @@ def lockup(dark=True, size=112):
     nc = '#FFFFFF' if dark else INK; sc = DACC if dark else CORAL
     return (f'<div style="display:flex; gap:28px; align-items:center">{logo(dark,f"width:{size}px; height:{size}px","Logo Fabrizio Fiorucci: sloop a vela dentro una bussola")}'
             f'<div style="display:flex; flex-direction:column; gap:0px"><p style="font-family:{H}; font-size:44px; font-weight:700; line-height:1.15; color:{nc}">Fabrizio Fiorucci</p>'
-            f'<p style="font-family:{HAND}; font-size:38px; font-weight:700; line-height:1.1; color:{sc}">skipper e istruttore di vela</p></div></div>')
+            f'<p style="font-family:{HAND}; font-size:38px; font-weight:700; line-height:1.1; color:{sc}">il mare, a vele spiegate</p></div></div>')
 PANEL='#E4F3F1'; PANEL_W='#C9E6E2'; SHADOW='box-shadow:0px 10px 28px rgba(27,42,65,0.10)'
 _acc=itertools.cycle([CORAL,SEA,SUN,PURPLE,BLUE,GREEN])
 def card(inner,bg=None,pad=32,gap=12,flex=1,extra=''):
