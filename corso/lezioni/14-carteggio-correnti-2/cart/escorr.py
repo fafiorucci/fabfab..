@@ -395,7 +395,7 @@ def c5_5_3_1():
     V=4; Pv=290; r1=350; r2=60; run=2
     F,P1,q=running_fix(S,'Cardinale sud Les Moines',r1,'Cardinale sud Les Moines',r2,Pv,run)
     S.passi=['V = +3° +1° = +4°: Pv = 290°, Rilv₁ = 350°, Rilv₂ = 060°.','Cammino: 6 × 20/60 = 2 mg per 290°.','Trasporta il primo rilevamento del segnale cardinale e incrocialo con il secondo.']
-    draw_running(S,'Cardinale sud Les Moines','cardinale S',r1,'Cardinale sud Les Moines','cardinale S',r2,Pv,run,F,P1,q,'02h30m','02h50m'); lm_pt(S,'Faro di Cap de Feno','Cap de Feno')
+    draw_running(S,'Cardinale sud Les Moines','cardinale S',r1,'Cardinale sud Les Moines','cardinale S',r2,Pv,run,F,P1,q,'02h30m','02h50m')
     S.fix(F,'PN 02h50m'); return S
 
 @reg(15)
