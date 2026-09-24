@@ -72,7 +72,7 @@ def tech_svg(kind):
         b+=line(P1[0]-40,P1[1]+22,Lx,Ly,NAVY,3)+line(P2[0]-80,P2[1]+10,L2[0],L2[1],CORAL,4)
         dx,dy=Lx-P1[0],Ly-P1[1]; b+=f'<line x1="{Q[0]-dx*1.1:.0f}" y1="{Q[1]-dy*1.1:.0f}" x2="{Q[0]+dx*0.05:.0f}" y2="{Q[1]+dy*0.05:.0f}" stroke="{PURPLE}" stroke-width="4" stroke-dasharray="14 9"/>'
         b+=dash(Lx,Ly,Q[0],Q[1],GREY,2)+arrow(P1[0],P1[1],P2[0],P2[1],GREEN,6,20)+f'<circle cx="{P2[0]}" cy="{P2[1]}" r="16" fill="none" stroke="{CORAL}" stroke-width="5"/><circle cx="{P1[0]}" cy="{P1[1]}" r="8" fill="#FFFFFF" stroke="{INK}" stroke-width="3"/>'
-        L=[(P1[0]-120,P1[1]+10,'ore 1',INK),(Lx-240,Ly-50,'punto 1',NAVY),(L2[0]-160,L2[1]+30,'punto 2',CORAL),(330,500,'cammino',GREEN),(Q[0]-470,Q[1]+60,'rilevamento 1 trasportato',PURPLE),(P2[0]-40,P2[1]-70,'punto nave',CORAL)]
+        L=[(P1[0]-120,P1[1]+10,'ore 1',INK),(Lx+26,Ly+14,'punto 1',NAVY),(L2[0]-160,L2[1]+30,'punto 2',CORAL),(330,500,'cammino',GREEN),(Q[0]-470,Q[1]+60,'rilevamento 1 trasportato',PURPLE),(P2[0]-40,P2[1]-70,'punto nave',CORAL)]
     elif kind=='tre':
         P=[(160,540),(380,400),(620,250)]
         for i,(q,c) in enumerate(zip(P,(NAVY,PURPLE,CORAL))):

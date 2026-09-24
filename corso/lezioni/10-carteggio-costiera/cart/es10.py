@@ -128,7 +128,7 @@ def e5_1_3_5():
     S.passi=['V = −2°: Rilv₁ = 050°, Rilv₂ = 081°. Senza vento né corrente la Rv coincide con la Pv.',f'Cammino: 12,4 × 15/60 = {run:.1f} miglia per 350°.','Trasporta il primo rilevamento di 3,1 mg per 350° e incrocialo con il secondo.']
     F,P1,q=running_fix(S,'Faro di Punta Polveraia',r1,'Faro di Punta Polveraia',r2,Pv,run)
     draw_running(S,'Faro di Punta Polveraia','Punta Polveraia',r1,'Faro di Punta Polveraia','Punta Polveraia',r2,Pv,run,F,P1,q,'13h45m','14h00m')
-    S.pt(S.xy((42+40/60,10.0)),'A','ship')
+    S.pt(S.xy((42+40/60,10.0)),'A','ship'); S.fix_below=True
     S.fix(F,'PN 14h00m'); return S
 
 @reg

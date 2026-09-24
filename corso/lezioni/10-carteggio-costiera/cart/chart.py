@@ -100,7 +100,7 @@ def render(S, W, H, solution=True, keep=None):
         elif kind=='fix': body+=f'<circle cx="{x:.1f}" cy="{y:.1f}" r="15" fill="none" stroke="{CORAL}" stroke-width="5"/><circle cx="{x:.1f}" cy="{y:.1f}" r="5" fill="{CORAL}"/>'
         elif solution or (lab.startswith(('A','B')) and '′' not in lab): body+=f'<circle cx="{x:.1f}" cy="{y:.1f}" r="7" fill="#FFFFFF" stroke="{INK}" stroke-width="3"/>'
         else: continue
-        labels.append((x,y,lab,LABC[kind],kind,None))
+        labels.append((x,y,lab,LABC[kind],'fixb' if kind=='fix' and getattr(S,'fix_below',False) else kind,None))
     sb,sbl=C.scalebar(); body+=sb+'</g>'
     return body,labels,glabs,sbl,C
 
@@ -111,7 +111,7 @@ def place_labels(labels, W, H, size=22):
         if b[0]<6 or b[1]<6 or b[0]+b[2]>W-6 or b[1]+b[3]>H-6: return False
         return all(b[0]+b[2]<o[0] or o[0]+o[2]<b[0] or b[1]+b[3]<o[1] or o[1]+o[3]<b[1] for o in boxes)
     # prima i punti (fix, lm, ship) poi le linee
-    order=sorted(labels,key=lambda l:{'fix':0,'lm':1,'ship':2,'line':3}[l[4]])
+    order=sorted(labels,key=lambda l:{'fix':0,'fixb':0,'lm':1,'ship':2,'line':3}[l[4]])
     for x,y,t,c,kind,seg in order:
         w=int(0.56*size*len(t))+24; h=size*1.3+6
         if kind=='line':
@@ -120,8 +120,9 @@ def place_labels(labels, W, H, size=22):
                 px,py=x1+(x2-x1)*f,y1+(y2-y1)*f
                 cands+= [(px-w/2,py-h-8),(px-w/2,py+8),(px+10,py-h/2),(px-w-10,py-h/2)]
         else:
-            r=20 if kind=='fix' else 16
+            r=20 if kind in ('fix','fixb') else 16
             cands=[(x+r,y-h-4),(x+r,y+4),(x-w-r,y-h-4),(x-w-r,y+4),(x-w/2,y-h-r),(x-w/2,y+r),(x+r,y-h/2),(x-w-r,y-h/2)]
+            if kind=='fixb': cands=[(x-w-r,y+6),(x-w/2,y+r+4),(x+r,y+6)]+cands
         for cx,cy in cands:
             b=(cx,cy,w,h)
             if ok(b): boxes.append(b); out.append((cx,cy,w,t,c,kind)); break
