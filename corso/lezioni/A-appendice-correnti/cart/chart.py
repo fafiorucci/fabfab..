@@ -104,14 +104,31 @@ def render(S, W, H, solution=True, keep=None):
     sb,sbl=C.scalebar(); body+=sb+'</g>'
     return body,labels,glabs,sbl,C
 
-def place_labels(labels, W, H, size=22, avoid=()):
-    """posiziona le etichette evitando sovrapposizioni (e i riquadri in avoid); ritorna [(x,y,w,testo,colore,pill)]"""
+def seg_hits(b, s):
+    """True se il segmento s=(x1,y1,x2,y2) attraversa il riquadro b=(x,y,w,h)"""
+    x0,y0,w,h=b; x1,y1,x2,y2=s; t0,t1=0.0,1.0; dx=x2-x1; dy=y2-y1
+    for p,q in ((-dx,x1-x0),(dx,x0+w-x1),(-dy,y1-y0),(dy,y0+h-y1)):
+        if p==0:
+            if q<0: return False
+        else:
+            r=q/p
+            if p<0: t0=max(t0,r)
+            else: t1=min(t1,r)
+            if t0>t1: return False
+    return True
+
+def place_labels(labels, W, H, size=22, avoid=(), segs=()):
+    """posiziona le etichette evitando sovrapposizioni (e i riquadri in avoid); con segs evita anche di coprire
+    le linee del tracciamento e i punti; ritorna [(x,y,w,testo,colore,pill)]"""
     boxes=list(avoid); out=[]
-    def ok(b):
+    if segs: boxes+=[(l[0]-10,l[1]-10,20,20) for l in labels if l[4]!='line']
+    def ok(b, lines=True):
         if b[0]<6 or b[1]<6 or b[0]+b[2]>W-6 or b[1]+b[3]>H-6: return False
+        if lines and any(seg_hits(b,s) for s in segs): return False
         return all(b[0]+b[2]<o[0] or o[0]+o[2]<b[0] or b[1]+b[3]<o[1] or o[1]+o[3]<b[1] for o in boxes)
-    # prima i punti (fix, lm, ship) poi le linee
-    order=sorted(labels,key=lambda l:{'fix':0,'fixb':0,'lm':1,'ship':2,'line':3}[l[4]])
+    # prima i punti (fix, lm, ship) poi le linee; con segs le linee vengono prima dei punti nave
+    rank={'fix':0,'fixb':0,'lm':1,'ship':2,'line':1.5 if segs else 3}
+    order=sorted(labels,key=lambda l:rank[l[4]])
     for x,y,t,c,kind,seg in order:
         w=int(0.56*size*len(t))+24; h=size*1.3+6
         if kind=='line':
@@ -119,13 +136,18 @@ def place_labels(labels, W, H, size=22, avoid=()):
             for f in (0.5,0.35,0.65,0.25,0.75,0.15,0.85):
                 px,py=x1+(x2-x1)*f,y1+(y2-y1)*f
                 cands+= [(px-w/2,py-h-8),(px-w/2,py+8),(px+10,py-h/2),(px-w-10,py-h/2)]
+            if segs:
+                for f in (0.5,0.35,0.65,0.25,0.75,0.15,0.85):
+                    px,py=x1+(x2-x1)*f,y1+(y2-y1)*f
+                    cands+= [(px,py+8),(px-w,py+8),(px,py-h-8),(px-w,py-h-8)]
         else:
             r=20 if kind in ('fix','fixb') else 16
             cands=[(x+r,y-h-4),(x+r,y+4),(x-w-r,y-h-4),(x-w-r,y+4),(x-w/2,y-h-r),(x-w/2,y+r),(x+r,y-h/2),(x-w-r,y-h/2)]
             if kind=='fixb': cands=[(x-w-r,y+6),(x-w/2,y+r+4),(x+r,y+6)]+cands
-        for cx,cy in cands:
-            b=(cx,cy,w,h)
-            if ok(b): boxes.append(b); out.append((cx,cy,w,t,c,kind)); break
+        pick=next(((cx,cy) for cx,cy in cands if ok((cx,cy,w,h))),None) if segs else None
+        if pick is None: pick=next(((cx,cy) for cx,cy in cands if ok((cx,cy,w,h),False)),None)
+        if pick is not None:
+            cx,cy=pick; boxes.append((cx,cy,w,h)); out.append((cx,cy,w,t,c,kind))
         else:
             cx,cy=cands[0]; cx=min(max(cx,8),W-w-8); cy=min(max(cy,8),H-h-8); boxes.append((cx,cy,w,h)); out.append((cx,cy,w,t,c,kind))
     return out

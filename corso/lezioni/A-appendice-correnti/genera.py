@@ -27,7 +27,10 @@ def chart_html(S, x, y, w, h, solution, alt):
     for kind,v,t in glabs:
         if kind=='lon' and 60<v<w-230 and v-lastx>150: html+=lab(x+v+6,y+h-34,140,t,'#5E6E82',20,800); lastx=v
     sx,sy,L,t=sbl; html+=lab(x+sx,y+sy,max(L,120),t,'#16324F',20,900)
-    for lx,ly,lw,t,c,kind in chart.place_labels(labels,w,h,22,[(sx-12,sy-8,max(L,120)+30,h-sy+8)]):
+    avoid=[(sx-12,sy-8,max(L,120)+30,h-sy+8)]; segs=()
+    if getattr(S,'avoid_segs',False):
+        avoid.append((0,h-40,w,40)); segs=[(*C.pll(a),*C.pll(b)) for a,b,k_,l_ in S.lines]
+    for lx,ly,lw,t,c,kind in chart.place_labels(labels,w,h,22,avoid,segs):
         html+=f'<p style="position:absolute; left:{x+lx:.0f}px; top:{y+ly:.0f}px; width:max-content; max-width:{lw+20:.0f}px; font-size:22px; line-height:1.3; font-weight:900; color:#FFFFFF; text-align:left; background:{c}; padding:2px 10px; border-radius:10px; white-space:nowrap">{t}</p>'
     return svg+html
 
@@ -116,6 +119,7 @@ def fix_pts(S,sid):
         C=add(A,vec(75,3)); E=add(A,vec(rv,ve))
         S.lines=[l for l in S.lines if l[2] not in ('rotta_l','corr')]
         S.line(A,C,'corr','corrente 075° · 3 kn'); S.line(C,E,'stima','Pv 029° · 7 kn'); S.pt(C,'C','ship'); S.pt(E,'E · Ve 9,3','ship')
+        S.pt(add(A,vec(180,1.5)),'','none'); S.avoid_segs=True
         S.passi=['B: Talamone per 305° a 0,5 mg (B è a SE del faro).','Rotta A-B 042°, 13,0 mg.','Da A la corrente 075° per 3 mg: punto C.','Compasso in C aperto di 7 mg: taglia la rotta in E. C→E: Pv 029°; A–E: Ve 9,3 kn.','Tempo 13,0 ÷ 9,3 = 1h23m: arrivo alle 11h08m.']
     if sid=='5.1.1-2':
         ren('stimato','S · stimato')
