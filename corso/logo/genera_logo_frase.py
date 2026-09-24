@@ -74,6 +74,15 @@ def render(name, spec, transparent=False):
     os.remove(src)
     im = Image.open(f'{OUT}/{name}.png'); im.crop((0, 0, 2*w, 2*h)).save(f'{OUT}/{name}.png')
 
+def mark(dark=False, bg=None):
+    back = bg or 'transparent'
+    return (1024, 1024, f'<div style="width:1024px; height:1024px; background:{back}; display:flex; align-items:center; justify-content:center">{logo(dark, "width:900px; height:900px")}</div>')
+# solo il simbolo, senza scritte: PNG trasparenti e SVG
+render('logo-fiorucci-simbolo', mark(False), transparent=True)
+render('logo-fiorucci-simbolo-negativo', mark(True), transparent=True)
+render('logo-fiorucci-simbolo-negativo-fondo-blu', mark(True, NAVY))
+open('logo-fiorucci-simbolo.svg', 'w').write(logo(False, 'width:200px; height:200px'))
+open('logo-fiorucci-simbolo-negativo.svg', 'w').write(logo(True, 'width:200px; height:200px'))
 render('logo-fiorucci-sailing-with-passion', horizontal(False, PAPER))
 render('logo-fiorucci-sailing-with-passion-trasparente', horizontal(False), transparent=True)
 render('logo-fiorucci-sailing-with-passion-negativo', horizontal(True, NAVY))
