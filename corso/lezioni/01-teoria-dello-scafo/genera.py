@@ -196,7 +196,7 @@ sec('struttura', head('Nomenclatura · la struttura','Chiglia, ordinate, paratie
 
 
 # =============== SCAFO IN LEGNO ===============
-X,Y,W,Hh=1000,290,792,620
+X,Y,W,Hh=128,290,792,620
 WOOD='#9C6B3F'; WOOD2='#6E4A2A'
 hp='M100 170 C 100 330, 190 420, 330 450 C 470 420, 560 330, 560 170'
 b=f'<path d="{hp} Z" fill="{BOAT}"/><path d="{hp}" fill="none" stroke="{WOOD}" stroke-width="18" stroke-dasharray="46 5"/>'
@@ -206,8 +206,9 @@ b+=f'<rect x="96" y="176" width="468" height="16" fill="{WOOD2}"/>'+''.join(f'<r
 for (lx,ly,tx,ty) in [(610,40,450,165),(610,150,548,185),(610,270,556,262),(610,370,520,330),(610,470,420,414),(610,560,356,466)]: b+=arrow(lx,ly,tx,ty,INK,2.5)
 lbls=lab(X+615,Y+22,177,'Ponte',INK,24,700)+lab(X+615,Y+132,177,'Bagli',INK,24,700)+lab(X+615,Y+252,177,'Fasciame',INK,24,700)+lab(X+615,Y+352,177,'Ordinate',INK,24,700)+lab(X+615,Y+452,177,'Madieri',INK,24,700)+lab(X+615,Y+542,177,'Chiglia',INK,24,700)
 txt=term('Chiglia','La trave longitudinale sul fondo: prosegue a prua nella <b>ruota di prua</b> e a poppa nel <b>dritto di poppa</b>.')+term('Ordinate e madieri','Le costole trasversali dello scafo; i madieri le collegano alla chiglia sul fondo.')+term('Bagli','Le travi trasversali che reggono il ponte di coperta.')+term('Fasciame','Il rivestimento esterno di tavole fissato sulle ordinate.')
-sec('legno', head('Nomenclatura · la costruzione','Lo scafo in legno')+f'<div style="display:flex; flex-direction:column; gap:26px; width:800px">{txt}</div>', pinned=svgp(X,Y,W,Hh,b,'Sezione di uno scafo in legno: chiglia sul fondo, madieri, ordinate, fasciame esterno, bagli e ponte di coperta')+lbls,
+sec('legno', head('Nomenclatura · la costruzione','Lo scafo in legno')+f'<div style="position:absolute; left:968px; top:290px; width:824px; display:flex; flex-direction:column; gap:26px">{txt}</div>', pinned=svgp(X,Y,W,Hh,b,'Sezione di uno scafo in legno: chiglia sul fondo, madieri, ordinate, fasciame esterno, bagli e ponte di coperta')+lbls,
  notes='Nel manuale Il Frangente (cap. 1, «struttura dello scafo in legno») la costruzione tradizionale spiega i nomi usati anche per gli scafi moderni in vetroresina: chiglia, ordinate, madieri, bagli, fasciame, ruota di prua e dritto di poppa.')
+X,Y,W,Hh=1000,290,792,620
 
 # =============== 8 SOTTO COPERTA ===============
 X,Y,W,Hh=1000,290,792,620
@@ -278,15 +279,16 @@ sec('carene', head('Le carene','Dislocante, planante, semiplanante')+f'<div styl
  notes='Quiz 1.1.1-52 e -71 (carena dislocante: tonda, non plana e sposta l\'acqua lateralmente); -68 (la V profonda affronta meglio il mare formato; la dislocante non è adatta alla planata; la carena piatta non è adatta al mare formato). Nota: il quiz 1.1.1-70 dà come esatta «tonda oppure a V profondo»: segnalarlo agli allievi.')
 
 # =============== 12 DISLOCAMENTO ===============
-X,Y,W,Hh=1000,290,792,620
+X,Y,W,Hh=128,290,792,620
 b=f'<rect x="0" y="310" width="{W}" height="{Hh-310}" fill="{WATER}" fill-opacity="0.10"/>'+section_hull(cid='s12')+line(0,310,W,310,TEAL,3)
 b+=f'<rect x="200" y="110" width="260" height="60" rx="10" fill="{BOAT}" stroke="{NAVY}" stroke-width="4"/>'
 b+=arrow(330,250,330,380,NAVY,6,22)+f'<circle cx="330" cy="250" r="14" fill="{NAVY}"/>'
 b+=arrow(330,420,330,300,TEAL,6,22)+f'<circle cx="330" cy="420" r="14" fill="{TEAL}"/>'
 lbls=lab(X+360,Y+200,300,'G · baricentro: qui agisce il <b>peso</b>',INK,24,600,'left',PAPER)+lab(X+360,Y+410,300,'C · centro di carena: qui agisce la <b>spinta</b>',TEAL,24,600,'left',PAPER)
 txt=term('Dislocamento','Il <b>peso</b> dell\'unità: uguale al peso dell\'acqua spostata dalla carena (principio di Archimede).')+term('Stazza','Il <b>volume</b> interno dell\'unità, cioè la sua capacità. Non è un peso.')+term('Portata','Il <b>carico</b> che l\'unità può trasportare: persone, carburante, acqua, provviste.')+term('Equilibrio','Peso e spinta sono uguali e stanno sulla stessa verticale. Se carico la barca, cresce il pescaggio e cala il bordo libero.')
-sec('dislocamento', head('Caratteristiche dell\'unità','Dislocamento, stazza e portata')+f'<div style="display:flex; flex-direction:column; gap:28px; width:800px">{txt}</div>', pinned=svgp(X,Y,W,Hh,b,'Sezione dello scafo con il baricentro G e la freccia del peso verso il basso, il centro di carena C e la freccia della spinta verso l\'alto')+lbls,
+sec('dislocamento', head('Caratteristiche dell\'unità','Dislocamento, stazza e portata')+f'<div style="position:absolute; left:968px; top:290px; width:824px; display:flex; flex-direction:column; gap:28px">{txt}</div>', pinned=svgp(X,Y,W,Hh,b,'Sezione dello scafo con il baricentro G e la freccia del peso verso il basso, il centro di carena C e la freccia della spinta verso l\'alto')+lbls,
  notes='Nel manuale Il Frangente (cap. 1) lunghezza, dislocamento, stazza e portata sono le caratteristiche dell\'unità. Quiz 1.1.2-50: il peso della nave corrisponde al dislocamento, non alla portata né alla stazza (distrattori del quiz). La stazza si esprime in tonnellate di stazza (GT) ed è una misura di volume. Il centro di carena è il baricentro del volume immerso.')
+X,Y,W,Hh=1000,290,792,620
 
 # =============== 13 ASSI E MOVIMENTI ===============
 def curved(cx,cy,r,a0,a1,c=ACC):

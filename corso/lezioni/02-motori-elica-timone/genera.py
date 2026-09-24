@@ -44,7 +44,7 @@ sec('installazioni', head('Il sistema propulsivo · motore + elica','Entrobordo,
  notes='Quiz 1.2.1-12 (sistema propulsivo = motore + elica), 1.2.1-9 (entrofuoribordo), 1.2.1-45/46/47 (idrogetto: condotto di aspirazione, elica, condotto forzato, meccanismo di governo; difficile al minimo e con vento), 1.2.1-52/53/55/56 (IPS, pod, S-drive: sostituire la guarnizione del piedino alla scadenza).')
 
 # ============ LINEA D'ASSE ============
-X,Y,W,Hh=700,290,1092,620
+X,Y,W,Hh=128,290,1092,620
 b=f'<defs><clipPath id="la"><rect x="0" y="330" width="1092" height="400"/></clipPath></defs>'
 hullp='M120 170 L1092 150 L1092 470 L120 360 Z'
 b+=f'<rect x="0" y="330" width="1092" height="290" fill="{WATER}" fill-opacity="0.22"/>'
@@ -58,8 +58,9 @@ b+=line(152,250,152,420,NAVY,6)+f'<path d="M140 400 L176 400 L176 520 Q160 530 1
 for (lx,ly,tx,ty) in [(760,120,755,222),(560,200,600,288),(470,520,420,420),(330,300,405,378),(280,570,215,500),(60,150,150,300)]: b+=arrow(lx,ly,tx,ty,INK,3)
 lbls=lab(X+690,Y+84,300,'Motore',INK)+lab(X+440,Y+160,260,'Invertitore / riduttore',SEA)+lab(X+380,Y+524,260,'Asse portaelica',INK)+lab(X+220,Y+262,220,'Astuccio',PURPLE)+lab(X+250,Y+574,160,'Elica',INK)+lab(X+20,Y+110,170,'Timone',INK)
 txt=term('Linea d\'asse','L\'insieme di organi meccanici che trasmette il movimento dal motore all\'elica.')+term('Invertitore','Dà marcia avanti, folle e marcia indietro: il motore gira sempre nello stesso verso.')+term('Riduttore','Riduce i giri che arrivano all\'elica.')+term('Astuccio','Il tubo in cui l\'asse portaelica attraversa lo scafo, a tenuta d\'acqua.')
-sec('lineaasse', head('Motore entrobordo · trasmissione','Dal motore all\'elica')+f'<div style="display:flex; flex-direction:column; gap:24px; width:540px">{txt}</div>', pinned=svgp(X,Y,W,Hh,b,'Spaccato di poppa: motore, invertitore e riduttore, asse portaelica che esce dallo scafo attraverso l\'astuccio, elica e timone')+lbls,
+sec('lineaasse', head('Motore entrobordo · trasmissione','Dal motore all\'elica')+f'<div style="position:absolute; left:1260px; top:290px; width:532px; display:flex; flex-direction:column; gap:24px">{txt}</div>', pinned=svgp(X,Y,W,Hh,b,'Spaccato di poppa: motore, invertitore e riduttore, asse portaelica che esce dallo scafo attraverso l\'astuccio, elica e timone')+lbls,
  notes='Quiz 1.2.2-7 (linea d\'asse), 1.2.1-7 e -14 (invertitore: non si inverte la rotazione del motore), 1.2.1-42/43/44 (figure: astuccio, asse portaelica, invertitore/riduttore), 1.2.1-41 (paratia del vano motore).')
+X,Y,W,Hh=700,290,1092,620
 
 # ============ QUATTRO TEMPI ============
 def cyl(stage):

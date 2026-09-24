@@ -17,6 +17,7 @@ def dot(n,c): return f'<p style="width:44px; height:44px; border-radius:22px; ba
 def item(n,c,t,d): return f'<div style="display:flex; gap:16px; align-items:start">{dot(n,c)}<div style="display:flex; flex-direction:column; gap:4px">{p(t,28,INK,800,1.25)}{p(d,24,BODY)}</div></div>'
 def big(x,y,w,t,c,size=110,align='center'):
     return f'<p style="position:absolute; left:{x}px; top:{y}px; width:{w}px; font-family:{H}; font-size:{size}px; font-weight:700; line-height:1; color:{c}; text-align:{align}">{t}</p>'
+def pcol(inner,w=532,gap=24): return f'<div style="position:absolute; left:1260px; top:290px; width:{w}px; display:flex; flex-direction:column; gap:{gap}px">{inner}</div>'
 col=lambda inner,w=520,gap=24: f'<div style="display:flex; flex-direction:column; gap:{gap}px; width:{w}px">{inner}</div>'
 X,Y,W,Hh=700,290,1092,620
 
@@ -50,6 +51,7 @@ sec('attracco', head('Ormeggi · il vocabolario','Arrivare in banchina')+col(txt
  notes='Quiz 1.4.4-30 (attracco = avvicinamento a banchina o galleggiante), -4 (attraccata = assicurata con i cavi d\'ormeggio), 1.4.4-21 (parlato per i parabordi a pulpiti e draglie). Mostrare in aula una galloccia e come si dà volta.')
 
 # ============ CAVI ALL'INGLESE (dall'alto) ============
+X=128
 b=f'<rect x="0" y="0" width="1092" height="150" fill="{QUAY}"/>'+line(0,150,1092,150,NAVY,5)
 b+=''.join(f'<rect x="{x}" y="152" width="44" height="22" rx="11" fill="{BLUE}"/>' for x in (380,524,680))
 b+=topboat(546,275,600,0,'#FFFFFF',NAVY,4)
@@ -60,8 +62,9 @@ for (n,x,y,c) in [(1,915,210,NAVY),(6,180,190,NAVY),(2,680,212,CORAL),(5,420,188
 b+=arrow(900,470,1000,470,NAVY,4,16)
 lbl=lab(X+40,Y+40,300,'BANCHINA',INK,26,900)+lab(X+780,Y+486,200,'prua',NAVY,24,800,'right')
 txt=item('1·6',NAVY,'Prodiera e poppiera','Le cime di prua e di poppa: tengono la barca al suo posto.')+item('2·5',CORAL,'Spring','Da prua o da poppa corrono verso il centro barca: bloccano i movimenti avanti e indietro.')+item('3·4',SEA,'Traversini','Perpendicolari alla banchina: non fanno scostare la barca.')
-sec('cavi', head('Ormeggio all\'inglese · di fianco','I cavi d\'ormeggio')+col(txt+note('Senza spring la barca scorre lungo la banchina!',CORAL,38),540,28), pinned=svgp(X,Y,W,Hh,b,'Vista dall\'alto di una barca ormeggiata di fianco: prodiera, poppiera, due spring incrociati verso il centro e due traversini perpendicolari alla banchina')+lbl,
+sec('cavi', head('Ormeggio all\'inglese · di fianco','I cavi d\'ormeggio'), pinned=pcol(txt+note('Senza spring la barca scorre lungo la banchina!',CORAL,38),540,28)+svgp(X,Y,W,Hh,b,'Vista dall\'alto di una barca ormeggiata di fianco: prodiera, poppiera, due spring incrociati verso il centro e due traversini perpendicolari alla banchina')+lbl,
  notes='Quiz 1.4.4-5 (spring: movimenti longitudinali), -13 (definizione di spring), -6 (traversini: non far scostare), -10, -11, -12 (figure: senza spring la barca si muove lungo l\'asse longitudinale). Nel disegno i numeri sono colorati come le cime in legenda.')
+X=700
 
 # ============ ORMEGGIO DI POPPA ============
 b=f'<rect x="0" y="0" width="1092" height="130" fill="{QUAY}"/>'+line(0,130,1092,130,NAVY,5)
@@ -79,6 +82,7 @@ sec('poppa', head('Ormeggio di poppa · «alla mediterranea»','Ormeggio di popp
  notes='Quiz 1.4.4-7 (cime di poppa incrociate con la risacca), -22 (trappa), -8 (doppino). Manovra: lezione 2, effetti combinati (elica sinistrorsa: si retrocede presentando il giardinetto di dritta, quiz 1.4.4-29). I quiz 1.4.4-14…-17 e -25…-28 chiedono quale cima dare o mollare per prima e da che posizione partire guardando una figura: si allenano sulle figure del manuale.')
 
 # ============ BOE E GAVITELLI ============
+X=128
 b=f'<rect x="0" y="200" width="1092" height="420" fill="{WATER}" fill-opacity="0.2"/>'+line(0,200,1092,200,SEA,3)
 b+=f'<path d="M0 560 Q270 540 546 562 T1092 552 L1092 620 L0 620 Z" fill="{LAND}"/>'
 b+=f'<rect x="660" y="515" width="130" height="58" rx="8" fill="#9AA5B1" stroke="{NAVY}" stroke-width="4"/><circle cx="725" cy="508" r="10" fill="none" stroke="{NAVY}" stroke-width="5"/>'
@@ -89,8 +93,9 @@ b+=rope('M498 150 Q600 175 716 232',SEA,6)
 for yy in (60,110): b+=arrow(1040,yy,900,yy,'#97A6B4',8,24)
 lbl=lab(X+780,Y+130,200,'Gavitello',CORAL)+lab(X+470,Y+250,230,'Cima sotto il gavitello',SEA)+lab(X+740,Y+360,200,'Catena',NAVY)+lab(X+810,Y+470,240,'Corpo morto',INK)+lab(X+900,Y+136,160,'vento',SOFT,24,800)
 txt=term('Corpo morto','Un blocco di cemento sul fondo con un anello: la catena sale fino al gavitello.')+term('Come arrivare','A lento moto, con la prora al vento o alla corrente: ci si presenta sottovento al gavitello.')+term('Dove legarsi','Alla cima sotto il gavitello, non al gavitello.')+term('Ormeggio a due boe','Solo se una boa è a proravia e l\'altra a poppavia.')
-sec('boe', head('Ormeggiarsi in rada','Boe, gavitelli e corpi morti')+col(txt), pinned=svgp(X,Y,W,Hh,b,'Sezione sotto il mare: corpo morto sul fondo, catena che sale al gavitello e barca che arriva con la prua al vento e si lega alla cima sotto il gavitello')+lbl,
+sec('boe', head('Ormeggiarsi in rada','Boe, gavitelli e corpi morti'), pinned=pcol(txt)+svgp(X,Y,W,Hh,b,'Sezione sotto il mare: corpo morto sul fondo, catena che sale al gavitello e barca che arriva con la prua al vento e si lega alla cima sotto il gavitello')+lbl,
  notes='Quiz 1.4.4-2 (corpo morto), -3 (avvicinamento a lento moto con prora al vento o alla corrente), -41 (sottovento al gavitello), -33 (ci si lega alla cima sotto il gavitello), -9 (due boe: una a proravia e una a poppavia). Il quiz 1.4.4-43 sull\'ancora galleggiante è oscurato; l\'ancora galleggiante (1.4.4-42, -44) si vede nella lezione 4.')
+X=700
 
 # ============ CIME E NODI ============
 def coil():
@@ -168,6 +173,7 @@ sec('coordinate', head('Cartografia · le coordinate','Latitudine e longitudine'
  notes='Quiz 1.7.1-2, -3, -4, -35 (latitudine), -1, -5, -12, -17, -36 (longitudine), -6, -26, -33 (meridiani), -14, -18, -32 (paralleli), -8, -15, -24 (equatore e Greenwich), -22 e -25 (λ e φ), -31 (95° di latitudine è impossibile), -30 (servono entrambe le coordinate).')
 
 # ============ LEGGERE LE COORDINATE ============
+X=128
 b=f'<rect x="60" y="40" width="972" height="540" fill="{CHART}" stroke="{NAVY}" stroke-width="4"/>'
 bw=[];wh=[]
 for i in range(10):
@@ -183,8 +189,9 @@ lbl=lab(X+86,Y+62,260,'42°50′ N',NAVY,22,800)+lab(X+84,Y+506,260,'42°41′ N
 lbl+=lab(X+300,Y+74,260,'1′ = 1 miglio',SUN,24,900,bg='#FFFFFF')+lab(X+630,Y+250,380,'P · 42°46′,0 N · 010°19′,5 E',CORAL,26,900,bg='#FFFFFF')
 lbl+=lab(X+120,Y+256,300,'latitudine: ai lati',CORAL,22,800)+lab(X+612,Y+470,300,'longitudine: in alto e in basso',BLUE,22,800)
 txt=term('Gradi, primi, decimi','1° = 60′; il primo si divide in decimi: 42°46′,3 N.')+term('Il miglio','1′ di latitudine = 1 miglio = 1852 m. Quindi 1° = 60 miglia.')+term('Rotte e coordinate','Con Rv 090° o 270° la latitudine non cambia; con Rv 000° o 180° non cambia la longitudine.')
-sec('leggere', head('Cartografia · sulla carta','Leggere le coordinate sulla carta')+col(txt), pinned=svgp(X,Y,W,Hh,b,'Riquadro di carta nautica con le scale graduate ai bordi: la latitudine del punto P si legge sulla scala laterale, la longitudine su quella in basso')+lbl,
+sec('leggere', head('Cartografia · sulla carta','Leggere le coordinate sulla carta'), pinned=pcol(txt)+svgp(X,Y,W,Hh,b,'Riquadro di carta nautica con le scale graduate ai bordi: la latitudine del punto P si legge sulla scala laterale, la longitudine su quella in basso')+lbl,
  notes='Quiz 1.7.1-9, -20, 1.7.5-20, -21, -50 (miglio = 1′ di latitudine = 1852 m), 1.7.5-32 e -37 (1° = 60 miglia; 180 miglia = 3°), -53 (4′,4 = 4,4 miglia), 1.7.1-11 (grado, primi, secondi), -27 (longitudine in alto e in basso), -34 (Rv 090: latitudine invariata), -23 (Rv 180: longitudine invariata). In aula: far leggere le coordinate di un faro sulla 5/D.')
+X=700
 
 # ============ MERCATORE ============
 b=f'<rect x="80" y="90" width="340" height="480" fill="{SEA}" fill-opacity="0.12"/>'+line(80,90,80,570,SEA,4)+line(420,90,420,570,SEA,4)
@@ -244,7 +251,7 @@ b+=f'<path d="{cl} L760 {cp[-1][1]+90} ' + ' '.join(f'L{a} {b_+90}' for a,b_ in 
 b+=f'<path d="{cl} L760 0 L0 0 Z" fill="{LAND}" stroke="{LAND_S}" stroke-width="4"/>'
 b+=''.join(f'<path d="M'+' L'.join(f'{a} {b_+off}' for a,b_ in cp)+f'" fill="none" stroke="{BLUE}" stroke-width="2.5" stroke-dasharray="10 7"/>' for off in (90,200))
 b+=light(640,90,1.3)+awash(300,230)+sub(520,350)+wreck(170,470)+anch(620,520,1.2)+noanch(360,540,1.2)
-SX=1032
+SX=128
 lbl=''.join(lab(SX+x,Y+y,60,t,NAVY,24,700) for x,y,t in [(80,220,'3'),(440,250,'7'),(250,360,'12'),(640,380,'18'),(90,560,'25'),(520,470,'30')])
 lbl+=''.join(f'<p style="position:absolute; left:{SX+x}px; top:{Y+y}px; font-size:26px; font-style:italic; font-weight:700; color:{NAVY}">{t}</p>' for x,y,t in [(200,300,'r'),(560,250,'s'),(400,420,'f')])
 lbl+=lab(SX+660,Y+60,90,'F',MAG,26,900)
@@ -259,7 +266,7 @@ L8=[(ico(f'<path d="M4 40 Q20 24 32 34 T60 28" fill="none" stroke="{BLUE}" strok
     (ico(wreck(32,40,1.1)),'Relitto','Qui in parte emergente.'),
     (ico(anch(20,34,0.9)+noanch(46,34,0.9)),'Fonda · divieto','Ancoraggio, ancoraggio vietato.'),
     (ico(light(24,48,1.1)),'Luce · «F»','F = luce fissa; P.A. = posizione approssimata.')]
-grid=f'<div style="width:860px; display:grid; grid-template-columns:1fr 1fr; gap:14px">{"".join(leg(*x) for x in L8)}</div>'
+grid=f'<div style="position:absolute; left:928px; top:290px; width:864px; display:grid; grid-template-columns:1fr 1fr; gap:14px">{"".join(leg(*x) for x in L8)}</div>'
 sec('simboli', head('Cartografia · simboli','Cosa c\'è sulla carta')+grid, pinned=svgp(SX,Y,760,620,b,'Carta nautica di fantasia con costa, isobate tratteggiate, scandagli, natura del fondo, scoglio affiorante, scogli sommersi, relitto, zona di fonda e di divieto e un faro')+lbl, gap=24,
  notes='Quiz 1.7.2-8, -48 (isobate), -24 (profondità, elevazioni, segnali), -15, -29 (natura del fondo), -38 (r = roccioso), -39 (f = fangoso), -41 (scoglio affiorante), -42 (scogli sommersi), -52 (relitto in parte emergente), -45, -51, -54 (ancoraggio, divieto, punto di fonda), -32 (F = luce fissa), -44 (P.A.). Altri simboli in figura: -40 (zona regolamentata), -43 (cavo abbandonato), -50 (schema di separazione del traffico), -53 (condotta). I numeri e le lettere sulla carta sono in corsivo.')
 
@@ -316,6 +323,7 @@ sec('rosa', head('Orientarsi','La rosa dei venti')+f'<div style="width:920px; di
  notes='Quiz 1.7.4-1, -4, -5, -6, -7 (in quale quadrante: 157° II, 224° III, 320° IV, 038° I, 099° II), -2 e -3 (sulla carta: 048° in alto a destra, 167° in basso a destra, 301° in alto a sinistra, 249° in basso a sinistra), -8 (senso orario), -9, -10, -11 (cardinali e intercardinali). I nomi dei venti tornano in meteorologia (lezione 7) e nel Portolano. Bussola, declinazione e deviazione: lezione 4.')
 
 # ============ STRUMENTI ============
+X=128
 b=f'<rect x="30" y="30" width="1032" height="560" rx="20" fill="{CHART}"/>'
 b+=''.join(line(30,y,1062,y,'#E4DCC8',2) for y in (160,300,440))+''.join(line(x,30,x,590,'#E4DCC8',2) for x in (260,520,780))
 def tri(dx,dy,rot,op):
@@ -329,8 +337,9 @@ b+=dash(765,540,935,540,CORAL,3)
 b+=f'<g transform="rotate(-28 640 150)"><rect x="560" y="138" width="190" height="24" rx="4" fill="{SUN}" stroke="{NAVY}" stroke-width="3"/><path d="M750 138 L786 150 L750 162 Z" fill="{BOAT}" stroke="{NAVY}" stroke-width="3"/><path d="M774 146 L786 150 L774 154 Z" fill="{NAVY}"/><rect x="530" y="138" width="30" height="24" rx="4" fill="{CORAL_T}" stroke="{NAVY}" stroke-width="3"/></g>'
 lbl=lab(X+120,Y+556,420,'Squadrette nautiche',SEA,26,900)+lab(X+900,Y+190,160,'Compasso a punte secche',NAVY,24,900)+lab(X+470,Y+40,300,'Matita morbida e gomma',INK,24,900)
 txt=term('Squadrette nautiche','Usate in coppia come parallele: tracciano e misurano rotte e rilevamenti.')+term('Compasso a punte secche','Misura distanze e riporta coordinate.')+term('Come si misura','Apri il compasso sul tratto e riporta l\'apertura sulla scala delle latitudini, alla stessa latitudine.')+term('Obbligatori','A bordo oltre le 12 miglia dalla costa.')
-sec('strumenti', head('Il carteggio','Gli strumenti del carteggio')+col(txt), pinned=svgp(X,Y,W,Hh,b,'Su una carta nautica: due squadrette nautiche con goniometro usate come parallele, un compasso a punte secche, una matita e una gomma')+lbl,
+sec('strumenti', head('Il carteggio','Gli strumenti del carteggio'), pinned=pcol(txt)+svgp(X,Y,W,Hh,b,'Su una carta nautica: due squadrette nautiche con goniometro usate come parallele, un compasso a punte secche, una matita e una gomma')+lbl,
  notes='Quiz 1.7.5-18 (squadrette e parallele), -19 (compasso: distanze e coordinate), 1.7.2-30 (compasso a punte secche per non rovinare la carta), 1.7.5-33 e -52 (distanza sulla scala delle latitudini, alla stessa latitudine), 1.7.2-37 (misura della distanza), -71 (strumenti obbligatori oltre 12 miglia). Portare in aula squadrette e compasso: da qui in poi ogni lezione ha un po\' di carteggio.')
+X=700
 
 quiz_slide('quiz3','Quiz 3 · Orientarsi e misurare',['1.7.4-1','1.7.4-8','1.7.5-33'],False)
 quiz_slide('quiz3r','Quiz 3 · Le risposte',['1.7.4-1','1.7.4-8','1.7.5-33'],True)
@@ -354,13 +363,13 @@ sec('stimata', head('Primi calcoli','La navigazione stimata')+col(txt+note('Inso
 
 # ============ FORMULA ============
 b=f'<path d="M280 40 L40 440 L520 440 Z" fill="{SUN_T}" stroke="{SUN}" stroke-width="10" stroke-linejoin="round"/>'+line(160,240,400,240,SUN,8)+line(280,240,280,440,SUN,8)
-TX=1232
+TX=128
 lbl=big(TX+230,Y+110,100,'S',CORAL,120)+big(TX+110,Y+300,120,'V',SEA,120)+big(TX+330,Y+300,120,'T',PURPLE,120)+big(TX+250,Y+320,60,'×',INK,70)
 def chip2(t,c,u): return f'<div style="display:flex; align-items:center; gap:18px"><p style="font-family:{H}; font-size:44px; font-weight:700; color:#FFFFFF; background:{c}; padding:10px 28px; border-radius:40px; flex:none">{t}</p>{p(u,26,INK,700)}</div>'
 mins=''.join(f'<div style="display:flex; flex-direction:column; align-items:center; background:#FFFFFF; {SHADOW}; padding:10px 14px; border-radius:18px"><p style="font-family:{H}; font-size:30px; font-weight:700; color:{INK}">{a}</p><p style="font-size:22px; font-weight:800; color:{SEA}">{b_} h</p></div>' for a,b_ in [('6′','0,1'),('12′','0,2'),('15′','0,25'),('18′','0,3'),('20′','0,33'),('30′','0,5'),('45′','0,75')])
 right=(chip2('S = V × T',CORAL,'spazio in <b>miglia</b>')+chip2('V = S ÷ T',SEA,'velocità in <b>nodi</b> (miglia all\'ora)')+chip2('T = S ÷ V',PURPLE,'tempo in <b>ore e decimi</b>')
        +p('<b>Minuti in ore:</b> dividi per 60. <b>Decimi in minuti:</b> moltiplica per 60 (0,4 h = 24′).',26,INK)+f'<div style="display:flex; gap:12px">{mins}</div>')
-sec('formula', head('Primi calcoli','Spazio, velocità, tempo')+f'<div style="display:flex; flex-direction:column; gap:22px; width:1040px">{right}</div>', pinned=svgp(TX,Y,560,480,b,'Il triangolo S sopra, V e T sotto: coprendo una lettera restano le altre due')+lbl+note('Copri la lettera che cerchi!',CORAL,40).replace('<p style="','<p style="position:absolute; left:'+str(TX+40)+'px; top:790px; width:500px; ',1),
+sec('formula', head('Primi calcoli','Spazio, velocità, tempo')+f'<div style="position:absolute; left:748px; top:290px; width:1044px; display:flex; flex-direction:column; gap:22px">{right}</div>', pinned=svgp(TX,Y,560,480,b,'Il triangolo S sopra, V e T sotto: coprendo una lettera restano le altre due')+lbl+note('Copri la lettera che cerchi!',CORAL,40).replace('<p style="','<p style="position:absolute; left:'+str(TX+40)+'px; top:790px; width:500px; ',1),
  notes='Quiz 1.7.5-13, -14, -25, -51 (nodo = un miglio all\'ora), -15, -16, -17 (le tre formule), -26 (miglio per le distanze), -35 (ricalcolare a ogni cambio di velocità), -54 (4,4 h = 4 h 24′). Il triangolo è un aiuto per la memoria: coprendo S restano V × T, coprendo V resta S ÷ T, coprendo T resta S ÷ V.')
 
 # ============ ESEMPI ============
