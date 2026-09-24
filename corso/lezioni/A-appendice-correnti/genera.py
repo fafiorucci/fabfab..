@@ -79,7 +79,7 @@ sec('indice', head('Appendice A · I tre problemi della corrente','Indice')+f'<d
  notes='Ogni problema ha una slide di metodo e una con un esercizio ufficiale svolto sulla carta 5/D. Gli esercizi completi sono nelle lezioni 13, 14 e 15.')
 
 # ---- triangolo ----
-sec('triangolo', head('1 · La base','Il triangolo delle velocità'), pinned=svgp(128,Y,W,Hh,tb,'Triangolo delle velocità: il vettore del motore più il vettore della corrente dà il moto sul fondo')+tri_labels(128,Y)+pcol(
+sec('triangolo', head('1 · La base','Il triangolo delle velocità'), pinned=svgp(128,Y,W,Hh,tb+dot(tP,NAVY,9)+dot(tQ,SEA,9),'Triangolo delle velocità: il vettore del motore più il vettore della corrente dà il moto sul fondo')+tri_labels(128,Y)+pill(128+tP[0]-80,Y+tP[1]-50,70,'P',NAVY,26,align='center')+pill(128+tQ[0]+22,Y+tQ[1]+8,70,'Q',SEA,26,align='center')+pcol(
  term('Motore: Pv · Vp','Dove la spinge l\'elica, nell\'acqua.')+term('Corrente: Dc · Vc','Dove l\'acqua trascina tutto, barca compresa.')+term('Sul fondo: Rv · Ve','La somma dei due vettori: dove la barca va davvero.')+
  f'<p style="font-family:{H}; font-size:44px; font-weight:700; color:{CORAL}">Ve = Vp + Vc</p>'+p('somma di vettori: direzioni e lunghezze',24,BODY,600)+''),
  notes='Tutti gli esercizi di corrente si risolvono con questo solo disegno: cambia soltanto quale lato è incognito. Problema 1: la rotta. Problema 2: la prora. Problema 3: la corrente.')
@@ -103,8 +103,26 @@ def method(id_,eb,title,dati,cerco,steps,check,fig,alt,lbl,left_fig,c,notes):
     else:
         sec(id_, head(eb,title,c)+col(body,532,16), pinned=svgp(X+160,Y,W-160,Hh,fig,alt)+lbl(X+160), notes=notes)
 
+def fix_pts(S,sid):
+    from geo import add, sub, dist, brg, u
+    from escorr import ll
+    from escorr import vec, pv_for, ship_from
+    ren=lambda old,new: [S.pts.__setitem__(i,(q[0],new,q[2])) for i,q in enumerate(S.pts) if q[1]==old]
+    if sid=='5.3.1-7':
+        A=S.xy((ll(42,25),ll(10,14.6))); S.pt(add(A,vec(55,6)),'P','ship'); ren('1 ora','Q · 1 ora')
+        S.passi=['Da A: 6 mg per 055° (moto proprio), punto P.','Da P: 1,5 mg verso nord (corrente), punto Q.','A→Q è la rotta vera: Rv = 045°, Ve 7,0 kn.']
+    if sid=='5.4.1-2':
+        A=S.xy((ll(42,23.2),ll(10,56.8))); B=ship_from(S,'Faro di Talamone',305,0.5); rv=brg(A,B); pv,ve=pv_for(rv,7,75,3)
+        C=add(A,vec(75,3)); E=add(A,vec(rv,ve))
+        S.lines=[l for l in S.lines if l[2] not in ('rotta_l','corr')]
+        S.line(A,C,'corr','corrente 075° · 3 kn'); S.line(C,E,'stima','Pv 029° · 7 kn'); S.pt(C,'C','ship'); S.pt(E,'E · Ve 9,3','ship')
+        S.passi=['B: Talamone per 305° a 0,5 mg (B è a SE del faro).','Rotta A-B 042°, 13,0 mg.','Da A la corrente 075° per 3 mg: punto C.','Compasso in C aperto di 7 mg: taglia la rotta in E. C→E: Pv 029°; A–E: Ve 9,3 kn.','Tempo 13,0 ÷ 9,3 = 1h23m: arrivo alle 11h08m.']
+    if sid=='5.1.1-2':
+        ren('stimato','S · stimato')
+        S.passi=['A: Polveraia per 112° a 1,8 mg.','Stimato S alle 09h18m: 6,8 mg per 350° (48 minuti a 8,5 kn).','Osservato B da GPS.','S→B: Dc = 225°; Vc = 2,9 mg in 48′ = 3,6 kn.']
 def example(id_,sid,eb,c,note):
     S=[f() for f in escorr.SOLS[13]+escorr.SOLS[14] if f.__name__=='c'+sid.replace('.','_').replace('-','_')][0]
+    fix_pts(S,sid)
     txt=S.ex['testo'].replace('\n',' ')
     ol='<ol style="font-size:23px; line-height:1.36; color:#34465E; display:flex; flex-direction:column; gap:8px">'+''.join(f'<li>{x}</li>' for x in S.passi)+'</ol>'
     res=f'<div style="display:flex; flex-direction:column; gap:4px; background:{CORAL_T}; padding:16px 20px; border-radius:20px"><p style="font-size:28px; font-weight:900; color:{CORAL}">{S.res_txt}</p><p style="font-size:22px; font-weight:700; color:{INK}">Ufficiale: {S.ex["risposta_ufficiale"].replace(chr(10)," ").replace("÷"," ÷ ")}</p></div>'
@@ -113,9 +131,9 @@ def example(id_,sid,eb,c,note):
 
 # ---- problema 1 ----
 A1=(140,520); P1=P(55,A1,600); Q1=P(0,P1,150)
-f1=SEA_BG[:-2].replace('1092','932')+'/>'+vecsvg(A1,P1,NAVY)+vecsvg(P1,Q1,SEA)+vecsvg(A1,Q1,CORAL,8)+dot(A1)
+f1=SEA_BG[:-2].replace('1092','932')+'/>'+vecsvg(A1,P1,NAVY)+vecsvg(P1,Q1,SEA)+vecsvg(A1,Q1,CORAL,8)+dot(A1)+dot(P1,NAVY,10)+dot(Q1,SEA,10)
 f1+=topboat(P(55,A1,250)[0]-40,P(55,A1,250)[1]+70,120,-35,'#FFFFFF',NAVY,4)
-l1=lambda x0: pill(x0+A1[0]-30,Y+A1[1]+30,100,'A',NAVY)+pill(x0+(A1[0]+P1[0])/2+40,Y+(A1[1]+P1[1])/2+30,300,'Pv 055° · 6 mg',NAVY)+pill(x0+P1[0]+24,Y+(P1[1]+Q1[1])/2-10,200,'N · 1,5 mg',SEA)+pill(x0+(A1[0]+Q1[0])/2-300,Y+(A1[1]+Q1[1])/2-60,300,'Rv 045° · 7,0 kn',CORAL)
+l1=lambda x0: pill(x0+P1[0]+22,Y+P1[1]+6,70,'P',NAVY,26,align='center')+pill(x0+Q1[0]-94,Y+Q1[1]-6,70,'Q',SEA,26,align='center')+pill(x0+A1[0]-30,Y+A1[1]+30,100,'A',NAVY)+pill(x0+(A1[0]+P1[0])/2+40,Y+(A1[1]+P1[1])/2+30,300,'Pv 055° · 6 mg',NAVY)+pill(x0+P1[0]+24,Y+(P1[1]+Q1[1])/2-10,200,'N · 1,5 mg',SEA)+pill(x0+(A1[0]+Q1[0])/2-300,Y+(A1[1]+Q1[1])/2-60,300,'Rv 045° · 7,0 kn',CORAL)
 method('p1','2 · Il problema diretto','Problema 1 · Conosco la prora','Pv, Vp, Dc, Vc','rotta vera Rv ed effettiva Ve',
  ['Da A traccia la Pv per Vp miglia: punto P.','Da P traccia la corrente, Dc per Vc miglia: punto Q.','A→Q è la Rv; la sua lunghezza in miglia è la Ve in nodi.','Posizione dopo t ore: Ve × t miglia sulla Rv.'],
  'la rotta sta tra la prora e la corrente, più vicina alla prora se Vp ≫ Vc.',f1,'Somma dei vettori: 6 miglia per 055° più 1,5 miglia verso nord danno la rotta vera 045° a 7 nodi',l1,False,SEA,
@@ -127,10 +145,10 @@ A=(250,540); rv=58; B=P(rv,A,860); Cc=P(300,A,200); vp=470
 ur=(math.sin(math.radians(rv)),-math.cos(math.radians(rv))); dx,dy=A[0]-Cc[0],A[1]-Cc[1]
 bq=dx*ur[0]+dy*ur[1]; tt=-bq+math.sqrt(bq*bq-(dx*dx+dy*dy-vp*vp)); E=(A[0]+tt*ur[0],A[1]+tt*ur[1])
 ae=math.degrees(math.atan2(E[0]-Cc[0],-(E[1]-Cc[1])))
-f2=SEA_BG+seg(A,B,CORAL,4,'14 10')+vecsvg(A,Cc,SEA)+vecsvg(Cc,E,NAVY)+vecsvg(A,E,CORAL,8)+dot(A)
+f2=SEA_BG+seg(A,B,CORAL,4,'14 10')+vecsvg(A,Cc,SEA)+vecsvg(Cc,E,NAVY)+vecsvg(A,E,CORAL,8)+dot(A)+dot(Cc,SEA,10)+dot(E,NAVY,10)
 f2+=f'<path d="M{P(ae-14,Cc,vp)[0]:.0f} {P(ae-14,Cc,vp)[1]:.0f} A{vp} {vp} 0 0 1 {P(ae+14,Cc,vp)[0]:.0f} {P(ae+14,Cc,vp)[1]:.0f}" fill="none" stroke="{PURPLE}" stroke-width="4" stroke-dasharray="8 8"/>'
 f2+=f'<circle cx="{B[0]:.0f}" cy="{B[1]:.0f}" r="16" fill="none" stroke="{CORAL}" stroke-width="6"/>'
-l2=lambda x0: (pill(x0+A[0]-20,Y+A[1]+26,100,'A',NAVY)+pill(x0+B[0]-90,Y+B[1]+26,100,'B',CORAL)+pill(x0+Cc[0]-60,Y+Cc[1]+40,260,'1 · corrente',SEA)
+l2=lambda x0: (pill(x0+Cc[0]-40,Y+Cc[1]-62,70,'C',SEA,26,align='center')+pill(x0+E[0]+26,Y+E[1]+14,70,'E',NAVY,26,align='center')+pill(x0+A[0]-20,Y+A[1]+26,100,'A',NAVY)+pill(x0+B[0]-90,Y+B[1]+26,100,'B',CORAL)+pill(x0+Cc[0]-60,Y+Cc[1]+40,260,'1 · corrente',SEA)
          +pill(x0+(Cc[0]+E[0])/2-60,Y+(Cc[1]+E[1])/2-80,260,'2 · compasso Vp → Pv',NAVY)+pill(x0+(A[0]+E[0])/2+40,Y+(A[1]+E[1])/2+10,220,'3 · Ve',CORAL))
 method('p2','3 · Il problema inverso','Problema 2 · Voglio arrivare in B','A, B, Vp, Dc, Vc','prora vera Pv, Ve, ora di arrivo',
  ['Traccia la rotta A–B e misura la distanza d.','Da A traccia la corrente, Dc per Vc miglia: punto C.','Compasso in C aperto di Vp: taglia la rotta in E.','C→E è la Pv; A–E è la Ve.','Tempo t = d ÷ Ve; arrivo = partenza + t.'],
@@ -139,7 +157,7 @@ method('p2','3 · Il problema inverso','Problema 2 · Voglio arrivare in B','A, 
 example('p2e','5.4.1-2','3 · Problema 2',PURPLE,'Rotta A–B 042°, 13,0 mg; Pv 029°, Ve 9,3 kn; 1h23m, arrivo alle 11h08m.')
 
 # ---- problema 3 ----
-l3=lambda x0: pill(x0+sA[0]-30,Y+sA[1]+30,100,'A',NAVY)+pill(x0+(sA[0]+sSt[0])/2-120,Y+(sA[1]+sSt[1])/2-80,320,'1 · stimato: Pv, Vp × t',NAVY)+pill(x0+sB[0]-160,Y+sB[1]+30,280,'2 · B osservato',CORAL)+pill(x0+(sSt[0]+sB[0])/2+30,Y+(sSt[1]+sB[1])/2-40,260,'3 · Dc e Vc',SEA)
+l3=lambda x0: pill(x0+sSt[0]+22,Y+sSt[1]-54,70,'S',NAVY,26,align='center')+pill(x0+sA[0]-30,Y+sA[1]+30,100,'A',NAVY)+pill(x0+(sA[0]+sSt[0])/2-120,Y+(sA[1]+sSt[1])/2-80,320,'1 · stimato S: Pv, Vp × t',NAVY)+pill(x0+sB[0]-160,Y+sB[1]+30,280,'2 · B osservato',CORAL)+pill(x0+(sSt[0]+sB[0])/2+30,Y+(sSt[1]+sB[1])/2-40,260,'3 · Dc e Vc',SEA)
 sb3=sb.replace('width="1092"','width="932"')
 method('p3','4 · Trovare la corrente','Problema 3 · Che corrente c\'è?','A, Pv, Vp, tempo t, punto osservato B','direzione Dc e velocità Vc della corrente',
  ['Da A traccia la Pv per Vp × t miglia: punto stimato S.','Trova il punto osservato B (rilevamenti o GPS).','S→B è la deriva: la direzione è la Dc.','Lunghezza S–B ÷ t = Vc.'],
