@@ -7,10 +7,10 @@ ORDER=['cover','rotta','allievi','materiale','perche']
 EB='Il corso per la vostra scuola'
 
 # ============ COVER ============
-cover(0,'Rotta verso la patente','Patente nautica Vela/Motore senza limiti dalla costa: un corso completo, pronto da usare in aula e in barca',
+cover(0,'Rotta verso la Patente Nautica da Diporto','Patente nautica Vela/Motore senza limiti dalla costa: un corso completo, pronto da usare in aula e in barca',
  'Presentazione del corso alla scuola nautica. In cinque slide: la struttura, cosa imparano gli allievi, il materiale pronto e i punti di forza.')
 c=LB.slides[-1][1]
-c=c.replace('Lezione 00 · 2 ore','Presentazione alla scuola nautica')
+c=c.replace('Lezione 00 · 2 ore','Il corso in sintesi').replace('font-size:104px; font-weight:700; line-height:1.05; color:#FFFFFF">Rotta','font-size:96px; font-weight:700; line-height:1.05; color:#FFFFFF">Rotta')
 chip=lambda b,t: f'<p style="font-size:24px; color:#FFF8EE; background:rgba(245,241,232,0.10); padding:8px 16px; border-radius:40px"><b>{b}</b> {t}</p>'
 chips=f'<div style="display:flex; gap:10px">{chip("30","ore")}{chip("15","lezioni")}{chip("12","appendici")}{chip("135","esercizi svolti")}{chip("1.000+","slide")}</div>'
 k=c.index('</div>\n<p style="font-size:24px; font-weight:600'); c=c[:k]+chips+c[k:]
@@ -31,16 +31,16 @@ g+=(f'<g transform="translate(560 60)"><path d="M-46 22 L46 22 L34 40 L-34 40 Z"
     f'<path d="M-2 18 L-2 -62" stroke="{NAVY}" stroke-width="4"/><path d="M-6 -56 L-6 14 L-44 14 Z" fill="#FFFFFF" stroke="{NAVY}" stroke-width="3"/><path d="M3 -48 L3 14 L36 14 Z" fill="{SUN}" stroke="{NAVY}" stroke-width="3"/></g>')
 # faro all'arrivo: l'esame
 g+=tower(1600,190,1.35)+glow(1600,42,SUN,8)
-lbls=(lab(128+277-120,290+H2-8,240,'Tappa 1',CORAL,24,900,'center')+lab(128+832-120,290+H2-8,240,'Tappa 2',SEA,24,900,'center')
-      +lab(128+1387-120,290+H2-8,240,'Tappa 3',PURPLE,24,900,'center')+lab(128+1600-140,290+H2-8,280,'L\'esame',NAVY,24,900,'center'))
+lbls=(lab(128+277-120,884,240,'Tappa 1',CORAL,24,900,'center')+lab(128+832-120,884,240,'Tappa 2',SEA,24,900,'center')
+      +lab(128+1387-120,884,240,'Tappa 3',PURPLE,24,900,'center')+lab(128+1600-140,884,280,'L\'esame',NAVY,24,900,'center'))
 legs=[('Teoria e vela','Lezioni 1–9 · 18 ore','Scafo e motori, ormeggi e carte, ancoraggio, punto nave e fanali, segnalamento e sicurezza, meteo e normativa, vela ed emergenze.',CORAL),
       ('Carteggio','Lezioni 10–15 · 12 ore','Tutti i 135 esercizi d\'esame svolti passo per passo sulle carte 5/D e 42/D: costiera, carburante, scarroccio, correnti.',SEA),
       ('Verso l\'esame','12 appendici e schede','10 prove d\'esame simulate, la prova pratica in barca, ripasso mirato e schede riassuntive per lo studio a casa.',PURPLE)]
 cards=''.join(f'<div style="flex:1; display:flex; flex-direction:column; gap:10px; background:#FFFFFF; border-top:10px solid {c_}; border-radius:28px; padding:28px 30px; box-shadow:0px 10px 28px rgba(27,42,65,0.10)">'
               f'{h3(t,38,c_)}<p style="font-size:24px; font-weight:900; letter-spacing:1px; text-transform:uppercase; color:{INK}">{s}</p>{p(d,28,BODY,400,1.4)}</div>' for t,s,d,c_ in legs)
 sec('rotta',header(EB,'Il corso in una rotta: 30 ore, tre tappe','map',SEA)
-    +f'<div style="height:{H2+40}px"></div>'+f'<div style="display:flex; gap:24px; align-items:stretch">{cards}</div>',
-    pinned=svgp(128,272,W2,H2,g,'La rotta del corso: tre tappe segnate da boe, una barca a vela in navigazione e un faro all\'arrivo, l\'esame',pan=False)+lbls,
+    +f'<div style="display:flex; gap:24px; align-items:stretch">{cards}</div>',
+    pinned=svgp(128,660,W2,H2,g,'La rotta del corso: tre tappe segnate da boe, una barca a vela in navigazione e un faro all\'arrivo, l\'esame',pan=False)+lbls,
     notes='Il corso segue il programma d\'esame (DM 323/2021, Allegato A) in 15 lezioni da 2 ore. Prima la teoria e la vela, poi il carteggio con tutti gli esercizi ufficiali, infine il ripasso con le appendici, le prove simulate e le schede per gli allievi.',gap=32)
 
 # ============ ALLIEVI ============
@@ -63,7 +63,7 @@ hero=(f'<div style="width:560px; display:flex; flex-direction:column; gap:12px; 
       f'<p style="font-family:{H}; font-size:140px; font-weight:700; line-height:1; color:#FFFFFF">1.000+</p>'
       f'<p style="font-size:30px; line-height:1.35; font-weight:700; color:{DSOFT}">slide illustrate, pronte per l\'aula, con le note per l\'istruttore</p>'
       f'{squiggle(DACC,220)}'
-      f'<p style="font-size:26px; line-height:1.4; color:{DSOFT}">Si proiettano così come sono, o si scaricano in PDF e PowerPoint.</p></div>')
+      f'<p style="font-family:{HAND}; font-size:46px; font-weight:700; line-height:1.1; color:{DACC}">Si accende il proiettore, e si salpa.</p></div>')
 MAT=[('15','lezioni da 2 ore','594 slide con disegni, schemi e quiz ufficiali con le risposte',CORAL),
      ('135','esercizi di carteggio','tutti svolti: traccia, soluzione e tracciamento sulla carta',SEA),
      ('12','appendici','364 slide: correnti, nomenclatura, nodi, IALA, normativa, VHF, costa, meteo, soccorso, ancoraggio',PURPLE),
@@ -86,8 +86,7 @@ WHY=[('Allineato all\'esame','Programma del DM 323/2021; quiz ed esercizi dall\'
      ('Pronto per la scuola','Note per l\'istruttore, PDF e PowerPoint, schede da dare agli allievi.')]
 wl=''.join(f'<div style="display:flex; gap:16px; align-items:start"><x-icon name="CheckCircle" style="color:{DACC}; width:40px; height:40px"></x-icon>'
            f'<div style="display:flex; flex-direction:column; gap:4px"><p style="font-size:30px; line-height:1.25; font-weight:800; color:#FFFFFF">{t}</p><p style="font-size:25px; line-height:1.35; color:{DSOFT}">{d}</p></div></div>' for t,d in WHY)
-sig=(f'<div style="display:flex; align-items:center; gap:28px">{lockup(True,96)}'
-     f'<p style="font-family:{HAND}; font-size:52px; font-weight:700; line-height:1.1; color:{DACC}">Pronti a salpare?</p></div>')
+sig=f'<p style="font-family:{HAND}; font-size:64px; font-weight:700; line-height:1.1; color:{DACC}">Pronti a salpare?</p>'
 sec('perche',header(EB,'Perché scegliere questo corso','flag',CORAL,True)
     +f'<div style="display:grid; grid-template-columns:1fr 1fr; gap:30px 60px">{wl}</div>'+sig,
     notes='Chiusura: il corso è tenuto da Fabrizio Fiorucci, skipper e istruttore di vela. Tutto il materiale è pronto e consultabile: indice del corso, lezioni, appendici e schede.',dark=True,gap=36)
