@@ -8,13 +8,14 @@ EB='Il corso per la vostra scuola'
 
 # ============ COVER ============
 cover(0,'Rotta verso la Patente Nautica da Diporto','Un corso completo, pronto da usare in aula e in barca',
- 'Presentazione del corso alla scuola nautica. In cinque slide: la struttura, cosa imparano gli allievi, il materiale pronto e i punti di forza.')
+ 'Presentazione del corso alla scuola nautica. In sette slide: la struttura, i percorsi entro 12 miglia o senza limiti, vela e motore o solo motore, cosa imparano gli allievi, il materiale pronto e i punti di forza.')
 c=LB.slides[-1][1]
 c=c.replace('Lezione 00 · 2 ore','Il corso in sintesi')
 t0=f'<h1 style="font-family:{H}; font-size:104px; font-weight:700; line-height:1.05; color:#FFFFFF">Rotta verso la Patente Nautica da Diporto</h1>'
 assert t0 in c
-c=c.replace(t0,f'<div style="display:flex; flex-direction:column; gap:4px"><p style="font-family:{H}; font-size:52px; font-weight:600; line-height:1.1; color:{DSOFT}">Rotta verso la</p>'
-            f'<h1 style="font-family:{H}; font-size:84px; font-weight:700; line-height:1.02; color:#FFFFFF">Patente Nautica<br>da Diporto</h1></div>')
+c=c.replace(t0,f'<h1 style="font-family:{H}; font-size:80px; font-weight:700; line-height:1.05; color:#FFFFFF; white-space:nowrap">Rotta verso la Patente Nautica da Diporto</h1>')
+c=c.replace('<div style="display:flex; flex-direction:column; gap:20px; width:840px">','<div style="display:flex; flex-direction:column; gap:20px">')
+c=c.replace('left:1000px; top:470px; width:792px; height:450px','left:1176px; top:592px; width:616px; height:350px')
 chip=lambda b,t: f'<p style="font-size:24px; color:#FFF8EE; background:rgba(245,241,232,0.10); padding:8px 16px; border-radius:40px"><b>{b}</b> {t}</p>'
 chips=f'<div style="display:flex; gap:10px">{chip("30","ore")}{chip("15","lezioni")}{chip("12","appendici")}{chip("135","esercizi svolti")}{chip("1.000+","slide")}</div>'
 k=c.index('</div>\n<p style="font-size:24px; font-weight:600'); c=c[:k]+chips+c[k:]
