@@ -171,6 +171,19 @@
   .note { background: var(--saffron-soft); border-radius: 10px; padding: 12px 16px; font-size: 14px; }
   .note b { color: var(--ink); }
   .note.check { background: var(--basil-soft); }
+  .cene { display: grid; gap: 6px; }
+  .cene .list { max-height: none; }
+  .portate { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .portate > li { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 8px 20px; padding: 16px 0; border-bottom: 1px dashed var(--line); }
+  @media (max-width: 560px) { .portate > li { grid-template-columns: minmax(0, 1fr); } }
+  .portata { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--basil); padding-top: 8px; }
+  .piatti { display: grid; gap: 12px; }
+  .piatto { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+  .piatto .nome { font: 400 26px/1.15 var(--serif); }
+  .piatto .nota { flex-basis: 100%; color: var(--muted); font-size: 14px; }
+  .stato { font-size: 12px; border-radius: 999px; padding: 2px 10px; background: var(--saffron-soft); color: var(--ink); white-space: nowrap; }
+  .stato.ok { background: var(--basil-soft); }
+  .linkbtn { background: none; border: 0; padding: 0; color: var(--basil); font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
   .figs { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: start; }
   .figs figure { margin: 0; display: grid; gap: 6px; }
   .figs img { display: block; width: 200px; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line); background: #fff; }
@@ -213,6 +226,11 @@
 
   <div class="app" id="app" data-view="list">
     <aside class="index" aria-label="Indice delle ricette">
+      <section class="cene" aria-label="Le cene">
+        <div class="eyebrow">Le cene</div>
+        <ul class="list" id="cene"></ul>
+      </section>
+      <div class="eyebrow">Le ricette</div>
       <div class="search">
         <svg viewBox="0 0 24 24" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
         <input id="q" type="search" placeholder="Cerca per nome o ingrediente" aria-label="Cerca ricette">
@@ -290,6 +308,37 @@
       daVerificare: ["Quale liquore? (amaretto, rum, maraschino…)", "Temperatura del forno non indicata: probabilmente 180 °C.", "Le mandorle amare oggi vanno usate con moderazione: cinque o sei vanno bene, non di più."]
     }
   ];
+
+  // Le cene ricostruite a voce: ogni piatto rimanda a una ricetta trascritta, se esiste.
+  const CENE = [
+    {
+      id: "prima-cena", titolo: "La prima cena", quando: "anno da definire",
+      descrizione: "La prima cena tornata in mente: una sera alla villa, con i piccioni in pagnotta al centro della tavola.",
+      portate: [
+        { portata: "Antipasto", piatti: [{ nome: "Crostini umbri", nota: "Anche con i fegatelli.", stato: "ricetta da trovare" }] },
+        { portata: "Primo", piatti: [{ nome: "Spaghetti aglio, olio e peperoncino", nota: "«Una cosa leggera, di sera.»", stato: "da raccontare a voce" }] },
+        { portata: "Secondo", piatti: [{ nome: "Piccioni in pagnotta", nota: "Nel quaderno, a p. 30, ci sono i Piccioni al ginepro: è la stessa preparazione o un'altra?", stato: "ricetta da trovare", simile: "piccioni-ginepro" }] },
+        { portata: "Contorno", piatti: [{ nome: "Insalata dell'orto", nota: "Oppure verdure ripassate in padella, secondo la stagione.", stato: "da raccontare a voce" }] },
+        { portata: "Dolce", piatti: [{ nome: "Tiramisù fatto a mano", stato: "ricetta da trovare" }, { nome: "Frutta fresca della tenuta", stato: "da raccontare a voce" }] },
+        { portata: "Per finire", piatti: [{ nome: "Caffè e amari fatti in casa", nota: "Una selezione di amari preparati alla villa.", stato: "ricette da trovare" }] },
+        { portata: "I vini", piatti: [
+          { nome: "Champagne", nota: "Con l'antipasto.", stato: "etichetta da ricordare" },
+          { nome: "Rosso del vigneto di casa", nota: "Dal primo in poi.", stato: "da raccontare a voce" }
+        ] }
+      ],
+      domande: [
+        "In che anno, o almeno in che periodo e in che stagione, si è svolta questa cena?",
+        "Chi era a tavola? C'era un'occasione particolare?",
+        "Come si preparavano i piccioni in pagnotta? La ricetta è in un taccuino o in un quaderno?",
+        "Quali crostini si servivano, oltre a quelli con i fegatelli? E i fegatelli come erano preparati?",
+        "Quali amari si facevano in casa, e con quali erbe o frutti?",
+        "Che cosa c'era nell'orto e tra gli alberi da frutta della tenuta in quella stagione?",
+        "Quale champagne si serviva, e chi lo sceglieva?",
+        "Il rosso del vigneto di casa: con quali uve, chi lo faceva, aveva un nome?"
+      ]
+    }
+  ];
+  const cenaById = id => CENE.find(c => c.id === id);
 
   // ---- Archivio locale (solo in questo browser) ----
   const KEY = "ricettario:v1";
@@ -543,11 +592,57 @@
     $("#f-titolo").focus({ preventScroll: true });
   }
 
+  function renderCene() {
+    $("#cene").innerHTML = CENE.map(c => `
+      <li><button type="button" class="item" data-cena="${esc(c.id)}" aria-current="${state.mode === "cena" && state.cena === c.id}">
+        <span class="name">${esc(c.titolo)}</span>
+        <span class="sub">${esc(c.quando)} · ${c.portate.filter(p => p.portata !== "I vini").length} portate e vini</span>
+      </button></li>`).join("");
+  }
+
+  function renderCena() {
+    const c = cenaById(state.cena);
+    $("#detail").innerHTML = `
+      <article class="card">
+        <button type="button" class="btn ghost small back" data-action="back">← Tutte le ricette</button>
+        <div>
+          <div class="eyebrow">Menu della cena · ${esc(c.quando)}</div>
+          <h2>${esc(c.titolo)}</h2>
+          <p class="lede">${esc(c.descrizione)}</p>
+        </div>
+        <ol class="portate">
+          ${c.portate.map(p => `<li>
+            <span class="portata">${esc(p.portata)}</span>
+            <div class="piatti">${p.piatti.map(d => {
+              const r = d.ricetta && byId(d.ricetta);
+              return `<div class="piatto">
+                <span class="nome">${esc(d.nome)}</span>
+                ${r ? `<button type="button" class="linkbtn" data-open="${esc(r.id)}">Apri la ricetta</button>` : `<span class="stato">${esc(d.stato)}</span>`}
+                ${d.nota ? `<span class="nota">${esc(d.nota)}${d.simile && byId(d.simile) ? ` <button type="button" class="linkbtn" data-open="${esc(d.simile)}">Vedi ${esc(byId(d.simile).titolo)}</button>` : ""}</span>` : ""}
+              </div>`;
+            }).join("")}</div>
+          </li>`).join("")}
+        </ol>
+        <div class="note check"><b>Da chiedere per ricostruire la serata</b><ul>${c.domande.map(q => `<li>${esc(q)}</li>`).join("")}</ul></div>
+      </article>`;
+  }
+
+  function openCena(id) {
+    state.cena = id;
+    state.mode = "cena";
+    $("#app").dataset.view = "detail";
+    try { history.replaceState(null, "", "#cena-" + id); } catch {}
+    render();
+    if (matchMedia("(max-width: 860px)").matches) $("#app").scrollIntoView({ block: "start" });
+  }
+
   function render() {
     renderStats();
     renderChips();
     renderList();
-    if (state.mode === "view") renderRecipe();
+    renderCene();
+    if (state.mode === "cena") renderCena();
+    else if (state.mode === "view") renderRecipe();
     else renderForm(state.mode === "edit" ? byId(state.current) : null);
   }
 
@@ -562,6 +657,14 @@
     if (scroll && matchMedia("(max-width: 860px)").matches) $("#app").scrollIntoView({ block: "start" });
   }
 
+  $("#cene").addEventListener("click", e => {
+    const b = e.target.closest(".item");
+    if (b) openCena(b.dataset.cena);
+  });
+  $("#detail").addEventListener("click", e => {
+    const b = e.target.closest("[data-open]");
+    if (b) open(b.dataset.open);
+  });
   $("#list").addEventListener("click", e => {
     const b = e.target.closest(".item");
     if (b) open(b.dataset.id);
@@ -660,11 +763,18 @@
   // ---- Avvio ----
   const fromHash = decodeURIComponent(location.hash.slice(1));
   state.current = byId(fromHash) ? fromHash : BASE[0].id;
+  state.cena = CENE[0].id;
   if (byId(fromHash)) $("#app").dataset.view = "detail";
+  else if (cenaById(fromHash.replace(/^cena-/, "")) || !fromHash) {
+    state.mode = "cena";
+    state.cena = cenaById(fromHash.replace(/^cena-/, "")) ? fromHash.replace(/^cena-/, "") : CENE[0].id;
+    if (fromHash) $("#app").dataset.view = "detail";
+  }
   render();
   window.addEventListener("hashchange", () => {
     const id = decodeURIComponent(location.hash.slice(1));
-    if (byId(id) && id !== state.current) open(id);
+    if (byId(id) && (id !== state.current || state.mode !== "view")) open(id);
+    else if (id.startsWith("cena-") && cenaById(id.slice(5))) openCena(id.slice(5));
   });
 })();
 </script>
