@@ -184,6 +184,10 @@
   .stato { font-size: 12px; border-radius: 999px; padding: 2px 10px; background: var(--saffron-soft); color: var(--ink); white-space: nowrap; }
   .stato.ok { background: var(--basil-soft); }
   .linkbtn { background: none; border: 0; padding: 0; color: var(--basil); font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .storia { display: grid; gap: 12px; max-width: 64ch; }
+  .storia p { margin: 0; font: 400 20px/1.5 var(--serif); }
+  .storia p:first-of-type::first-letter { float: left; font-size: 3.4em; line-height: .8; padding: 6px 10px 0 0; color: var(--basil); }
+  .storia .storia-nota { font: 12px/1.4 var(--sans); color: var(--muted); }
   .figs { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: start; }
   .figs figure { margin: 0; display: grid; gap: 6px; }
   .figs img { display: block; width: 200px; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line); background: #fff; }
@@ -256,7 +260,7 @@
   // tempo e difficoltà sono stime; "daVerificare" raccoglie i dubbi di lettura da chiarire con l'autore.
   const BASE = [
     {
-      id: "torta-banane", immagini: true, titolo: "Torta alle banane", categoria: "Dolci", fonte: "foglio sciolto a quadretti, inchiostro verde",
+      id: "torta-banane", immagini: true, storia: ["Sul finire degli anni Sessanta la banana smette di essere un lusso. Fino alla metà del decennio in Italia la sua importazione era un monopolio di Stato, e il frutto arrivava in tavola come una rarità; poi il mercato si apre e i caschi gialli diventano merce di tutti i giorni. Nel 1967 Andy Warhol l'aveva trasformata in un'icona, stampandola sulla copertina del primo disco dei Velvet Underground: la banana era pop, americana, moderna.", "Questa torta porta con sé quell'aria nuova dentro una struttura antica. È costruita come un plum cake all'inglese, burro e zucchero montati a lungo, le uova una alla volta, la farina a pioggia, con la raccomandazione di chi l'ha fatta molte volte: «più si sbatte e meglio è». Il frutto dei tropici entra in un impasto da pasticceria borghese.", "La ricetta non sta nei quaderni. È scritta con l'inchiostro verde su un foglio a quadretti, rimasto tra le pagine: una ricetta annotata a parte, che aspettava di essere ricopiata."], titolo: "Torta alle banane", categoria: "Dolci", fonte: "foglio sciolto a quadretti, inchiostro verde",
       tempo: 65, dosi: 1, dosiLabel: ["torta", "torte"], difficolta: "Facile",
       ingredienti: [i(300, "g", "farina"), i(250, "g", "burro"), i(250, "g", "zucchero"), i(4, "", "uova"), i(1, "bustina", "lievito"), i(2, "", "banane grosse")],
       passi: [
@@ -267,7 +271,7 @@
       daVerificare: ["Il procedimento non dice quando e come si aggiungono le banane (schiacciate nell'impasto? a fette sopra?)."]
     },
     {
-      id: "torta-mele", immagini: true, titolo: "Torta di mele", categoria: "Dolci", fonte: "quaderno, p. 20, inchiostro blu",
+      id: "torta-mele", immagini: true, storia: ["Il quaderno la chiama semplicemente torta di mele, ma la farina non c'è. A sostenerla sono le fette di pane imburrate, le mele sottili e il latte che il forno trasforma in crema. Appartiene a una famiglia antica di dolci del recupero, in cui il pane del giorno prima diventa impalcatura: la miascia dei laghi lombardi, la charlotte di mele francese, il bread and butter pudding inglese.", "Il cedro candito, l'uvetta e la cannella la spostano però verso la pasticceria delle feste, e il finale, «anche con panna liquida», verso una tavola di ospiti. Negli anni in cui la cucina dei ristoranti inseguiva la leggerezza della nouvelle cuisine, piatti come questo custodivano il sapore domestico, quello che gli ospiti di una villa non avrebbero trovato altrove.", "Le mele, del resto, sono il frutto più dipinto della storia dell'arte: lucide nelle nature morte del Seicento, costruite come architetture nelle tele di Cézanne, che diceva di voler stupire Parigi con una mela."], titolo: "Torta di mele", categoria: "Dolci", fonte: "quaderno, p. 20, inchiostro blu",
       tempo: 90, dosi: 1, dosiLabel: ["pirofila", "pirofile"], difficolta: "Facile",
       ingredienti: [i(1000, "g", "mele"), i(100, "g", "zucchero"), i(200, "g", "burro"), i(50, "g", "uvette ben lavate"), i(null, "", "pezzetti di cedro candito"), i(1, "scorza", "di limone, grattata"), i(null, "", "fette di pane sottilissime"), i(1, "bicchiere", "latte"), i(1, "pizzico", "cannella")],
       passi: [
@@ -280,7 +284,7 @@
       daVerificare: ["«Forno moderato»: probabilmente 170–180 °C, da confermare.", "Quanto pane serve? Il quaderno non indica una quantità."]
     },
     {
-      id: "piccioni-ginepro", immagini: true, titolo: "Piccioni al ginepro", categoria: "Secondi", fonte: "quaderno, p. 30, inchiostro blu",
+      id: "piccioni-ginepro", immagini: true, storia: ["Il piccione sta sul confine tra la campagna e la tavola importante. Nell'Italia centrale le torri colombaie accanto ai casali lo allevano da secoli, e i ricettari del Rinascimento lo trattano da piatto nobile: nell'Opera di Bartolomeo Scappi, cuoco di papa Pio V, pubblicata nel 1570, i piccioni tornano di continuo, arrosto, in pasticcio, ripieni.", "Questa ricetta ne conserva il trattamento da selvaggina. Una notte nell'aceto con l'alloro e il chiodo di garofano, poi il ginepro schiacciato e la bardatura di lardo, che protegge la carne magra durante la cottura. È una cucina che chiede un giorno di anticipo, quella di una casa dove la cena si cominciava a preparare la sera prima.", "Negli stessi anni i grandi cuochi francesi portavano il piccione nei menu della nouvelle cuisine, rosato e tagliato sottile. Qui resta fedele a un'altra immagine, quella delle nature morte di cacciagione, dove per secoli gli uccelli sono stati dipinti accanto al pane, al vino e alle erbe."], titolo: "Piccioni al ginepro", categoria: "Secondi", fonte: "quaderno, p. 30, inchiostro blu",
       tempo: 75, riposo: "una notte di marinatura", dosi: 4, difficolta: "Media",
       ingredienti: [i(4, "", "piccioni"), i(2, "cucchiai", "[parola poco leggibile, forse burro]"), i(50, "g", "lardo"), i(2, "", "cipolle"), i(null, "", "farina [quantità poco leggibile]"), i(5, "cucchiai", "aceto"), i(1, "foglia", "alloro"), i(1, "chiodo", "di garofano"), i(null, "", "bacche di ginepro"), i(null, "", "sale, pepe"), i(null, "", "brodo (citato solo nel procedimento)")],
       passi: [
@@ -295,7 +299,7 @@
       ]
     },
     {
-      id: "torta-cinque-minuti", immagini: true, titolo: "Torta dei cinque minuti", categoria: "Dolci", fonte: "quaderno, p. 33, inchiostro rosso",
+      id: "torta-cinque-minuti", immagini: true, storia: ["Il titolo ha il ritmo delle riviste degli anni del boom, che promettevano alla casa moderna dolci pronti in pochi minuti. I cinque minuti però sono solo quelli dell'impasto: prima ci sono le mandorle da scottare, pelare e tritare, dopo mezz'ora di forno e un giorno intero di riposo. È la contraddizione felice di molti dolci di famiglia.", "Le dosi sono tutte uguali, duecento grammi per ogni ingrediente, una formula da ricordare a memoria. La torta è parente delle torte rustiche di mandorle del Nord, come la sbrisolona mantovana, e dei dolci di mandorla del Sud. Le cinque o sei mandorle amare fanno quello che fanno negli amaretti: danno profondità a tutto il resto.", "Nel 1950 l'Editoriale Domus, l'editore della rivista di architettura fondata da Gio Ponti, aveva pubblicato Il cucchiaio d'argento, destinato a entrare in moltissime cucine italiane. In quegli anni cucina, design e buona forma parlavano la stessa lingua. Questa ricetta, ricopiata in rosso con grafia accurata, appartiene a quel mondo."], titolo: "Torta dei cinque minuti", categoria: "Dolci", fonte: "quaderno, p. 33, inchiostro rosso",
       tempo: 50, riposo: "un giorno di riposo prima di servirla", dosi: 1, dosiLabel: ["tortiera", "tortiere"], difficolta: "Facile",
       ingredienti: [i(200, "g", "farina bianca"), i(200, "g", "zucchero semolato"), i(200, "g", "burro"), i(200, "g", "mandorle dolci (più cinque o sei amare)"), i(1, "", "uovo"), i(1, "bicchierino", "liquore"), i(null, "", "poco zucchero vanigliato"), i(null, "", "burro per ungere lo stampo")],
       passi: [
@@ -312,7 +316,7 @@
   // Le cene ricostruite a voce: ogni piatto rimanda a una ricetta trascritta, se esiste.
   const CENE = [
     {
-      id: "prima-cena", titolo: "La prima cena", quando: "anno da definire",
+      id: "prima-cena", titolo: "La prima cena", storia: ["Una cena di campagna in una villa italiana, negli anni in cui la tavola raccontava ancora il luogo. Il menu non cerca l'effetto: crostini, spaghetti, piccioni, l'insalata dell'orto, il tiramisù. Mentre i ristoranti inseguivano la nouvelle cuisine, con porzioni piccole e piatti geometrici, la villa offriva ciò che nessun ristorante poteva dare: i prodotti della tenuta, il vino del vigneto di casa, gli amari preparati in casa.", "Lo champagne con l'antipasto è l'unico lusso venuto da fuori, e basta a dare il tono della serata. I crostini con i fegatelli sono l'antipasto dell'Italia centrale; gli spaghetti aglio, olio e peperoncino sono il piatto delle spaghettate di mezzanotte tra amici, e servirli agli ospiti, di sera, dice una familiarità che nessuna etichetta avrebbe prescritto.", "Il tiramisù, allora, era un dolce giovane. Nato tra Veneto e Friuli e diffuso negli anni Settanta e Ottanta, stava entrando proprio in quel periodo nelle case e nei ristoranti di tutta Italia."], quando: "anno da definire",
       descrizione: "La prima cena tornata in mente: una sera alla villa, con i piccioni in pagnotta al centro della tavola.",
       portate: [
         { portata: "Antipasto", piatti: [{ nome: "Crostini umbri", nota: "Anche con i fegatelli.", stato: "ricetta da trovare" }] },
@@ -488,6 +492,7 @@
           </div>
           <button type="button" class="fav" data-action="fav" aria-pressed="${fav}" aria-label="${fav ? "Togli dalle preferite" : "Aggiungi alle preferite"}">${starSvg}</button>
         </div>
+        ${storiaHtml(r.storia)}
         <div class="meta">
           <div><span>${r.fonte ? "Tempo stimato" : "Tempo"}</span><b>${durata(r.tempo)}</b></div>
           <div><span>Dosi</span>
@@ -592,6 +597,13 @@
     $("#f-titolo").focus({ preventScroll: true });
   }
 
+  const storiaHtml = paras => paras ? `
+        <section class="storia">
+          <div class="eyebrow">Nel suo tempo</div>
+          ${paras.map(t => `<p>${esc(t)}</p>`).join("")}
+          <p class="storia-nota">Testo di contesto in bozza, da verificare in redazione. I ricordi di chi cucinava si aggiungeranno dalle interviste.</p>
+        </section>` : "";
+
   function renderCene() {
     $("#cene").innerHTML = CENE.map(c => `
       <li><button type="button" class="item" data-cena="${esc(c.id)}" aria-current="${state.mode === "cena" && state.cena === c.id}">
@@ -610,6 +622,7 @@
           <h2>${esc(c.titolo)}</h2>
           <p class="lede">${esc(c.descrizione)}</p>
         </div>
+        ${storiaHtml(c.storia)}
         <ol class="portate">
           ${c.portate.map(p => `<li>
             <span class="portata">${esc(p.portata)}</span>
