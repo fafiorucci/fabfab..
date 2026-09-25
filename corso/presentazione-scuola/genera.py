@@ -3,14 +3,18 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from app_common import *
 OUT=SP+'/deck/project'
-ORDER=['cover','rotta','percorsi','allievi','materiale','perche']
+ORDER=['cover','rotta','percorsi','velamotore','allievi','materiale','perche']
 EB='Il corso per la vostra scuola'
 
 # ============ COVER ============
-cover(0,'Rotta verso la Patente Nautica da Diporto','Patente nautica Vela/Motore senza limiti dalla costa: un corso completo, pronto da usare in aula e in barca',
+cover(0,'Rotta verso la Patente Nautica da Diporto','Un corso completo, pronto da usare in aula e in barca',
  'Presentazione del corso alla scuola nautica. In cinque slide: la struttura, cosa imparano gli allievi, il materiale pronto e i punti di forza.')
 c=LB.slides[-1][1]
-c=c.replace('Lezione 00 · 2 ore','Il corso in sintesi').replace('font-size:104px; font-weight:700; line-height:1.05; color:#FFFFFF">Rotta','font-size:96px; font-weight:700; line-height:1.05; color:#FFFFFF">Rotta')
+c=c.replace('Lezione 00 · 2 ore','Il corso in sintesi')
+t0=f'<h1 style="font-family:{H}; font-size:104px; font-weight:700; line-height:1.05; color:#FFFFFF">Rotta verso la Patente Nautica da Diporto</h1>'
+assert t0 in c
+c=c.replace(t0,f'<div style="display:flex; flex-direction:column; gap:4px"><p style="font-family:{H}; font-size:52px; font-weight:600; line-height:1.1; color:{DSOFT}">Rotta verso la</p>'
+            f'<h1 style="font-family:{H}; font-size:84px; font-weight:700; line-height:1.02; color:#FFFFFF">Patente Nautica<br>da Diporto</h1></div>')
 chip=lambda b,t: f'<p style="font-size:24px; color:#FFF8EE; background:rgba(245,241,232,0.10); padding:8px 16px; border-radius:40px"><b>{b}</b> {t}</p>'
 chips=f'<div style="display:flex; gap:10px">{chip("30","ore")}{chip("15","lezioni")}{chip("12","appendici")}{chip("135","esercizi svolti")}{chip("1.000+","slide")}</div>'
 k=c.index('</div>\n<p style="font-size:24px; font-weight:600'); c=c[:k]+chips+c[k:]
@@ -72,6 +76,38 @@ sec('percorsi',header(EB,'Due patenti, due rotte','compass',BLUE)+svgi(W3,H3,d,'
     +f'<div style="display:flex; gap:24px; align-items:stretch">{R12}{RSL}</div>'+banner,
     pinned=lbl3,
     notes='Prove d\'esame secondo l\'art. 6 del DM 323/2021 (tabella riportata nel manuale dei quiz). Entro 12 miglia: 5 quiz su elementi di carteggio in 15 minuti con al massimo 1 errore, 20 quiz base in 30 minuti con al massimo 4 errori, per la vela 5 quiz vela in 15 minuti con al massimo 1 errore. Senza limiti: prova di carteggio con 4 esercizi in 60 minuti con al massimo 1 errore, quiz base solo per chi non ha già la patente entro 12 miglia, quiz vela per la vela. Prova pratica: entro 12 miglia in mare, in lago o in specchi acquei adeguati; senza limiti in mare.',gap=22)
+
+
+# ============ VELA E MOTORE O SOLO MOTORE ============
+def motorboat(x,y,s):
+    return (f'<g transform="translate({x} {y}) scale({s})"><path d="M-120 0 L130 -8 Q138 18 108 34 L-110 36 Z" fill="#FFFFFF" stroke="{NAVY}" stroke-width="4"/>'
+            f'<path d="M-116 16 L126 10" stroke="{ORANGE}" stroke-width="8"/><path d="M-50 -2 L60 -6 L36 -46 L-30 -46 Z" fill="#FFFFFF" stroke="{NAVY}" stroke-width="4"/>'
+            f'<path d="M-20 -38 L28 -38 L40 -16 L-24 -14 Z" fill="{BLUE}" fill-opacity="0.8"/></g>')
+W4,H4=1664,120
+wake=lambda x: ''.join(f'<path d="M{x-150-j*40} {88+j*8} q20 -8 40 0" fill="none" stroke="{SEA}" stroke-width="4" stroke-linecap="round" stroke-opacity="{0.7-j*0.2}"/>' for j in range(3))
+d4=(f'<path d="M0 100 '+' '.join('q26 -9 52 0 t52 0' for _ in range(16))+f'" fill="none" stroke="{SEA}" stroke-opacity="0.4" stroke-width="5" stroke-linecap="round"/>'
+    +wake(420)+motorboat(420,70,0.62)+sailboat(1240,58,0.8,SEA)+motorboat(1450,74,0.36))
+lbl4=(lab(128+560,268,300,'solo motore',ORANGE,24,900)+lab(128+1520,268,200,'vela e motore',SEA,24,900))
+def rowsbox(title,sub,rows,c_):
+    g=''.join(f'<p style="font-size:28px; line-height:1.3; font-weight:900; color:{c_}">{a}</p><p style="font-size:28px; line-height:1.35; color:{BODY}">{b}</p>' for a,b in rows)
+    return (f'<div style="flex:1; display:flex; flex-direction:column; gap:22px; background:#FFFFFF; border-top:10px solid {c_}; border-radius:28px; padding:30px 32px; box-shadow:0px 10px 28px rgba(27,42,65,0.10)">'
+            f'<div style="display:flex; align-items:center; gap:16px">{h3(title,38,c_)}<p style="font-size:24px; font-weight:900; color:#FFFFFF; background:{c_}; padding:4px 14px; border-radius:14px">{sub}</p></div>'
+            f'<div style="display:grid; grid-template-columns:150px 1fr; gap:22px 18px">{g}</div></div>')
+MOT=rowsbox('Solo motore','abilita alle unità a motore',[
+    ('Esame','Carteggio e quiz base. Niente quiz vela.'),
+    ('Pratica','Manovre a motore: ormeggio e disormeggio, uomo a mare, nodi, strumenti.'),
+    ('In aula','Tutte le lezioni tranne la 8 sulla vela: 2 ore in meno.')],ORANGE)
+VEL=rowsbox('Vela e motore','abilita a vela, motore e mista',[
+    ('Esame','In più 5 quiz vela: 15′, al massimo 1 errore.'),
+    ('Pratica','Andature e manovre a vela, più tutto il programma a motore, con l\'istruttore di vela a bordo.'),
+    ('In aula','Tutte le 15 lezioni, con la lezione 8 sulla vela e l\'appendice B sui nomi della barca a vela.')],SEA)
+banner4=(f'<div style="display:flex; align-items:center; gap:18px; background:{NAVY}; border-radius:24px; padding:16px 28px">'
+         f'<p style="font-family:{HAND}; font-size:40px; font-weight:700; line-height:1; color:{DACC}; white-space:nowrap">E se la vela non va?</p>'
+         f'<p style="font-size:26px; line-height:1.3; font-weight:700; color:#FFFFFF">Chi non è idoneo alla prova a vela può optare per la patente a solo motore, con le manovre a motore.</p></div>')
+sec('velamotore',header(EB,'Vela e motore, o solo motore','sail',SEA)+svgi(W4,H4,d4,'Un motoscafo con la sua scia e, più avanti, una barca a vela con un piccolo motoscafo',pan=False)
+    +f'<div style="display:flex; gap:24px; align-items:stretch">{MOT}{VEL}</div>'+banner4,
+    pinned=lbl4,
+    notes='DM 323/2021, art. 6 e prova pratica (tabella e programma riportati nel manuale dei quiz). Solo motore: carteggio (quiz di carteggio entro 12 miglia, prova di carteggio senza limiti) e quiz base; prova pratica con le manovre a motore dell\'Allegato D. Vela e motore: in più 5 quiz vela in 15 minuti con al massimo 1 errore; la prova pratica su unità a vela include anche il programma a motore e a bordo c\'è l\'istruttore professionale di vela. Chi non è idoneo nella pratica a vela può optare per la patente a solo motore effettuando le manovre a motore; l\'opzione si annota nel verbale. Vale sia per la patente entro 12 miglia sia per quella senza limiti.',gap=22)
 
 # ============ ALLIEVI ============
 LEARN=[('hull','Conoscere la barca','Scafo, motori ed elica, timone, attrezzatura e vele: ogni parte con il suo nome e la sua funzione.',CORAL),
