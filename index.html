@@ -170,6 +170,8 @@
   }
   .note { background: var(--saffron-soft); border-radius: 10px; padding: 12px 16px; font-size: 14px; }
   .note b { color: var(--ink); }
+  .note.check { background: var(--basil-soft); }
+  .note ul { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 4px; }
   .owner-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border-top: 1px solid var(--line); padding-top: 18px; }
   .owner-actions p { margin: 0; color: var(--muted); font-size: 13px; }
 
@@ -199,7 +201,7 @@
   <header class="masthead">
     <div>
       <h1>Ricettario <em>di casa</em></h1>
-      <p>Le ricette di sempre, con le dosi che si adattano ai commensali.</p>
+      <p>Le ricette dei taccuini e dei quaderni, trascritte pagina per pagina.</p>
     </div>
     <div class="stats" id="stats"></div>
   </header>
@@ -227,111 +229,60 @@
 
   // q: quantità per le dosi base; null = quanto basta
   const i = (q, u, nome) => ({ q, u, nome });
+  // Ricette trascritte dagli originali: testo fedele, quantità strutturate per il ricalcolo.
+  // tempo e difficoltà sono stime; "daVerificare" raccoglie i dubbi di lettura da chiarire con l'autore.
   const BASE = [
     {
-      id: "carbonara", titolo: "Spaghetti alla carbonara", categoria: "Primi", tempo: 25, dosi: 4, difficolta: "Facile",
-      descrizione: "Guanciale croccante, tuorli e pecorino: la crema nasce in padella, fuori dal fuoco, con l'acqua di cottura.",
-      ingredienti: [i(320, "g", "spaghetti"), i(150, "g", "guanciale"), i(4, "", "tuorli d'uovo"), i(50, "g", "pecorino romano grattugiato"), i(null, "", "pepe nero macinato al momento"), i(null, "", "sale grosso per l'acqua")],
+      id: "torta-banane", titolo: "Torta alle banane", categoria: "Dolci", fonte: "foglio sciolto a quadretti, inchiostro verde",
+      tempo: 65, dosi: 1, dosiLabel: ["torta", "torte"], difficolta: "Facile",
+      ingredienti: [i(300, "g", "farina"), i(250, "g", "burro"), i(250, "g", "zucchero"), i(4, "", "uova"), i(1, "bustina", "lievito"), i(2, "", "banane grosse")],
       passi: [
-        "Taglia il guanciale a listarelle e rosolalo in padella senza olio finché il grasso diventa trasparente e la carne croccante. Spegni il fuoco.",
-        "In una ciotola sbatti i tuorli con il pecorino e abbondante pepe fino a ottenere una crema densa.",
-        "Cuoci gli spaghetti in acqua salata e scolali al dente, tenendo da parte un mestolo di acqua di cottura.",
-        "Versa la pasta nella padella con il guanciale, sempre a fuoco spento, e aggiungi la crema di uova.",
-        "Manteca con energia unendo poca acqua di cottura alla volta, finché la salsa è lucida e avvolgente. Servi subito con altro pecorino e pepe."
+        "Sbattere lo zucchero con il burro, aggiungere una alla volta le uova sbattendo sempre e alternando alla farina (più si sbatte e meglio è).",
+        "Mettere in ultimo il lievito e mettere in una teglia imburrata.",
+        "Infornare a 200° per 45 minuti."
+      ],
+      daVerificare: ["Il procedimento non dice quando e come si aggiungono le banane (schiacciate nell'impasto? a fette sopra?)."]
+    },
+    {
+      id: "torta-mele", titolo: "Torta di mele", categoria: "Dolci", fonte: "quaderno, p. 20, inchiostro blu",
+      tempo: 90, dosi: 1, dosiLabel: ["pirofila", "pirofile"], difficolta: "Facile",
+      ingredienti: [i(1000, "g", "mele"), i(100, "g", "zucchero"), i(200, "g", "burro"), i(50, "g", "uvette ben lavate"), i(null, "", "pezzetti di cedro candito"), i(1, "scorza", "di limone, grattata"), i(null, "", "fette di pane sottilissime"), i(1, "bicchiere", "latte"), i(1, "pizzico", "cannella")],
+      passi: [
+        "Imburrare da ambo le parti le fettine di pane.",
+        "Sbucciate le mele, affettatele sottilmente, mescolatele con zucchero, cannella, uvette, raschiatura di limone, cedro candito.",
+        "Quindi in una pirofila ben imburrata disporre a strati le fette di pane e il composto di mele, terminando con queste ultime.",
+        "Versarvi il latte e passare in forno moderato per circa un'ora.",
+        "Servire la torta tiepida nella pirofila di cottura, anche con panna liquida."
+      ],
+      daVerificare: ["«Forno moderato»: probabilmente 170–180 °C, da confermare.", "Quanto pane serve? Il quaderno non indica una quantità."]
+    },
+    {
+      id: "piccioni-ginepro", titolo: "Piccioni al ginepro", categoria: "Secondi", fonte: "quaderno, p. 30, inchiostro blu",
+      tempo: 75, riposo: "una notte di marinatura", dosi: 4, difficolta: "Media",
+      ingredienti: [i(4, "", "piccioni"), i(2, "cucchiai", "[parola poco leggibile, forse burro]"), i(50, "g", "lardo"), i(2, "", "cipolle"), i(null, "", "farina [quantità poco leggibile]"), i(5, "cucchiai", "aceto"), i(1, "foglia", "alloro"), i(1, "chiodo", "di garofano"), i(null, "", "bacche di ginepro"), i(null, "", "sale, pepe"), i(null, "", "brodo (citato solo nel procedimento)")],
+      passi: [
+        "Preparate i piccioni, metteteli in infusione per tutta la notte con l'aceto, la foglia di alloro, le cipolle, 1 chiodo di garofano, sale, pepe.",
+        "Asciugateli, insaporiteli con il sale e il pepe e bacche di ginepro schiacciate e avvolgeteli nel lardo.",
+        "Arrostiteli nel burro spumante, aggiungetevi le cipolle tagliate a pezzi, bagnate col brodo e stufate adagio coperto per circa 40 minuti."
+      ],
+      daVerificare: [
+        "La riga degli ingredienti è in parte sbiadita al margine destro: manca qualcosa dopo «2 cucchiai» e prima di «di farina».",
+        "La farina non compare nel procedimento: serviva a infarinare i piccioni o a legare il fondo?",
+        "Il brodo è nel procedimento ma non tra gli ingredienti."
       ]
     },
     {
-      id: "risotto-milanese", titolo: "Risotto alla milanese", categoria: "Primi", tempo: 40, dosi: 4, difficolta: "Media",
-      descrizione: "Il giallo dello zafferano, la tostatura a secco e una mantecatura generosa di burro e Parmigiano.",
-      ingredienti: [i(320, "g", "riso Carnaroli"), i(1000, "ml", "brodo di carne caldo"), i(1, "", "cipolla dorata piccola"), i(80, "g", "burro freddo"), i(60, "g", "Parmigiano Reggiano grattugiato"), i(100, "ml", "vino bianco secco"), i(1, "bustina", "zafferano in polvere"), i(null, "", "sale")],
+      id: "torta-cinque-minuti", titolo: "Torta dei cinque minuti", categoria: "Dolci", fonte: "quaderno, p. 33, inchiostro rosso",
+      tempo: 50, riposo: "un giorno di riposo prima di servirla", dosi: 1, dosiLabel: ["tortiera", "tortiere"], difficolta: "Facile",
+      ingredienti: [i(200, "g", "farina bianca"), i(200, "g", "zucchero semolato"), i(200, "g", "burro"), i(200, "g", "mandorle dolci (più cinque o sei amare)"), i(1, "", "uovo"), i(1, "bicchierino", "liquore"), i(null, "", "poco zucchero vanigliato"), i(null, "", "burro per ungere lo stampo")],
       passi: [
-        "Se al posto della bustina usi i pistilli (circa 0,2 g per 4 persone), mettili in infusione in un mestolino di brodo caldo almeno 30 minuti prima.",
-        "Trita finemente la cipolla e falla appassire in metà del burro a fuoco dolce, senza farla colorire.",
-        "Unisci il riso e tostalo 2 minuti mescolando, finché i chicchi diventano traslucidi. Sfuma con il vino.",
-        "Aggiungi il brodo un mestolo alla volta, aspettando che venga assorbito prima del successivo. Dopo 10 minuti unisci lo zafferano.",
-        "A cottura (16–18 minuti) spegni, aggiungi il burro rimasto e il Parmigiano, copri e lascia riposare 2 minuti. Manteca e servi all'onda."
-      ]
-    },
-    {
-      id: "pasta-fagioli", titolo: "Pasta e fagioli", categoria: "Primi", tempo: 50, dosi: 4, difficolta: "Facile",
-      descrizione: "Minestra densa e cremosa: una parte dei fagioli si frulla per legare il brodo.",
-      ingredienti: [i(200, "g", "ditalini o pasta mista"), i(500, "g", "fagioli borlotti lessati"), i(1, "", "carota"), i(1, "costa", "sedano"), i(1, "", "cipolla"), i(200, "ml", "passata di pomodoro"), i(1000, "ml", "brodo vegetale"), i(1, "rametto", "rosmarino"), i(null, "", "olio extravergine d'oliva"), i(null, "", "sale e pepe")],
-      passi: [
-        "Trita carota, sedano e cipolla e soffriggili in 3 cucchiai d'olio con il rosmarino per 8 minuti.",
-        "Aggiungi la passata e i fagioli, copri con il brodo e cuoci 20 minuti a fuoco medio.",
-        "Togli il rosmarino, preleva un terzo dei fagioli, frullali e rimettili nella pentola.",
-        "Cuoci la pasta direttamente nella minestra, allungando con brodo se serve. Servi con un filo d'olio a crudo e pepe."
-      ]
-    },
-    {
-      id: "parmigiana", titolo: "Parmigiana di melanzane", categoria: "Secondi", tempo: 90, dosi: 6, difficolta: "Media",
-      descrizione: "Strati di melanzane fritte, sugo al basilico, fior di latte e Parmigiano, passati in forno.",
-      ingredienti: [i(1500, "g", "melanzane lunghe"), i(700, "ml", "passata di pomodoro"), i(300, "g", "fior di latte"), i(100, "g", "Parmigiano Reggiano grattugiato"), i(1, "spicchio", "aglio"), i(null, "", "basilico fresco"), i(null, "", "olio di semi di arachide per friggere"), i(null, "", "sale")],
-      passi: [
-        "Taglia le melanzane a fette di mezzo centimetro, salale e lasciale in un colapasta con un peso sopra per un'ora. Asciugale bene.",
-        "Cuoci la passata 15 minuti con l'aglio, un filo d'olio, sale e qualche foglia di basilico.",
-        "Friggi le melanzane in olio ben caldo finché sono dorate e scolale su carta assorbente. Taglia il fior di latte a dadini e lascialo sgocciolare.",
-        "In una pirofila alterna sugo, melanzane, fior di latte, Parmigiano e basilico. Chiudi con sugo e Parmigiano.",
-        "Inforna a 180 °C per 35–40 minuti. Lascia riposare almeno 30 minuti prima di tagliare."
-      ]
-    },
-    {
-      id: "caponata", titolo: "Caponata siciliana", categoria: "Contorni", tempo: 60, dosi: 6, difficolta: "Media",
-      descrizione: "Agrodolce di melanzane con sedano, olive, capperi e pinoli. Migliore il giorno dopo.",
-      ingredienti: [i(1000, "g", "melanzane"), i(1, "", "cipolla rossa"), i(2, "coste", "sedano"), i(200, "g", "pomodori pelati"), i(50, "g", "olive verdi denocciolate"), i(30, "g", "capperi dissalati"), i(30, "g", "pinoli"), i(40, "ml", "aceto di vino bianco"), i(20, "g", "zucchero"), i(null, "", "olio di semi per friggere"), i(null, "", "basilico e sale")],
-      passi: [
-        "Taglia le melanzane a cubetti, salale e lasciale spurgare 30 minuti. Asciugale e friggile finché sono dorate.",
-        "Sbollenta il sedano a tocchetti per 3 minuti. In padella fai appassire la cipolla affettata con un filo d'olio.",
-        "Aggiungi sedano, pelati spezzettati, olive, capperi e pinoli e cuoci 10 minuti.",
-        "Sciogli lo zucchero nell'aceto, versalo in padella e lascia evaporare per 2 minuti.",
-        "Unisci le melanzane, mescola con delicatezza e completa con il basilico. Servi a temperatura ambiente."
-      ]
-    },
-    {
-      id: "pesto", titolo: "Pesto alla genovese", categoria: "Salse", tempo: 15, dosi: 4, difficolta: "Facile",
-      descrizione: "Basilico giovane pestato a freddo con aglio, pinoli, due formaggi e olio ligure.",
-      ingredienti: [i(50, "g", "basilico genovese, foglie"), i(70, "ml", "olio extravergine delicato"), i(30, "g", "Parmigiano Reggiano grattugiato"), i(20, "g", "pecorino (Fiore Sardo)"), i(15, "g", "pinoli"), i(1, "spicchio", "aglio"), i(null, "", "sale grosso")],
-      passi: [
-        "Lava il basilico e asciugalo tamponando, senza strofinare le foglie.",
-        "Nel mortaio pesta l'aglio con qualche grano di sale grosso fino a ridurlo in crema, poi aggiungi i pinoli.",
-        "Unisci il basilico poco alla volta, schiacciandolo con movimento rotatorio contro le pareti.",
-        "Incorpora i formaggi e infine l'olio a filo, mescolando con il pestello. Usalo subito o coprilo con un velo d'olio."
-      ]
-    },
-    {
-      id: "focaccia", titolo: "Focaccia genovese", categoria: "Lievitati", tempo: 60, riposo: "circa 4 ore di lievitazione", dosi: 1, dosiLabel: "teglia 30×40", difficolta: "Media",
-      descrizione: "Alta due dita, con i buchi pieni di salamoia e la superficie dorata e croccante.",
-      ingredienti: [i(500, "g", "farina 0"), i(350, "ml", "acqua a temperatura ambiente"), i(10, "g", "lievito di birra fresco"), i(10, "g", "sale fino"), i(5, "g", "malto d'orzo o zucchero"), i(25, "ml", "olio extravergine (impasto)"), i(80, "ml", "acqua (salamoia)"), i(40, "ml", "olio extravergine (salamoia)"), i(null, "", "sale grosso")],
-      passi: [
-        "Sciogli lievito e malto nell'acqua, aggiungi la farina e impasta; unisci il sale e poi l'olio fino a ottenere un impasto liscio.",
-        "Lascia riposare 20 minuti, stendilo nella teglia unta allargandolo con i polpastrelli e fai lievitare 1 ora.",
-        "Stendilo fino ai bordi, cospargi di sale grosso e lascia lievitare ancora 1 ora e mezza.",
-        "Premi le dita nell'impasto per formare i buchi, versa la salamoia emulsionata e lascia lievitare altri 45 minuti.",
-        "Cuoci a 230 °C nella parte bassa del forno per 18–20 minuti, finché è dorata."
-      ]
-    },
-    {
-      id: "tiramisu", titolo: "Tiramisù", categoria: "Dolci", tempo: 30, riposo: "almeno 4 ore in frigorifero", dosi: 6, difficolta: "Facile",
-      descrizione: "Savoiardi inzuppati nel caffè e crema al mascarpone, con cacao amaro all'ultimo momento.",
-      ingredienti: [i(4, "", "uova freschissime"), i(100, "g", "zucchero"), i(500, "g", "mascarpone"), i(300, "g", "savoiardi"), i(300, "ml", "caffè espresso freddo"), i(null, "", "cacao amaro in polvere")],
-      passi: [
-        "Separa le uova. Monta i tuorli con metà dello zucchero finché sono chiari e spumosi, poi incorpora il mascarpone.",
-        "Monta gli albumi a neve con lo zucchero rimasto e uniscili alla crema mescolando dal basso verso l'alto.",
-        "Inzuppa velocemente i savoiardi nel caffè e disponine uno strato nella pirofila; coprili con metà della crema.",
-        "Ripeti con un secondo strato di savoiardi e la crema rimasta. Livella e riponi in frigorifero.",
-        "Prima di servire, spolvera con cacao amaro setacciato."
-      ]
-    },
-    {
-      id: "panna-cotta", titolo: "Panna cotta", categoria: "Dolci", tempo: 20, riposo: "almeno 4 ore in frigorifero", dosi: 4, difficolta: "Facile",
-      descrizione: "Panna, vaniglia e poca gelatina: deve tremare appena quando si sforma.",
-      ingredienti: [i(500, "ml", "panna fresca"), i(80, "g", "zucchero"), i(8, "g", "gelatina in fogli"), i(1, "bacca", "vaniglia")],
-      passi: [
-        "Ammolla la gelatina in acqua fredda per 10 minuti.",
-        "Scalda la panna con lo zucchero e i semi della vaniglia fino a sfiorare il bollore, poi spegni.",
-        "Strizza la gelatina e scioglila nella panna calda mescolando.",
-        "Versa negli stampini e lascia rassodare in frigorifero. Sforma immergendo lo stampo in acqua calda per pochi secondi."
-      ]
+        "Scottare tutte le mandorle in acqua bollente, poi pelarle e tritarle finemente.",
+        "Versare la farina sulla spianatoia e ad essa unire il burro un poco ammorbidito e a pezzetti, le mandorle, lo zucchero, l'uovo e il liquore.",
+        "Impastare tutto quanto per cinque minuti.",
+        "Imburrare una tortiera e mettervi il composto preparato, quindi porla in forno già caldo lasciando cuocere la torta per circa mezz'ora.",
+        "Prima di servirla spolverizzarne la superficie con zucchero vanigliato e lasciarla riposare per un giorno."
+      ],
+      daVerificare: ["Quale liquore? (amaretto, rum, maraschino…)", "Temperatura del forno non indicata: probabilmente 180 °C.", "Le mandorle amare oggi vanno usate con moderazione: cinque o sei vanno bene, non di più."]
     }
   ];
 
@@ -343,7 +294,7 @@
   const saved = load();
   const state = {
     mine: Array.isArray(saved.mine) ? saved.mine : [],
-    fav: new Set(Array.isArray(saved.fav) ? saved.fav : ["carbonara", "tiramisu"]),
+    fav: new Set(Array.isArray(saved.fav) ? saved.fav : []),
     cat: "Tutte",
     q: "",
     current: null,
@@ -356,6 +307,7 @@
     try { localStorage.setItem(KEY, JSON.stringify({ mine: state.mine, fav: [...state.fav] })); } catch {}
   };
   const all = () => [...BASE, ...state.mine];
+  for (const id of [...state.fav]) if (!all().some(r => r.id === id)) state.fav.delete(id);
   const byId = id => all().find(r => r.id === id);
 
   // ---- Utilità ----
@@ -389,7 +341,7 @@
     return { text: uu ? `${num} ${uu}` : num };
   }
 
-  const PLURALE = { bustina: "bustine", costa: "coste", spicchio: "spicchi", rametto: "rametti", bacca: "bacche", cucchiaio: "cucchiai", cucchiaino: "cucchiaini", pizzico: "pizzichi", tazza: "tazze", bicchiere: "bicchieri" };
+  const PLURALE = { bustina: "bustine", costa: "coste", spicchio: "spicchi", rametto: "rametti", bacca: "bacche", cucchiaio: "cucchiai", cucchiaino: "cucchiaini", pizzico: "pizzichi", tazza: "tazze", bicchiere: "bicchieri", bicchierino: "bicchierini", foglia: "foglie", chiodo: "chiodi", scorza: "scorze" };
   const SINGOLARE = Object.fromEntries(Object.entries(PLURALE).map(([s, p]) => [p, s]));
   const unita = (u, v) => (v > 1 ? PLURALE[u] || u : SINGOLARE[u] || u);
 
@@ -467,7 +419,8 @@
     if (!r) { state.current = all()[0].id; return renderRecipe(); }
     const dosi = state.servings[r.id] ?? r.dosi;
     const factor = dosi / r.dosi;
-    const label = r.dosiLabel ? (dosi === 1 ? r.dosiLabel : r.dosiLabel.replace(/^teglia/, "teglie")) : (dosi === 1 ? "persona" : "persone");
+    const [sing, plur] = r.dosiLabel || ["persona", "persone"];
+    const label = dosi === 1 ? sing : plur;
     const fav = state.fav.has(r.id);
 
     $("#detail").innerHTML = `
@@ -475,14 +428,14 @@
         <button type="button" class="btn ghost small back" data-action="back">← Tutte le ricette</button>
         <div class="title-row">
           <div>
-            <div class="eyebrow">${esc(r.categoria)}</div>
+            <div class="eyebrow">${esc(r.categoria)}${r.fonte ? ` · ${esc(r.fonte)}` : ""}</div>
             <h2>${esc(r.titolo)}</h2>
             ${r.descrizione ? `<p class="lede">${esc(r.descrizione)}</p>` : ""}
           </div>
           <button type="button" class="fav" data-action="fav" aria-pressed="${fav}" aria-label="${fav ? "Togli dalle preferite" : "Aggiungi alle preferite"}">${starSvg}</button>
         </div>
         <div class="meta">
-          <div><span>Tempo</span><b>${durata(r.tempo)}</b></div>
+          <div><span>${r.fonte ? "Tempo stimato" : "Tempo"}</span><b>${durata(r.tempo)}</b></div>
           <div><span>Dosi</span>
             <div class="stepper">
               <button type="button" data-action="less" aria-label="Diminuisci dosi" ${dosi <= 1 ? "disabled" : ""}>−</button>
@@ -493,6 +446,7 @@
           <div><span>Difficoltà</span><b>${esc(r.difficolta)}</b></div>
         </div>
         ${r.riposo ? `<div class="note"><b>Da sapere:</b> oltre al tempo di preparazione servono ${esc(r.riposo)}.</div>` : ""}
+        ${r.daVerificare ? `<div class="note check"><b>Da chiedere o verificare</b><ul>${r.daVerificare.map(d => `<li>${esc(d)}</li>`).join("")}</ul></div>` : ""}
         <div class="body">
           <section>
             <h3>Ingredienti</h3>
@@ -507,6 +461,7 @@
           </section>
           <section>
             <h3>Procedimento</h3>
+            ${r.fonte ? '<p class="hint">Testo trascritto fedelmente dall\'originale.</p>' : ""}
             <ol class="steps">${r.passi.map(p => `<li><span>${esc(p)}</span></li>`).join("")}</ol>
           </section>
         </div>
