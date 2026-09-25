@@ -171,6 +171,11 @@
   .note { background: var(--saffron-soft); border-radius: 10px; padding: 12px 16px; font-size: 14px; }
   .note b { color: var(--ink); }
   .note.check { background: var(--basil-soft); }
+  .figs { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: start; }
+  .figs figure { margin: 0; display: grid; gap: 6px; }
+  .figs img { display: block; width: 200px; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line); background: #fff; }
+  .figs figcaption { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .fig-note { flex-basis: 100%; margin: 0; font-size: 12px; color: var(--muted); }
   .note ul { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 4px; }
   .owner-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border-top: 1px solid var(--line); padding-top: 18px; }
   .owner-actions p { margin: 0; color: var(--muted); font-size: 13px; }
@@ -233,7 +238,7 @@
   // tempo e difficoltà sono stime; "daVerificare" raccoglie i dubbi di lettura da chiarire con l'autore.
   const BASE = [
     {
-      id: "torta-banane", titolo: "Torta alle banane", categoria: "Dolci", fonte: "foglio sciolto a quadretti, inchiostro verde",
+      id: "torta-banane", immagini: true, titolo: "Torta alle banane", categoria: "Dolci", fonte: "foglio sciolto a quadretti, inchiostro verde",
       tempo: 65, dosi: 1, dosiLabel: ["torta", "torte"], difficolta: "Facile",
       ingredienti: [i(300, "g", "farina"), i(250, "g", "burro"), i(250, "g", "zucchero"), i(4, "", "uova"), i(1, "bustina", "lievito"), i(2, "", "banane grosse")],
       passi: [
@@ -244,7 +249,7 @@
       daVerificare: ["Il procedimento non dice quando e come si aggiungono le banane (schiacciate nell'impasto? a fette sopra?)."]
     },
     {
-      id: "torta-mele", titolo: "Torta di mele", categoria: "Dolci", fonte: "quaderno, p. 20, inchiostro blu",
+      id: "torta-mele", immagini: true, titolo: "Torta di mele", categoria: "Dolci", fonte: "quaderno, p. 20, inchiostro blu",
       tempo: 90, dosi: 1, dosiLabel: ["pirofila", "pirofile"], difficolta: "Facile",
       ingredienti: [i(1000, "g", "mele"), i(100, "g", "zucchero"), i(200, "g", "burro"), i(50, "g", "uvette ben lavate"), i(null, "", "pezzetti di cedro candito"), i(1, "scorza", "di limone, grattata"), i(null, "", "fette di pane sottilissime"), i(1, "bicchiere", "latte"), i(1, "pizzico", "cannella")],
       passi: [
@@ -257,7 +262,7 @@
       daVerificare: ["«Forno moderato»: probabilmente 170–180 °C, da confermare.", "Quanto pane serve? Il quaderno non indica una quantità."]
     },
     {
-      id: "piccioni-ginepro", titolo: "Piccioni al ginepro", categoria: "Secondi", fonte: "quaderno, p. 30, inchiostro blu",
+      id: "piccioni-ginepro", immagini: true, titolo: "Piccioni al ginepro", categoria: "Secondi", fonte: "quaderno, p. 30, inchiostro blu",
       tempo: 75, riposo: "una notte di marinatura", dosi: 4, difficolta: "Media",
       ingredienti: [i(4, "", "piccioni"), i(2, "cucchiai", "[parola poco leggibile, forse burro]"), i(50, "g", "lardo"), i(2, "", "cipolle"), i(null, "", "farina [quantità poco leggibile]"), i(5, "cucchiai", "aceto"), i(1, "foglia", "alloro"), i(1, "chiodo", "di garofano"), i(null, "", "bacche di ginepro"), i(null, "", "sale, pepe"), i(null, "", "brodo (citato solo nel procedimento)")],
       passi: [
@@ -272,7 +277,7 @@
       ]
     },
     {
-      id: "torta-cinque-minuti", titolo: "Torta dei cinque minuti", categoria: "Dolci", fonte: "quaderno, p. 33, inchiostro rosso",
+      id: "torta-cinque-minuti", immagini: true, titolo: "Torta dei cinque minuti", categoria: "Dolci", fonte: "quaderno, p. 33, inchiostro rosso",
       tempo: 50, riposo: "un giorno di riposo prima di servirla", dosi: 1, dosiLabel: ["tortiera", "tortiere"], difficolta: "Facile",
       ingredienti: [i(200, "g", "farina bianca"), i(200, "g", "zucchero semolato"), i(200, "g", "burro"), i(200, "g", "mandorle dolci (più cinque o sei amare)"), i(1, "", "uovo"), i(1, "bicchierino", "liquore"), i(null, "", "poco zucchero vanigliato"), i(null, "", "burro per ungere lo stampo")],
       passi: [
@@ -447,6 +452,10 @@
         </div>
         ${r.riposo ? `<div class="note"><b>Da sapere:</b> oltre al tempo di preparazione servono ${esc(r.riposo)}.</div>` : ""}
         ${r.daVerificare ? `<div class="note check"><b>Da chiedere o verificare</b><ul>${r.daVerificare.map(d => `<li>${esc(d)}</li>`).join("")}</ul></div>` : ""}
+        ${r.immagini ? `<div class="figs">${[["ingredienti", "Gli ingredienti"], ["piatto", "Il piatto finito"]].map(([k, l]) => `
+          <figure><img src="img/${esc(r.id)}-${k}.jpg" alt="${l}: ${esc(r.titolo)}, illustrazione ad acquerello" width="200" height="149" loading="lazy"><figcaption>${l}</figcaption></figure>`).join("")}
+          <p class="fig-note">Illustrazioni ad acquerello generate con Canva per immaginare il piatto: non sono fotografie della ricetta originale.</p>
+        </div>` : ""}
         <div class="body">
           <section>
             <h3>Ingredienti</h3>
