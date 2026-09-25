@@ -67,8 +67,28 @@ Numerazione: `5.S.A-n` — S = carta e settore (5.1-5.4 = 5/D A-D, 5.5-5.8 = 42/
 
 Fonte dei testi: Allegato A al DD 131/2022 (atto ufficiale, art. 5 L. 633/1941), trascrizione verificata di [ilbeca/rotta-giusta](https://github.com/ilbeca/rotta-giusta).
 
-## Prossimi passi
+## Appendici (ripasso ed esercitazione)
 
-1. Per ogni esercizio: soluzione ragionata e tracciamento sulla carta.
-2. Slide di dettaglio per le lezioni 1-9.
-3. Prova simulata finale.
+| | Appendice | Slide | Deck | Sorgenti |
+|---|---|---|---|---|
+| A | I tre problemi della corrente | 13 | [slide](https://claude.ai/artifact/1hFQPJ6uzwJTcUD3iL8kQr) | [`lezioni/A-appendice-correnti`](lezioni/A-appendice-correnti/) |
+| B | I nomi della barca a vela | 26 | [slide](https://claude.ai/artifact/WNpiYhrUGGtCF1b8x3HwqV) | [`lezioni/B-appendice-nomenclatura`](lezioni/B-appendice-nomenclatura/) |
+| C | I nodi marinari | 20 | [slide](https://claude.ai/artifact/SgD9AT2riGF8Qn3Y3nkBeE) | [`lezioni/C-appendice-nodi`](lezioni/C-appendice-nodi/) |
+| D | Prove d'esame simulate (10 prove) | 105 | [slide](https://claude.ai/artifact/Lc3nDQhbwaT9W7StE9dSjE) | [`lezioni/D-appendice-prove`](lezioni/D-appendice-prove/) |
+| E | La prova pratica | 25 | [slide](https://claude.ai/artifact/Mzyami3LS4DrJEUr91yHVB) | [`lezioni/E-appendice-pratica`](lezioni/E-appendice-pratica/) |
+| F | Schede IALA | 31 | [slide](https://claude.ai/artifact/8r66WpwATcTvjUVVmMDkcF) | [`lezioni/F-appendice-iala`](lezioni/F-appendice-iala/) |
+| G | La normativa in tabelle | 30 | [slide](https://claude.ai/artifact/1rxQdsHj5KsKWbzfQywxYK) | [`lezioni/G-appendice-normativa`](lezioni/G-appendice-normativa/) |
+| H | La radio VHF | 26 | [slide](https://claude.ai/artifact/5Cb5LD8J7BgGSoBQfL3SLm) | [`lezioni/H-appendice-vhf`](lezioni/H-appendice-vhf/) |
+| I | Navigare sottocosta | 22 | [slide](https://claude.ai/artifact/CL3ifXqfGFmb7rLVtJCVTL) | [`lezioni/I-appendice-sottocosta`](lezioni/I-appendice-sottocosta/) |
+| J | I bollettini meteo | 21 | [slide](https://claude.ai/artifact/8DuhyYgsfK2SzSiiPjWWU7) | [`lezioni/J-appendice-meteo`](lezioni/J-appendice-meteo/) |
+| K | Il soccorso in mare | 23 | [slide](https://claude.ai/artifact/RnDo7TYXGz52N73sXndC26) | [`lezioni/K-appendice-soccorso`](lezioni/K-appendice-soccorso/) |
+| L | L'ancoraggio | 22 | [slide](https://claude.ai/artifact/5N8Yqin6vPAdayCKswo4Ug) | [`lezioni/L-appendice-ancoraggio`](lezioni/L-appendice-ancoraggio/) |
+
+## Materiali pronti
+
+- 15 lezioni da 2 ore: 9 di teoria e vela, 6 di carteggio.
+- 12 appendici A–L di ripasso ed esercitazione.
+- 10 prove d'esame simulate complete (appendice D).
+- 135 esercizi di carteggio del DD 131/2022, tutti svolti.
+
+Deck dell'indice: [slide](https://claude.ai/artifact/KWJagMPHLrNsJ7wsAJTQ2c) (slide 24-25 appendici, 26 riepilogo), aggiornato con [`template/genera_indice_appendici.py`](template/genera_indice_appendici.py).
