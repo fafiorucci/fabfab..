@@ -88,13 +88,26 @@ Fonte dei testi: Allegato A al DD 131/2022 (atto ufficiale, art. 5 L. 633/1941),
 
 ## Presentazione alla scuola nautica
 
-[Rotta verso la patente · Il corso in sintesi](https://claude.ai/artifact/FxjVMj32rr5eymmibB5Eec): 7 slide su struttura, percorsi 12 miglia e senza limiti, vela o solo motore, competenze degli allievi, materiale e punti di forza. Sorgenti in [`presentazione-scuola/`](presentazione-scuola/).
+**Rotta verso la Patente Nautica da Diporto · Il corso in sintesi** (7 slide): la presentazione del corso alla scuola nautica. [Slide](https://claude.ai/artifact/FxjVMj32rr5eymmibB5Eec) · sorgenti in [`presentazione-scuola/`](presentazione-scuola/).
+
+| # | Slide | Contenuto |
+|---|---|---|
+| 1 | Copertina | Il corso in sintesi: 30 ore, 15 lezioni, 12 appendici, 135 esercizi svolti, oltre 1.000 slide |
+| 2 | Il corso in una rotta | Tre tappe: teoria e vela (lezioni 1-9, 18 ore), carteggio (10-15, 12 ore), verso l'esame (appendici e schede) |
+| 3 | Due patenti, due rotte | Entro 12 miglia o senza limiti: prove d'esame (quesiti, tempi, errori ammessi), lezioni del corso, prova pratica; chi ha già la 12 miglia fa solo carteggio |
+| 4 | Vela e motore, o solo motore | Esame, prova pratica e lezioni per ciascuna abilitazione; chi non è idoneo a vela può optare per il solo motore |
+| 5 | Cosa sapranno fare gli allievi | Sei competenze: barca, sicurezza in navigazione, carteggio, meteo, emergenze, comando |
+| 6 | Il materiale | Oltre 1.000 slide pronte: lezioni, esercizi, appendici, prove simulate, prova pratica, schede |
+| 7 | Perché scegliere questo corso | Sei punti di forza e la chiusura «Pronti a salpare?» |
+
+Fonti per le slide 3 e 4: art. 6 del DM 323/2021 e programma della prova pratica, come riportati nel manuale dei quiz (tabella delle prove d'esame).
 
 ## Materiali pronti
 
 - 15 lezioni da 2 ore: 9 di teoria e vela, 6 di carteggio.
 - 12 appendici A–L di ripasso ed esercitazione.
 - Schede riassuntive per lo studente, una o due pagine per lezione (addendum).
+- Presentazione del corso alla scuola nautica, 7 slide.
 - 10 prove d'esame simulate complete (appendice D).
 - 135 esercizi di carteggio del DD 131/2022, tutti svolti.
 
