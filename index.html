@@ -3,51 +3,51 @@
 <title>Ricettario di casa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
   :root {
-    --bg: #F2F4EF;
-    --surface: #FFFFFF;
-    --ink: #1B2420;
-    --muted: #5B6A61;
-    --line: #D5DDD4;
-    --basil: #24513A;
-    --basil-soft: #E1EBE3;
-    --saffron: #D9960F;
-    --saffron-soft: #FBEFD2;
+    --bg: #F6F3EF;
+    --surface: #FFFDFB;
+    --ink: #27231F;
+    --muted: #6B635B;
+    --line: #E6DFD6;
+    --basil: #6A5577;
+    --basil-soft: #EDE6F0;
+    --saffron: #B9785C;
+    --saffron-soft: #F6E6DC;
     --danger: #B3372B;
-    --shadow: 0 1px 2px rgba(27, 36, 32, .06), 0 8px 24px rgba(27, 36, 32, .06);
-    --serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+    --shadow: 0 1px 2px rgba(39, 35, 31, .04), 0 12px 32px rgba(39, 35, 31, .06);
+    --serif: "Fraunces", "Iowan Old Style", Georgia, serif;
     --sans: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
     --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       color-scheme: dark;
-      --bg: #111713;
-      --surface: #19211C;
-      --ink: #E6ECE5;
-      --muted: #9AA99F;
-      --line: #2C3831;
-      --basil: #8CC5A0;
-      --basil-soft: #203129;
-      --saffron: #F0B53A;
-      --saffron-soft: #3A2E14;
+      --bg: #141214;
+      --surface: #1E1B1E;
+      --ink: #EFEAEE;
+      --muted: #ADA4AB;
+      --line: #332E33;
+      --basil: #CDB7DA;
+      --basil-soft: #2C2530;
+      --saffron: #E6B39C;
+      --saffron-soft: #3A2A24;
       --danger: #EE7A6C;
       --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
     }
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --bg: #111713;
-    --surface: #19211C;
-    --ink: #E6ECE5;
-    --muted: #9AA99F;
-    --line: #2C3831;
-    --basil: #8CC5A0;
-    --basil-soft: #203129;
-    --saffron: #F0B53A;
-    --saffron-soft: #3A2E14;
+    --bg: #141214;
+    --surface: #1E1B1E;
+    --ink: #EFEAEE;
+    --muted: #ADA4AB;
+    --line: #332E33;
+    --basil: #CDB7DA;
+    --basil-soft: #2C2530;
+    --saffron: #E6B39C;
+    --saffron-soft: #3A2A24;
     --danger: #EE7A6C;
     --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
   }
@@ -56,6 +56,7 @@
   body {
     margin: 0;
     background: var(--bg);
+    transition: background-color .6s ease, color .6s ease;
     color: var(--ink);
     font: 15px/1.55 var(--sans);
     padding-inline: 16px;
@@ -66,14 +67,15 @@
   .wrap { max-width: 1160px; margin: 0 auto; padding-block: 28px 56px; display: grid; gap: 28px; }
 
   /* Testata */
-  .masthead { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; border-bottom: 1px solid var(--line); padding-bottom: 18px; }
-  .masthead h1 { font: 400 clamp(40px, 6vw, 60px)/1 var(--serif); margin: 0; letter-spacing: -.01em; }
-  .masthead h1 em { color: var(--basil); }
-  .masthead p { margin: 6px 0 0; color: var(--muted); }
-  .stats { display: flex; gap: 20px; font-variant-numeric: tabular-nums; }
-  .stat { display: grid; }
-  .stat b { font: 400 28px/1 var(--serif); }
-  .stat span { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .masthead { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px 24px; padding-bottom: 8px; }
+  .kicker { margin: 0 0 10px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .14em; color: var(--basil); }
+  .masthead h1 { font: 350 clamp(44px, 7.5vw, 88px)/.95 var(--serif); margin: 0; letter-spacing: -.025em; text-wrap: balance; }
+  .masthead h1 em { color: var(--basil); font-weight: 300; }
+  .tagline { margin: 14px 0 0; color: var(--muted); font-size: 17px; max-width: 52ch; }
+  .stats { display: flex; flex-wrap: wrap; gap: 8px; font-variant-numeric: tabular-nums; }
+  .stat { display: inline-flex; align-items: baseline; gap: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; transition: background-color .6s, border-color .6s; }
+  .stat b { font: 400 22px/1 var(--serif); }
+  .stat span { font-size: 12px; color: var(--muted); }
 
   /* Layout a due colonne */
   .app { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 32px; align-items: start; }
@@ -89,7 +91,7 @@
   @media (max-width: 860px) { .index { position: static; } }
   .search { position: relative; }
   .search input {
-    width: 100%; padding: 11px 14px 11px 38px; border: 1px solid var(--line); border-radius: 10px;
+    width: 100%; padding: 11px 14px 11px 38px; border: 1px solid var(--line); border-radius: 999px;
     background: var(--surface);
   }
   .search svg { position: absolute; left: 12px; top: 50%; translate: 0 -50%; width: 16px; height: 16px; stroke: var(--muted); fill: none; }
@@ -99,24 +101,28 @@
     font-size: 13px; cursor: pointer; color: var(--muted);
   }
   .chip:hover { border-color: var(--basil); color: var(--ink); }
-  .chip[aria-pressed="true"] { background: var(--basil); border-color: var(--basil); color: var(--bg); }
+  .chip[aria-pressed="true"] { background: var(--basil); border-color: var(--basil); color: var(--surface); }
   .list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); max-height: 60vh; overflow-y: auto; }
   @media (max-width: 860px) { .list { max-height: none; } }
   .list li { border-bottom: 1px solid var(--line); }
   .item {
     width: 100%; display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; text-align: left;
-    background: none; border: 0; padding: 12px 10px; cursor: pointer; border-radius: 8px;
+    background: none; border: 0; padding: 12px 12px; cursor: pointer; border-radius: 14px;
   }
   .item:hover { background: var(--basil-soft); }
   .item[aria-current="true"] { background: var(--basil-soft); }
-  .item .name { font-weight: 600; }
+  .item .name { font-weight: 600; display: flex; align-items: center; gap: 10px; }
+  .dots { display: inline-flex; flex: none; }
+  .dots i { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--surface); margin-left: -4px; }
+  .dots i:first-child { margin-left: 0; }
+  .item .sub { padding-left: 36px; }
   .item .sub { grid-column: 1; font-size: 13px; color: var(--muted); }
   .item .star { grid-row: 1 / span 2; grid-column: 2; align-self: center; color: var(--saffron); }
   .empty { color: var(--muted); padding: 16px 4px; margin: 0; }
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
-    border-radius: 10px; padding: 10px 16px; font-weight: 600; border: 1px solid var(--basil);
-    background: var(--basil); color: var(--bg);
+    border-radius: 999px; padding: 10px 18px; font-weight: 600; border: 1px solid var(--basil);
+    background: var(--basil); color: var(--surface);
   }
   .btn:hover { filter: brightness(1.08); }
   .btn.ghost { background: transparent; color: var(--basil); }
@@ -124,27 +130,50 @@
   .btn.small { padding: 6px 12px; font-size: 13px; }
 
   /* Scheda ricetta */
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); padding: clamp(20px, 4vw, 40px); display: grid; gap: 24px; }
-  .back { justify-self: start; }
+  .card { --pad: clamp(20px, 4vw, 40px); background: var(--surface); border: 1px solid var(--line); border-radius: 28px; box-shadow: var(--shadow); padding: var(--pad); display: grid; gap: 26px; transition: background-color .6s, border-color .6s; }
+
+  /* Copertina della ricetta: i toni del piatto */
+  .hero {
+    margin: calc(-1 * var(--pad)) calc(-1 * var(--pad)) 0; padding: calc(var(--pad) + 4px) var(--pad);
+    border-radius: 27px 27px 0 0; background: linear-gradient(135deg, var(--basil-soft) 0%, var(--saffron-soft) 100%);
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end;
+  }
+  .hero-text { display: grid; gap: 0; }
+  .card .hero h2 { font: 350 clamp(40px, 6.2vw, 76px)/.98 var(--serif); letter-spacing: -.025em; margin: 8px 0 0; text-wrap: balance; }
+  .claim { margin: 14px 0 0; font: 500 17px/1.45 var(--sans); max-width: 44ch; }
+  .quote { margin: 12px 0 0; font: italic 350 22px/1.3 var(--serif); color: var(--basil); max-width: 40ch; }
+  .palette { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .sw { display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 4px; border-radius: 999px; background: var(--surface); font-size: 12px; font-weight: 500; }
+  .sw i { width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .08); }
+  .hero-side { display: grid; justify-items: end; align-content: space-between; gap: 16px; align-self: stretch; }
+  .hero-fig { margin: 0; display: grid; gap: 8px; justify-items: center; }
+  .hero-fig img { display: block; width: 200px; max-width: 100%; height: auto; border-radius: 22px; border: 6px solid var(--surface); box-shadow: 0 14px 34px rgba(0, 0, 0, .10); rotate: 2.5deg; }
+  .hero-fig figcaption { font-size: 11px; color: var(--muted); }
+  @media (max-width: 640px) {
+    .hero { grid-template-columns: minmax(0, 1fr); }
+    .hero-side { justify-items: start; grid-auto-flow: column; align-items: end; justify-content: space-between; }
+  }
+  .ingr-fig { margin: 0 0 14px; }
+  .ingr-fig img { display: block; width: 200px; max-width: 100%; height: auto; border-radius: 18px; }
+  .back { justify-self: start; margin-bottom: 12px; }
   .eyebrow { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--basil); }
-  .title-row { display: flex; gap: 16px; align-items: start; justify-content: space-between; }
   .card h2 { font: 400 clamp(34px, 5vw, 52px)/1.02 var(--serif); margin: 4px 0 0; text-wrap: balance; }
   .lede { margin: 10px 0 0; color: var(--muted); max-width: 62ch; font-size: 16px; }
   .fav {
-    flex: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: transparent;
+    flex: none; width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--surface);
     cursor: pointer; display: grid; place-items: center; color: var(--muted);
   }
   .fav svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; }
   .fav[aria-pressed="true"] { color: var(--saffron); border-color: var(--saffron); background: var(--saffron-soft); }
   .fav[aria-pressed="true"] svg { fill: currentColor; }
 
-  .meta { display: flex; flex-wrap: wrap; gap: 12px 36px; padding-block: 12px; border-block: 1px solid var(--line); }
-  .meta > div { display: grid; gap: 2px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 10px; }
+  .meta > div { display: grid; gap: 2px; background: var(--bg); border-radius: 18px; padding: 10px 18px; transition: background-color .6s; }
   .meta span { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
   .meta b { font-weight: 600; font-variant-numeric: tabular-nums; }
   .stepper { display: flex; align-items: center; gap: 8px; }
   .stepper button {
-    width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line); background: transparent;
+    width: 26px; height: 26px; border-radius: 50%; border: 0; background: var(--surface);
     cursor: pointer; line-height: 1; display: grid; place-items: center;
   }
   .stepper button:hover { border-color: var(--basil); }
@@ -163,12 +192,12 @@
   .ingr input:checked ~ span { text-decoration: line-through; opacity: .5; }
 
   .steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 14px; }
-  .steps li { counter-increment: s; display: grid; grid-template-columns: 34px 1fr; gap: 12px; max-width: 64ch; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 34px 1fr; gap: 14px; max-width: 64ch; align-items: start; }
   .steps li::before {
-    content: counter(s); font: 400 24px/1.1 var(--serif); color: var(--saffron);
-    border-top: 2px solid var(--saffron); padding-top: 2px; text-align: left;
+    content: counter(s); width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
+    font: 500 16px/1 var(--serif); background: var(--saffron-soft); color: var(--ink);
   }
-  .note { background: var(--saffron-soft); border-radius: 10px; padding: 12px 16px; font-size: 14px; }
+  .note { background: var(--saffron-soft); border-radius: 18px; padding: 12px 16px; font-size: 14px; }
   .note b { color: var(--ink); }
   .note.check { background: var(--basil-soft); }
   .cene { display: grid; gap: 6px; }
@@ -185,14 +214,9 @@
   .stato.ok { background: var(--basil-soft); }
   .linkbtn { background: none; border: 0; padding: 0; color: var(--basil); font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
   .storia { display: grid; gap: 12px; max-width: 64ch; }
-  .storia p { margin: 0; font: 400 20px/1.5 var(--serif); }
-  .storia p:first-of-type::first-letter { float: left; font-size: 3.4em; line-height: .8; padding: 6px 10px 0 0; color: var(--basil); }
+  .storia p { margin: 0; font: 350 19px/1.6 var(--serif); }
+  .storia p:first-of-type::first-letter { float: left; font-size: 3.6em; line-height: .8; padding: 6px 10px 0 0; color: var(--basil); font-weight: 300; }
   .storia .storia-nota { font: 12px/1.4 var(--sans); color: var(--muted); }
-  .figs { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: start; }
-  .figs figure { margin: 0; display: grid; gap: 6px; }
-  .figs img { display: block; width: 200px; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line); background: #fff; }
-  .figs figcaption { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
-  .fig-note { flex-basis: 100%; margin: 0; font-size: 12px; color: var(--muted); }
   .note ul { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 4px; }
   .owner-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border-top: 1px solid var(--line); padding-top: 18px; }
   .owner-actions p { margin: 0; color: var(--muted); font-size: 13px; }
@@ -212,18 +236,19 @@
 
   .toast {
     position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); translate: -50% 0;
-    background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: 14px;
+    background: var(--ink); color: var(--surface); padding: 10px 18px; border-radius: 999px; font-size: 14px;
     box-shadow: var(--shadow); transition: opacity .2s; pointer-events: none;
   }
   .toast[data-show="false"] { opacity: 0; }
-  @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .toast, body, .card, .stat, .meta > div { transition: none; } }
 </style>
 
 <div class="wrap">
   <header class="masthead">
     <div>
+      <p class="kicker">1968 — 1998 · una villa, trent'anni di cene</p>
       <h1>Ricettario <em>di casa</em></h1>
-      <p>Le ricette dei taccuini e dei quaderni, trascritte pagina per pagina.</p>
+      <p class="tagline">Scritte a mano sui taccuini, ricopiate nei quaderni, servite a tavole illustri. Ogni ricetta porta con sé i colori del suo piatto.</p>
     </div>
     <div class="stats" id="stats"></div>
   </header>
@@ -260,7 +285,7 @@
   // tempo e difficoltà sono stime; "daVerificare" raccoglie i dubbi di lettura da chiarire con l'autore.
   const BASE = [
     {
-      id: "torta-banane", immagini: true, storia: ["Sul finire degli anni Sessanta la banana smette di essere un lusso. Fino alla metà del decennio in Italia la sua importazione era un monopolio di Stato, e il frutto arrivava in tavola come una rarità; poi il mercato si apre e i caschi gialli diventano merce di tutti i giorni. Nel 1967 Andy Warhol l'aveva trasformata in un'icona, stampandola sulla copertina del primo disco dei Velvet Underground: la banana era pop, americana, moderna.", "Questa torta porta con sé quell'aria nuova dentro una struttura antica. È costruita come un plum cake all'inglese, burro e zucchero montati a lungo, le uova una alla volta, la farina a pioggia, con la raccomandazione di chi l'ha fatta molte volte: «più si sbatte e meglio è». Il frutto dei tropici entra in un impasto da pasticceria borghese.", "La ricetta non sta nei quaderni. È scritta con l'inchiostro verde su un foglio a quadretti, rimasto tra le pagine: una ricetta annotata a parte, che aspettava di essere ricopiata."], titolo: "Torta alle banane", categoria: "Dolci", fonte: "foglio sciolto a quadretti, inchiostro verde",
+      id: "torta-banane", immagini: true, tono: "banane", claim: "Il frutto più pop degli anni Sessanta, montato a mano in un dolce da forno di casa.", citazione: "Più si sbatte e meglio è.", storia: ["Sul finire degli anni Sessanta la banana smette di essere un lusso. Fino alla metà del decennio in Italia la sua importazione era un monopolio di Stato, e il frutto arrivava in tavola come una rarità; poi il mercato si apre e i caschi gialli diventano merce di tutti i giorni. Nel 1967 Andy Warhol l'aveva trasformata in un'icona, stampandola sulla copertina del primo disco dei Velvet Underground: la banana era pop, americana, moderna.", "Questa torta porta con sé quell'aria nuova dentro una struttura antica. È costruita come un plum cake all'inglese, burro e zucchero montati a lungo, le uova una alla volta, la farina a pioggia, con la raccomandazione di chi l'ha fatta molte volte: «più si sbatte e meglio è». Il frutto dei tropici entra in un impasto da pasticceria borghese.", "La ricetta non sta nei quaderni. È scritta con l'inchiostro verde su un foglio a quadretti, rimasto tra le pagine: una ricetta annotata a parte, che aspettava di essere ricopiata."], titolo: "Torta alle banane", categoria: "Dolci", fonte: "foglio sciolto a quadretti, inchiostro verde",
       tempo: 65, dosi: 1, dosiLabel: ["torta", "torte"], difficolta: "Facile",
       ingredienti: [i(300, "g", "farina"), i(250, "g", "burro"), i(250, "g", "zucchero"), i(4, "", "uova"), i(1, "bustina", "lievito"), i(2, "", "banane grosse")],
       passi: [
@@ -271,7 +296,7 @@
       daVerificare: ["Il procedimento non dice quando e come si aggiungono le banane (schiacciate nell'impasto? a fette sopra?)."]
     },
     {
-      id: "torta-mele", immagini: true, storia: ["Il quaderno la chiama semplicemente torta di mele, ma la farina non c'è. A sostenerla sono le fette di pane imburrate, le mele sottili e il latte che il forno trasforma in crema. Appartiene a una famiglia antica di dolci del recupero, in cui il pane del giorno prima diventa impalcatura: la miascia dei laghi lombardi, la charlotte di mele francese, il bread and butter pudding inglese.", "Il cedro candito, l'uvetta e la cannella la spostano però verso la pasticceria delle feste, e il finale, «anche con panna liquida», verso una tavola di ospiti. Negli anni in cui la cucina dei ristoranti inseguiva la leggerezza della nouvelle cuisine, piatti come questo custodivano il sapore domestico, quello che gli ospiti di una villa non avrebbero trovato altrove.", "Le mele, del resto, sono il frutto più dipinto della storia dell'arte: lucide nelle nature morte del Seicento, costruite come architetture nelle tele di Cézanne, che diceva di voler stupire Parigi con una mela."], titolo: "Torta di mele", categoria: "Dolci", fonte: "quaderno, p. 20, inchiostro blu",
+      id: "torta-mele", immagini: true, tono: "mele", claim: "Pane, mele e latte: la torta che non ha bisogno di farina.", citazione: "Servire la torta tiepida, anche con panna liquida.", storia: ["Il quaderno la chiama semplicemente torta di mele, ma la farina non c'è. A sostenerla sono le fette di pane imburrate, le mele sottili e il latte che il forno trasforma in crema. Appartiene a una famiglia antica di dolci del recupero, in cui il pane del giorno prima diventa impalcatura: la miascia dei laghi lombardi, la charlotte di mele francese, il bread and butter pudding inglese.", "Il cedro candito, l'uvetta e la cannella la spostano però verso la pasticceria delle feste, e il finale, «anche con panna liquida», verso una tavola di ospiti. Negli anni in cui la cucina dei ristoranti inseguiva la leggerezza della nouvelle cuisine, piatti come questo custodivano il sapore domestico, quello che gli ospiti di una villa non avrebbero trovato altrove.", "Le mele, del resto, sono il frutto più dipinto della storia dell'arte: lucide nelle nature morte del Seicento, costruite come architetture nelle tele di Cézanne, che diceva di voler stupire Parigi con una mela."], titolo: "Torta di mele", categoria: "Dolci", fonte: "quaderno, p. 20, inchiostro blu",
       tempo: 90, dosi: 1, dosiLabel: ["pirofila", "pirofile"], difficolta: "Facile",
       ingredienti: [i(1000, "g", "mele"), i(100, "g", "zucchero"), i(200, "g", "burro"), i(50, "g", "uvette ben lavate"), i(null, "", "pezzetti di cedro candito"), i(1, "scorza", "di limone, grattata"), i(null, "", "fette di pane sottilissime"), i(1, "bicchiere", "latte"), i(1, "pizzico", "cannella")],
       passi: [
@@ -284,7 +309,7 @@
       daVerificare: ["«Forno moderato»: probabilmente 170–180 °C, da confermare.", "Quanto pane serve? Il quaderno non indica una quantità."]
     },
     {
-      id: "piccioni-ginepro", immagini: true, storia: ["Il piccione sta sul confine tra la campagna e la tavola importante. Nell'Italia centrale le torri colombaie accanto ai casali lo allevano da secoli, e i ricettari del Rinascimento lo trattano da piatto nobile: nell'Opera di Bartolomeo Scappi, cuoco di papa Pio V, pubblicata nel 1570, i piccioni tornano di continuo, arrosto, in pasticcio, ripieni.", "Questa ricetta ne conserva il trattamento da selvaggina. Una notte nell'aceto con l'alloro e il chiodo di garofano, poi il ginepro schiacciato e la bardatura di lardo, che protegge la carne magra durante la cottura. È una cucina che chiede un giorno di anticipo, quella di una casa dove la cena si cominciava a preparare la sera prima.", "Negli stessi anni i grandi cuochi francesi portavano il piccione nei menu della nouvelle cuisine, rosato e tagliato sottile. Qui resta fedele a un'altra immagine, quella delle nature morte di cacciagione, dove per secoli gli uccelli sono stati dipinti accanto al pane, al vino e alle erbe."], titolo: "Piccioni al ginepro", categoria: "Secondi", fonte: "quaderno, p. 30, inchiostro blu",
+      id: "piccioni-ginepro", immagini: true, tono: "piccioni", claim: "Una notte nell'aceto, il ginepro, il lardo: il piatto delle tavole importanti.", citazione: "Metteteli in infusione per tutta la notte.", storia: ["Il piccione sta sul confine tra la campagna e la tavola importante. Nell'Italia centrale le torri colombaie accanto ai casali lo allevano da secoli, e i ricettari del Rinascimento lo trattano da piatto nobile: nell'Opera di Bartolomeo Scappi, cuoco di papa Pio V, pubblicata nel 1570, i piccioni tornano di continuo, arrosto, in pasticcio, ripieni.", "Questa ricetta ne conserva il trattamento da selvaggina. Una notte nell'aceto con l'alloro e il chiodo di garofano, poi il ginepro schiacciato e la bardatura di lardo, che protegge la carne magra durante la cottura. È una cucina che chiede un giorno di anticipo, quella di una casa dove la cena si cominciava a preparare la sera prima.", "Negli stessi anni i grandi cuochi francesi portavano il piccione nei menu della nouvelle cuisine, rosato e tagliato sottile. Qui resta fedele a un'altra immagine, quella delle nature morte di cacciagione, dove per secoli gli uccelli sono stati dipinti accanto al pane, al vino e alle erbe."], titolo: "Piccioni al ginepro", categoria: "Secondi", fonte: "quaderno, p. 30, inchiostro blu",
       tempo: 75, riposo: "una notte di marinatura", dosi: 4, difficolta: "Media",
       ingredienti: [i(4, "", "piccioni"), i(2, "cucchiai", "[parola poco leggibile, forse burro]"), i(50, "g", "lardo"), i(2, "", "cipolle"), i(null, "", "farina [quantità poco leggibile]"), i(5, "cucchiai", "aceto"), i(1, "foglia", "alloro"), i(1, "chiodo", "di garofano"), i(null, "", "bacche di ginepro"), i(null, "", "sale, pepe"), i(null, "", "brodo (citato solo nel procedimento)")],
       passi: [
@@ -299,7 +324,7 @@
       ]
     },
     {
-      id: "torta-cinque-minuti", immagini: true, storia: ["Il titolo ha il ritmo delle riviste degli anni del boom, che promettevano alla casa moderna dolci pronti in pochi minuti. I cinque minuti però sono solo quelli dell'impasto: prima ci sono le mandorle da scottare, pelare e tritare, dopo mezz'ora di forno e un giorno intero di riposo. È la contraddizione felice di molti dolci di famiglia.", "Le dosi sono tutte uguali, duecento grammi per ogni ingrediente, una formula da ricordare a memoria. La torta è parente delle torte rustiche di mandorle del Nord, come la sbrisolona mantovana, e dei dolci di mandorla del Sud. Le cinque o sei mandorle amare fanno quello che fanno negli amaretti: danno profondità a tutto il resto.", "Nel 1950 l'Editoriale Domus, l'editore della rivista di architettura fondata da Gio Ponti, aveva pubblicato Il cucchiaio d'argento, destinato a entrare in moltissime cucine italiane. In quegli anni cucina, design e buona forma parlavano la stessa lingua. Questa ricetta, ricopiata in rosso con grafia accurata, appartiene a quel mondo."], titolo: "Torta dei cinque minuti", categoria: "Dolci", fonte: "quaderno, p. 33, inchiostro rosso",
+      id: "torta-cinque-minuti", immagini: true, tono: "mandorle", claim: "Cinque minuti d'impasto, un giorno d'attesa.", citazione: "Lasciarla riposare per un giorno.", storia: ["Il titolo ha il ritmo delle riviste degli anni del boom, che promettevano alla casa moderna dolci pronti in pochi minuti. I cinque minuti però sono solo quelli dell'impasto: prima ci sono le mandorle da scottare, pelare e tritare, dopo mezz'ora di forno e un giorno intero di riposo. È la contraddizione felice di molti dolci di famiglia.", "Le dosi sono tutte uguali, duecento grammi per ogni ingrediente, una formula da ricordare a memoria. La torta è parente delle torte rustiche di mandorle del Nord, come la sbrisolona mantovana, e dei dolci di mandorla del Sud. Le cinque o sei mandorle amare fanno quello che fanno negli amaretti: danno profondità a tutto il resto.", "Nel 1950 l'Editoriale Domus, l'editore della rivista di architettura fondata da Gio Ponti, aveva pubblicato Il cucchiaio d'argento, destinato a entrare in moltissime cucine italiane. In quegli anni cucina, design e buona forma parlavano la stessa lingua. Questa ricetta, ricopiata in rosso con grafia accurata, appartiene a quel mondo."], titolo: "Torta dei cinque minuti", categoria: "Dolci", fonte: "quaderno, p. 33, inchiostro rosso",
       tempo: 50, riposo: "un giorno di riposo prima di servirla", dosi: 1, dosiLabel: ["tortiera", "tortiere"], difficolta: "Facile",
       ingredienti: [i(200, "g", "farina bianca"), i(200, "g", "zucchero semolato"), i(200, "g", "burro"), i(200, "g", "mandorle dolci (più cinque o sei amare)"), i(1, "", "uovo"), i(1, "bicchierino", "liquore"), i(null, "", "poco zucchero vanigliato"), i(null, "", "burro per ungere lo stampo")],
       passi: [
@@ -313,10 +338,27 @@
     }
   ];
 
+  // Tavolozze pastello ricavate dagli ingredienti: ogni ricetta tinge la pagina con i toni del suo piatto.
+  // Ordine: bg, surface, ink, muted, line, accento, accento tenue, secondo accento, secondo accento tenue.
+  const TONI = {"banane": {"light": ["#FBF6E3", "#FFFDF4", "#2E2718", "#6E6446", "#EDE2BC", "#7A5B12", "#F6E7AE", "#A8741F", "#F3DEC4"], "dark": ["#17140C", "#211C11", "#F3EEDF", "#B9AE90", "#3A321E", "#F0D67A", "#3A3016", "#E8B96A", "#3A2A17"], "sw": [["Banana matura", "#F3DC7A"], ["Burro", "#F7EBC0"], ["Crosta dorata", "#DDB27A"], ["Farina", "#F2EDE3"]]}, "mele": {"light": ["#F3F7EB", "#FFFEF9", "#1F2716", "#5C6A4A", "#DCE5CB", "#4F6B2A", "#E1EDCB", "#B5524D", "#F7DCD5"], "dark": ["#111509", "#1A1F12", "#EEF1E4", "#A9B394", "#2F3822", "#BFD88F", "#2A3319", "#F0A69F", "#3A2220"], "sw": [["Mela verde", "#CFE0A8"], ["Buccia rossa", "#E9A9A0"], ["Cannella", "#CFA27F"], ["Latte", "#F8F4EA"]]}, "piccioni": {"light": ["#F2F0F6", "#FDFCFE", "#24222F", "#5F5B74", "#DEDAE9", "#4B4668", "#E3E0EF", "#8A5A44", "#F0E3D9"], "dark": ["#121119", "#1B1A24", "#ECEAF3", "#A9A6BC", "#302E40", "#BDB8E3", "#2C2A3C", "#E0B39A", "#3A2A22"], "sw": [["Bacca di ginepro", "#9C98C4"], ["Alloro", "#BCC8A6"], ["Arrosto", "#CFA283"], ["Cipolla", "#F0DCCB"]]}, "mandorle": {"light": ["#FAF1EE", "#FFFCFA", "#2E211D", "#7A625A", "#EDDDD6", "#7A4A3A", "#F3E2DA", "#B04F66", "#F7DDE3"], "dark": ["#181110", "#221917", "#F4ECE8", "#BFA9A0", "#3A2B27", "#EFC3AF", "#3A2824", "#F0A2B3", "#3C2229"], "sw": [["Mandorla", "#E6D0B8"], ["Zucchero vanigliato", "#F7F1E6"], ["Liquore", "#DDA893"], ["Inchiostro rosso", "#DE93A3"]]}, "cena": {"light": ["#F3F5EE", "#FFFEFB", "#23261A", "#62664E", "#DFE3D1", "#5A5A2E", "#E6EAD6", "#8C3F4A", "#F5E8C8"], "dark": ["#121409", "#1B1E13", "#EEF0E3", "#ABAF96", "#30341F", "#D8DB9E", "#2D3120", "#E7A3AC", "#3B3320"], "sw": [["Champagne", "#F2E2B0"], ["Salvia dell'orto", "#C5D3B0"], ["Rosso del vigneto", "#CF929B"], ["Pagnotta", "#E3C49C"]]}};
+  const TOKENS = ["--bg", "--surface", "--ink", "--muted", "--line", "--basil", "--basil-soft", "--saffron", "--saffron-soft"];
+  const tonoCss = v => TOKENS.map((t, k) => `${t}:${v[k]}`).join(";");
+  function applyTono(key) {
+    let el = document.getElementById("tono");
+    if (!el) { el = document.createElement("style"); el.id = "tono"; document.body.appendChild(el); }
+    const t = TONI[key];
+    el.textContent = !t ? "" :
+      `:root{${tonoCss(t.light)}}` +
+      `@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){${tonoCss(t.dark)}}}` +
+      `:root[data-theme="dark"]{${tonoCss(t.dark)}}`;
+  }
+  const dotsHtml = key => TONI[key] ? `<span class="dots" aria-hidden="true">${TONI[key].sw.slice(0, 3).map(s => `<i style="background:${s[1]}"></i>`).join("")}</span>` : "";
+  const paletteHtml = key => TONI[key] ? `<div class="palette" aria-label="La tavolozza del piatto">${TONI[key].sw.map(s => `<span class="sw"><i style="background:${s[1]}"></i>${esc(s[0])}</span>`).join("")}</div>` : "";
+
   // Le cene ricostruite a voce: ogni piatto rimanda a una ricetta trascritta, se esiste.
   const CENE = [
     {
-      id: "prima-cena", titolo: "La prima cena", storia: ["Una cena di campagna in una villa italiana, negli anni in cui la tavola raccontava ancora il luogo. Il menu non cerca l'effetto: crostini, spaghetti, piccioni, l'insalata dell'orto, il tiramisù. Mentre i ristoranti inseguivano la nouvelle cuisine, con porzioni piccole e piatti geometrici, la villa offriva ciò che nessun ristorante poteva dare: i prodotti della tenuta, il vino del vigneto di casa, gli amari preparati in casa.", "Lo champagne con l'antipasto è l'unico lusso venuto da fuori, e basta a dare il tono della serata. I crostini con i fegatelli sono l'antipasto dell'Italia centrale; gli spaghetti aglio, olio e peperoncino sono il piatto delle spaghettate di mezzanotte tra amici, e servirli agli ospiti, di sera, dice una familiarità che nessuna etichetta avrebbe prescritto.", "Il tiramisù, allora, era un dolce giovane. Nato tra Veneto e Friuli e diffuso negli anni Settanta e Ottanta, stava entrando proprio in quel periodo nelle case e nei ristoranti di tutta Italia."], quando: "anno da definire",
+      id: "prima-cena", titolo: "La prima cena", tono: "cena", claim: "Champagne all'antipasto, piccioni in pagnotta, il rosso del vigneto di casa.", citazione: "Una cosa leggera, di sera.", storia: ["Una cena di campagna in una villa italiana, negli anni in cui la tavola raccontava ancora il luogo. Il menu non cerca l'effetto: crostini, spaghetti, piccioni, l'insalata dell'orto, il tiramisù. Mentre i ristoranti inseguivano la nouvelle cuisine, con porzioni piccole e piatti geometrici, la villa offriva ciò che nessun ristorante poteva dare: i prodotti della tenuta, il vino del vigneto di casa, gli amari preparati in casa.", "Lo champagne con l'antipasto è l'unico lusso venuto da fuori, e basta a dare il tono della serata. I crostini con i fegatelli sono l'antipasto dell'Italia centrale; gli spaghetti aglio, olio e peperoncino sono il piatto delle spaghettate di mezzanotte tra amici, e servirli agli ospiti, di sera, dice una familiarità che nessuna etichetta avrebbe prescritto.", "Il tiramisù, allora, era un dolce giovane. Nato tra Veneto e Friuli e diffuso negli anni Settanta e Ottanta, stava entrando proprio in quel periodo nelle case e nei ristoranti di tutta Italia."], quando: "anno da definire",
       descrizione: "La prima cena tornata in mente: una sera alla villa, con i piccioni in pagnotta al centro della tavola.",
       portate: [
         { portata: "Antipasto", piatti: [{ nome: "Crostini umbri", nota: "Anche con i fegatelli.", stato: "ricetta da trovare" }] },
@@ -436,9 +478,10 @@
   function renderStats() {
     const n = all().length;
     $("#stats").innerHTML = `
-      <div class="stat"><b>${n}</b><span>ricette</span></div>
-      <div class="stat"><b>${state.fav.size}</b><span>preferite</span></div>
-      <div class="stat"><b>${state.mine.length}</b><span>tue</span></div>`;
+      <div class="stat"><b>${n}</b><span>${n === 1 ? "ricetta" : "ricette"}</span></div>
+      <div class="stat"><b>${CENE.length}</b><span>${CENE.length === 1 ? "cena" : "cene"}</span></div>
+      ${state.fav.size ? `<div class="stat"><b>${state.fav.size}</b><span>preferite</span></div>` : ""}
+      ${state.mine.length ? `<div class="stat"><b>${state.mine.length}</b><span>tue</span></div>` : ""}`;
   }
 
   function renderChips() {
@@ -463,7 +506,7 @@
     const rs = filtered();
     $("#list").innerHTML = rs.length ? rs.map(r => `
       <li><button type="button" class="item" data-id="${esc(r.id)}" aria-current="${state.current === r.id && state.mode === "view"}">
-        <span class="name">${esc(r.titolo)}</span>
+        <span class="name">${dotsHtml(r.tono)}${esc(r.titolo)}</span>
         <span class="sub">${esc(r.categoria)} · ${durata(r.tempo)}${r.mine ? " · tua" : ""}</span>
         ${state.fav.has(r.id) ? '<span class="star" aria-label="preferita">★</span>' : ""}
       </button></li>`).join("")
@@ -483,15 +526,21 @@
 
     $("#detail").innerHTML = `
       <article class="card">
-        <button type="button" class="btn ghost small back" data-action="back">← Tutte le ricette</button>
-        <div class="title-row">
-          <div>
+        <header class="hero">
+          <div class="hero-text">
+            <button type="button" class="btn ghost small back" data-action="back">← Tutte le ricette</button>
             <div class="eyebrow">${esc(r.categoria)}${r.fonte ? ` · ${esc(r.fonte)}` : ""}</div>
             <h2>${esc(r.titolo)}</h2>
+            ${r.claim ? `<p class="claim">${esc(r.claim)}</p>` : ""}
+            ${r.citazione ? `<p class="quote">«${esc(r.citazione)}»</p>` : ""}
             ${r.descrizione ? `<p class="lede">${esc(r.descrizione)}</p>` : ""}
+            ${paletteHtml(r.tono)}
           </div>
-          <button type="button" class="fav" data-action="fav" aria-pressed="${fav}" aria-label="${fav ? "Togli dalle preferite" : "Aggiungi alle preferite"}">${starSvg}</button>
-        </div>
+          <div class="hero-side">
+            <button type="button" class="fav" data-action="fav" aria-pressed="${fav}" aria-label="${fav ? "Togli dalle preferite" : "Aggiungi alle preferite"}">${starSvg}</button>
+            ${r.immagini ? `<figure class="hero-fig"><img src="img/${esc(r.id)}-piatto.jpg" alt="Il piatto finito: ${esc(r.titolo)}, illustrazione ad acquerello" width="200" height="149"><figcaption>Illustrazione, non una foto della ricetta</figcaption></figure>` : ""}
+          </div>
+        </header>
         ${storiaHtml(r.storia)}
         <div class="meta">
           <div><span>${r.fonte ? "Tempo stimato" : "Tempo"}</span><b>${durata(r.tempo)}</b></div>
@@ -506,13 +555,10 @@
         </div>
         ${r.riposo ? `<div class="note"><b>Da sapere:</b> oltre al tempo di preparazione servono ${esc(r.riposo)}.</div>` : ""}
         ${r.daVerificare ? `<div class="note check"><b>Da chiedere o verificare</b><ul>${r.daVerificare.map(d => `<li>${esc(d)}</li>`).join("")}</ul></div>` : ""}
-        ${r.immagini ? `<div class="figs">${[["ingredienti", "Gli ingredienti"], ["piatto", "Il piatto finito"]].map(([k, l]) => `
-          <figure><img src="img/${esc(r.id)}-${k}.jpg" alt="${l}: ${esc(r.titolo)}, illustrazione ad acquerello" width="200" height="149" loading="lazy"><figcaption>${l}</figcaption></figure>`).join("")}
-          <p class="fig-note">Illustrazioni ad acquerello generate con Canva per immaginare il piatto: non sono fotografie della ricetta originale.</p>
-        </div>` : ""}
         <div class="body">
           <section>
             <h3>Ingredienti</h3>
+            ${r.immagini ? `<figure class="ingr-fig"><img src="img/${esc(r.id)}-ingredienti.jpg" alt="Gli ingredienti: ${esc(r.titolo)}, illustrazione ad acquerello" width="200" height="149" loading="lazy"></figure>` : ""}
             <p class="hint">${factor === 1 ? "Spunta quello che hai già sul piano di lavoro." : `Quantità ricalcolate per ${dosi} (ricetta originale: ${r.dosi}).`}</p>
             <ul class="ingr">
               ${r.ingredienti.map((g, k) => {
@@ -607,7 +653,7 @@
   function renderCene() {
     $("#cene").innerHTML = CENE.map(c => `
       <li><button type="button" class="item" data-cena="${esc(c.id)}" aria-current="${state.mode === "cena" && state.cena === c.id}">
-        <span class="name">${esc(c.titolo)}</span>
+        <span class="name">${dotsHtml(c.tono)}${esc(c.titolo)}</span>
         <span class="sub">${esc(c.quando)} · ${c.portate.filter(p => p.portata !== "I vini").length} portate e vini</span>
       </button></li>`).join("");
   }
@@ -616,12 +662,16 @@
     const c = cenaById(state.cena);
     $("#detail").innerHTML = `
       <article class="card">
-        <button type="button" class="btn ghost small back" data-action="back">← Tutte le ricette</button>
-        <div>
-          <div class="eyebrow">Menu della cena · ${esc(c.quando)}</div>
-          <h2>${esc(c.titolo)}</h2>
-          <p class="lede">${esc(c.descrizione)}</p>
-        </div>
+        <header class="hero">
+          <div class="hero-text">
+            <button type="button" class="btn ghost small back" data-action="back">← Tutte le ricette</button>
+            <div class="eyebrow">Menu della cena · ${esc(c.quando)}</div>
+            <h2>${esc(c.titolo)}</h2>
+            <p class="claim">${esc(c.claim)}</p>
+            <p class="quote">«${esc(c.citazione)}»</p>
+            ${paletteHtml(c.tono)}
+          </div>
+        </header>
         ${storiaHtml(c.storia)}
         <ol class="portate">
           ${c.portate.map(p => `<li>
@@ -654,6 +704,7 @@
     renderChips();
     renderList();
     renderCene();
+    applyTono(state.mode === "cena" ? cenaById(state.cena).tono : state.mode === "view" ? (byId(state.current) || {}).tono : null);
     if (state.mode === "cena") renderCena();
     else if (state.mode === "view") renderRecipe();
     else renderForm(state.mode === "edit" ? byId(state.current) : null);
