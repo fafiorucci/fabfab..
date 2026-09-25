@@ -84,10 +84,13 @@ Fonte dei testi: Allegato A al DD 131/2022 (atto ufficiale, art. 5 L. 633/1941),
 | K | Il soccorso in mare | 23 | [slide](https://claude.ai/artifact/RnDo7TYXGz52N73sXndC26) | [`lezioni/K-appendice-soccorso`](lezioni/K-appendice-soccorso/) |
 | L | L'ancoraggio | 22 | [slide](https://claude.ai/artifact/5N8Yqin6vPAdayCKswo4Ug) | [`lezioni/L-appendice-ancoraggio`](lezioni/L-appendice-ancoraggio/) |
 
+**Addendum · Schede riassuntive per lo studente** (31 slide): una o due pagine per lezione con le regole da memorizzare e i numeri dei quiz. [Slide](https://claude.ai/artifact/NEHjtWa3XgzS6NMc4K18vC) · [`lezioni/M-addendum-schede`](lezioni/M-addendum-schede/)
+
 ## Materiali pronti
 
 - 15 lezioni da 2 ore: 9 di teoria e vela, 6 di carteggio.
 - 12 appendici A–L di ripasso ed esercitazione.
+- Schede riassuntive per lo studente, una o due pagine per lezione (addendum).
 - 10 prove d'esame simulate complete (appendice D).
 - 135 esercizi di carteggio del DD 131/2022, tutti svolti.
 
