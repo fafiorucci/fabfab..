@@ -3,7 +3,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from app_common import *
 OUT=SP+'/deck/project'
-ORDER=['cover','rotta','allievi','materiale','perche']
+ORDER=['cover','rotta','percorsi','allievi','materiale','perche']
 EB='Il corso per la vostra scuola'
 
 # ============ COVER ============
@@ -42,6 +42,36 @@ sec('rotta',header(EB,'Il corso in una rotta: 30 ore, tre tappe','map',SEA)
     +f'<div style="display:flex; gap:24px; align-items:stretch">{cards}</div>',
     pinned=svgp(128,660,W2,H2,g,'La rotta del corso: tre tappe segnate da boe, una barca a vela in navigazione e un faro all\'arrivo, l\'esame',pan=False)+lbls,
     notes='Il corso segue il programma d\'esame (DM 323/2021, Allegato A) in 15 lezioni da 2 ore. Prima la teoria e la vela, poi il carteggio con tutti gli esercizi ufficiali, infine il ripasso con le appendici, le prove simulate e le schede per gli allievi.',gap=32)
+
+
+# ============ PERCORSI: 12 MIGLIA O SENZA LIMITI ============
+def sailboat(x,y,s,sail):
+    return (f'<g transform="translate({x} {y}) scale({s})"><path d="M-46 22 L46 22 L34 40 L-34 40 Z" fill="#FFFFFF" stroke="{NAVY}" stroke-width="4"/>'
+            f'<path d="M-2 18 L-2 -62" stroke="{NAVY}" stroke-width="4"/><path d="M-6 -56 L-6 14 L-44 14 Z" fill="#FFFFFF" stroke="{NAVY}" stroke-width="3"/><path d="M3 -48 L3 14 L36 14 Z" fill="{sail}" stroke="{NAVY}" stroke-width="3"/></g>')
+W3,H3=1664,120
+d=(f'<path d="M0 96 '+' '.join('q26 -9 52 0 t52 0' for _ in range(16))+f'" fill="none" stroke="{SEA}" stroke-opacity="0.4" stroke-width="5" stroke-linecap="round"/>'
+   f'<path d="M0 120 L0 30 Q60 22 110 48 Q150 70 170 120 Z" fill="{LAND}" stroke="{LAND_S}" stroke-width="3"/>'
+   +tower(70,60,0.5)+glow(70,6,SUN,5)
+   +f'<path d="M760 4 L760 116" stroke="{NAVY}" stroke-width="4" stroke-dasharray="12 10"/>'
+   +sailboat(430,58,0.8,SEA)+sailboat(1250,58,0.8,CORAL)
+   +arrow(1330,74,1600,74,CORAL,4,16))
+lbl3=(lab(128+780,262,300,'12 miglia dalla costa',NAVY,24,900)+lab(128+1360,262,300,'senza limiti',CORAL,24,900))
+def route(title,sub,rows,aula,c_):
+    tb=table(['Prova','Quesiti','Tempo','Errori'],[44,20,16,20],rows,c_,24)
+    return (f'<div style="flex:1; display:flex; flex-direction:column; gap:12px; background:#FFFFFF; border-top:10px solid {c_}; border-radius:28px; padding:24px 28px; box-shadow:0px 10px 28px rgba(27,42,65,0.10)">'
+            f'<div style="display:flex; align-items:center; gap:16px">{h3(title,38,c_)}<p style="font-size:24px; font-weight:900; color:#FFFFFF; background:{c_}; padding:4px 14px; border-radius:14px">{sub}</p></div>'
+            f'{tb}{p(aula,25,BODY,400,1.35)}</div>')
+R12=route('Entro 12 miglia','Lezioni 1–9 · 18 ore',[('Quiz di carteggio','5','15′','max 1'),('Quiz base','20','30′','max 4'),('Quiz vela (solo vela)','5','15′','max 1')],
+          '<b>In aula</b>: teoria, vela ed elementi di carteggio. Prova pratica in mare o in lago.',SEA)
+RSL=route('Senza limiti','Lezioni 1–15 · 30 ore',[('Prova di carteggio','4 esercizi','60′','max 1'),('Quiz base','20','30′','max 4'),('Quiz vela (solo vela)','5','15′','max 1')],
+          '<b>In più</b>: tutto il carteggio su 5/D e 42/D, 135 esercizi svolti e 10 prove simulate. Prova pratica in mare.',CORAL)
+banner=(f'<div style="display:flex; align-items:center; gap:18px; background:{NAVY}; border-radius:24px; padding:16px 28px">'
+        f'<p style="font-family:{HAND}; font-size:40px; font-weight:700; line-height:1; color:{DACC}; white-space:nowrap">Hai già la 12 miglia?</p>'
+        f'<p style="font-size:26px; line-height:1.3; font-weight:700; color:#FFFFFF">Niente quiz base: solo carteggio (e quiz vela per la vela), con le lezioni 10–15.</p></div>')
+sec('percorsi',header(EB,'Due patenti, due rotte','compass',BLUE)+svgi(W3,H3,d,'Dalla costa al largo: una barca naviga entro la linea delle 12 miglia, un\'altra la supera verso il mare aperto',pan=False)
+    +f'<div style="display:flex; gap:24px; align-items:stretch">{R12}{RSL}</div>'+banner,
+    pinned=lbl3,
+    notes='Prove d\'esame secondo l\'art. 6 del DM 323/2021 (tabella riportata nel manuale dei quiz). Entro 12 miglia: 5 quiz su elementi di carteggio in 15 minuti con al massimo 1 errore, 20 quiz base in 30 minuti con al massimo 4 errori, per la vela 5 quiz vela in 15 minuti con al massimo 1 errore. Senza limiti: prova di carteggio con 4 esercizi in 60 minuti con al massimo 1 errore, quiz base solo per chi non ha già la patente entro 12 miglia, quiz vela per la vela. Prova pratica: entro 12 miglia in mare, in lago o in specchi acquei adeguati; senza limiti in mare.',gap=22)
 
 # ============ ALLIEVI ============
 LEARN=[('hull','Conoscere la barca','Scafo, motori ed elica, timone, attrezzatura e vele: ogni parte con il suo nome e la sua funzione.',CORAL),

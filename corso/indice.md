@@ -88,7 +88,7 @@ Fonte dei testi: Allegato A al DD 131/2022 (atto ufficiale, art. 5 L. 633/1941),
 
 ## Presentazione alla scuola nautica
 
-[Rotta verso la patente · Il corso in sintesi](https://claude.ai/artifact/FxjVMj32rr5eymmibB5Eec): 5 slide su struttura, competenze degli allievi, materiale e punti di forza. Sorgenti in [`presentazione-scuola/`](presentazione-scuola/).
+[Rotta verso la patente · Il corso in sintesi](https://claude.ai/artifact/FxjVMj32rr5eymmibB5Eec): 6 slide su struttura, percorsi 12 miglia e senza limiti, competenze degli allievi, materiale e punti di forza. Sorgenti in [`presentazione-scuola/`](presentazione-scuola/).
 
 ## Materiali pronti
 
