@@ -86,6 +86,10 @@ Fonte dei testi: Allegato A al DD 131/2022 (atto ufficiale, art. 5 L. 633/1941),
 
 **Addendum · Schede riassuntive per lo studente** (31 slide): una o due pagine per lezione con le regole da memorizzare e i numeri dei quiz. [Slide](https://claude.ai/artifact/NEHjtWa3XgzS6NMc4K18vC) · [`lezioni/M-addendum-schede`](lezioni/M-addendum-schede/)
 
+## Presentazione alla scuola nautica
+
+[Rotta verso la patente · Il corso in sintesi](https://claude.ai/artifact/FxjVMj32rr5eymmibB5Eec): 5 slide su struttura, competenze degli allievi, materiale e punti di forza. Sorgenti in [`presentazione-scuola/`](presentazione-scuola/).
+
 ## Materiali pronti
 
 - 15 lezioni da 2 ore: 9 di teoria e vela, 6 di carteggio.
