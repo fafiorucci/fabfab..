@@ -1,0 +1,706 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ricettario di casa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  :root {
+    --bg: #F2F4EF;
+    --surface: #FFFFFF;
+    --ink: #1B2420;
+    --muted: #5B6A61;
+    --line: #D5DDD4;
+    --basil: #24513A;
+    --basil-soft: #E1EBE3;
+    --saffron: #D9960F;
+    --saffron-soft: #FBEFD2;
+    --danger: #B3372B;
+    --shadow: 0 1px 2px rgba(27, 36, 32, .06), 0 8px 24px rgba(27, 36, 32, .06);
+    --serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+    --sans: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #111713;
+      --surface: #19211C;
+      --ink: #E6ECE5;
+      --muted: #9AA99F;
+      --line: #2C3831;
+      --basil: #8CC5A0;
+      --basil-soft: #203129;
+      --saffron: #F0B53A;
+      --saffron-soft: #3A2E14;
+      --danger: #EE7A6C;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #111713;
+    --surface: #19211C;
+    --ink: #E6ECE5;
+    --muted: #9AA99F;
+    --line: #2C3831;
+    --basil: #8CC5A0;
+    --basil-soft: #203129;
+    --saffron: #F0B53A;
+    --saffron-soft: #3A2E14;
+    --danger: #EE7A6C;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.55 var(--sans);
+    padding-inline: 16px;
+  }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; }
+
+  .wrap { max-width: 1160px; margin: 0 auto; padding-block: 28px 56px; display: grid; gap: 28px; }
+
+  /* Testata */
+  .masthead { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; border-bottom: 1px solid var(--line); padding-bottom: 18px; }
+  .masthead h1 { font: 400 clamp(40px, 6vw, 60px)/1 var(--serif); margin: 0; letter-spacing: -.01em; }
+  .masthead h1 em { color: var(--basil); }
+  .masthead p { margin: 6px 0 0; color: var(--muted); }
+  .stats { display: flex; gap: 20px; font-variant-numeric: tabular-nums; }
+  .stat { display: grid; }
+  .stat b { font: 400 28px/1 var(--serif); }
+  .stat span { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+
+  /* Layout a due colonne */
+  .app { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 32px; align-items: start; }
+  @media (max-width: 860px) {
+    .app { grid-template-columns: minmax(0, 1fr); }
+    .app[data-view="list"] .detail { display: none; }
+    .app[data-view="detail"] .index { display: none; }
+  }
+  @media (min-width: 861px) { .back { display: none !important; } }
+
+  /* Indice */
+  .index { display: grid; gap: 16px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); }
+  @media (max-width: 860px) { .index { position: static; } }
+  .search { position: relative; }
+  .search input {
+    width: 100%; padding: 11px 14px 11px 38px; border: 1px solid var(--line); border-radius: 10px;
+    background: var(--surface);
+  }
+  .search svg { position: absolute; left: 12px; top: 50%; translate: 0 -50%; width: 16px; height: 16px; stroke: var(--muted); fill: none; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 4px 12px;
+    font-size: 13px; cursor: pointer; color: var(--muted);
+  }
+  .chip:hover { border-color: var(--basil); color: var(--ink); }
+  .chip[aria-pressed="true"] { background: var(--basil); border-color: var(--basil); color: var(--bg); }
+  .list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); max-height: 60vh; overflow-y: auto; }
+  @media (max-width: 860px) { .list { max-height: none; } }
+  .list li { border-bottom: 1px solid var(--line); }
+  .item {
+    width: 100%; display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; text-align: left;
+    background: none; border: 0; padding: 12px 10px; cursor: pointer; border-radius: 8px;
+  }
+  .item:hover { background: var(--basil-soft); }
+  .item[aria-current="true"] { background: var(--basil-soft); }
+  .item .name { font-weight: 600; }
+  .item .sub { grid-column: 1; font-size: 13px; color: var(--muted); }
+  .item .star { grid-row: 1 / span 2; grid-column: 2; align-self: center; color: var(--saffron); }
+  .empty { color: var(--muted); padding: 16px 4px; margin: 0; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
+    border-radius: 10px; padding: 10px 16px; font-weight: 600; border: 1px solid var(--basil);
+    background: var(--basil); color: var(--bg);
+  }
+  .btn:hover { filter: brightness(1.08); }
+  .btn.ghost { background: transparent; color: var(--basil); }
+  .btn.danger { background: var(--danger); border-color: var(--danger); color: var(--bg); }
+  .btn.small { padding: 6px 12px; font-size: 13px; }
+
+  /* Scheda ricetta */
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); padding: clamp(20px, 4vw, 40px); display: grid; gap: 24px; }
+  .back { justify-self: start; }
+  .eyebrow { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--basil); }
+  .title-row { display: flex; gap: 16px; align-items: start; justify-content: space-between; }
+  .card h2 { font: 400 clamp(34px, 5vw, 52px)/1.02 var(--serif); margin: 4px 0 0; text-wrap: balance; }
+  .lede { margin: 10px 0 0; color: var(--muted); max-width: 62ch; font-size: 16px; }
+  .fav {
+    flex: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: transparent;
+    cursor: pointer; display: grid; place-items: center; color: var(--muted);
+  }
+  .fav svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+  .fav[aria-pressed="true"] { color: var(--saffron); border-color: var(--saffron); background: var(--saffron-soft); }
+  .fav[aria-pressed="true"] svg { fill: currentColor; }
+
+  .meta { display: flex; flex-wrap: wrap; gap: 12px 36px; padding-block: 12px; border-block: 1px solid var(--line); }
+  .meta > div { display: grid; gap: 2px; }
+  .meta span { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .meta b { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .stepper { display: flex; align-items: center; gap: 8px; }
+  .stepper button {
+    width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line); background: transparent;
+    cursor: pointer; line-height: 1; display: grid; place-items: center;
+  }
+  .stepper button:hover { border-color: var(--basil); }
+  .stepper button:disabled { opacity: .4; cursor: default; }
+
+  .body { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 36px; }
+  @media (max-width: 640px) { .body { grid-template-columns: minmax(0, 1fr); } }
+  .body h3 { font: 400 26px/1.1 var(--serif); margin: 0 0 10px; }
+  .hint { font-size: 12px; color: var(--muted); margin: -4px 0 10px; }
+  .ingr { list-style: none; margin: 0; padding: 0; }
+  .ingr li { border-bottom: 1px dashed var(--line); }
+  .ingr label { display: grid; grid-template-columns: 18px 96px 1fr; gap: 10px; align-items: baseline; padding: 8px 0; cursor: pointer; }
+  .ingr input { accent-color: var(--basil); translate: 0 2px; }
+  .qty { font: 500 13px/1.4 var(--mono); font-variant-numeric: tabular-nums; color: var(--basil); text-align: right; }
+  .qty.qb { color: var(--muted); font-style: italic; }
+  .ingr input:checked ~ span { text-decoration: line-through; opacity: .5; }
+
+  .steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 14px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 34px 1fr; gap: 12px; max-width: 64ch; }
+  .steps li::before {
+    content: counter(s); font: 400 24px/1.1 var(--serif); color: var(--saffron);
+    border-top: 2px solid var(--saffron); padding-top: 2px; text-align: left;
+  }
+  .note { background: var(--saffron-soft); border-radius: 10px; padding: 12px 16px; font-size: 14px; }
+  .note b { color: var(--ink); }
+  .owner-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border-top: 1px solid var(--line); padding-top: 18px; }
+  .owner-actions p { margin: 0; color: var(--muted); font-size: 13px; }
+
+  /* Modulo */
+  form.card { gap: 18px; }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+  .field { display: grid; gap: 6px; }
+  .field label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .field input, .field select, .field textarea {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg);
+  }
+  .field textarea { min-height: 150px; resize: vertical; line-height: 1.5; }
+  .field small { color: var(--muted); font-size: 12px; }
+  .error { color: var(--danger); font-size: 14px; margin: 0; }
+  .form-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); translate: -50% 0;
+    background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: 14px;
+    box-shadow: var(--shadow); transition: opacity .2s; pointer-events: none;
+  }
+  .toast[data-show="false"] { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div>
+      <h1>Ricettario <em>di casa</em></h1>
+      <p>Le ricette di sempre, con le dosi che si adattano ai commensali.</p>
+    </div>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="app" id="app" data-view="list">
+    <aside class="index" aria-label="Indice delle ricette">
+      <div class="search">
+        <svg viewBox="0 0 24 24" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <input id="q" type="search" placeholder="Cerca per nome o ingrediente" aria-label="Cerca ricette">
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Filtra per portata"></div>
+      <ul class="list" id="list"></ul>
+      <button class="btn" id="new" type="button">+ Nuova ricetta</button>
+    </aside>
+
+    <main class="detail" id="detail" aria-live="polite"></main>
+  </div>
+</div>
+<div class="toast" id="toast" data-show="false" role="status"></div>
+
+<script>
+(() => {
+  const CATEGORIE = ["Primi", "Secondi", "Contorni", "Salse", "Lievitati", "Dolci"];
+  const LIVELLI = ["Facile", "Media", "Impegnativa"];
+
+  // q: quantità per le dosi base; null = quanto basta
+  const i = (q, u, nome) => ({ q, u, nome });
+  const BASE = [
+    {
+      id: "carbonara", titolo: "Spaghetti alla carbonara", categoria: "Primi", tempo: 25, dosi: 4, difficolta: "Facile",
+      descrizione: "Guanciale croccante, tuorli e pecorino: la crema nasce in padella, fuori dal fuoco, con l'acqua di cottura.",
+      ingredienti: [i(320, "g", "spaghetti"), i(150, "g", "guanciale"), i(4, "", "tuorli d'uovo"), i(50, "g", "pecorino romano grattugiato"), i(null, "", "pepe nero macinato al momento"), i(null, "", "sale grosso per l'acqua")],
+      passi: [
+        "Taglia il guanciale a listarelle e rosolalo in padella senza olio finché il grasso diventa trasparente e la carne croccante. Spegni il fuoco.",
+        "In una ciotola sbatti i tuorli con il pecorino e abbondante pepe fino a ottenere una crema densa.",
+        "Cuoci gli spaghetti in acqua salata e scolali al dente, tenendo da parte un mestolo di acqua di cottura.",
+        "Versa la pasta nella padella con il guanciale, sempre a fuoco spento, e aggiungi la crema di uova.",
+        "Manteca con energia unendo poca acqua di cottura alla volta, finché la salsa è lucida e avvolgente. Servi subito con altro pecorino e pepe."
+      ]
+    },
+    {
+      id: "risotto-milanese", titolo: "Risotto alla milanese", categoria: "Primi", tempo: 40, dosi: 4, difficolta: "Media",
+      descrizione: "Il giallo dello zafferano, la tostatura a secco e una mantecatura generosa di burro e Parmigiano.",
+      ingredienti: [i(320, "g", "riso Carnaroli"), i(1000, "ml", "brodo di carne caldo"), i(1, "", "cipolla dorata piccola"), i(80, "g", "burro freddo"), i(60, "g", "Parmigiano Reggiano grattugiato"), i(100, "ml", "vino bianco secco"), i(1, "bustina", "zafferano in polvere"), i(null, "", "sale")],
+      passi: [
+        "Se al posto della bustina usi i pistilli (circa 0,2 g per 4 persone), mettili in infusione in un mestolino di brodo caldo almeno 30 minuti prima.",
+        "Trita finemente la cipolla e falla appassire in metà del burro a fuoco dolce, senza farla colorire.",
+        "Unisci il riso e tostalo 2 minuti mescolando, finché i chicchi diventano traslucidi. Sfuma con il vino.",
+        "Aggiungi il brodo un mestolo alla volta, aspettando che venga assorbito prima del successivo. Dopo 10 minuti unisci lo zafferano.",
+        "A cottura (16–18 minuti) spegni, aggiungi il burro rimasto e il Parmigiano, copri e lascia riposare 2 minuti. Manteca e servi all'onda."
+      ]
+    },
+    {
+      id: "pasta-fagioli", titolo: "Pasta e fagioli", categoria: "Primi", tempo: 50, dosi: 4, difficolta: "Facile",
+      descrizione: "Minestra densa e cremosa: una parte dei fagioli si frulla per legare il brodo.",
+      ingredienti: [i(200, "g", "ditalini o pasta mista"), i(500, "g", "fagioli borlotti lessati"), i(1, "", "carota"), i(1, "costa", "sedano"), i(1, "", "cipolla"), i(200, "ml", "passata di pomodoro"), i(1000, "ml", "brodo vegetale"), i(1, "rametto", "rosmarino"), i(null, "", "olio extravergine d'oliva"), i(null, "", "sale e pepe")],
+      passi: [
+        "Trita carota, sedano e cipolla e soffriggili in 3 cucchiai d'olio con il rosmarino per 8 minuti.",
+        "Aggiungi la passata e i fagioli, copri con il brodo e cuoci 20 minuti a fuoco medio.",
+        "Togli il rosmarino, preleva un terzo dei fagioli, frullali e rimettili nella pentola.",
+        "Cuoci la pasta direttamente nella minestra, allungando con brodo se serve. Servi con un filo d'olio a crudo e pepe."
+      ]
+    },
+    {
+      id: "parmigiana", titolo: "Parmigiana di melanzane", categoria: "Secondi", tempo: 90, dosi: 6, difficolta: "Media",
+      descrizione: "Strati di melanzane fritte, sugo al basilico, fior di latte e Parmigiano, passati in forno.",
+      ingredienti: [i(1500, "g", "melanzane lunghe"), i(700, "ml", "passata di pomodoro"), i(300, "g", "fior di latte"), i(100, "g", "Parmigiano Reggiano grattugiato"), i(1, "spicchio", "aglio"), i(null, "", "basilico fresco"), i(null, "", "olio di semi di arachide per friggere"), i(null, "", "sale")],
+      passi: [
+        "Taglia le melanzane a fette di mezzo centimetro, salale e lasciale in un colapasta con un peso sopra per un'ora. Asciugale bene.",
+        "Cuoci la passata 15 minuti con l'aglio, un filo d'olio, sale e qualche foglia di basilico.",
+        "Friggi le melanzane in olio ben caldo finché sono dorate e scolale su carta assorbente. Taglia il fior di latte a dadini e lascialo sgocciolare.",
+        "In una pirofila alterna sugo, melanzane, fior di latte, Parmigiano e basilico. Chiudi con sugo e Parmigiano.",
+        "Inforna a 180 °C per 35–40 minuti. Lascia riposare almeno 30 minuti prima di tagliare."
+      ]
+    },
+    {
+      id: "caponata", titolo: "Caponata siciliana", categoria: "Contorni", tempo: 60, dosi: 6, difficolta: "Media",
+      descrizione: "Agrodolce di melanzane con sedano, olive, capperi e pinoli. Migliore il giorno dopo.",
+      ingredienti: [i(1000, "g", "melanzane"), i(1, "", "cipolla rossa"), i(2, "coste", "sedano"), i(200, "g", "pomodori pelati"), i(50, "g", "olive verdi denocciolate"), i(30, "g", "capperi dissalati"), i(30, "g", "pinoli"), i(40, "ml", "aceto di vino bianco"), i(20, "g", "zucchero"), i(null, "", "olio di semi per friggere"), i(null, "", "basilico e sale")],
+      passi: [
+        "Taglia le melanzane a cubetti, salale e lasciale spurgare 30 minuti. Asciugale e friggile finché sono dorate.",
+        "Sbollenta il sedano a tocchetti per 3 minuti. In padella fai appassire la cipolla affettata con un filo d'olio.",
+        "Aggiungi sedano, pelati spezzettati, olive, capperi e pinoli e cuoci 10 minuti.",
+        "Sciogli lo zucchero nell'aceto, versalo in padella e lascia evaporare per 2 minuti.",
+        "Unisci le melanzane, mescola con delicatezza e completa con il basilico. Servi a temperatura ambiente."
+      ]
+    },
+    {
+      id: "pesto", titolo: "Pesto alla genovese", categoria: "Salse", tempo: 15, dosi: 4, difficolta: "Facile",
+      descrizione: "Basilico giovane pestato a freddo con aglio, pinoli, due formaggi e olio ligure.",
+      ingredienti: [i(50, "g", "basilico genovese, foglie"), i(70, "ml", "olio extravergine delicato"), i(30, "g", "Parmigiano Reggiano grattugiato"), i(20, "g", "pecorino (Fiore Sardo)"), i(15, "g", "pinoli"), i(1, "spicchio", "aglio"), i(null, "", "sale grosso")],
+      passi: [
+        "Lava il basilico e asciugalo tamponando, senza strofinare le foglie.",
+        "Nel mortaio pesta l'aglio con qualche grano di sale grosso fino a ridurlo in crema, poi aggiungi i pinoli.",
+        "Unisci il basilico poco alla volta, schiacciandolo con movimento rotatorio contro le pareti.",
+        "Incorpora i formaggi e infine l'olio a filo, mescolando con il pestello. Usalo subito o coprilo con un velo d'olio."
+      ]
+    },
+    {
+      id: "focaccia", titolo: "Focaccia genovese", categoria: "Lievitati", tempo: 60, riposo: "circa 4 ore di lievitazione", dosi: 1, dosiLabel: "teglia 30×40", difficolta: "Media",
+      descrizione: "Alta due dita, con i buchi pieni di salamoia e la superficie dorata e croccante.",
+      ingredienti: [i(500, "g", "farina 0"), i(350, "ml", "acqua a temperatura ambiente"), i(10, "g", "lievito di birra fresco"), i(10, "g", "sale fino"), i(5, "g", "malto d'orzo o zucchero"), i(25, "ml", "olio extravergine (impasto)"), i(80, "ml", "acqua (salamoia)"), i(40, "ml", "olio extravergine (salamoia)"), i(null, "", "sale grosso")],
+      passi: [
+        "Sciogli lievito e malto nell'acqua, aggiungi la farina e impasta; unisci il sale e poi l'olio fino a ottenere un impasto liscio.",
+        "Lascia riposare 20 minuti, stendilo nella teglia unta allargandolo con i polpastrelli e fai lievitare 1 ora.",
+        "Stendilo fino ai bordi, cospargi di sale grosso e lascia lievitare ancora 1 ora e mezza.",
+        "Premi le dita nell'impasto per formare i buchi, versa la salamoia emulsionata e lascia lievitare altri 45 minuti.",
+        "Cuoci a 230 °C nella parte bassa del forno per 18–20 minuti, finché è dorata."
+      ]
+    },
+    {
+      id: "tiramisu", titolo: "Tiramisù", categoria: "Dolci", tempo: 30, riposo: "almeno 4 ore in frigorifero", dosi: 6, difficolta: "Facile",
+      descrizione: "Savoiardi inzuppati nel caffè e crema al mascarpone, con cacao amaro all'ultimo momento.",
+      ingredienti: [i(4, "", "uova freschissime"), i(100, "g", "zucchero"), i(500, "g", "mascarpone"), i(300, "g", "savoiardi"), i(300, "ml", "caffè espresso freddo"), i(null, "", "cacao amaro in polvere")],
+      passi: [
+        "Separa le uova. Monta i tuorli con metà dello zucchero finché sono chiari e spumosi, poi incorpora il mascarpone.",
+        "Monta gli albumi a neve con lo zucchero rimasto e uniscili alla crema mescolando dal basso verso l'alto.",
+        "Inzuppa velocemente i savoiardi nel caffè e disponine uno strato nella pirofila; coprili con metà della crema.",
+        "Ripeti con un secondo strato di savoiardi e la crema rimasta. Livella e riponi in frigorifero.",
+        "Prima di servire, spolvera con cacao amaro setacciato."
+      ]
+    },
+    {
+      id: "panna-cotta", titolo: "Panna cotta", categoria: "Dolci", tempo: 20, riposo: "almeno 4 ore in frigorifero", dosi: 4, difficolta: "Facile",
+      descrizione: "Panna, vaniglia e poca gelatina: deve tremare appena quando si sforma.",
+      ingredienti: [i(500, "ml", "panna fresca"), i(80, "g", "zucchero"), i(8, "g", "gelatina in fogli"), i(1, "bacca", "vaniglia")],
+      passi: [
+        "Ammolla la gelatina in acqua fredda per 10 minuti.",
+        "Scalda la panna con lo zucchero e i semi della vaniglia fino a sfiorare il bollore, poi spegni.",
+        "Strizza la gelatina e scioglila nella panna calda mescolando.",
+        "Versa negli stampini e lascia rassodare in frigorifero. Sforma immergendo lo stampo in acqua calda per pochi secondi."
+      ]
+    }
+  ];
+
+  // ---- Archivio locale (solo in questo browser) ----
+  const KEY = "ricettario:v1";
+  const load = () => {
+    try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; }
+  };
+  const saved = load();
+  const state = {
+    mine: Array.isArray(saved.mine) ? saved.mine : [],
+    fav: new Set(Array.isArray(saved.fav) ? saved.fav : ["carbonara", "tiramisu"]),
+    cat: "Tutte",
+    q: "",
+    current: null,
+    servings: {},
+    checked: new Set(),
+    mode: "view",
+    confirmDelete: false
+  };
+  const persist = () => {
+    try { localStorage.setItem(KEY, JSON.stringify({ mine: state.mine, fav: [...state.fav] })); } catch {}
+  };
+  const all = () => [...BASE, ...state.mine];
+  const byId = id => all().find(r => r.id === id);
+
+  // ---- Utilità ----
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  const nf1 = new Intl.NumberFormat("it-IT", { maximumFractionDigits: 1 });
+  const nf2 = new Intl.NumberFormat("it-IT", { maximumFractionDigits: 2 });
+
+  const durata = min => {
+    const h = Math.floor(min / 60), m = min % 60;
+    return h ? (m ? `${h} h ${m} min` : `${h} h`) : `${m} min`;
+  };
+
+  function formatQty(ing, factor) {
+    if (ing.q == null) return { text: "q.b.", qb: true };
+    let v = ing.q * factor, u = ing.u || "";
+    if ((u === "g" || u === "ml") && v >= 1000) {
+      v = v / 1000; u = u === "g" ? "kg" : "l";
+      return { text: `${nf2.format(Math.round(v * 20) / 20)} ${u}` };
+    }
+    if (u === "g" || u === "ml") {
+      const num = v >= 100 ? nf1.format(Math.round(v / 5) * 5) : v >= 10 ? nf1.format(Math.round(v)) : nf1.format(v);
+      return { text: `${num} ${u}` };
+    }
+    // pezzi, spicchi, coste…: al mezzo più vicino
+    const r = Math.max(0.5, Math.round(v * 2) / 2);
+    const int = Math.floor(r);
+    const num = r % 1 ? (int ? `${int}½` : "½") : String(r);
+    const uu = unita(u, r);
+    return { text: uu ? `${num} ${uu}` : num };
+  }
+
+  const PLURALE = { bustina: "bustine", costa: "coste", spicchio: "spicchi", rametto: "rametti", bacca: "bacche", cucchiaio: "cucchiai", cucchiaino: "cucchiaini", pizzico: "pizzichi", tazza: "tazze", bicchiere: "bicchieri" };
+  const SINGOLARE = Object.fromEntries(Object.entries(PLURALE).map(([s, p]) => [p, s]));
+  const unita = (u, v) => (v > 1 ? PLURALE[u] || u : SINGOLARE[u] || u);
+
+  // "200 g farina" → {q:200,u:"g",nome:"farina"}; righe senza numero → q.b.
+  const UNITA = ["kg", "g", "l", "ml", "cl", ...Object.keys(PLURALE), ...Object.values(PLURALE)];
+  const FRAZIONI = { "½": 0.5, "¼": 0.25, "¾": 0.75 };
+  function parseIngrediente(line) {
+    const qb = () => i(null, "", line.replace(/\s*q\.?\s*b\.?\s*$/i, "").trim());
+    const m = line.match(/^(\d+(?:[.,]\d+)?|\d+\/\d+|[½¼¾])\s*([a-zà-ú]+)?\.?\s+(.+)$/i);
+    if (!m) return qb();
+    const n = m[1];
+    let q = FRAZIONI[n] ?? (n.includes("/") ? n.split("/")[0] / n.split("/")[1] : parseFloat(n.replace(",", ".")));
+    if (!isFinite(q) || q <= 0) return qb();
+    let u = (m[2] || "").toLowerCase();
+    let nome = m[3].trim();
+    if (u && !UNITA.includes(u)) { nome = `${m[2]} ${nome}`; u = ""; }
+    if (u) nome = nome.replace(/^(di\s+|d')/i, "");
+    if (u === "kg") { q *= 1000; u = "g"; }
+    if (u === "l") { q *= 1000; u = "ml"; }
+    if (u === "cl") { q *= 10; u = "ml"; }
+    return i(q, u, nome);
+  }
+
+  let toastTimer;
+  function toast(msg) {
+    const t = $("#toast");
+    t.textContent = msg;
+    t.dataset.show = "true";
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => (t.dataset.show = "false"), 2200);
+  }
+
+  // ---- Rendering ----
+  function renderStats() {
+    const n = all().length;
+    $("#stats").innerHTML = `
+      <div class="stat"><b>${n}</b><span>ricette</span></div>
+      <div class="stat"><b>${state.fav.size}</b><span>preferite</span></div>
+      <div class="stat"><b>${state.mine.length}</b><span>tue</span></div>`;
+  }
+
+  function renderChips() {
+    const present = new Set(all().map(r => r.categoria));
+    const cats = ["Tutte", ...CATEGORIE.filter(c => present.has(c)), "Preferite"];
+    $("#chips").innerHTML = cats.map(c =>
+      `<button type="button" class="chip" data-cat="${esc(c)}" aria-pressed="${state.cat === c}">${c === "Preferite" ? "★ " : ""}${esc(c)}</button>`
+    ).join("");
+  }
+
+  function filtered() {
+    const q = norm(state.q.trim());
+    return all().filter(r => {
+      if (state.cat === "Preferite" && !state.fav.has(r.id)) return false;
+      if (state.cat !== "Tutte" && state.cat !== "Preferite" && r.categoria !== state.cat) return false;
+      if (!q) return true;
+      return norm(r.titolo).includes(q) || r.ingredienti.some(g => norm(g.nome).includes(q));
+    });
+  }
+
+  function renderList() {
+    const rs = filtered();
+    $("#list").innerHTML = rs.length ? rs.map(r => `
+      <li><button type="button" class="item" data-id="${esc(r.id)}" aria-current="${state.current === r.id && state.mode === "view"}">
+        <span class="name">${esc(r.titolo)}</span>
+        <span class="sub">${esc(r.categoria)} · ${durata(r.tempo)}${r.mine ? " · tua" : ""}</span>
+        ${state.fav.has(r.id) ? '<span class="star" aria-label="preferita">★</span>' : ""}
+      </button></li>`).join("")
+      : `<li><p class="empty">Nessuna ricetta trovata${state.q ? ` per “${esc(state.q)}”` : ""}.</p></li>`;
+  }
+
+  const starSvg = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.8l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z" stroke-linejoin="round"></path></svg>';
+
+  function renderRecipe() {
+    const r = byId(state.current);
+    if (!r) { state.current = all()[0].id; return renderRecipe(); }
+    const dosi = state.servings[r.id] ?? r.dosi;
+    const factor = dosi / r.dosi;
+    const label = r.dosiLabel ? (dosi === 1 ? r.dosiLabel : r.dosiLabel.replace(/^teglia/, "teglie")) : (dosi === 1 ? "persona" : "persone");
+    const fav = state.fav.has(r.id);
+
+    $("#detail").innerHTML = `
+      <article class="card">
+        <button type="button" class="btn ghost small back" data-action="back">← Tutte le ricette</button>
+        <div class="title-row">
+          <div>
+            <div class="eyebrow">${esc(r.categoria)}</div>
+            <h2>${esc(r.titolo)}</h2>
+            ${r.descrizione ? `<p class="lede">${esc(r.descrizione)}</p>` : ""}
+          </div>
+          <button type="button" class="fav" data-action="fav" aria-pressed="${fav}" aria-label="${fav ? "Togli dalle preferite" : "Aggiungi alle preferite"}">${starSvg}</button>
+        </div>
+        <div class="meta">
+          <div><span>Tempo</span><b>${durata(r.tempo)}</b></div>
+          <div><span>Dosi</span>
+            <div class="stepper">
+              <button type="button" data-action="less" aria-label="Diminuisci dosi" ${dosi <= 1 ? "disabled" : ""}>−</button>
+              <b id="dosi">${dosi} ${esc(label)}</b>
+              <button type="button" data-action="more" aria-label="Aumenta dosi" ${dosi >= 24 ? "disabled" : ""}>+</button>
+            </div>
+          </div>
+          <div><span>Difficoltà</span><b>${esc(r.difficolta)}</b></div>
+        </div>
+        ${r.riposo ? `<div class="note"><b>Da sapere:</b> oltre al tempo di preparazione servono ${esc(r.riposo)}.</div>` : ""}
+        <div class="body">
+          <section>
+            <h3>Ingredienti</h3>
+            <p class="hint">${factor === 1 ? "Spunta quello che hai già sul piano di lavoro." : `Quantità ricalcolate per ${dosi} (ricetta originale: ${r.dosi}).`}</p>
+            <ul class="ingr">
+              ${r.ingredienti.map((g, k) => {
+                const f = formatQty(g, factor);
+                const key = `${r.id}:${k}`;
+                return `<li><label><input type="checkbox" id="ing-${esc(r.id)}-${k}" data-key="${esc(key)}" ${state.checked.has(key) ? "checked" : ""}><span class="qty${f.qb ? " qb" : ""}">${esc(f.text)}</span><span>${esc(g.nome)}</span></label></li>`;
+              }).join("")}
+            </ul>
+          </section>
+          <section>
+            <h3>Procedimento</h3>
+            <ol class="steps">${r.passi.map(p => `<li><span>${esc(p)}</span></li>`).join("")}</ol>
+          </section>
+        </div>
+        ${r.mine ? `
+          <div class="owner-actions">
+            ${state.confirmDelete
+              ? `<p>Eliminare “${esc(r.titolo)}”? Non si potrà recuperare.</p>
+                 <button type="button" class="btn danger small" data-action="delete-yes">Elimina</button>
+                 <button type="button" class="btn ghost small" data-action="delete-no">Annulla</button>`
+              : `<p>Ricetta tua, salvata in questo browser.</p>
+                 <button type="button" class="btn ghost small" data-action="edit">Modifica</button>
+                 <button type="button" class="btn ghost small" data-action="delete">Elimina</button>`}
+          </div>` : ""}
+      </article>`;
+  }
+
+  function renderForm(r) {
+    const val = (k, d = "") => esc(r ? r[k] : d);
+    const ingr = r ? r.ingredienti.map(g => g.q == null ? `${g.nome} q.b.` : `${g.q}${g.u ? " " + g.u : ""} ${g.nome}`).join("\n") : "";
+    const passi = r ? r.passi.join("\n") : "";
+    $("#detail").innerHTML = `
+      <form class="card" id="form" novalidate>
+        <button type="button" class="btn ghost small back" data-action="back">← Tutte le ricette</button>
+        <div>
+          <div class="eyebrow">${r ? "Modifica ricetta" : "Nuova ricetta"}</div>
+          <h2>${r ? esc(r.titolo) : "Scrivi la tua ricetta"}</h2>
+        </div>
+        <div class="field">
+          <label for="f-titolo">Titolo</label>
+          <input id="f-titolo" name="titolo" required value="${val("titolo")}" placeholder="Es. Polpette al sugo della nonna">
+        </div>
+        <div class="grid2">
+          <div class="field">
+            <label for="f-cat">Portata</label>
+            <select id="f-cat" name="categoria">${CATEGORIE.map(c => `<option ${r && r.categoria === c ? "selected" : ""}>${c}</option>`).join("")}</select>
+          </div>
+          <div class="field">
+            <label for="f-tempo">Tempo (minuti)</label>
+            <input id="f-tempo" name="tempo" type="number" min="1" inputmode="numeric" value="${val("tempo", 30)}">
+          </div>
+          <div class="field">
+            <label for="f-dosi">Dosi (persone)</label>
+            <input id="f-dosi" name="dosi" type="number" min="1" max="24" inputmode="numeric" value="${val("dosi", 4)}">
+          </div>
+          <div class="field">
+            <label for="f-diff">Difficoltà</label>
+            <select id="f-diff" name="difficolta">${LIVELLI.map(l => `<option ${r && r.difficolta === l ? "selected" : ""}>${l}</option>`).join("")}</select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-desc">Descrizione breve</label>
+          <input id="f-desc" name="descrizione" value="${val("descrizione")}" placeholder="Una riga su cosa la rende speciale">
+        </div>
+        <div class="field">
+          <label for="f-ingr">Ingredienti</label>
+          <textarea id="f-ingr" name="ingredienti" placeholder="400 g macinato misto&#10;1 uovo&#10;50 g pane raffermo&#10;sale q.b.">${esc(ingr)}</textarea>
+          <small>Uno per riga, quantità all'inizio (g, kg, ml, l, cucchiai…). Le righe senza numero diventano “q.b.” e non vengono ricalcolate.</small>
+        </div>
+        <div class="field">
+          <label for="f-passi">Procedimento</label>
+          <textarea id="f-passi" name="passi" placeholder="Ammolla il pane nel latte.&#10;Impasta con carne, uovo e formaggio.">${esc(passi)}</textarea>
+          <small>Un passaggio per riga.</small>
+        </div>
+        <p class="error" id="f-err" hidden></p>
+        <div class="form-actions">
+          <button class="btn" type="submit">${r ? "Salva modifiche" : "Aggiungi al ricettario"}</button>
+          <button class="btn ghost" type="button" data-action="${r ? "cancel-edit" : "back"}">Annulla</button>
+        </div>
+      </form>`;
+    $("#f-titolo").focus({ preventScroll: true });
+  }
+
+  function render() {
+    renderStats();
+    renderChips();
+    renderList();
+    if (state.mode === "view") renderRecipe();
+    else renderForm(state.mode === "edit" ? byId(state.current) : null);
+  }
+
+  // ---- Navigazione ----
+  function open(id, { scroll = true } = {}) {
+    state.current = id;
+    state.mode = "view";
+    state.confirmDelete = false;
+    $("#app").dataset.view = "detail";
+    try { history.replaceState(null, "", "#" + id); } catch {}
+    render();
+    if (scroll && matchMedia("(max-width: 860px)").matches) $("#app").scrollIntoView({ block: "start" });
+  }
+
+  $("#list").addEventListener("click", e => {
+    const b = e.target.closest(".item");
+    if (b) open(b.dataset.id);
+  });
+  $("#chips").addEventListener("click", e => {
+    const b = e.target.closest(".chip");
+    if (!b) return;
+    state.cat = b.dataset.cat;
+    renderChips(); renderList();
+  });
+  $("#q").addEventListener("input", e => { state.q = e.target.value; renderList(); });
+  $("#new").addEventListener("click", () => {
+    state.mode = "new";
+    $("#app").dataset.view = "detail";
+    render();
+  });
+
+  $("#detail").addEventListener("click", e => {
+    const a = e.target.closest("[data-action]");
+    if (!a) return;
+    const r = byId(state.current);
+    switch (a.dataset.action) {
+      case "back":
+        state.mode = "view";
+        $("#app").dataset.view = "list";
+        render();
+        break;
+      case "fav":
+        state.fav.has(r.id) ? state.fav.delete(r.id) : state.fav.add(r.id);
+        persist(); render();
+        toast(state.fav.has(r.id) ? "Aggiunta alle preferite" : "Tolta dalle preferite");
+        break;
+      case "less":
+      case "more": {
+        const d = (state.servings[r.id] ?? r.dosi) + (a.dataset.action === "more" ? 1 : -1);
+        state.servings[r.id] = Math.min(24, Math.max(1, d));
+        renderRecipe();
+        break;
+      }
+      case "edit": state.mode = "edit"; render(); break;
+      case "cancel-edit": state.mode = "view"; render(); break;
+      case "delete": state.confirmDelete = true; renderRecipe(); break;
+      case "delete-no": state.confirmDelete = false; renderRecipe(); break;
+      case "delete-yes":
+        state.mine = state.mine.filter(x => x.id !== r.id);
+        state.fav.delete(r.id);
+        persist();
+        toast("Ricetta eliminata");
+        open(all()[0].id, { scroll: false });
+        $("#app").dataset.view = "list";
+        break;
+    }
+  });
+
+  $("#detail").addEventListener("change", e => {
+    const key = e.target.dataset && e.target.dataset.key;
+    if (!key) return;
+    e.target.checked ? state.checked.add(key) : state.checked.delete(key);
+  });
+
+  $("#detail").addEventListener("submit", e => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const err = $("#f-err");
+    const titolo = String(f.get("titolo") || "").trim();
+    const righe = k => String(f.get(k) || "").split("\n").map(s => s.trim()).filter(Boolean);
+    const ingredienti = righe("ingredienti").map(parseIngrediente);
+    const passi = righe("passi");
+    const miss = [!titolo && "il titolo", !ingredienti.length && "almeno un ingrediente", !passi.length && "almeno un passaggio"].filter(Boolean);
+    if (miss.length) {
+      err.textContent = `Manca ${miss.join(", ")}.`;
+      err.hidden = false;
+      return;
+    }
+    const editing = state.mode === "edit";
+    const slug = norm(titolo).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "ricetta";
+    let id = editing ? state.current : slug;
+    if (!editing) { let n = 2; while (byId(id)) id = `${slug}-${n++}`; }
+    const ricetta = {
+      id, mine: true, titolo,
+      categoria: String(f.get("categoria")),
+      tempo: Math.max(1, parseInt(f.get("tempo"), 10) || 30),
+      dosi: Math.min(24, Math.max(1, parseInt(f.get("dosi"), 10) || 4)),
+      difficolta: String(f.get("difficolta")),
+      descrizione: String(f.get("descrizione") || "").trim(),
+      ingredienti, passi
+    };
+    state.mine = editing ? state.mine.map(x => (x.id === id ? ricetta : x)) : [...state.mine, ricetta];
+    delete state.servings[id];
+    for (const k of [...state.checked]) if (k.startsWith(id + ":")) state.checked.delete(k);
+    persist();
+    toast(editing ? "Modifiche salvate" : "Ricetta aggiunta");
+    open(id);
+  });
+
+  // ---- Avvio ----
+  const fromHash = decodeURIComponent(location.hash.slice(1));
+  state.current = byId(fromHash) ? fromHash : BASE[0].id;
+  if (byId(fromHash)) $("#app").dataset.view = "detail";
+  render();
+  window.addEventListener("hashchange", () => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (byId(id) && id !== state.current) open(id);
+  });
+})();
+</script>
