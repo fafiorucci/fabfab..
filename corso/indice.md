@@ -98,4 +98,4 @@ Fonte dei testi: Allegato A al DD 131/2022 (atto ufficiale, art. 5 L. 633/1941),
 - 10 prove d'esame simulate complete (appendice D).
 - 135 esercizi di carteggio del DD 131/2022, tutti svolti.
 
-Deck dell'indice: [slide](https://claude.ai/artifact/KWJagMPHLrNsJ7wsAJTQ2c) (slide 24-25 appendici, 26 riepilogo), aggiornato con [`template/genera_indice_appendici.py`](template/genera_indice_appendici.py).
+Deck dell'indice: [slide](https://claude.ai/artifact/KWJagMPHLrNsJ7wsAJTQ2c) (slide 24-25 appendici, 26 presentazione alla scuola e schede riassuntive, 27 riepilogo), aggiornato con [`template/genera_indice_appendici.py`](template/genera_indice_appendici.py) e [`template/genera_indice_extra.py`](template/genera_indice_extra.py).
