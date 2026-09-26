@@ -163,6 +163,138 @@ const ICONS = {
     P("M26 60 C32 46 44 42 50 42 C56 42 68 46 74 60 Z", K.milk),
     C(42, 52, 1.2, K.dark, NF), C(54, 50, 1.2, K.dark, NF), C(60, 55, 1.2, K.dark, NF)
   ],
+  acqua: [
+    P("M38 16 L62 16 L60 30 C74 40 78 56 76 72 C74 86 64 92 50 92 C36 92 26 86 24 72 C22 56 26 40 40 30 Z", K.glass),
+    P("M25 60 C40 64 60 64 75 60 C76 78 66 90 50 90 C34 90 24 78 25 60 Z", "#C9DFE7"),
+    P("M34 44 C32 50 32 54 33 58", "none")
+  ],
+  olio: [
+    P("M44 12 L56 12 L56 30 C66 36 70 46 70 58 L70 88 L30 88 L30 58 C30 46 34 36 44 30 Z", "#DCD9A0"),
+    P("M34 58 L66 58 L66 78 L34 78 Z", K.milk),
+    E(50, 68, 6, 4, "#A8B06A"), P("M50 64 L54 60", "none")
+  ],
+  cacao: [
+    P("M26 58 C30 40 42 32 50 32 C58 32 70 40 74 58 Z", "#9E7662"),
+    P("M16 56 L84 56 C82 78 68 90 50 90 C32 90 18 78 16 56 Z", "#EEDFD2"),
+    C(42, 46, 1.4, K.milk, NF), C(56, 42, 1.4, K.milk, NF)
+  ],
+  marmellata: [
+    P("M28 36 L72 36 L74 84 C74 88 70 90 66 90 L34 90 C30 90 26 88 26 84 Z", "#E59A8E"),
+    P("M24 22 L76 22 L76 36 L24 36 Z", "#F6E6DC"),
+    P("M24 29 L76 29 M37 22 L37 36 M50 22 L50 36 M63 22 L63 36", "none"),
+    E(50, 62, 14, 10, K.milk)
+  ],
+  riso: [
+    P("M26 58 C30 38 44 30 50 30 C56 30 70 38 74 58 Z", K.milk),
+    P("M16 56 L84 56 C82 78 68 90 50 90 C32 90 18 78 16 56 Z", "#EDE6F0"),
+    P("M38 46 L42 44 M50 40 L54 42 M58 48 L62 46 M46 52 L50 50", "none")
+  ],
+  pomodoro: [
+    P("M50 30 C30 30 16 44 16 60 C16 78 32 88 50 88 C68 88 84 78 84 60 C84 44 70 30 50 30 Z", K.chili),
+    P("M50 34 L40 24 L48 32 L36 36 L50 38 L64 36 L52 32 L60 24 Z", K.bay),
+    P("M50 34 L52 22", "none"), C(34, 52, 2, K.milk, NF)
+  ],
+  parmigiano: [
+    P("M14 52 L68 30 L86 44 L30 66 Z", "#F3DE9A"),
+    P("M14 52 L30 66 L30 82 L14 68 Z", "#E8CD80"),
+    P("M30 66 L86 44 L86 60 L30 82 Z", "#F6E7B2"),
+    C(50, 58, 1.4, K.crust, NF), C(64, 54, 1.2, K.crust, NF), C(42, 66, 1.2, K.crust, NF)
+  ],
+  mozzarella: [
+    E(50, 84, 38, 8, K.glass),
+    P("M20 60 C20 40 34 30 50 30 C66 30 80 40 80 60 C80 76 66 84 50 84 C34 84 20 76 20 60 Z", K.milk),
+    P("M42 32 C46 24 56 24 58 32", "none"),
+    P("M68 30 C74 22 86 22 88 26 C84 32 74 34 68 30 Z", K.bay)
+  ],
+  pangrattato: [
+    P("M26 58 C30 42 42 34 50 34 C58 34 70 42 74 58 Z", K.bread),
+    P("M16 56 L84 56 C82 78 68 90 50 90 C32 90 18 78 16 56 Z", "#F6E6DC"),
+    C(40, 48, 1.6, K.cocoa, NF), C(52, 44, 1.6, K.cocoa, NF), C(60, 50, 1.6, K.cocoa, NF), C(46, 52, 1.2, K.milk, NF)
+  ],
+  crema: [
+    P("M28 34 L72 34 L74 84 C74 88 70 90 66 90 L34 90 C30 90 26 88 26 84 Z", "#9E7662"),
+    P("M26 20 L74 20 L74 34 L26 34 Z", K.milk),
+    E(50, 62, 16, 12, "#F7F4EC"),
+    C(50, 62, 6, "#C9A27E"), P("M50 56 L50 52", "none")
+  ],
+  noce: [
+    P("M50 18 C68 18 80 32 80 50 C80 70 66 84 50 84 C34 84 20 70 20 50 C20 32 32 18 50 18 Z", "#C8AE8C"),
+    P("M50 18 C46 40 54 62 50 84", "none"),
+    P("M32 36 C38 40 36 46 42 50 M30 58 C36 60 38 66 42 70 M66 34 C62 40 64 46 58 50 M70 58 C64 60 62 66 58 70", "none")
+  ],
+  miele: [
+    P("M24 40 L64 40 L66 84 C66 88 62 90 58 90 L30 90 C26 90 22 88 22 84 Z", "#EBC67A"),
+    P("M22 30 L66 30 L66 40 L22 40 Z", "#F6E6DC"),
+    P("M60 36 L84 12", "none"),
+    E(84, 12, 7, 5, K.crust, 'transform="rotate(-45 84 12)"'),
+    P("M30 60 C38 64 46 58 54 62", "none")
+  ],
+  cioccolato: [
+    P("M18 30 L72 22 L82 70 L28 78 Z", "#8E6A5E"),
+    P("M34 28 L44 76 M52 25 L62 73 M22 46 L76 38 M25 62 L79 54", "none"),
+    P("M50 60 L86 54 L90 84 L54 90 Z", "#F6E6DC")
+  ],
+  amaretto: [
+    E(36, 58, 22, 18, "#D9A77A"), E(66, 46, 20, 16, "#E3B78C"),
+    P("M28 52 L36 58 L46 54 M60 42 L66 48 L74 44", "none"),
+    C(32, 64, 1.4, K.milk, NF), C(42, 62, 1.4, K.milk, NF), C(64, 52, 1.4, K.milk, NF)
+  ],
+  panna: [
+    P("M30 30 L50 16 L70 30 L70 88 L30 88 Z", K.milk),
+    P("M30 50 L70 50 L70 68 L30 68 Z", K.glass),
+    P("M50 16 L50 30 M30 30 L70 30", "none")
+  ],
+  amido: [
+    P("M24 30 L76 30 L76 88 L24 88 Z", "#F4EFE4"),
+    P("M24 30 L34 18 L66 18 L76 30", "none"),
+    C(50, 58, 14, "#E6D6B8"), P("M44 58 C48 52 52 52 56 58", "none")
+  ],
+  yogurt: [
+    P("M28 30 L72 30 L66 86 L34 86 Z", "#F7F6F2"),
+    E(50, 30, 24, 6, "#D8E3EA"),
+    P("M31 52 L69 52 L67 66 L33 66 Z", "#D8E3EA")
+  ],
+  zucchina: [
+    P("M14 66 C14 52 58 30 80 30 C88 30 90 38 84 44 C66 60 32 78 22 76 C17 75 14 71 14 66 Z", "#A8C98E"),
+    P("M82 32 L90 24", "none"),
+    P("M24 66 C40 58 58 48 74 40 M30 72 C46 64 62 54 78 44", "none")
+  ],
+  origano: [
+    P("M50 90 L50 14 M50 40 L34 30 M50 58 L68 48", "none"),
+    E(44, 22, 6, 4, "#9DB08A"), E(56, 22, 6, 4, "#9DB08A"), E(30, 28, 6, 4, "#9DB08A"), E(40, 36, 6, 4, "#9DB08A"),
+    E(72, 46, 6, 4, "#9DB08A"), E(62, 52, 6, 4, "#9DB08A"), E(42, 68, 6, 4, "#9DB08A"), E(58, 76, 6, 4, "#9DB08A")
+  ],
+  carne: [
+    E(50, 78, 38, 10, K.milk),
+    P("M18 72 C18 52 34 40 50 40 C66 40 82 52 82 72 Z", "#E9A9A0"),
+    P("M30 60 C34 56 38 62 42 58 C46 54 50 60 54 56 C58 52 62 58 66 54 M36 68 C40 64 44 70 48 66 C52 62 56 68 60 64", "none")
+  ],
+  mortadella: [
+    C(50, 54, 32, "#F2B8B8"),
+    C(50, 54, 26, "#F6C6C6"),
+    P("M40 44 L44 44 L44 48 L40 48 Z M58 40 L62 40 L62 44 L58 44 Z M54 60 L58 60 L58 64 L54 64 Z M36 62 L40 62 L40 66 L36 66 Z", "#FFFFFF", NF),
+    C(48, 54, 2, K.appleGreen, NF), C(64, 52, 2, K.appleGreen, NF)
+  ],
+  nocemoscata: [
+    E(46, 54, 24, 18, "#B98B73"),
+    P("M26 46 C36 54 56 50 66 58 M30 64 C40 58 52 66 64 62 M40 38 C44 48 44 60 42 70", "none"),
+    P("M70 30 L86 22 L90 30 L74 38 Z", K.grey)
+  ],
+  oliva: [
+    E(38, 56, 16, 20, "#BFC98E", 'transform="rotate(-20 38 56)"'),
+    E(64, 60, 15, 19, "#AEBB7C", 'transform="rotate(15 64 60)"'),
+    C(40, 48, 4, K.chili), C(62, 52, 4, K.chili),
+    P("M60 22 C70 14 82 16 86 20 C80 28 68 30 60 22 Z", K.bay)
+  ],
+  prosciutto: [
+    P("M14 54 C24 36 44 44 54 34 C64 26 80 30 86 42 C80 58 62 52 52 64 C42 74 22 72 14 54 Z", "#E9B8AE"),
+    P("M14 54 C22 70 42 74 52 64 C62 54 80 58 86 42 L88 48 C82 64 64 60 54 70 C44 80 20 76 14 54 Z", "#FBF1EC")
+  ],
+  pasta: [
+    P("M16 68 C16 46 32 34 50 34 C68 34 84 46 84 68 C84 78 68 84 50 84 C32 84 16 78 16 68 Z", "#F3E3C3"),
+    P("M34 52 C40 48 48 50 52 54 M56 62 C62 58 68 60 72 64", "none"),
+    C(30, 62, 1.4, K.milk, NF), C(64, 46, 1.4, K.milk, NF), C(46, 70, 1.4, K.milk, NF)
+  ],
   incerto: [
     P("M22 18 L78 22 L74 86 L20 80 Z", "#F6EFD9"),
     P("M40 40 C40 30 60 30 60 40 C60 48 50 48 50 58 M50 68 L50 70", "none")
@@ -171,9 +303,14 @@ const ICONS = {
 
 // Nome dell'ingrediente → icona. L'ordine conta: i casi particolari vengono prima.
 const MATCH = [
-  [/leggibile, forse/, "incerto"], [/vanigliato|vaniglia/, "vaniglia"], [/farina/, "farina"], [/burro/, "burro"],
+  [/leggibile, forse/, "incerto"], [/nutella/i, "crema"], [/moscata/, "nocemoscata"], [/mortadella/, "mortadella"],
+  [/amaretti/, "amaretto"], [/cioccolato/, "cioccolato"], [/amido|fecola/, "amido"], [/yogurt/, "yogurt"],
+  [/marmellat/, "marmellata"], [/pomodor|salsa di pom/, "pomodoro"], [/parmigian|pecorino/, "parmigiano"], [/mozzarell/, "mozzarella"],
+  [/pangrattato/, "pangrattato"], [/cacao/, "cacao"], [/miele/, "miele"], [/panna/, "panna"], [/zucchin/, "zucchina"],
+  [/origano/, "origano"], [/carne|macinat/, "carne"], [/olive/, "oliva"], [/prosciutto|pancetta/, "prosciutto"],
+  [/pasta lievitata/, "pasta"], [/albumi/, "uovo"], [/riso/, "riso"], [/acqua/, "acqua"], [/olio/, "olio"], [/noci\b|noci /, "noce"], [/vanigliato|vaniglia/, "vaniglia"], [/farina/, "farina"], [/burro/, "burro"],
   [/zucchero/, "zucchero"], [/uov|tuorl/, "uovo"], [/lievito/, "lievito"], [/banan/, "banana"], [/mele|mela/, "mela"],
-  [/uvett/, "uvetta"], [/cedro/, "cedro"], [/limone/, "limone"], [/pane/, "pane"], [/latte/, "latte"],
+  [/uvett/, "uvetta"], [/cedro/, "cedro"], [/limon/, "limone"], [/pane/, "pane"], [/latte/, "latte"],
   [/cannella/, "cannella"], [/piccion/, "piccione"], [/lardo/, "lardo"], [/cipoll/, "cipolla"], [/aceto/, "aceto"],
   [/alloro/, "alloro"], [/garofano/, "chiodo"], [/ginepro/, "ginepro"], [/sale|pepe/, "salepepe"], [/brodo/, "brodo"],
   [/mandorl/, "mandorla"], [/liquore/, "liquore"]
@@ -306,6 +443,94 @@ const DISHES = {
     P("M124 104 L146 104", "none")
   ]
 };
+
+const cookie = (x, y, rx, ry, fill, dots) => [E(x, y, rx, ry, fill), ...(dots || []).map(([dx, dy]) => C(x + dx, y + dy, 1.2, "#FFFFFF", NF))];
+const plate = () => E(100, 126, 90, 20, K.milk);
+Object.assign(DISHES, {
+  "ciambella-bicolore": [
+    plate(),
+    P("M36 80 L42 112 C44 124 156 124 158 112 L164 80 Z", "#F0DDB4"),
+    P("M58 88 L60 118 M79 90 L80 121 M100 90 L100 122 M121 90 L120 121 M142 88 L140 118", "none"),
+    E(100, 80, 64, 20, "#F3E6C8"),
+    E(72, 84, 11, 4, "#B08A73", NF), E(126, 78, 13, 4, "#B08A73", NF), E(98, 92, 10, 3, "#B08A73", NF), E(84, 70, 8, 3, "#B08A73", NF),
+    P("M50 80 C60 72 74 88 88 78 M112 70 C122 66 132 76 144 72", "none"),
+    E(100, 79, 15, 5, "#7A5A48"),
+    ...icon("limone", "translate(150 96) scale(.34)")
+  ],
+  "torta-ripiena": [
+    plate(),
+    P("M40 78 L40 110 C40 122 160 122 160 110 L160 78 Z", "#F0D7A8"),
+    P("M40 92 C80 100 120 100 160 92 L160 99 C120 107 80 107 40 99 Z", "#E59A8E"),
+    E(100, 78, 60, 18, "#F6E4BF"),
+    ...icon("marmellata", "translate(150 58) scale(.42)")
+  ],
+  suppli: [
+    E(100, 110, 90, 32, K.milk),
+    ...cookie(62, 98, 30, 12, "#D9A06E", [[-12, -4], [4, -6], [14, 2], [-4, 4]]),
+    ...cookie(112, 110, 30, 12, "#D9A06E", [[-10, -4], [6, -5], [16, 2]]),
+    E(150, 86, 22, 12, "#D9A06E"), E(150, 86, 14, 7, K.chili), E(150, 86, 6, 3, K.milk),
+    P("M152 84 C160 70 172 62 186 60", "none"),
+    ...icon("pomodoro", "translate(18 30) scale(.36)")
+  ],
+  crostate: [
+    plate(),
+    P("M30 84 L30 98 C30 114 170 114 170 98 L170 84 Z", "#E3B87E"),
+    E(100, 84, 70, 20, "#D98A9A"),
+    P("M40 72 L160 72 L160 76 L40 76 Z", "#EBCB98"), P("M31 82 L169 82 L169 86 L31 86 Z", "#EBCB98"), P("M40 92 L160 92 L160 96 L40 96 Z", "#EBCB98"),
+    P("M62 67 L68 67 L68 101 L62 101 Z", "#EBCB98"), P("M97 65 L103 65 L103 103 L97 103 Z", "#EBCB98"), P("M132 67 L138 67 L138 101 L132 101 Z", "#EBCB98")
+  ],
+  "biscotti-nutella": [
+    plate(),
+    ...cookie(80, 92, 20, 8, "#9E7662", [[-8, -2], [4, -3], [10, 1]]), ...cookie(122, 92, 20, 8, "#9E7662", [[-6, -2], [6, -1]]),
+    ...cookie(58, 108, 20, 8, "#9E7662", [[-8, -1], [5, -2]]), ...cookie(100, 112, 20, 8, "#9E7662", [[-6, -2], [8, 0]]), ...cookie(142, 108, 20, 8, "#9E7662", [[-4, -2], [6, 1]]),
+    ...icon("crema", "translate(146 26) scale(.44)")
+  ],
+  "biscotti-limone": [
+    plate(),
+    ...cookie(78, 94, 19, 8, "#F7F3E4"), ...cookie(120, 94, 19, 8, "#F7F3E4"), ...cookie(58, 110, 19, 8, "#F7F3E4"), ...cookie(100, 114, 19, 8, "#F7F3E4"), ...cookie(142, 110, 19, 8, "#F7F3E4"),
+    P("M70 94 L78 91 L84 95 M112 94 L120 91 L126 95 M50 110 L58 107 L64 111 M92 114 L100 111 L106 115 M134 110 L142 107 L148 111", "none"),
+    ...icon("limone", "translate(138 30) scale(.46)")
+  ],
+  "biscotti-noci": [
+    plate(),
+    ...cookie(78, 94, 18, 9, "#E6D2B4", [[-6, -3], [4, -4], [8, 1]]), ...cookie(120, 94, 18, 9, "#E6D2B4", [[-5, -3], [6, -2]]),
+    ...cookie(58, 110, 18, 9, "#E6D2B4", [[-4, -3], [6, 0]]), ...cookie(100, 114, 18, 9, "#E6D2B4", [[-6, -2], [5, -3]]), ...cookie(142, 110, 18, 9, "#E6D2B4", [[-3, -3], [7, -1]]),
+    ...icon("noce", "translate(146 26) scale(.42)")
+  ],
+  "crostata-amaretti": [
+    plate(),
+    P("M30 84 L30 98 C30 114 170 114 170 98 L170 84 Z", "#E3B87E"),
+    E(100, 84, 70, 20, "#8E6A5E"),
+    E(100, 84, 58, 14, "#9E7A6C", NF),
+    ...[[46, 80], [64, 70], [88, 66], [112, 66], [136, 70], [154, 80], [138, 96], [114, 101], [86, 101], [62, 96]].map(([x, y]) => C(x, y, 6, "#D9A77A"))
+  ],
+  "pan-di-spagna": [
+    plate(),
+    P("M38 70 L38 112 C38 124 162 124 162 112 L162 70 Z", "#F3D27A"),
+    E(100, 70, 62, 17, "#E8B95E"),
+    C(60, 96, 1.4, "#FFFFFF", NF), C(80, 104, 1.4, "#FFFFFF", NF), C(104, 98, 1.4, "#FFFFFF", NF), C(128, 106, 1.4, "#FFFFFF", NF), C(146, 94, 1.4, "#FFFFFF", NF)
+  ],
+  "olive-nonna-papera": [
+    E(100, 112, 90, 30, K.milk),
+    ...[[52, 98], [78, 92], [104, 96], [130, 92], [64, 112], [92, 114], [120, 112], [146, 106]].map(([x, y]) => E(x, y, 13, 10, "#D9A06E")),
+    E(150, 88, 9, 7, "#BFC98E"), E(40, 112, 9, 7, "#BFC98E"),
+    ...icon("limone", "translate(150 26) scale(.36)")
+  ],
+  "torta-sette-vasetti": [
+    plate(),
+    P("M36 78 L36 110 C36 122 156 122 156 110 L156 78 Z", "#F4E7C4"),
+    E(96, 78, 60, 17, "#EFD49A"),
+    ...icon("yogurt", "translate(142 44) scale(.46)")
+  ],
+  "zucchine-crumble": [
+    E(100, 96, 88, 42, K.milk),
+    E(100, 92, 72, 30, "#A8C98E"),
+    ...[[64, 86], [82, 80], [100, 88], [118, 80], [136, 88], [74, 100], [96, 104], [120, 100], [58, 94], [142, 96], [108, 76], [88, 94]].map(([x, y]) => C(x, y, 5, "#DDB27A")),
+    C(70, 92, 1.3, "#7E9468", NF), C(112, 94, 1.3, "#7E9468", NF), C(128, 84, 1.3, "#7E9468", NF), C(90, 84, 1.3, "#7E9468", NF),
+    P("M12 96 L4 94 M188 96 L196 94", "none")
+  ]
+});
+DISHES["piccioni-pagnotta"] = DISHES.pagnotta;
 // La tavola della prima cena: pagnotta al centro, champagne e rosso ai lati.
 DISHES["prima-cena"] = [
   Gs("translate(-30 30) scale(.56)", DISHES.champagne.flat()),

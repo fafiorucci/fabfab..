@@ -18,13 +18,19 @@ const LABELS = {
   mela: "Mele", uvetta: "Uvetta", cedro: "Cedro candito", limone: "Limone", pane: "Pane", latte: "Latte",
   cannella: "Cannella", piccione: "Piccioni", lardo: "Lardo", cipolla: "Cipolle", aceto: "Aceto", alloro: "Alloro",
   chiodo: "Chiodi di garofano", ginepro: "Ginepro", salepepe: "Sale e pepe", brodo: "Brodo", mandorla: "Mandorle",
-  liquore: "Liquore", vaniglia: "Zucchero vanigliato", incerto: "Parola da decifrare"
+  liquore: "Liquore", vaniglia: "Vaniglia", incerto: "Parola da decifrare", acqua: "Acqua", olio: "Olio",
+  cacao: "Cacao", marmellata: "Marmellata", riso: "Riso", pomodoro: "Pomodoro", parmigiano: "Parmigiano",
+  mozzarella: "Mozzarella", pangrattato: "Pangrattato", crema: "Crema di nocciole", noce: "Noci", miele: "Miele",
+  cioccolato: "Cioccolato", amaretto: "Amaretti", panna: "Panna", amido: "Amido e fecola", yogurt: "Yogurt",
+  zucchina: "Zucchine", origano: "Origano", carne: "Carne macinata", mortadella: "Mortadella",
+  nocemoscata: "Noce moscata", oliva: "Olive", prosciutto: "Prosciutto", pasta: "Pasta lievitata"
 };
 
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const nf = n => String(Math.round(n * 100) / 100).replace(".", ",");
 const qty = g => {
   if (g.q == null) return "q.b.";
+  if (g.q === 0.5) return g.u ? `½ ${g.u}` : "½";
   if ((g.u === "g" || g.u === "ml") && g.q >= 1000) return `${nf(g.q / 1000)} ${g.u === "g" ? "kg" : "l"}`;
   return g.u ? `${nf(g.q)} ${g.u}` : nf(g.q);
 };
@@ -41,9 +47,11 @@ const uniq = a => [...new Set(a)];
 const recipeIcons = r => uniq(r.ingredienti.map(g => iconFor(g.nome)).filter(k => k !== "incerto"));
 
 // ---- Impaginazione a pagine fisse: copertina, indice, dispensa, 3 pagine per capitolo, colophon ----
+const ORDINE = ["Antipasti", "Primi", "Secondi", "Contorni", "Salse", "Lievitati", "Dolci"];
 const chapters = [
   ...CENE.map(c => ({ kind: "cena", data: c, dish: c.id })),
-  ...BASE.map(r => ({ kind: "ricetta", data: r, dish: r.id }))
+  ...BASE.map((r, k) => ({ kind: "ricetta", data: r, dish: r.id, k }))
+    .sort((a, b) => ORDINE.indexOf(a.data.categoria) - ORDINE.indexOf(b.data.categoria) || a.k - b.k)
 ];
 let pageNo = 4;
 chapters.forEach((ch, k) => { ch.n = k + 1; ch.page = pageNo; pageNo += 3; });
@@ -76,7 +84,7 @@ const indice = `
       ${chapters.map(ch => `
         <li style="${vars(ch.data.tono)}">
           <span class="toc-ill">${dishSvg(ch.dish)}</span>
-          <span class="toc-t"><em class="hand-n">${two(ch.n)}</em>${esc(ch.data.titolo)}<small>${ch.kind === "cena" ? "Menu della cena · " + esc(ch.data.quando) : esc(ch.data.categoria) + " · " + esc(ch.data.fonte)}</small></span>
+          <span class="toc-t"><em class="hand-n">${two(ch.n)}</em>${esc(ch.data.titolo)}<small>${ch.kind === "cena" ? "Menu della cena · " + esc(ch.data.quando) : esc(ch.data.categoria)}</small></span>
           <span class="toc-p">${ch.page}</span>
         </li>`).join("")}
       <li class="toc-extra"><span class="toc-ill small">${iconSvg("farina")}</span><span class="toc-t">La dispensa<small>Tutti gli ingredienti, disegnati</small></span><span class="toc-p">3</span></li>
@@ -129,7 +137,7 @@ const storiaPage = ch => {
     </div>`;
   const domande = "";
   return `
-<section class="page storia-page" style="${vars(d.tono)}">
+<section class="page storia-page${d.storia.join("").length > 1500 ? " long" : ""}" style="${vars(d.tono)}">
   <aside class="rail">
     <span class="rail-t">Nel suo tempo</span>
     <div class="rail-icons">${icons.map(k => iconSvg(k)).join("")}</div>
@@ -148,14 +156,14 @@ const storiaPage = ch => {
 const recipePage = ch => {
   const r = ch.data;
   return `
-<section class="page recipe" style="${vars(r.tono)}">
+<section class="page recipe${r.ingredienti.length > 11 || r.passi.join("").length > 480 ? " dense" : ""}" style="${vars(r.tono)}">
   <div class="content">
     <header class="rhead">
       <span class="rhead-ill">${dishSvg(r.id)}</span>
       <div><p class="eyebrow">Capitolo ${two(ch.n)} · la ricetta</p><h3 class="rtitle">${esc(r.titolo)}</h3></div>
     </header>
     <h4>Ingredienti</h4>
-    <div class="cards${r.ingredienti.length > 6 ? " three" : ""}">
+    <div class="cards${r.ingredienti.length > 12 ? " four" : r.ingredienti.length > 6 ? " three" : ""}">
       ${r.ingredienti.map(g => `<div class="card">${iconSvg(iconFor(g.nome))}<div><b class="${g.q == null ? "qb" : ""}">${esc(qty(g))}</b><span>${esc(g.nome)}</span></div></div>`).join("")}
     </div>
     <h4>Procedimento <small>trascritto fedelmente dall'originale</small></h4>
@@ -242,19 +250,19 @@ const html = `<!doctype html><html lang="it"><head><meta charset="utf-8"><title>
 
   /* Pagine neutre */
   .plain { background: #FBF6EE; }
-  .toc { list-style: none; margin: 7mm 0 0; padding: 0; }
-  .toc li { display: grid; grid-template-columns: 27mm 1fr auto; align-items: center; gap: 4mm; padding: 1.6mm 3mm; margin-bottom: 2mm; border-radius: 5mm; background: var(--acc-soft); }
+  .toc { list-style: none; margin: 7mm 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2mm 3mm; }
+  .toc li { display: grid; grid-template-columns: 15mm 1fr auto; align-items: center; gap: 2.5mm; padding: 1.4mm 2.4mm; border-radius: 5mm; background: var(--acc-soft); }
   .toc li.toc-extra { background: transparent; border: .3mm dashed #E0D6C8; }
-  .toc-ill { width: 27mm; }
-  .toc-ill.small { width: 10mm; justify-self: center; }
-  .toc-t { font: 400 15pt/1.15 "Fraunces", serif; }
-  .toc-t .hand-n { font-size: 10pt; margin-right: 3mm; }
-  .toc-t small { display: block; font: 7.5pt/1.4 "Figtree", sans-serif; color: var(--muted); margin-top: 1mm; }
-  .toc-p { font: 300 18pt "Fraunces", serif; padding-right: 2mm; }
-  .pantry { margin-top: 8mm; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4mm 3mm; }
+  .toc-ill { width: 15mm; }
+  .toc-ill.small { width: 9mm; justify-self: center; }
+  .toc-t { font: 400 9.6pt/1.15 "Fraunces", serif; }
+  .toc-t .hand-n { font-size: 7pt; margin-right: 1.5mm; }
+  .toc-t small { display: block; font: 6pt/1.3 "Figtree", sans-serif; color: var(--muted); margin-top: .6mm; }
+  .toc-p { font: 300 12pt "Fraunces", serif; }
+  .pantry { margin-top: 7mm; display: grid; grid-template-columns: repeat(8, 1fr); gap: 3mm 2mm; }
   .pantry figure { margin: 0; display: grid; justify-items: center; gap: 1.5mm; }
-  .pantry .ill { width: 17mm; }
-  .pantry figcaption { font-size: 7.5pt; text-align: center; line-height: 1.25; }
+  .pantry .ill { width: 12mm; }
+  .pantry figcaption { font-size: 6pt; text-align: center; line-height: 1.2; }
   .colophon p { font: 300 10.5pt/1.6 "Fraunces", serif; margin: 5mm 0 0; max-width: 120mm; }
   .colophon-icons { display: flex; gap: 5mm; margin-top: 12mm; }
   .colophon-icons .ill { width: 13mm; }
@@ -307,6 +315,16 @@ const html = `<!doctype html><html lang="it"><head><meta charset="utf-8"><title>
   .cards.three .card { grid-template-columns: 11mm 1fr; gap: 2mm; padding: 1.6mm 2.2mm 1.6mm 1.6mm; }
   .cards.three .card b { font-size: 10pt; }
   .cards.three .card span { font-size: 7.8pt; }
+  .cards.four { grid-template-columns: repeat(4, 1fr); gap: 1.8mm; }
+  .cards.four .card { grid-template-columns: 8mm 1fr; gap: 1.5mm; padding: 1.2mm 1.6mm 1.2mm 1.2mm; }
+  .cards.four .card b { font-size: 8.6pt; }
+  .cards.four .card span { font-size: 6.8pt; }
+  .dense h4 { margin: 3.5mm 0 2mm; }
+  .dense .rhead { grid-template-columns: 28mm 1fr; padding-bottom: 3mm; }
+  .dense .steps { gap: 1.6mm; }
+  .dense .steps p { font-size: 8.7pt; line-height: 1.45; }
+  .dense .note { margin-top: 3mm; padding: 2.2mm 4mm; font-size: 7.6pt; }
+  .long .storia p { font-size: 10pt; line-height: 1.55; }
   .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 3mm; }
   .steps li { display: grid; grid-template-columns: 9mm 1fr; gap: 2mm; align-items: start; }
   .steps .hand-n { font-size: 13pt; line-height: 1.2; }
