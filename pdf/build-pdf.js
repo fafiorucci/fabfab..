@@ -127,7 +127,7 @@ const storiaPage = ch => {
       <div><span>Difficoltà</span><b>${esc(d.difficolta)}</b></div>
       ${d.riposo ? `<div><span>Da sapere</span><b>${esc(d.riposo)}</b></div>` : ""}
     </div>`;
-  const domande = ch.kind === "cena" ? `<div class="note check"><b>Da chiedere per ricostruire la serata</b><ul>${d.domande.map(q => `<li>${esc(q)}</li>`).join("")}</ul></div>` : "";
+  const domande = "";
   return `
 <section class="page storia-page" style="${vars(d.tono)}">
   <aside class="rail">
@@ -196,6 +196,7 @@ const colophon = `
     <p>I testi «Nel suo tempo» sono bozze di contesto storico e artistico, da verificare in redazione prima della stampa. I ricordi di chi ha cucinato in quella villa si aggiungeranno dalle interviste.</p>
     <p>Icone e disegni sono illustrazioni vettoriali realizzate per questo menabò: raccontano gli ingredienti e i piatti, ma non sostituiscono le fotografie dei piatti cucinati, che verranno scattate per l'edizione definitiva.</p>
     <p>Le tavolozze di ogni capitolo sono ricavate dai colori degli ingredienti. Caratteri: Fraunces, Figtree, Homemade Apple.</p>
+    ${CENE.map(c => `<div class="note check"><b>Da chiedere ancora · ${esc(c.titolo)}</b><ul>${c.domande.map(q => `<li>${esc(q)}</li>`).join("")}</ul></div>`).join("")}
     <div class="colophon-icons">${["uovo", "farina", "burro", "mela", "mandorla", "alloro", "ginepro"].map(k => iconSvg(k)).join("")}</div>
   </div>
   ${foot(colophonPage)}
@@ -315,10 +316,10 @@ const html = `<!doctype html><html lang="it"><head><meta charset="utf-8"><title>
   .menu-t { margin-top: 2mm; }
   .menu { margin-top: 6mm; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm 4mm; }
   .dish { background: var(--bg); border-radius: 4mm; padding: 2mm 3mm 3mm; }
-  .dish-ill { height: 30mm; display: grid; place-items: center; }
-  .dish-ill .ill { width: 36mm; }
+  .dish-ill { height: 26mm; display: grid; place-items: center; }
+  .dish-ill .ill { width: 32mm; }
   .dish-n { margin: 1mm 0 0; font: 400 11pt/1.15 "Fraunces", serif; }
-  .dish-note { margin: 1mm 0 0; font-size: 7pt; line-height: 1.35; color: var(--muted); }
+  .dish-note { margin: 1mm 0 0; font-size: 6.8pt; line-height: 1.35; color: var(--muted); }
 </style></head><body>
 ${cover}
 ${indice}

@@ -217,6 +217,10 @@
   .storia p { margin: 0; font: 350 19px/1.6 var(--serif); }
   .storia p:first-of-type::first-letter { float: left; font-size: 3.6em; line-height: .8; padding: 6px 10px 0 0; color: var(--basil); font-weight: 300; }
   .storia .storia-nota { font: 12px/1.4 var(--sans); color: var(--muted); }
+  .risposte { margin: 8px 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; }
+  .risposte dt { font-weight: 600; }
+  .risposte dd { margin: 0; }
+  @media (max-width: 560px) { .risposte { grid-template-columns: 1fr; gap: 2px; } .risposte dd { margin-bottom: 6px; } }
   .note ul { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 4px; }
   .owner-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border-top: 1px solid var(--line); padding-top: 18px; }
   .owner-actions p { margin: 0; color: var(--muted); font-size: 13px; }
@@ -357,32 +361,7 @@
 
   // Le cene ricostruite a voce: ogni piatto rimanda a una ricetta trascritta, se esiste.
   const CENE = [
-    {
-      id: "prima-cena", titolo: "La prima cena", tono: "cena", claim: "Champagne all'antipasto, piccioni in pagnotta, il rosso del vigneto di casa.", citazione: "Una cosa leggera, di sera.", storia: ["Una cena di campagna in una villa italiana, negli anni in cui la tavola raccontava ancora il luogo. Il menu non cerca l'effetto: crostini, spaghetti, piccioni, l'insalata dell'orto, il tiramisù. Mentre i ristoranti inseguivano la nouvelle cuisine, con porzioni piccole e piatti geometrici, la villa offriva ciò che nessun ristorante poteva dare: i prodotti della tenuta, il vino del vigneto di casa, gli amari preparati in casa.", "Lo champagne con l'antipasto è l'unico lusso venuto da fuori, e basta a dare il tono della serata. I crostini con i fegatelli sono l'antipasto dell'Italia centrale; gli spaghetti aglio, olio e peperoncino sono il piatto delle spaghettate di mezzanotte tra amici, e servirli agli ospiti, di sera, dice una familiarità che nessuna etichetta avrebbe prescritto.", "Il tiramisù, allora, era un dolce giovane. Nato tra Veneto e Friuli e diffuso negli anni Settanta e Ottanta, stava entrando proprio in quel periodo nelle case e nei ristoranti di tutta Italia."], quando: "anno da definire",
-      descrizione: "La prima cena tornata in mente: una sera alla villa, con i piccioni in pagnotta al centro della tavola.",
-      portate: [
-        { portata: "Antipasto", piatti: [{ nome: "Crostini umbri", nota: "Anche con i fegatelli.", stato: "ricetta da trovare" }] },
-        { portata: "Primo", piatti: [{ nome: "Spaghetti aglio, olio e peperoncino", nota: "«Una cosa leggera, di sera.»", stato: "da raccontare a voce" }] },
-        { portata: "Secondo", piatti: [{ nome: "Piccioni in pagnotta", nota: "Nel quaderno, a p. 30, ci sono i Piccioni al ginepro: è la stessa preparazione o un'altra?", stato: "ricetta da trovare", simile: "piccioni-ginepro" }] },
-        { portata: "Contorno", piatti: [{ nome: "Insalata dell'orto", nota: "Oppure verdure ripassate in padella, secondo la stagione.", stato: "da raccontare a voce" }] },
-        { portata: "Dolce", piatti: [{ nome: "Tiramisù fatto a mano", stato: "ricetta da trovare" }, { nome: "Frutta fresca della tenuta", stato: "da raccontare a voce" }] },
-        { portata: "Per finire", piatti: [{ nome: "Caffè e amari fatti in casa", nota: "Una selezione di amari preparati alla villa.", stato: "ricette da trovare" }] },
-        { portata: "I vini", piatti: [
-          { nome: "Champagne", nota: "Con l'antipasto.", stato: "etichetta da ricordare" },
-          { nome: "Rosso del vigneto di casa", nota: "Dal primo in poi.", stato: "da raccontare a voce" }
-        ] }
-      ],
-      domande: [
-        "In che anno, o almeno in che periodo e in che stagione, si è svolta questa cena?",
-        "Chi era a tavola? C'era un'occasione particolare?",
-        "Come si preparavano i piccioni in pagnotta? La ricetta è in un taccuino o in un quaderno?",
-        "Quali crostini si servivano, oltre a quelli con i fegatelli? E i fegatelli come erano preparati?",
-        "Quali amari si facevano in casa, e con quali erbe o frutti?",
-        "Che cosa c'era nell'orto e tra gli alberi da frutta della tenuta in quella stagione?",
-        "Quale champagne si serviva, e chi lo sceglieva?",
-        "Il rosso del vigneto di casa: con quali uve, chi lo faceva, aveva un nome?"
-      ]
-    }
+    {"id": "prima-cena", "titolo": "La prima cena", "tono": "cena", "claim": "1975: Moët & Chandon all'antipasto, piccioni in pagnotta, il rosso del vigneto di casa.", "citazione": "Una cosa leggera, di sera.", "storia": ["Il 1975. Tra gli ospiti, quella sera, siede uno scrittore e poeta siciliano. Il menu non cerca l'effetto: crostini, spaghetti, piccioni, le verdure dell'orto, il tiramisù. Mentre i ristoranti inseguivano la nouvelle cuisine, con porzioni piccole e piatti geometrici, la villa offriva ciò che nessun ristorante poteva dare: i prodotti della tenuta, il vino del vigneto di casa, gli amari preparati in casa.", "Il piatto di centro è il più antico nella tecnica. I piccioni, puliti e spennati, vengono chiusi in un impasto di pane con salvia, rosmarino, aglio, olio, sale e pepe, e cuociono dentro la crosta, che trattiene i succhi e i profumi. È la stessa idea delle cotture in crosta della tradizione contadina e dei pasticci rinascimentali, dove la pasta faceva da pentola.", "I crostini sono tre: con i fegatelli cotti in padella e poi tritati con il minipimer, l'utensile elettrico che in quegli anni entrava nelle cucine di casa; con i pomodorini; con alici e mozzarella. Gli spaghetti prendono il peperoncino dall'orto, dove in quella stagione crescevano anche i broccoli. Il tiramisù, allora, era un dolce giovane: nato tra Veneto e Friuli, si stava diffondendo proprio in quegli anni.", "Con l'antipasto si serve Moët & Chandon, la maison di Épernay fondata nel 1743; poi il rosso del vigneto di casa, fatto con uve rosse miste e senza un nome in etichetta. In fondo, gli amari fatti in casa disegnano una piccola carta d'Italia: il limoncello della costiera, il mirto della Sardegna, la genziana delle montagne, il nocino delle noci raccolte, per tradizione, nella notte di San Giovanni, e un amaro alle mille erbe."], "quando": "1975", "descrizione": "Una sera del 1975 alla villa, con uno scrittore e poeta siciliano a tavola e i piccioni in pagnotta al centro.", "portate": [{"portata": "Antipasto", "piatti": [{"nome": "Crostini umbri", "nota": "Tre tipi: con i fegatelli cotti in padella e tritati con il minipimer, con i pomodorini, con alici e mozzarella.", "stato": "da raccontare a voce"}]}, {"portata": "Primo", "piatti": [{"nome": "Spaghetti aglio, olio e peperoncino", "nota": "«Una cosa leggera, di sera.» Il peperoncino veniva dall'orto.", "stato": "da raccontare a voce"}]}, {"portata": "Secondo", "piatti": [{"nome": "Piccioni in pagnotta", "nota": "I piccioni, puliti e spennati, chiusi in un impasto di pane con salvia, rosmarino, aglio, olio, sale e pepe. È un'altra ricetta rispetto ai Piccioni al ginepro di p. 30.", "stato": "ricetta nel quaderno: da fotografare", "simile": "piccioni-ginepro"}]}, {"portata": "Contorno", "piatti": [{"nome": "Insalata dell'orto", "nota": "Oppure verdure ripassate in padella: in quella stagione nell'orto c'erano broccoli e peperoncini.", "stato": "da raccontare a voce"}]}, {"portata": "Dolce", "piatti": [{"nome": "Tiramisù fatto a mano", "stato": "ricetta da trovare"}, {"nome": "Frutta fresca della tenuta", "stato": "da raccontare a voce"}]}, {"portata": "Per finire", "piatti": [{"nome": "Caffè e amari fatti in casa", "nota": "Amaro mille erbe, limoncello, nocino, mirto, genziana.", "stato": "ricette da trovare"}]}, {"portata": "I vini", "piatti": [{"nome": "Champagne Moët & Chandon", "nota": "Con l'antipasto.", "stato": "confermato", "ok": true}, {"nome": "Rosso del vigneto di casa", "nota": "Uve rosse miste, senza un nome in etichetta. Dal primo in poi.", "stato": "confermato", "ok": true}]}], "risposte": [["Quando", "1975."], ["Chi era a tavola", "Uno scrittore e poeta siciliano."], ["Piccioni in pagnotta", "Piccioni puliti e spennati, chiusi in un impasto di pane con salvia, aglio, olio, pepe, sale e rosmarino. La ricetta è in un quaderno."], ["Crostini", "Con i fegatelli, cotti in padella e poi tritati con il minipimer dell'epoca; con pomodorini; con alici e mozzarella."], ["Amari di casa", "Amaro mille erbe, limoncello, nocino, mirto, genziana."], ["Orto", "Peperoncini e broccoli."], ["Champagne", "Moët & Chandon."], ["Rosso di casa", "Uve rosse miste; non aveva un nome."]], "domande": ["In che stagione? Broccoli e peperoncini fanno pensare all'autunno.", "Possiamo fotografare la pagina del quaderno con i piccioni in pagnotta?", "Lo scrittore si può nominare nel libro? Se sì, serve il consenso degli eredi per gli aneddoti.", "Il tiramisù e gli amari: le ricette sono scritte in un taccuino o in un quaderno?", "Quali alberi da frutta c'erano nella tenuta?"]}
   ];
   const cenaById = id => CENE.find(c => c.id === id);
 
@@ -680,13 +659,14 @@
               const r = d.ricetta && byId(d.ricetta);
               return `<div class="piatto">
                 <span class="nome">${esc(d.nome)}</span>
-                ${r ? `<button type="button" class="linkbtn" data-open="${esc(r.id)}">Apri la ricetta</button>` : `<span class="stato">${esc(d.stato)}</span>`}
+                ${r ? `<button type="button" class="linkbtn" data-open="${esc(r.id)}">Apri la ricetta</button>` : `<span class="stato${d.ok ? " ok" : ""}">${esc(d.stato)}</span>`}
                 ${d.nota ? `<span class="nota">${esc(d.nota)}${d.simile && byId(d.simile) ? ` <button type="button" class="linkbtn" data-open="${esc(d.simile)}">Vedi ${esc(byId(d.simile).titolo)}</button>` : ""}</span>` : ""}
               </div>`;
             }).join("")}</div>
           </li>`).join("")}
         </ol>
-        <div class="note check"><b>Da chiedere per ricostruire la serata</b><ul>${c.domande.map(q => `<li>${esc(q)}</li>`).join("")}</ul></div>
+        ${c.risposte ? `<div class="note"><b>Ricostruita con i ricordi</b><dl class="risposte">${c.risposte.map(([q, a]) => `<dt>${esc(q)}</dt><dd>${esc(a)}</dd>`).join("")}</dl></div>` : ""}
+        <div class="note check"><b>Da chiedere ancora</b><ul>${c.domande.map(q => `<li>${esc(q)}</li>`).join("")}</ul></div>
       </article>`;
   }
 
