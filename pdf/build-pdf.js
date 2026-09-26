@@ -1,8 +1,9 @@
 // Genera il menabò in PDF del ricettario a partire dai dati di index.html.
-// Uso: node pdf/build-pdf.js  →  ricettario.pdf (formato 17×24 cm)
+// Uso: node pdf/build-pdf.js  →  ricettario.pdf (formato 17×24 cm). Stampa l'elenco delle pagine che sforano.
 const fs = require("fs");
 const path = require("path");
 const { chromium } = require(process.env.PLAYWRIGHT || "playwright");
+const { ICONS, iconFor, dishFor, iconSvg, dishSvg, ILL_CSS } = require("./illustrazioni");
 
 const ROOT = path.resolve(__dirname, "..");
 const src = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
@@ -12,6 +13,14 @@ const start = src.indexOf("  const i = (q, u, nome)");
 const end = src.indexOf("  // ---- Archivio locale");
 const { BASE, CENE, TONI } = new Function(src.slice(start, end) + "\nreturn { BASE, CENE, TONI };")();
 
+const LABELS = {
+  farina: "Farina", burro: "Burro", zucchero: "Zucchero", uovo: "Uova", lievito: "Lievito", banana: "Banane",
+  mela: "Mele", uvetta: "Uvetta", cedro: "Cedro candito", limone: "Limone", pane: "Pane", latte: "Latte",
+  cannella: "Cannella", piccione: "Piccioni", lardo: "Lardo", cipolla: "Cipolle", aceto: "Aceto", alloro: "Alloro",
+  chiodo: "Chiodi di garofano", ginepro: "Ginepro", salepepe: "Sale e pepe", brodo: "Brodo", mandorla: "Mandorle",
+  liquore: "Liquore", vaniglia: "Zucchero vanigliato", incerto: "Parola da decifrare"
+};
+
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const nf = n => String(Math.round(n * 100) / 100).replace(".", ",");
 const qty = g => {
@@ -20,136 +29,174 @@ const qty = g => {
   return g.u ? `${nf(g.q)} ${g.u}` : nf(g.q);
 };
 const durata = min => { const h = Math.floor(min / 60), m = min % 60; return h ? (m ? `${h} h ${m} min` : `${h} h`) : `${m} min`; };
+const two = n => String(n).padStart(2, "0");
 // Ordine dei token nelle tavolozze: bg, surface, ink, muted, line, accento, accento tenue, secondo accento, secondo tenue.
 const vars = key => {
   const [bg, surface, ink, muted, line, acc, accSoft, acc2, acc2Soft] = TONI[key].light;
   return `--bg:${bg};--surface:${surface};--ink:${ink};--muted:${muted};--line:${line};--acc:${acc};--acc-soft:${accSoft};--acc2:${acc2};--acc2-soft:${acc2Soft}`;
 };
 const palette = key => `<div class="palette">${TONI[key].sw.map(([n, c]) => `<span class="sw"><i style="background:${c}"></i>${esc(n)}</span>`).join("")}</div>`;
-const dots = key => `<span class="dots">${TONI[key].sw.map(([, c]) => `<i style="background:${c}"></i>`).join("")}</span>`;
-const storia = paras => `
-  <section class="storia">
-    <div class="eyebrow">Nel suo tempo</div>
-    ${paras.map(t => `<p>${esc(t)}</p>`).join("")}
-  </section>`;
-const foot = n => `<footer class="foot"><span>Ricettario di casa</span><span>${n}</span></footer>`;
+const foot = n => `<footer class="foot"><span>Ricettario di casa</span><span class="pn">${n}</span></footer>`;
+const uniq = a => [...new Set(a)];
+const recipeIcons = r => uniq(r.ingredienti.map(g => iconFor(g.nome)).filter(k => k !== "incerto"));
 
-// ---- Impaginazione a pagine fisse: copertina, indice, 2 pagine per capitolo, colophon ----
+// ---- Impaginazione a pagine fisse: copertina, indice, dispensa, 3 pagine per capitolo, colophon ----
 const chapters = [
-  ...CENE.map(c => ({ kind: "cena", data: c })),
-  ...BASE.map(r => ({ kind: "ricetta", data: r }))
+  ...CENE.map(c => ({ kind: "cena", data: c, dish: c.id })),
+  ...BASE.map(r => ({ kind: "ricetta", data: r, dish: r.id }))
 ];
-let pageNo = 3;
-chapters.forEach(ch => { ch.page = pageNo; pageNo += 2; });
+let pageNo = 4;
+chapters.forEach((ch, k) => { ch.n = k + 1; ch.page = pageNo; pageNo += 3; });
 const colophonPage = pageNo;
 
+// Copertina: una tappezzeria di ingredienti con il titolo al centro.
+const coverKeys = Object.keys(ICONS).filter(k => k !== "incerto");
+const coverTiles = Array.from({ length: 48 }, (_, k) => {
+  const key = coverKeys[(k * 7) % coverKeys.length];
+  const rot = ((k * 37) % 30) - 15;
+  return `<div class="tile" style="rotate:${rot}deg">${iconSvg(key)}</div>`;
+}).join("");
 const cover = `
 <section class="page cover">
-  <div class="cover-in">
+  <div class="tiles">${coverTiles}</div>
+  <div class="cover-card">
     <p class="kicker">1968 — 1998 · una villa, trent'anni di cene</p>
-    <h1>Ricettario<br><em>di casa</em></h1>
+    <h1>Ricettario</h1>
+    <p class="hand">di casa</p>
     <p class="sub">Ricette scritte a mano sui taccuini, ricopiate nei quaderni, servite a tavole illustri.</p>
-    <div class="cover-dots">${chapters.map(ch => dots(ch.data.tono)).join("")}</div>
-    <p class="edition">Menabò di prova · settembre 2026</p>
+    <p class="edition">Menabò di prova · 2026</p>
   </div>
 </section>`;
 
 const indice = `
 <section class="page plain">
   <div class="content">
-    <p class="eyebrow">Indice</p>
-    <h2 class="h-index">In queste pagine</h2>
+    <h2 class="big">Indice</h2>
     <ol class="toc">
-      ${chapters.map((ch, k) => `
-        <li>${dots(ch.data.tono)}
-          <span class="toc-t">${esc(ch.data.titolo)}<small>${ch.kind === "cena" ? "Menu della cena" : esc(ch.data.categoria) + " · " + esc(ch.data.fonte)}</small></span>
-          <span class="toc-p">${ch.page}</span></li>`).join("")}
-      <li><span class="dots"></span><span class="toc-t">Nota al menabò<small>Fonti, illustrazioni, testi in bozza</small></span><span class="toc-p">${colophonPage}</span></li>
+      ${chapters.map(ch => `
+        <li style="${vars(ch.data.tono)}">
+          <span class="toc-ill">${dishSvg(ch.dish)}</span>
+          <span class="toc-t"><em class="hand-n">${two(ch.n)}</em>${esc(ch.data.titolo)}<small>${ch.kind === "cena" ? "Menu della cena · " + esc(ch.data.quando) : esc(ch.data.categoria) + " · " + esc(ch.data.fonte)}</small></span>
+          <span class="toc-p">${ch.page}</span>
+        </li>`).join("")}
+      <li class="toc-extra"><span class="toc-ill small">${iconSvg("farina")}</span><span class="toc-t">La dispensa<small>Tutti gli ingredienti, disegnati</small></span><span class="toc-p">3</span></li>
+      <li class="toc-extra"><span class="toc-ill small">${iconSvg("incerto")}</span><span class="toc-t">Nota al menabò<small>Fonti, illustrazioni, testi in bozza</small></span><span class="toc-p">${colophonPage}</span></li>
     </ol>
-    <div class="howto">
-      <p class="eyebrow">Come leggere questo libro</p>
-      <p>Ogni capitolo si apre con i colori del suo piatto: una tavolozza pastello ricavata dagli ingredienti. Segue la ricetta, con il procedimento trascritto parola per parola dall'originale e le dosi ordinate per la cucina di oggi.</p>
-    </div>
   </div>
   ${foot(2)}
 </section>`;
 
-const opener = (ch, n) => {
+const dispensa = `
+<section class="page plain">
+  <div class="content">
+    <h2 class="big">La dispensa</h2>
+    <p class="lead">Tutti gli ingredienti di questo libro, disegnati uno per uno.</p>
+    <div class="pantry">
+      ${Object.keys(ICONS).map(k => `<figure>${iconSvg(k)}<figcaption>${LABELS[k]}</figcaption></figure>`).join("")}
+    </div>
+  </div>
+  ${foot(3)}
+</section>`;
+
+const opener = ch => {
   const d = ch.data;
-  const eyebrow = ch.kind === "cena"
-    ? `Capitolo ${n} · Menu della cena · ${esc(d.quando)}`
-    : `Capitolo ${n} · ${esc(d.categoria)} · ${esc(d.fonte)}`;
+  const eyebrow = ch.kind === "cena" ? `Menu della cena · ${esc(d.quando)}` : `${esc(d.categoria)} · ${esc(d.fonte)}`;
   return `
 <section class="page opener" style="${vars(d.tono)}">
-  <div class="content">
-    ${d.immagini ? `<figure class="dish"><img src="../img/${d.id}-piatto.jpg" alt=""><figcaption>Illustrazione, non una foto della ricetta</figcaption></figure>` : ""}
-    <p class="eyebrow">${eyebrow}</p>
+  <div class="num">${two(ch.n)}</div>
+  <svg class="blob" viewBox="0 0 200 160"><path d="M38 22 C70 -6 142 2 172 30 C198 54 196 104 170 128 C142 154 70 158 36 134 C6 112 8 46 38 22 Z"/></svg>
+  <div class="hero-ill">${dishSvg(ch.dish)}</div>
+  <div class="opener-text">
+    <p class="eyebrow">Capitolo ${two(ch.n)} · ${eyebrow}</p>
     <h2>${esc(d.titolo)}</h2>
+    <p class="hand quote">${esc(d.citazione)}</p>
     <p class="claim">${esc(d.claim)}</p>
-    <p class="quote">«${esc(d.citazione)}»</p>
     ${palette(d.tono)}
-    ${storia(d.storia)}
   </div>
   ${foot(ch.page)}
 </section>`;
 };
 
-const recipePage = ch => {
-  const r = ch.data;
-  const label = r.dosiLabel ? (r.dosi === 1 ? r.dosiLabel[0] : r.dosiLabel[1]) : (r.dosi === 1 ? "persona" : "persone");
-  return `
-<section class="page recipe" style="${vars(r.tono)}">
-  <div class="content">
-    <header class="mini"><span class="eyebrow">${esc(r.titolo)}</span>${dots(r.tono)}</header>
+const storiaPage = ch => {
+  const d = ch.data;
+  const icons = ch.kind === "cena" ? ["alloro", "pane", "cipolla", "liquore"] : recipeIcons(d).slice(0, 5);
+  const meta = ch.kind === "cena" ? "" : `
     <div class="meta">
-      <div><span>Tempo stimato</span><b>${durata(r.tempo)}</b></div>
-      <div><span>Dosi</span><b>${r.dosi} ${esc(label)}</b></div>
-      <div><span>Difficoltà</span><b>${esc(r.difficolta)}</b></div>
-    </div>
-    <div class="cols">
-      <section>
-        <h3>Ingredienti</h3>
-        ${r.immagini ? `<img class="ingr-img" src="../img/${r.id}-ingredienti.jpg" alt="">` : ""}
-        <ul class="ingr">${r.ingredienti.map(g => `<li><span class="q${g.q == null ? " qb" : ""}">${esc(qty(g))}</span><span>${esc(g.nome)}</span></li>`).join("")}</ul>
-      </section>
-      <section>
-        <h3>Procedimento</h3>
-        <p class="hint">Trascritto fedelmente dall'originale.</p>
-        <ol class="steps">${r.passi.map(p => `<li>${esc(p)}</li>`).join("")}</ol>
-      </section>
-    </div>
-    ${r.riposo ? `<div class="note"><b>Da sapere:</b> oltre al tempo di preparazione servono ${esc(r.riposo)}.</div>` : ""}
-    ${r.daVerificare ? `<div class="note check"><b>Da chiedere o verificare</b><ul>${r.daVerificare.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>` : ""}
+      <div><span>Tempo stimato</span><b>${durata(d.tempo)}</b></div>
+      <div><span>Dosi</span><b>${d.dosi} ${esc(d.dosiLabel ? (d.dosi === 1 ? d.dosiLabel[0] : d.dosiLabel[1]) : (d.dosi === 1 ? "persona" : "persone"))}</b></div>
+      <div><span>Difficoltà</span><b>${esc(d.difficolta)}</b></div>
+      ${d.riposo ? `<div><span>Da sapere</span><b>${esc(d.riposo)}</b></div>` : ""}
+    </div>`;
+  const domande = ch.kind === "cena" ? `<div class="note check"><b>Da chiedere per ricostruire la serata</b><ul>${d.domande.map(q => `<li>${esc(q)}</li>`).join("")}</ul></div>` : "";
+  return `
+<section class="page storia-page" style="${vars(d.tono)}">
+  <aside class="rail">
+    <span class="rail-t">Nel suo tempo</span>
+    <div class="rail-icons">${icons.map(k => iconSvg(k)).join("")}</div>
+  </aside>
+  <div class="content with-rail">
+    <p class="eyebrow">Capitolo ${two(ch.n)} · ${esc(d.titolo)}</p>
+    <div class="storia">${d.storia.map(t => `<p>${esc(t)}</p>`).join("")}</div>
+    <p class="draft">Testo di contesto in bozza, da verificare in redazione. I ricordi di chi cucinava si aggiungeranno dalle interviste.</p>
+    ${meta}
+    ${domande}
   </div>
   ${foot(ch.page + 1)}
 </section>`;
 };
 
+const recipePage = ch => {
+  const r = ch.data;
+  return `
+<section class="page recipe" style="${vars(r.tono)}">
+  <div class="content">
+    <header class="rhead">
+      <span class="rhead-ill">${dishSvg(r.id)}</span>
+      <div><p class="eyebrow">Capitolo ${two(ch.n)} · la ricetta</p><h3 class="rtitle">${esc(r.titolo)}</h3></div>
+    </header>
+    <h4>Ingredienti</h4>
+    <div class="cards${r.ingredienti.length > 6 ? " three" : ""}">
+      ${r.ingredienti.map(g => `<div class="card">${iconSvg(iconFor(g.nome))}<div><b class="${g.q == null ? "qb" : ""}">${esc(qty(g))}</b><span>${esc(g.nome)}</span></div></div>`).join("")}
+    </div>
+    <h4>Procedimento <small>trascritto fedelmente dall'originale</small></h4>
+    <ol class="steps">${r.passi.map((p, k) => `<li><span class="hand-n">${k + 1}</span><p>${esc(p)}</p></li>`).join("")}</ol>
+    ${r.daVerificare ? `<div class="note check"><b>Da chiedere o verificare</b><ul>${r.daVerificare.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>` : ""}
+  </div>
+  ${foot(ch.page + 2)}
+</section>`;
+};
+
 const menuPage = ch => {
   const c = ch.data;
+  const piatti = c.portate.flatMap(p => p.piatti.map(d => ({ ...d, portata: p.portata })));
   return `
 <section class="page recipe" style="${vars(c.tono)}">
   <div class="content">
-    <header class="mini"><span class="eyebrow">${esc(c.titolo)} · il menu</span>${dots(c.tono)}</header>
-    <ol class="menu">
-      ${c.portate.map(p => `<li><span class="portata">${esc(p.portata)}</span><div>${p.piatti.map(d => `
-        <p class="piatto">${esc(d.nome)}${d.nota ? `<small>${esc(d.nota)}</small>` : ""}</p>`).join("")}</div></li>`).join("")}
-    </ol>
-    <div class="note check"><b>Da chiedere per ricostruire la serata</b><ul>${c.domande.map(q => `<li>${esc(q)}</li>`).join("")}</ul></div>
+    <p class="eyebrow">Capitolo ${two(ch.n)} · ${esc(c.titolo)}</p>
+    <h2 class="big menu-t">Il menu</h2>
+    <div class="menu">
+      ${piatti.map(d => `
+        <div class="dish">
+          <div class="dish-ill">${dishFor(d.nome) ? dishSvg(dishFor(d.nome)) : ""}</div>
+          <p class="eyebrow">${esc(d.portata)}</p>
+          <p class="dish-n">${esc(d.nome)}</p>
+          ${d.nota ? `<p class="dish-note">${esc(d.nota)}</p>` : ""}
+        </div>`).join("")}
+    </div>
   </div>
-  ${foot(ch.page + 1)}
+  ${foot(ch.page + 2)}
 </section>`;
 };
 
 const colophon = `
 <section class="page plain">
   <div class="content colophon">
-    <p class="eyebrow">Nota al menabò</p>
-    <h2 class="h-index">Come è fatto questo libro</h2>
-    <p>Le ricette sono trascritte parola per parola dai taccuini, dai quaderni e dai fogli sciolti dell'archivio; accanto a ciascuna è indicato dove si trova l'originale. Le dosi sono state ordinate per la cucina di oggi, mentre tempi e difficoltà sono stime da verificare in cucina.</p>
+    <h2 class="big">Nota al menabò</h2>
+    <p>Le ricette sono trascritte parola per parola dai taccuini, dai quaderni e dai fogli sciolti dell'archivio; accanto a ciascuna è indicato dove si trova l'originale. Le dosi sono ordinate per la cucina di oggi; tempi e difficoltà sono stime da verificare in cucina.</p>
     <p>I testi «Nel suo tempo» sono bozze di contesto storico e artistico, da verificare in redazione prima della stampa. I ricordi di chi ha cucinato in quella villa si aggiungeranno dalle interviste.</p>
-    <p>Le illustrazioni ad acquerello sono state generate con Canva per immaginare i piatti: non sono fotografie delle ricette e verranno sostituite dalle fotografie dei piatti cucinati.</p>
-    <p>Le tavolozze di ogni capitolo sono ricavate dai colori degli ingredienti.</p>
+    <p>Icone e disegni sono illustrazioni vettoriali realizzate per questo menabò: raccontano gli ingredienti e i piatti, ma non sostituiscono le fotografie dei piatti cucinati, che verranno scattate per l'edizione definitiva.</p>
+    <p>Le tavolozze di ogni capitolo sono ricavate dai colori degli ingredienti. Caratteri: Fraunces, Figtree, Homemade Apple.</p>
+    <div class="colophon-icons">${["uovo", "farina", "burro", "mela", "mandorla", "alloro", "ginepro"].map(k => iconSvg(k)).join("")}</div>
   </div>
   ${foot(colophonPage)}
 </section>`;
@@ -163,97 +210,120 @@ const html = `<!doctype html><html lang="it"><head><meta charset="utf-8"><title>
   @font-face { font-family: "Fraunces"; font-weight: 400; font-style: italic; src: ${f("Fraunces-400italic.ttf")}; }
   @font-face { font-family: "Figtree"; font-weight: 400; src: ${f("Figtree-400.ttf")}; }
   @font-face { font-family: "Figtree"; font-weight: 600; src: ${f("Figtree-600.ttf")}; }
+  @font-face { font-family: "Homemade Apple"; font-weight: 400; src: ${f("HomemadeApple-400.ttf")}; }
+  ${ILL_CSS}
   @page { size: 170mm 240mm; margin: 0; }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
   body { font: 9.5pt/1.5 "Figtree", sans-serif; color: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact;
-    --bg: #F6F3EF; --surface: #FFFDFB; --ink: #27231F; --muted: #6B635B; --line: #E6DFD6; --acc: #6A5577; --acc-soft: #EDE6F0; --acc2: #B9785C; --acc2-soft: #F6E6DC; }
+    --bg: #F6F2EC; --surface: #FFFDF9; --ink: #2E2924; --muted: #6E655C; --line: #E6DED3; --acc: #6A5577; --acc-soft: #EDE6F0; --acc2: #B9785C; --acc2-soft: #F6E6DC; }
   .page { width: 170mm; height: 240mm; position: relative; overflow: hidden; break-after: page; color: var(--ink); background: var(--surface); }
   .content { position: absolute; inset: 16mm 17mm 20mm; overflow: hidden; }
-  .foot { position: absolute; left: 17mm; right: 17mm; bottom: 9mm; display: flex; justify-content: space-between; font-size: 7.5pt; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
-  .eyebrow { margin: 0; font-size: 7.5pt; font-weight: 600; text-transform: uppercase; letter-spacing: .14em; color: var(--acc); }
-  .dots { display: inline-flex; flex: none; vertical-align: middle; }
-  .dots i { width: 9px; height: 9px; border-radius: 50%; border: 1.2px solid var(--surface); margin-left: -3px; }
-  .dots i:first-child { margin-left: 0; }
+  .foot { position: absolute; left: 17mm; right: 17mm; bottom: 9mm; display: flex; justify-content: space-between; align-items: baseline; font-size: 7pt; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; }
+  .foot .pn { font: 300 11pt "Fraunces", serif; letter-spacing: 0; color: var(--ink); }
+  .eyebrow { margin: 0; font-size: 7pt; font-weight: 600; text-transform: uppercase; letter-spacing: .16em; color: var(--acc); }
+  .hand { font-family: "Homemade Apple", cursive; }
+  .hand-n { font: 400 normal 1em "Homemade Apple", cursive; color: var(--acc); }
+  .big { margin: 0; font: 300 40pt/.95 "Fraunces", serif; letter-spacing: -.03em; }
+  .lead { margin: 3mm 0 0; font: italic 300 12pt/1.4 "Fraunces", serif; color: var(--muted); }
 
   /* Copertina */
-  .cover { background:
-      radial-gradient(60mm 60mm at 12% 14%, #F3DC7A88, transparent 70%),
-      radial-gradient(70mm 70mm at 92% 22%, #E9A9A088, transparent 70%),
-      radial-gradient(80mm 80mm at 18% 88%, #C5D3B099, transparent 70%),
-      radial-gradient(70mm 70mm at 88% 84%, #9C98C477, transparent 70%),
-      radial-gradient(60mm 60mm at 55% 55%, #E6D0B866, transparent 70%),
-      #FBF8F3; }
-  .cover-in { position: absolute; inset: 26mm 18mm 20mm; display: flex; flex-direction: column; }
-  .kicker { margin: 0; font-size: 8pt; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: #6A5577; }
-  .cover h1 { margin: 10mm 0 0; font: 300 64pt/.9 "Fraunces", serif; letter-spacing: -.03em; color: #27231F; }
-  .cover h1 em { font-weight: 300; color: #8C3F4A; }
-  .cover .sub { margin: 9mm 0 0; font: italic 300 14pt/1.35 "Fraunces", serif; max-width: 105mm; color: #4A433D; }
-  .cover-dots { margin-top: auto; display: flex; gap: 7mm; }
-  .cover-dots .dots i { width: 16px; height: 16px; margin-left: -5px; border-width: 2px; border-color: #FBF8F3; }
-  .cover-dots .dots i:first-child { margin-left: 0; }
-  .edition { margin: 6mm 0 0; font-size: 8pt; letter-spacing: .1em; text-transform: uppercase; color: #6B635B; }
+  .cover { background: #FBF6EE; }
+  .tiles { position: absolute; inset: -6mm; display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 31mm; place-items: center; }
+  .tile { width: 17mm; }
+  .cover-card { position: absolute; left: 19mm; right: 19mm; top: 58mm; padding: 13mm 12mm 11mm; background: #FFFDF9; border-radius: 9mm;
+    box-shadow: 0 4mm 14mm rgba(60, 45, 30, .12); text-align: center; }
+  .kicker { margin: 0; font-size: 7pt; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #6A5577; }
+  .cover h1 { margin: 7mm 0 0; font: 300 60pt/.9 "Fraunces", serif; letter-spacing: -.035em; color: #2E2924; }
+  .cover .hand { margin: 1mm 0 0; font-size: 28pt; line-height: 1.3; color: #B04F66; rotate: -4deg; }
+  .cover .sub { margin: 7mm auto 0; font: italic 300 12pt/1.4 "Fraunces", serif; max-width: 92mm; color: #5C534B; }
+  .edition { margin: 8mm 0 0; font-size: 7pt; letter-spacing: .16em; text-transform: uppercase; color: #8A8076; }
 
-  /* Indice e colophon */
-  .plain { background: #FBF8F3; }
-  .h-index { font: 300 30pt/1 "Fraunces", serif; letter-spacing: -.02em; margin: 3mm 0 9mm; }
-  .toc { list-style: none; margin: 0; padding: 0; }
-  .toc li { display: grid; grid-template-columns: 14mm 1fr auto; align-items: baseline; gap: 3mm; padding: 3.2mm 0; border-bottom: 0.3mm solid #E6DFD6; }
-  .toc-t { font: 400 14pt/1.2 "Fraunces", serif; }
-  .toc-t small { display: block; font: 8pt/1.4 "Figtree", sans-serif; color: #6B635B; margin-top: 1mm; }
-  .toc-p { font: 300 14pt "Fraunces", serif; font-variant-numeric: tabular-nums; }
-  .howto { margin-top: 12mm; max-width: 110mm; }
-  .howto p:last-child { margin: 2mm 0 0; font: 300 11pt/1.55 "Fraunces", serif; }
-  .colophon p:not(.eyebrow) { font: 300 11pt/1.6 "Fraunces", serif; margin: 0 0 4mm; max-width: 118mm; }
+  /* Pagine neutre */
+  .plain { background: #FBF6EE; }
+  .toc { list-style: none; margin: 7mm 0 0; padding: 0; }
+  .toc li { display: grid; grid-template-columns: 27mm 1fr auto; align-items: center; gap: 4mm; padding: 1.6mm 3mm; margin-bottom: 2mm; border-radius: 5mm; background: var(--acc-soft); }
+  .toc li.toc-extra { background: transparent; border: .3mm dashed #E0D6C8; }
+  .toc-ill { width: 27mm; }
+  .toc-ill.small { width: 10mm; justify-self: center; }
+  .toc-t { font: 400 15pt/1.15 "Fraunces", serif; }
+  .toc-t .hand-n { font-size: 10pt; margin-right: 3mm; }
+  .toc-t small { display: block; font: 7.5pt/1.4 "Figtree", sans-serif; color: var(--muted); margin-top: 1mm; }
+  .toc-p { font: 300 18pt "Fraunces", serif; padding-right: 2mm; }
+  .pantry { margin-top: 8mm; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4mm 3mm; }
+  .pantry figure { margin: 0; display: grid; justify-items: center; gap: 1.5mm; }
+  .pantry .ill { width: 17mm; }
+  .pantry figcaption { font-size: 7.5pt; text-align: center; line-height: 1.25; }
+  .colophon p { font: 300 10.5pt/1.6 "Fraunces", serif; margin: 5mm 0 0; max-width: 120mm; }
+  .colophon-icons { display: flex; gap: 5mm; margin-top: 12mm; }
+  .colophon-icons .ill { width: 13mm; }
 
-  /* Apertura di capitolo: i toni del piatto */
-  .opener { background: linear-gradient(160deg, var(--acc-soft) 0%, var(--bg) 55%, var(--acc2-soft) 100%); }
-  .opener h2 { margin: 4mm 0 0; font: 300 40pt/.95 "Fraunces", serif; letter-spacing: -.025em; max-width: 92mm; }
-  .claim { margin: 5mm 0 0; font-size: 10.5pt; font-weight: 600; max-width: 88mm; line-height: 1.4; }
-  .quote { margin: 3mm 0 0; font: italic 300 14pt/1.3 "Fraunces", serif; color: var(--acc); max-width: 90mm; }
-  .dish { float: right; margin: 0 0 4mm 5mm; width: 50mm; display: grid; gap: 1.5mm; justify-items: center; }
-  .dish img { width: 50mm; border-radius: 5mm; border: 1.6mm solid var(--surface); box-shadow: 0 3mm 7mm rgba(0,0,0,.10); rotate: 2.5deg; }
-  .dish figcaption { font-size: 6.5pt; color: var(--muted); }
+  /* Apertura: il piatto a tutta pagina nei suoi colori */
+  .opener { background: linear-gradient(165deg, var(--acc-soft) 0%, var(--bg) 52%, var(--acc2-soft) 100%); }
+  .num { position: absolute; right: 12mm; top: 6mm; font: 300 130pt/1 "Fraunces", serif; color: transparent; -webkit-text-stroke: .35mm var(--acc); letter-spacing: -.04em; opacity: .55; }
+  .blob { position: absolute; left: 14mm; top: 30mm; width: 142mm; }
+  .blob path { fill: var(--surface); opacity: .75; }
+  .hero-ill { position: absolute; left: 24mm; top: 36mm; width: 122mm; }
+  .opener-text { position: absolute; left: 17mm; right: 17mm; bottom: 22mm; }
+  .opener h2 { margin: 3mm 0 0; font: 300 42pt/.95 "Fraunces", serif; letter-spacing: -.03em; }
+  .quote { margin: 3mm 0 0; font-size: 13pt; line-height: 1.6; color: var(--acc); }
+  .claim { margin: 3mm 0 0; font-size: 10pt; font-weight: 600; max-width: 110mm; }
   .palette { display: flex; flex-wrap: wrap; gap: 1.8mm; margin-top: 5mm; }
-  .sw { display: inline-flex; align-items: center; gap: 1.8mm; padding: .8mm 2.6mm .8mm .8mm; border-radius: 99px; background: var(--surface); font-size: 7.5pt; font-weight: 600; }
+  .sw { display: inline-flex; align-items: center; gap: 1.8mm; padding: .8mm 2.8mm .8mm .8mm; border-radius: 99px; background: var(--surface); font-size: 7pt; font-weight: 600; }
   .sw i { width: 4.6mm; height: 4.6mm; border-radius: 50%; box-shadow: inset 0 0 0 .25mm rgba(0,0,0,.08); }
-  .storia { clear: both; margin-top: 7mm; padding-top: 5mm; border-top: .3mm solid var(--line); }
-  .storia p { margin: 2.5mm 0 0; font: 300 10pt/1.55 "Fraunces", serif; }
-  .storia p:first-of-type::first-letter { float: left; font-size: 3.3em; line-height: .8; padding: 1mm 2mm 0 0; color: var(--acc); }
 
-  /* Pagina ricetta */
-  .recipe { background: var(--surface); }
-  .mini { display: flex; justify-content: space-between; align-items: center; padding-bottom: 3mm; border-bottom: .3mm solid var(--line); }
-  .meta { display: flex; gap: 2.5mm; margin: 4mm 0 5mm; }
+  /* Nel suo tempo */
+  .storia-page { background: var(--surface); }
+  .rail { position: absolute; left: 0; top: 0; bottom: 0; width: 30mm; background: var(--acc-soft); display: flex; flex-direction: column; align-items: center; padding: 16mm 0 20mm; gap: 8mm; }
+  .rail-t { writing-mode: vertical-rl; rotate: 180deg; font: italic 300 20pt "Fraunces", serif; color: var(--acc); }
+  .rail-icons { display: grid; gap: 5mm; margin-top: auto; }
+  .rail-icons .ill { width: 14mm; }
+  .content.with-rail { left: 40mm; }
+  .storia { margin-top: 6mm; }
+  .storia p { margin: 0 0 3.2mm; font: 300 10.6pt/1.62 "Fraunces", serif; }
+  .storia p:first-child::first-letter { float: left; font-size: 3.6em; line-height: .8; padding: 1mm 2mm 0 0; color: var(--acc); }
+  .draft { margin: 2mm 0 0; font-size: 7pt; color: var(--muted); }
+  .meta { display: flex; flex-wrap: wrap; gap: 2.5mm; margin-top: 7mm; }
   .meta div { background: var(--bg); border-radius: 4mm; padding: 2mm 4mm; display: grid; }
   .meta span { font-size: 6.5pt; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
-  .meta b { font-weight: 600; font-size: 9.5pt; }
-  .cols { display: grid; grid-template-columns: 52mm 1fr; gap: 7mm; }
-  h3 { margin: 0 0 3mm; font: 400 16pt/1 "Fraunces", serif; }
-  .ingr-img { width: 40mm; border-radius: 4mm; margin-bottom: 3mm; display: block; }
-  .ingr { list-style: none; margin: 0; padding: 0; }
-  .ingr li { display: grid; grid-template-columns: 17mm 1fr; gap: 2.5mm; padding: 1.1mm 0; border-bottom: .25mm dashed var(--line); font-size: 8.6pt; line-height: 1.35; }
-  .q { text-align: right; font-weight: 600; color: var(--acc); font-variant-numeric: tabular-nums; }
-  .q.qb { font-weight: 400; font-style: italic; color: var(--muted); }
-  .hint { margin: -1.5mm 0 3mm; font-size: 7.5pt; color: var(--muted); }
-  .steps { list-style: none; margin: 0; padding: 0; counter-reset: s; display: grid; gap: 3mm; }
-  .steps li { counter-increment: s; display: grid; grid-template-columns: 7mm 1fr; gap: 2.5mm; font-size: 9.3pt; line-height: 1.5; }
-  .steps li::before { content: counter(s); width: 6.5mm; height: 6.5mm; border-radius: 50%; display: grid; place-items: center; background: var(--acc2-soft); font: 400 9pt/1 "Fraunces", serif; }
-  .note { margin-top: 3.5mm; background: var(--acc2-soft); border-radius: 4mm; padding: 3mm 4.5mm; font-size: 8.3pt; line-height: 1.45; }
+  .meta b { font-weight: 600; font-size: 9pt; }
+  .note { margin-top: 5mm; background: var(--acc2-soft); border-radius: 4mm; padding: 3mm 4.5mm; font-size: 8.2pt; line-height: 1.45; }
   .note.check { background: var(--acc-soft); }
   .note ul { margin: 1.5mm 0 0; padding-left: 4mm; }
 
-  /* Menu della cena */
-  .menu { list-style: none; margin: 4mm 0 0; padding: 0; }
-  .menu > li { display: grid; grid-template-columns: 26mm 1fr; gap: 4mm; padding: 2.6mm 0; border-bottom: .25mm dashed var(--line); }
-  .portata { font-size: 7pt; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; color: var(--acc); padding-top: 1.6mm; }
-  .piatto { margin: 0; font: 400 13pt/1.2 "Fraunces", serif; }
-  .piatto + .piatto { margin-top: 2mm; }
-  .piatto small { display: block; font: 8pt/1.4 "Figtree", sans-serif; color: var(--muted); margin-top: .6mm; }
+  /* La ricetta */
+  .recipe { background: var(--surface); }
+  .rhead { display: grid; grid-template-columns: 36mm 1fr; gap: 5mm; align-items: center; padding-bottom: 4mm; border-bottom: .3mm solid var(--line); }
+  .rtitle { margin: 1.5mm 0 0; font: 300 24pt/1 "Fraunces", serif; letter-spacing: -.02em; }
+  h4 { margin: 5mm 0 3mm; font: 400 14pt/1 "Fraunces", serif; }
+  h4 small { font: 7pt "Figtree", sans-serif; color: var(--muted); margin-left: 2mm; letter-spacing: .02em; }
+  .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.6mm; }
+  .card { display: grid; grid-template-columns: 15mm 1fr; gap: 3mm; align-items: center; background: var(--bg); border-radius: 4mm; padding: 2mm 3mm 2mm 2mm; }
+  .card b { display: block; font: 400 12pt/1.1 "Fraunces", serif; color: var(--acc); }
+  .card b.qb { font-style: italic; color: var(--muted); }
+  .card span { display: block; font-size: 8.6pt; line-height: 1.3; margin-top: .6mm; }
+  .cards.three { grid-template-columns: repeat(3, 1fr); gap: 2.2mm; }
+  .cards.three .card { grid-template-columns: 11mm 1fr; gap: 2mm; padding: 1.6mm 2.2mm 1.6mm 1.6mm; }
+  .cards.three .card b { font-size: 10pt; }
+  .cards.three .card span { font-size: 7.8pt; }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 3mm; }
+  .steps li { display: grid; grid-template-columns: 9mm 1fr; gap: 2mm; align-items: start; }
+  .steps .hand-n { font-size: 13pt; line-height: 1.2; }
+  .steps p { margin: 0; font-size: 9.8pt; line-height: 1.55; }
+
+  /* Il menu della cena */
+  .menu-t { margin-top: 2mm; }
+  .menu { margin-top: 6mm; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm 4mm; }
+  .dish { background: var(--bg); border-radius: 4mm; padding: 2mm 3mm 3mm; }
+  .dish-ill { height: 30mm; display: grid; place-items: center; }
+  .dish-ill .ill { width: 36mm; }
+  .dish-n { margin: 1mm 0 0; font: 400 11pt/1.15 "Fraunces", serif; }
+  .dish-note { margin: 1mm 0 0; font-size: 7pt; line-height: 1.35; color: var(--muted); }
 </style></head><body>
 ${cover}
 ${indice}
-${chapters.map((ch, k) => opener(ch, k + 1) + (ch.kind === "cena" ? menuPage(ch) : recipePage(ch))).join("")}
+${dispensa}
+${chapters.map(ch => opener(ch) + storiaPage(ch) + (ch.kind === "cena" ? menuPage(ch) : recipePage(ch))).join("")}
 ${colophon}
 </body></html>`;
 
@@ -266,11 +336,15 @@ ${colophon}
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(300);
   // Controllo: nessuna pagina deve tagliare il testo.
-  const overflow = await page.$$eval(".page .content", els => els
-    .map((el, k) => ({ page: k + 1, over: el.scrollHeight - el.clientHeight }))
-    .filter(x => x.over > 1));
-  const fontsOk = await page.evaluate(() => [...document.fonts].filter(f => f.status === "loaded").length);
+  const overflow = await page.$$eval(".page", pages => pages.map((p, k) => {
+    const c = p.querySelector(".content, .opener-text");
+    if (!c) return null;
+    const over = c.classList.contains("opener-text")
+      ? c.getBoundingClientRect().top - (p.querySelector(".hero-ill").getBoundingClientRect().bottom)
+      : -(c.scrollHeight - c.clientHeight);
+    return over < -1 ? { page: k + 1, over: Math.round(-over) } : null;
+  }).filter(Boolean));
   await page.pdf({ path: path.join(ROOT, "ricettario.pdf"), width: "170mm", height: "240mm", printBackground: true, preferCSSPageSize: true });
   await browser.close();
-  console.log(JSON.stringify({ pages: colophonPage, fontsLoaded: fontsOk, overflow }));
+  console.log(JSON.stringify({ pages: colophonPage, overflow }));
 })();
