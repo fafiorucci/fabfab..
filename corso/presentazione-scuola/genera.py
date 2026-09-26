@@ -16,7 +16,7 @@ assert t0 in c
 c=c.replace(t0,f'<div style="display:flex; flex-direction:column; gap:4px"><p style="font-family:{H}; font-size:52px; font-weight:600; line-height:1.1; color:{DSOFT}">Rotta verso la</p>'
             f'<h1 style="font-family:{H}; font-size:84px; font-weight:700; line-height:1.02; color:#FFFFFF">Patente Nautica<br>da Diporto</h1></div>')
 chip=lambda b,t: f'<p style="font-size:24px; color:#FFF8EE; background:rgba(245,241,232,0.10); padding:8px 16px; border-radius:40px"><b>{b}</b> {t}</p>'
-chips=f'<div style="display:flex; gap:10px">{chip("30","ore")}{chip("15","lezioni")}{chip("12","appendici")}{chip("135","esercizi svolti")}{chip("1.000+","slide")}</div>'
+chips=f'<div style="display:flex; gap:10px">{chip("30","ore")}{chip("15","lezioni")}{chip("13","appendici")}{chip("135","esercizi svolti")}{chip("1.000+","slide")}</div>'
 k=c.index('</div>\n<p style="font-size:24px; font-weight:600'); c=c[:k]+chips+c[k:]
 LB.slides[-1]=('cover',c)
 
@@ -39,7 +39,7 @@ lbls=(lab(128+277-120,884,240,'Tappa 1',CORAL,24,900,'center')+lab(128+832-120,8
       +lab(128+1387-120,884,240,'Tappa 3',PURPLE,24,900,'center')+lab(128+1600-140,884,280,'L\'esame',NAVY,24,900,'center'))
 legs=[('Teoria e vela','Lezioni 1–9 · 18 ore','Scafo e motori, ormeggi e carte, ancoraggio, punto nave e fanali, segnalamento e sicurezza, meteo e normativa, vela ed emergenze.',CORAL),
       ('Carteggio','Lezioni 10–15 · 12 ore','Tutti i 135 esercizi d\'esame svolti passo per passo sulle carte 5/D e 42/D: costiera, carburante, scarroccio, correnti.',SEA),
-      ('Verso l\'esame','12 appendici e schede','10 prove d\'esame simulate, la prova pratica in barca, ripasso mirato e schede riassuntive per lo studio a casa.',PURPLE)]
+      ('Verso l\'esame','13 appendici e schede','10 prove d\'esame simulate, la prova pratica in barca, ripasso mirato e schede riassuntive per lo studio a casa.',PURPLE)]
 cards=''.join(f'<div style="flex:1; display:flex; flex-direction:column; gap:10px; background:#FFFFFF; border-top:10px solid {c_}; border-radius:28px; padding:28px 30px; box-shadow:0px 10px 28px rgba(27,42,65,0.10)">'
               f'{h3(t,38,c_)}<p style="font-size:24px; font-weight:900; letter-spacing:1px; text-transform:uppercase; color:{INK}">{s}</p>{p(d,28,BODY,400,1.4)}</div>' for t,s,d,c_ in legs)
 sec('rotta',header(EB,'Il corso in una rotta: 30 ore, tre tappe','map',SEA)
@@ -132,7 +132,7 @@ hero=(f'<div style="width:560px; display:flex; flex-direction:column; gap:12px; 
       f'<p style="font-family:{HAND}; font-size:46px; font-weight:700; line-height:1.1; color:{DACC}">Si accende il proiettore, e si salpa.</p></div>')
 MAT=[('15','lezioni da 2 ore','594 slide con disegni, schemi e quiz ufficiali con le risposte',CORAL),
      ('135','esercizi di carteggio','tutti svolti: traccia, soluzione e tracciamento sulla carta',SEA),
-     ('12','appendici','364 slide: correnti, nomenclatura, nodi, IALA, normativa, VHF, costa, meteo, soccorso, ancoraggio',PURPLE),
+     ('13','appendici','389 slide: correnti, nomi, nodi, IALA, normativa, VHF, costa, meteo, soccorso, ancora, portanza',PURPLE),
      ('10','prove d\'esame simulate','complete di carteggio, quiz base e quiz vela, con le soluzioni',BLUE),
      ('1','prova pratica','le manovre in barca dell\'Allegato D, passo per passo',GREEN),
      ('15','schede per gli allievi','regole da memorizzare e numeri dei quiz, da stampare',ORANGE)]
@@ -141,7 +141,7 @@ mt=''.join(f'<div style="display:flex; align-items:center; gap:20px; background:
            f'<div style="flex:1; display:flex; flex-direction:column; gap:2px">{p(t,28,INK,800,1.2)}{p(d,24,BODY,400,1.3)}</div></div>' for n,t,d,c_ in MAT)
 sec('materiale',header(EB,'Il materiale: un corso chiavi in mano','book',PURPLE)
     +f'<div style="display:flex; gap:32px; align-items:stretch">{hero}<div style="flex:1; display:flex; flex-direction:column; gap:12px">{mt}</div></div>',
-    notes='Totale: 594 slide di lezione, 364 di appendici, 31 di schede riassuntive e 26 di indice del corso. Ogni deck si proietta dal browser e si scarica in PDF o PowerPoint.',gap=30)
+    notes='Totale: 594 slide di lezione, 389 di appendici, 31 di schede riassuntive e 26 di indice del corso. Ogni deck si proietta dal browser e si scarica in PDF o PowerPoint.',gap=30)
 
 # ============ PERCHÉ ============
 WHY=[('Allineato all\'esame','Programma del DM 323/2021; quiz ed esercizi dall\'elenco ufficiale del DD 131/2022.'),

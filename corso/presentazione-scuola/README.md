@@ -2,7 +2,7 @@
 
 Presentazione del corso alla scuola nautica, in 7 slide: [slide](https://claude.ai/artifact/FxjVMj32rr5eymmibB5Eec).
 
-1. Copertina «Rotta verso la Patente Nautica da Diporto · Il corso in sintesi»: 30 ore, 15 lezioni, 12 appendici, 135 esercizi svolti, oltre 1.000 slide.
+1. Copertina «Rotta verso la Patente Nautica da Diporto · Il corso in sintesi»: 30 ore, 15 lezioni, 13 appendici, 135 esercizi svolti, oltre 1.000 slide.
 2. Il corso in una rotta: teoria e vela (lezioni 1-9), carteggio (10-15), verso l'esame (appendici e schede).
 3. Due patenti, due rotte: entro 12 miglia o senza limiti, prove d'esame e lezioni del corso per ciascuna.
 4. Vela e motore, o solo motore: esame, prova pratica e lezioni per ciascuna abilitazione.

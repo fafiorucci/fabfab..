@@ -93,7 +93,7 @@ Fonte dei testi: Allegato A al DD 131/2022 (atto ufficiale, art. 5 L. 633/1941),
 
 | # | Slide | Contenuto |
 |---|---|---|
-| 1 | Copertina | Il corso in sintesi: 30 ore, 15 lezioni, 12 appendici, 135 esercizi svolti, oltre 1.000 slide |
+| 1 | Copertina | Il corso in sintesi: 30 ore, 15 lezioni, 13 appendici, 135 esercizi svolti, oltre 1.000 slide |
 | 2 | Il corso in una rotta | Tre tappe: teoria e vela (lezioni 1-9, 18 ore), carteggio (10-15, 12 ore), verso l'esame (appendici e schede) |
 | 3 | Due patenti, due rotte | Entro 12 miglia o senza limiti: prove d'esame (quesiti, tempi, errori ammessi), lezioni del corso, prova pratica; chi ha già la 12 miglia fa solo carteggio |
 | 4 | Vela e motore, o solo motore | Esame, prova pratica e lezioni per ciascuna abilitazione; chi non è idoneo a vela può optare per il solo motore |
@@ -112,4 +112,4 @@ Fonti per le slide 3 e 4: art. 6 del DM 323/2021 e programma della prova pratica
 - 10 prove d'esame simulate complete (appendice D).
 - 135 esercizi di carteggio del DD 131/2022, tutti svolti.
 
-Deck dell'indice: [slide](https://claude.ai/artifact/KWJagMPHLrNsJ7wsAJTQ2c) (slide 24-25 appendici, 26 presentazione alla scuola e schede riassuntive, 27 riepilogo), aggiornato con [`template/genera_indice_appendici.py`](template/genera_indice_appendici.py) e [`template/genera_indice_extra.py`](template/genera_indice_extra.py).
+Deck dell'indice: [slide](https://claude.ai/artifact/KWJagMPHLrNsJ7wsAJTQ2c) (slide 24 appendici A–F, 25 appendici G–M, 26 presentazione alla scuola e schede riassuntive, 27 riepilogo), aggiornato con [`template/genera_indice_appendici.py`](template/genera_indice_appendici.py), [`template/genera_indice_extra.py`](template/genera_indice_extra.py) e [`template/genera_indice_M.py`](template/genera_indice_M.py).
