@@ -30,7 +30,7 @@ def sub(f,pairs):
         if b in s and a not in s: continue
         assert s.count(a)==1,(f,a); s=s.replace(a,b)
     open(f,'w').write(s)
-sub(P+'/slides/appendici1.html',[('>Dodici appendici per studiare e allenarsi</h2>','>Tredici appendici per studiare e allenarsi</h2>')])
+sub(P+'/slides/appendici1.html',[('>Dodici appendici per studiare e allenarsi</h2>','>Sei appendici per studiare e allenarsi</h2>'),('>Tredici appendici per studiare e allenarsi</h2>','>Sei appendici per studiare e allenarsi</h2>')])
 sub(P+'/slides/cover.html',[('15 lezioni da 2 ore e 12 appendici,','15 lezioni da 2 ore e 13 appendici,'),('<b>12</b> appendici','<b>13</b> appendici')])
 sub(P+'/slides/prossimi.html',[('color:#7FD3DC">12</p>','color:#7FD3DC">13</p>'),('appendici di ripasso ed esercitazione (A–L)','appendici di ripasso ed esercitazione (A–M)'),
    ('ripassare (B, C, F, G, H, I, J, K, L) e','ripassare (B, C, F, G, H, I, J, K, L, M) e'),('12 appendici A–L,','13 appendici A–M,')])
