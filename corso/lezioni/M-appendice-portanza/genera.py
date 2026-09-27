@@ -23,11 +23,11 @@ FLOW='#6FB7C2'
 
 # ---------------- disegni ----------------
 def T(x,y,s,cx,cy): return cx+s*x, cy-s*y
-def flow_lines(k,s,cx,cy,c=FLOW,w=3,op=1.0,skip=()):
+def flow_lines(k,s,cx,cy,c=FLOW,w=3,op=1.0,skip=(),n=90):
     out=''
     for i,L in enumerate(FL[k]['lines']):
         if i in skip: continue
-        pts=L['pts']; st=max(1,len(pts)//90)
+        pts=L['pts']; st=max(1,len(pts)//n)
         pp=pts[::st]+[pts[-1]]
         d='M'+' L'.join(f'{T(x,y,s,cx,cy)[0]:.1f} {T(x,y,s,cx,cy)[1]:.1f}' for x,y in pp)
         out+=f'<path d="{d}" fill="none" stroke="{c}" stroke-width="{w}" stroke-opacity="{op}" stroke-linecap="round"/>'
@@ -239,9 +239,9 @@ def spiral(xc,yc,r0,turns,sign,c,w=4):
     return f'<path d="{d}" fill="none" stroke="{c}" stroke-width="{w}" stroke-linecap="round"/>'+head_at(x0,y0,math.degrees(math.atan2(y0-y1,x0-x1)),c,20)
 s1,cx1=88,360
 top=('<defs><clipPath id="vtA"><rect x="0" y="0" width="720" height="296"/></clipPath><clipPath id="vtB"><rect x="0" y="304" width="720" height="316"/></clipPath></defs>'
-     +'<g clip-path="url(#vtA)">'+flow_lines('lastra_ideale',s1,cx1,150,w=2.5)+'</g>'+body('lastra_ideale',s1,cx1,150,fill=SAND,st=NAVY,sw=9))
+     +'<g clip-path="url(#vtA)">'+flow_lines('lastra_ideale',s1,cx1,150,w=2.5,n=45)+'</g>'+body('lastra_ideale',s1,cx1,150,fill=SAND,st=NAVY,sw=9))
 tx_,ty_=T(*trail('lastra'),s1,cx1,462)
-bot=('<g clip-path="url(#vtB)">'+flow_lines('lastra',s1,cx1,462,w=2.5)+'</g>'+body('lastra',s1,cx1,462,fill=SAND,st=NAVY,sw=9)
+bot=('<g clip-path="url(#vtB)">'+flow_lines('lastra',s1,cx1,462,w=2.5,n=45)+'</g>'+body('lastra',s1,cx1,462,fill=SAND,st=NAVY,sw=9)
      +f'<ellipse cx="{cx1}" cy="462" rx="235" ry="92" fill="none" stroke="{CORAL}" stroke-width="5" stroke-dasharray="16 10"/>'
      +head_at(cx1+10,370,0,CORAL,24)+head_at(cx1-10,554,180,CORAL,24)
      +f'<path d="M{tx_:.0f} {ty_:.0f} C{tx_+120:.0f} {ty_+10:.0f} 780 480 850 470" fill="none" stroke="{GREY}" stroke-width="3" stroke-dasharray="8 8"/>'
