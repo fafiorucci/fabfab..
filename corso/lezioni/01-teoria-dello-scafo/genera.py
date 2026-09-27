@@ -336,6 +336,62 @@ strip=f'<div style="position:absolute; left:128px; top:820px; width:1664px; disp
 sec('stabilita', head('Stabilità','Baricentro, centro di carena e metacentro'), pinned=pin+strip,
  notes='G: baricentro, dove agisce il peso. C: centro di carena, dove agisce la spinta. M: metacentro, il punto dove la verticale per C sbandato incontra l\'asse di simmetria. Finché M sta sopra G, peso e spinta formano una coppia che raddrizza la barca. Quiz 1.1.1-12: la coppia di stabilità di forma dipende dalla forma della carena. Nelle barche a vela la zavorra e il bulbo abbassano G (stabilità di peso).')
 
+# =============== 14b METACENTRO ===============
+X,Y,W,Hh=128,290,1092,620
+def rot(x,y,ox,oy,a,s=1.0):
+    ca,sa=math.cos(math.radians(a)),math.sin(math.radians(a))
+    return ox+s*(x*ca-y*sa), oy+s*(x*sa+y*ca)
+HULL='M-230 -120 C -230 40 -140 130 0 160 C 140 130 230 40 230 -120 Z'
+def boat(ox,oy,a,s,cid,load=False):
+    g=f'<g transform="translate({ox} {oy}) rotate({a}) scale({s})">'
+    body=f'<path d="{HULL}" fill="{BOAT}" stroke="{NAVY}" stroke-width="{4/s:.1f}"/>'
+    if load: body+=f'<rect x="-120" y="-330" width="240" height="210" rx="16" fill="{SUN}" stroke="{NAVY}" stroke-width="{4/s:.1f}"/>'
+    else: body+=f'<rect x="-90" y="-180" width="180" height="60" rx="12" fill="{BOAT}" stroke="{NAVY}" stroke-width="{4/s:.1f}"/>'
+    wet=f'<defs><clipPath id="{cid}"><rect x="-2000" y="{oy}" width="4000" height="2000"/></clipPath></defs>'
+    red=f'<g clip-path="url(#{cid})"><g transform="translate({ox} {oy}) rotate({a}) scale({s})"><path d="{HULL}" fill="{ACC}" fill-opacity="0.85" stroke="{NAVY}" stroke-width="{4/s:.1f}"/></g></g>'
+    return g+body+'</g>'+wet+red
+a=18; O=(380,300)
+G=rot(0,20,*O,a); M=rot(0,-150,*O,a); C0=rot(0,90,*O,a)
+Cx=M[0]; Cy=392
+b=f'<rect x="0" y="300" width="{W}" height="{Hh-300}" fill="{WATER}" fill-opacity="0.12"/>'+line(0,300,W,300,TEAL,3)
+b+=boat(*O,a,1.0,'mc1')
+ax1=rot(0,-250,*O,a); ax2=rot(0,210,*O,a)
+b+=dash(ax1[0],ax1[1],ax2[0],ax2[1],SOFT)
+b+=f'<line x1="{G[0]:.1f}" y1="{G[1]:.1f}" x2="{M[0]:.1f}" y2="{M[1]:.1f}" stroke="{SUN}" stroke-width="10" stroke-linecap="round" stroke-opacity="0.8"/>'
+b+=dash(Cx,Cy,Cx,M[1],TEAL)
+b+=arrow(G[0],G[1],G[0],G[1]+150,NAVY,6,22)+arrow(Cx,Cy,Cx,Cy-120,TEAL,6,22)
+b+=arrow(G[0],G[1]-40,Cx-2,G[1]-40,PURPLE,4,14)+arrow(Cx-2,G[1]-40,G[0]+2,G[1]-40,PURPLE,4,14)
+b+=f'<circle cx="{C0[0]:.1f}" cy="{C0[1]:.1f}" r="9" fill="none" stroke="{TEAL}" stroke-width="3" stroke-dasharray="4 4"/>'
+b+=f'<circle cx="{G[0]:.1f}" cy="{G[1]:.1f}" r="12" fill="{NAVY}"/><circle cx="{Cx:.1f}" cy="{Cy}" r="12" fill="{TEAL}"/><circle cx="{M[0]:.1f}" cy="{M[1]:.1f}" r="12" fill="{ACC}"/>'
+b+=f'<path d="M690 330 A200 200 0 0 0 672 214" fill="none" stroke="{GREEN}" stroke-width="7"/>'+arrow(676,226,668,204,GREEN,7,24)
+# riquadro: M sotto G
+bx,by,bw,bh=770,40,300,540
+b+=f'<rect x="{bx}" y="{by}" width="{bw}" height="{bh}" rx="28" fill="#FFFFFF" fill-opacity="0.7"/>'
+O2=(bx+150,390); s2=0.42
+b+=f'<rect x="{bx}" y="390" width="{bw}" height="{by+bh-390}" fill="{WATER}" fill-opacity="0.14"/>'+line(bx,390,bx+bw,390,TEAL,2)
+b+=boat(*O2,a,s2,'mc2',True)
+G2=rot(0,-200,*O2,a,s2); M2=rot(0,-60,*O2,a,s2); C2x=M2[0]; C2y=O2[1]+40
+b+=dash(C2x,C2y,C2x,M2[1],TEAL)
+b+=arrow(G2[0],G2[1],G2[0],G2[1]+100,NAVY,5,18)+arrow(C2x,C2y,C2x,C2y-80,TEAL,5,18)
+b+=f'<circle cx="{G2[0]:.1f}" cy="{G2[1]:.1f}" r="10" fill="{NAVY}"/><circle cx="{C2x:.1f}" cy="{C2y}" r="9" fill="{TEAL}"/><circle cx="{M2[0]:.1f}" cy="{M2[1]:.1f}" r="9" fill="{ACC}"/>'
+b+=f'<path d="M{bx+60} 230 A150 150 0 0 1 {bx+150} 200" fill="none" stroke="{ACC}" stroke-width="6"/>'+arrow(bx+140,202,bx+160,200,ACC,6,20)
+lbl=(lab(X+M[0]+22,Y+M[1]-40,300,'M · metacentro',ACC,24,700)
+     +lab(X+G[0]-230,Y+G[1]-8,200,'G · baricentro',NAVY,24,700,'right')
+     +lab(X+Cx+22,Y+Cy+6,300,'C · centro di carena (spostato)',TEAL,24,700)
+     +lab(X+450,Y+172,230,'GM: altezza metacentrica',INK,24,700,'left',PAPER)
+     +lab(X+G[0]-128,Y+G[1]-62,110,'braccio',PURPLE,24,700,'right')
+     +lab(X+20,Y+20,360,'<b>M sopra G</b>: la coppia raddrizza',GREEN,24,400)
+     +lab(X+30,Y+560,700,'tratteggio grigio = asse di simmetria della barca',SOFT,24,600)
+     +lab(X+bx+14,Y+by+12,bw-28,'<b>M sotto G</b>: pesi in alto, la coppia fa sbandare di più',ACC,24,400)
+     +lab(X+G2[0]+14,Y+G2[1]-16,40,'G',NAVY,24,700)+lab(X+M2[0]+14,Y+M2[1]-6,40,'M',ACC,24,700))
+def mterm(t,d): return f'<div style="display:flex; flex-direction:column; gap:4px">{p(t,28,INK,700,1.25)}{p(d,24,BODY,400,1.35)}</div>'
+txt=(mterm('Che cos\'è','Quando la barca sbanda un poco, la spinta sale verticale dal nuovo centro di carena C e taglia l\'asse di simmetria in un punto: <b>M</b>.')
+     +mterm('Non è un pezzo della barca','È un punto geometrico: non ha peso e non si vede. Per piccoli sbandamenti resta quasi fermo.')
+     +mterm('La regola','<b>M sopra G</b>: la barca torna dritta. <b>M sotto G</b>: la coppia la fa sbandare di più.')
+     +mterm('L\'altezza GM','Grande: barca «dura», rollio corto e brusco. Piccola: rollio lento, meno margine. Pesi in alto alzano G e riducono GM.'))
+sec('metacentro', head('Stabilità','Il metacentro, spiegato bene'), pinned=svgp(X,Y,W,Hh,b,'Sezione di una barca sbandata di 18 gradi: il baricentro G sull\'asse di simmetria, il centro di carena C spostato verso il lato immerso, la verticale della spinta che sale da C e taglia l\'asse di simmetria nel metacentro M, sopra G; tra G e M in giallo l\'altezza metacentrica, e il braccio orizzontale tra peso e spinta. Nel riquadro una barca con un grosso carico in alto: G è sopra M e la barca sbanda di più')+lbl+f'<div style="position:absolute; left:1260px; top:290px; width:532px; display:flex; flex-direction:column; gap:22px">{txt}</div>',
+ notes='Il metacentro crea confusione perché non è un oggetto: è il punto d\'incontro tra due rette. 1) La retta della spinta: quando la barca sbanda, la parte immersa cambia forma e il centro di carena C si sposta verso il lato che si immerge; la spinta di Archimede sale verticale da lì. 2) L\'asse di simmetria della barca, che sbanda con lei. Dove si incontrano c\'è il metacentro M. Il baricentro G invece non si sposta, se i pesi a bordo restano fermi. Se M è sopra G, peso (giù da G) e spinta (su da C) formano una coppia che riporta la barca dritta: il braccio orizzontale tra le due rette, di solito chiamato GZ, dice quanto è forte. Se M finisse sotto G, la stessa coppia farebbe sbandare di più: la barca si capovolge. La distanza GM si chiama altezza metacentrica: grande vuol dire barca rigida, con un rollio corto e brusco e scomodo; piccola vuol dire rollio lento e dolce, ma meno riserva di stabilità. Tutto questo vale per piccoli sbandamenti (fino a una decina di gradi); ai grandi angoli si ragiona con il braccio GZ. Cosa lo cambia a bordo: pesi in alto (persone sul fly, tender sulla tuga), acqua libera in sentina o serbatoi mezzi vuoti alzano G o ne peggiorano l\'effetto e riducono GM. Per l\'esame basta ricordare: G baricentro, C centro di carena, M metacentro; M sopra G = stabile. Disegno costruito in scala: M si trova davvero sulla verticale per C e sull\'asse di simmetria.')
+
 # =============== 15 FLAPS ===============
 X,Y,W,Hh=1000,290,792,520
 b=water(W,300,Hh,0.10)
@@ -390,7 +446,7 @@ slides.append(('chiusura', f'''<section id="chiusura" data-transition="fade" sty
 
 # slide sugli zinchi e le correnti galvaniche: HTML in slide_zinchi.html (confronto con l'App QuizNautica (Il Frangente))
 slides.append(('zinchi',open(os.path.join(SP,'slide_zinchi.html')).read()))
-ORDER=['cover','agenda','classificazione','profilo','sezione','dislocamento','carene','carena_imp','zinchi','quiz1','quiz1r','orientamento','struttura','legno','sottocoperta','ferramenta','quiz2','quiz2r','assi','stabilita','quiz3','quiz3r','flaps','trim','quiz4','quiz4r','finale1','finale1r','finale2','finale2r','chiusura']
+ORDER=['cover','agenda','classificazione','profilo','sezione','dislocamento','carene','carena_imp','zinchi','quiz1','quiz1r','orientamento','struttura','legno','sottocoperta','ferramenta','quiz2','quiz2r','assi','stabilita','metacentro','quiz3','quiz3r','flaps','trim','quiz4','quiz4r','finale1','finale1r','finale2','finale2r','chiusura']
 import re as _re
 d=dict(slides); assert sorted(d)==sorted(ORDER),(set(d)^set(ORDER))
 slides=[(i,d[i]) for i in ORDER]
