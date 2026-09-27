@@ -15,7 +15,7 @@ APP=[('G','La normativa in tabelle',30,'Documenti, dotazioni, limiti, velocità 
      ('J','I bollettini meteo',21,'Leggere il bollettino, scala Beaufort e Douglas, decidere se uscire',BLUE,'8DuhyYgsfK2SzSiiPjWWU7'),
      ('K','Il soccorso in mare',23,'Chiamate di emergenza, segnali di soccorso, dotazioni e abbandono',GREEN,'RnDo7TYXGz52N73sXndC26'),
      ('L',"L'ancoraggio",22,'Tipi di ancora, fondali, calumo, manovra di dar fondo e salpare',ORANGE,'5N8Yqin6vPAdayCKswo4Ug'),
-     ('M','La portanza',25,'Perché la vela spinge: pressioni, incidenza, stallo, filetti, fessura',CORAL,'Ap7Q1MUK6AqSZtf58LmStt')]
+     ('M','La portanza',33,'Perché la vela spinge: viscosità e vortici, incidenza, stallo, filetti, fessura',CORAL,'Ap7Q1MUK6AqSZtf58LmStt')]
 def cardA(L,t,n,d,c,u):
     return (f'<div style="display:flex; align-items:center; gap:20px; background:#FFFFFF; border-left:12px solid {c}; border-radius:24px; padding:16px 24px; {SHADOW}">'
             f'<p style="width:76px; height:76px; border-radius:38px; background:{c}; color:#FFFFFF; font-family:{H}; font-size:46px; font-weight:700; line-height:76px; text-align:center; flex:none">{L}</p>'

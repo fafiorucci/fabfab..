@@ -132,7 +132,7 @@ hero=(f'<div style="width:560px; display:flex; flex-direction:column; gap:12px; 
       f'<p style="font-family:{HAND}; font-size:46px; font-weight:700; line-height:1.1; color:{DACC}">Si accende il proiettore, e si salpa.</p></div>')
 MAT=[('15','lezioni da 2 ore','594 slide con disegni, schemi e quiz ufficiali con le risposte',CORAL),
      ('135','esercizi di carteggio','tutti svolti: traccia, soluzione e tracciamento sulla carta',SEA),
-     ('13','appendici','389 slide: correnti, nomi, nodi, IALA, normativa, VHF, costa, meteo, soccorso, ancora, portanza',PURPLE),
+     ('13','appendici','397 slide: correnti, nomi, nodi, IALA, normativa, VHF, costa, meteo, soccorso, ancora, portanza',PURPLE),
      ('10','prove d\'esame simulate','complete di carteggio, quiz base e quiz vela, con le soluzioni',BLUE),
      ('1','prova pratica','le manovre in barca dell\'Allegato D, passo per passo',GREEN),
      ('15','schede per gli allievi','regole da memorizzare e numeri dei quiz, da stampare',ORANGE)]
@@ -141,7 +141,7 @@ mt=''.join(f'<div style="display:flex; align-items:center; gap:20px; background:
            f'<div style="flex:1; display:flex; flex-direction:column; gap:2px">{p(t,28,INK,800,1.2)}{p(d,24,BODY,400,1.3)}</div></div>' for n,t,d,c_ in MAT)
 sec('materiale',header(EB,'Il materiale: un corso chiavi in mano','book',PURPLE)
     +f'<div style="display:flex; gap:32px; align-items:stretch">{hero}<div style="flex:1; display:flex; flex-direction:column; gap:12px">{mt}</div></div>',
-    notes='Totale: 594 slide di lezione, 389 di appendici, 31 di schede riassuntive e 26 di indice del corso. Ogni deck si proietta dal browser e si scarica in PDF o PowerPoint.',gap=30)
+    notes='Totale: 594 slide di lezione, 397 di appendici, 31 di schede riassuntive e 27 di indice del corso. Ogni deck si proietta dal browser e si scarica in PDF o PowerPoint.',gap=30)
 
 # ============ PERCHÉ ============
 WHY=[('Allineato all\'esame','Programma del DM 323/2021; quiz ed esercizi dall\'elenco ufficiale del DD 131/2022.'),
