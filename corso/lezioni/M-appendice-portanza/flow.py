@@ -7,21 +7,26 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-def case(mu, alpha_deg, nlev=15, span=1.7, xlim=3.4):
+def case(mu, alpha_deg, nlev=15, span=1.7, xlim=3.4, G_fixed=None, joukowski=True):
     a = math.radians(alpha_deg); U = 1.0
     R = abs(1 - mu)
     # Kutta: velocità nulla in zeta = 1 (bordo d'uscita)
     A = U * (np.exp(-1j*a) - R**2*np.exp(1j*a)/(1-mu)**2); B = 1j/(2*np.pi*(1-mu))
     # dw = A + G*B = 0 con G reale: risolvo sul componente appropriato
     G = -A.imag/B.imag if abs(B.imag) > 1e-12 else -A.real/B.real
+    if G_fixed is not None: G = G_fixed
     def w(zeta):
         s = zeta - mu
         return U*(s*np.exp(-1j*a) + R**2*np.exp(1j*a)/s) + 1j*G/(2*np.pi)*np.log(s)
     def dw(zeta):
         s = zeta - mu
         return U*(np.exp(-1j*a) - R**2*np.exp(1j*a)/s**2) + 1j*G/(2*np.pi*s)
-    J = lambda zeta: zeta + 1/zeta
-    dJ = lambda zeta: 1 - 1/zeta**2
+    if joukowski:
+        J = lambda zeta: zeta + 1/zeta
+        dJ = lambda zeta: 1 - 1/zeta**2
+    else:
+        J = lambda zeta: zeta
+        dJ = lambda zeta: 1 + 0*zeta
     # rotazione: la corrente libera diventa orizzontale
     rot = np.exp(-1j*a)
     th = np.linspace(0, 2*np.pi, 721)
@@ -33,7 +38,7 @@ def case(mu, alpha_deg, nlev=15, span=1.7, xlim=3.4):
     ZE = mu + RR*np.exp(1j*TT)
     psi = np.imag(w(ZE))
     ZZ = J(ZE)*rot
-    psi0 = float(np.imag(w(np.array([1+0j]))[0]))
+    psi0 = float(np.imag(w(np.array([mu+R+0j]))[0])) if not joukowski else float(np.imag(w(np.array([1+0j]))[0]))
     lev = [psi0 + k*span/((nlev-1)/2) for k in range(-(nlev//2), nlev//2+1)]
     cs = plt.contour(TT, RR, psi, levels=sorted(lev))
     lines = []
@@ -74,6 +79,8 @@ if __name__ == '__main__':
         'vela': case(0.20j, 6, span=1.6),
         'profilo0': case(-0.09+0.10j, 0),
         'chiglia': case(-0.09+0j, 5),
+        'lastra_ideale': case(0j + 1e-6, 10, span=1.6, G_fixed=0.0),
+        'cilindro': case(0j, 0, span=1.8, G_fixed=6.0, joukowski=False),
     }
     here = os.path.dirname(os.path.abspath(__file__))
     json.dump(out, open(os.path.join(here, 'flow_lines.json'), 'w'), separators=(',', ':'))

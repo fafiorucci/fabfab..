@@ -83,7 +83,7 @@ Fonte dei testi: Allegato A al DD 131/2022 (atto ufficiale, art. 5 L. 633/1941),
 | J | I bollettini meteo | 21 | [slide](https://claude.ai/artifact/8DuhyYgsfK2SzSiiPjWWU7) | [`lezioni/J-appendice-meteo`](lezioni/J-appendice-meteo/) |
 | K | Il soccorso in mare | 23 | [slide](https://claude.ai/artifact/RnDo7TYXGz52N73sXndC26) | [`lezioni/K-appendice-soccorso`](lezioni/K-appendice-soccorso/) |
 | L | L'ancoraggio | 22 | [slide](https://claude.ai/artifact/5N8Yqin6vPAdayCKswo4Ug) | [`lezioni/L-appendice-ancoraggio`](lezioni/L-appendice-ancoraggio/) |
-| M | La portanza, dall'ala alla vela | 25 | [slide](https://claude.ai/artifact/Ap7Q1MUK6AqSZtf58LmStt) | [`lezioni/M-appendice-portanza`](lezioni/M-appendice-portanza/) |
+| M | La portanza, dall'ala alla vela (fonte: L. Romanò, «La fisica in barca a vela», cap. 4) | 33 | [slide](https://claude.ai/artifact/Ap7Q1MUK6AqSZtf58LmStt) | [`lezioni/M-appendice-portanza`](lezioni/M-appendice-portanza/) |
 
 **Addendum · Schede riassuntive per lo studente** (31 slide): una o due pagine per lezione con le regole da memorizzare e i numeri dei quiz. [Slide](https://claude.ai/artifact/NEHjtWa3XgzS6NMc4K18vC) · [`lezioni/M-addendum-schede`](lezioni/M-addendum-schede/)
 
