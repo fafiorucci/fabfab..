@@ -47,6 +47,14 @@ for i in range(NP):
     es=sorted(es,key=lambda x:-len(x['testo'])); es=[es[0],es[3],es[1],es[2]]
     PROVE.append(dict(carta=es[0]['carta'],es=es,base=base,vela=take('VELA',5)))
 
+# ---------- prove oltre 12 miglia: fissate in prove_oltre.json (quelle pubblicate), se presente ----------
+PO=os.path.join(os.path.dirname(os.path.abspath(__file__)),'prove_oltre.json')
+if os.path.exists(PO):
+    CI={x['id']:x for x in C}; QI={q['p']:q for q in QL}
+    PROVE=[dict(carta=d['carta'],es=[CI[i] for i in d['es']],base=[QI[p] for p in d['base']],vela=[QI[p] for p in d['vela']]) for d in json.load(open(PO))]
+    used={q['p'] for P in PROVE for q in P['base']+P['vela']}
+    for t in pools: pools[t]=[q for q in pools[t] if q['p'] not in used]
+
 # ---------- prove entro 12 miglia: un esercizio ufficiale per settore, quiz nuovi ----------
 sett={}
 for x in E12:
@@ -237,3 +245,4 @@ write_deck(OUT,'Appendice D · Prove d\'esame simulate',ORDER,
   **{f"s{i+13}":{"description":f"Oltre 12 miglia · prova {i}: carteggio, quiz base, quiz vela e correzione","start":f"p{i}"} for i in range(1,NP+1)}})
 json.dump([dict(carta=P['carta'],es=[x['id'] for x in P['es']],base=[q['p'] for q in P['base']],vela=[q['p'] for q in P['vela']]) for P in PROVE],
           open(SP+'/appD/prove.json','w'),indent=1)
+json.dump([dict(es=P['es']['id'],base=[q['p'] for q in P['base']],vela=[q['p'] for q in P['vela']]) for P in PROVE12],open(SP+'/appD/prove_entro.json','w'),indent=1)

@@ -16,4 +16,4 @@ Venti esami completi (197 slide) in due parti, costruiti come le prove del DM 32
 - **quiz vela**: 5 domande;
 - **correzione**: risposte ufficiali del carteggio con la lezione dove l'esercizio è risolto, griglia delle lettere per i quiz.
 
-Nessun quiz o esercizio si ripete, né dentro una parte né tra le due parti; si preferiscono domande non usate nelle verifiche delle lezioni. Le prove oltre 12 miglia sono identiche a quelle della versione precedente. `prove.json` elenca il contenuto delle prove oltre 12 miglia. `genera.py` (seme fisso) le rigenera identiche.
+Nessun quiz o esercizio si ripete, né dentro una parte né tra le due parti; si preferiscono domande non usate nelle verifiche delle lezioni. Le prove oltre 12 miglia sono identiche a quelle della versione precedente: `genera.py` le legge da `prove_oltre.json` (id degli esercizi e numeri dei quiz), così non cambiano se cambiano le verifiche delle lezioni. Le prove entro 12 miglia usano un seme fisso ed escludono le domande già usate nelle prove oltre. `prove.json` (copia di `prove_oltre.json`) e `prove_entro.json` elencano il contenuto delle due parti.
