@@ -3,10 +3,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lezione_base import *
 import lezione_base as LB
 OUT=SP+'/lez02/project'
-LB.ICON_T.update({'La lezione di oggi':'lifebuoy','Entrobordo, entrofuoribordo, fuoribordo, idrogetto':'propeller','Dal motore all\'elica':'propeller','Il ciclo a quattro tempi':'fuel',
- 'Motore a benzina e motore diesel':'fuel','Il raffreddamento':'current','Il motore ci parla: fumo e avviamento':'cloud','Il motore ci parla: in navigazione':'helm',
+LB.ICON_T.update({'La lezione di oggi':'lifebuoy','Entrobordo, entrofuoribordo, fuoribordo, idrogetto':'propeller','Dal motore all\'elica':'propeller','S-drive, IPS, pod e idrogetto':'propeller','Il ciclo a quattro tempi':'fuel',
+ 'Motore a benzina e motore diesel':'fuel','Il raffreddamento':'current','Benzina: miscela e scintilla':'fuel','Diesel: aria compressa e iniettori':'fuel','Fuoribordo: acqua di mare diretta':'current','Entrobordo: due circuiti e lo scambiatore':'current','Il motore ci parla: fumo e avviamento':'cloud','Il motore ci parla: in navigazione':'helm',
  'Carburante e manutenzione':'fuel','Quanto carburante imbarcare':'fuel','Autonomia e consumi':'chart','Mozzo, pale, passo e regresso':'propeller',
- 'Elica destrorsa e sinistrorsa':'propeller','L\'effetto evolutivo dell\'elica':'current','Due motori, due eliche':'propeller','Il timone':'helm','Barra e ruota':'helm','Effetti combinati elica e timone':'anchor'})
+ 'Elica destrorsa e sinistrorsa':'propeller','Spinta e velocità':'propeller','L\'effetto evolutivo dell\'elica':'current','Due motori, due eliche':'propeller','Il timone':'helm','Barra e ruota':'helm','Effetti combinati elica e timone':'anchor'})
 
 # ============ COVER + AGENDA ============
 cover(2,'Motori, elica e timone','Come funziona il motore, come spinge l\'elica, come governa il timone',
@@ -62,6 +62,39 @@ sec('lineaasse', head('Motore entrobordo · trasmissione','Dal motore all\'elica
  notes='Quiz 1.2.2-7 (linea d\'asse), 1.2.1-7 e -14 (invertitore: non si inverte la rotazione del motore), 1.2.1-42/43/44 (figure: astuccio, asse portaelica, invertitore/riduttore), 1.2.1-41 (paratia del vano motore).')
 X,Y,W,Hh=700,290,1092,620
 
+# ============ TIPI DI TRASMISSIONE ============
+def gear(x,y,r=7): return f'<circle cx="{x}" cy="{y}" r="{r}" fill="{SUN}" stroke="{NAVY}" stroke-width="2"/>'
+def prop_front(x,y,s=1,c=NAVY):
+    return prop_side(x,y,s,c)
+def leg(x0,x1,ytop,ybot,w=16,c=SEA):
+    return f'<path d="M{x0-w/2} {ytop} L{x0+w/2} {ytop} L{x1+w/2} {ybot} Q{x1} {ybot+10} {x1-w/2} {ybot} Z" fill="{c}" stroke="{NAVY}" stroke-width="3" stroke-linejoin="round"/>'
+tr={
+'sdrive':mini_hull(f'<path d="M262 172 L300 170 L292 222 L276 224 Z" fill="{NAVY}"/>'+eng(140,114)
+    +leg(176,176,168,208,18)+gear(176,178,6)+gear(176,204,6)+line(176,140,176,172,'#7A8796',5)
+    +f'<rect x="162" y="166" width="28" height="7" rx="3" fill="{PURPLE}"/>'+prop_side(158,204)),
+'ips':mini_hull(eng(80,112)+leg(150,160,172,208,18)+prop_side(178,204)+prop_side(190,204,0.8,SEA)
+    +arrow(212,206,262,206,CORAL,4,12)+line(120,134,150,172,'#7A8796',5)),
+'pod':mini_hull(eng(80,112)+leg(160,160,172,206,18)+prop_side(142,202)+line(120,134,160,172,'#7A8796',5)
+    +f'<path d="M126 218 A36 10 0 0 0 196 218" fill="none" stroke="{CORAL}" stroke-width="4" stroke-linecap="round"/>'+head_at(196,216,-80,CORAL,12)),
+'getto':mini_hull(eng(210,112)
+    +f'<path d="M262 176 Q230 170 190 166 L90 160 L48 156" fill="none" stroke="{SEA}" stroke-width="14" stroke-linecap="round"/>'
+    +prop_side(130,162,0.8)+arrow(290,214,262,182,SEA,3,11)
+    +f'<path d="M44 146 L30 150 L30 166 L44 168" fill="none" stroke="{NAVY}" stroke-width="5" stroke-linejoin="round"/>'
+    +''.join(line(26,152+i*6,4,146+i*9,'#FFFFFF',3) for i in range(3))),
+}
+TR={'sdrive':('S-drive','Un <b>piedino</b> sotto lo scafo con <b>due ingranaggi conici</b> porta il moto all\'elica al posto della linea d\'asse. Tipico delle <b>barche a vela</b>. La <b>guarnizione</b> del piedino si sostituisce alla scadenza stampata nella gomma.'),
+    'ips':('IPS','<i>Inboard Performance System</i>: <b>piede completamente immerso</b> e orientabile, con eliche <b>traenti</b>, rivolte <b>verso prua</b>, e controrotanti.'),
+    'pod':('Pod','<b>Corpo trasmissione in un piede immerso</b> che <b>ruota</b> e orienta la prua della barca: il piede fa anche da timone. L\'IPS è un tipo di pod.'),
+    'getto':('Idrogetto','Una <b>pompa</b> mossa dal motore aspira acqua e la spinge ad alta velocità <b>da poppa</b>. Parti: condotto di aspirazione, elica, condotto forzato, meccanismo di governo. <b>Difficile al minimo dei giri e con vento</b>.')}
+ALT={'sdrive':'Disegno di profilo di barca a vela: motore, piedino S-drive con due ingranaggi conici, guarnizione e elica',
+     'ips':'Disegno di profilo: piede IPS immerso con due eliche rivolte verso prua che tirano la barca',
+     'pod':'Disegno di profilo: piede pod immerso che ruota su se stesso per orientare la barca',
+     'getto':'Disegno di profilo: l\'acqua entra dal fondo, passa per la pompa ed esce a getto da poppa'}
+TC={'sdrive':PURPLE,'ips':SEA,'pod':BLUE,'getto':CORAL}
+cc=''.join(card(svgi(440,230,tr[k],ALT[k],dw=350,dh=183)+h3(TR[k][0],30,TC[k])+p(TR[k][1],24),None,24,10) for k in TR)
+sec('trasmissioni', head('Tipi di trasmissione','S-drive, IPS, pod e idrogetto')+f'<div style="display:flex; gap:24px">{cc}</div>',
+ notes='Quiz 1.2.1-55 (S-drive: piedino con due ingranaggi conici, sulle barche a vela al posto della linea d\'asse), 1.2.1-56 (S-drive: sostituire la guarnizione del piedino secondo la scadenza stampata nella gomma, non «ogni 15 anni»), 1.2.1-52 (IPS: piede completamente immerso, eliche traenti rivolte verso prua), 1.2.1-54 (figura: riconoscere la trasmissione IPS), 1.2.1-53 (pod: piede immerso che ruotando orienta la prua), 1.2.1-45/46/47 (idrogetto: getto da poppa con pompa mossa da un motore convenzionale; condotto di aspirazione, elica, condotto forzato e meccanismo di governo; difficile al minimo e con vento). Nel disegno dell\'S-drive la striscia viola è la guarnizione tra piedino e scafo: se cede, entra acqua.')
+
 # ============ QUATTRO TEMPI ============
 def cyl(stage):
     s=f'<rect x="0" y="0" width="300" height="300" rx="30" fill="#FFFFFF"/>'
@@ -86,6 +119,68 @@ cc=''.join(card(svgi(300,300,cyl(k),f'Cilindro nella fase di {t.split(" · ")[1]
 sec('quattrotempi', head('Come funziona il motore','Il ciclo a quattro tempi')+f'<div style="display:flex; gap:24px">{cc}</div>'+note('Un ciclo completo = 4 corse del pistone e 2 giri dell\'albero motore.',CORAL,40),
  notes='Quiz 1.2.1-6 e -33 (aspirazione, compressione, scoppio, scarico), 1.2.1-16 e -17 (2 giri dell\'albero, 4 corse del pistone). Nel diesel si aspira solo aria e il gasolio viene iniettato alla fine della compressione.')
 
+# ============ DETTAGLIO: BENZINA E DIESEL ============
+def nterm(n,t,d,c): return f'<div style="display:flex; gap:16px; align-items:start"><p style="flex:none; width:44px; font-family:{H}; font-size:26px; font-weight:700; line-height:44px; text-align:center; color:#FFFFFF; background:{c}; border-radius:22px">{n}</p><div style="display:flex; flex-direction:column; gap:2px">{p(t,26,INK,800,1.25)}{p(d,24,BODY,400,1.35)}</div></div>'
+def tcol(x,items,extra=''): return f'<div style="position:absolute; left:{x}px; top:290px; width:532px; display:flex; flex-direction:column; gap:20px">{"".join(nterm(*i) for i in items)}{extra}</div>'
+FUEL=SUN; ELEC=PURPLE; GREY='#9AA5B1'; MIX='#9DB9F2'
+def cylinder(cx,piston_y,fill,fill_c):
+    s=f'<rect x="{cx-84}" y="156" width="168" height="{piston_y-156}" fill="{fill_c}"/>'
+    s+=f'<path d="M{cx-90} 150 L{cx-90} 430 M{cx+90} 150 L{cx+90} 430 M{cx-90} 150 L{cx+90} 150" stroke="{NAVY}" stroke-width="8" fill="none" stroke-linecap="round"/>'
+    s+=f'<rect x="{cx-86}" y="{piston_y}" width="172" height="56" rx="8" fill="{CORAL}"/>'
+    s+=line(cx,piston_y+40,cx+10,468,NAVY,12)+f'<circle cx="{cx}" cy="486" r="44" fill="none" stroke="{NAVY}" stroke-width="6"/><circle cx="{cx+10}" cy="468" r="8" fill="{SUN}"/>'
+    for vx in (cx-50,cx+50): s+=line(vx,104,vx,150,NAVY,5)+f'<rect x="{vx-16}" y="146" width="32" height="7" rx="3" fill="{NAVY}"/>'
+    return s
+# --- benzina: disegno a destra ---
+X,Y,W,Hh=700,290,1092,620
+b=f'<rect x="50" y="410" width="190" height="120" rx="18" fill="{SUN_T}" stroke="{SUN}" stroke-width="5"/><path d="M60 450 q20 -8 40 0 t40 0 t40 0 t40 0 L220 520 L60 520 Z" fill="{SUN}" fill-opacity="0.45"/>'
+b+=f'<path d="M145 410 L145 336 M171 310 L200 310 M240 310 L360 310 L360 252" fill="none" stroke="{FUEL}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>'
+b+=f'<circle cx="145" cy="310" r="26" fill="{NAVY}"/><circle cx="145" cy="310" r="8" fill="{SUN}"/><rect x="200" y="290" width="40" height="40" rx="8" fill="#FFFFFF" stroke="{NAVY}" stroke-width="3"/>'+''.join(line(206,298+i*8,234,298+i*8,SOFT,2) for i in range(4))
+b+=f'<rect x="310" y="160" width="120" height="92" rx="14" fill="{SEA}"/><path d="M340 160 Q370 206 340 252 M400 160 Q370 206 400 252" fill="none" stroke="#FFFFFF" stroke-width="4"/>'
+b+=arrow(370,30,370,150,BLUE,6,18)
+b+=f'<path d="M430 206 L520 206 Q540 206 540 186 L540 104 L640 104" fill="none" stroke="{MIX}" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>'
+b+=f'<path d="M740 104 L840 104 L870 80" fill="none" stroke="{GREY}" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>'
+b+=cylinder(690,286,'mix',MIX)
+b+=f'<rect x="681" y="86" width="18" height="64" fill="{NAVY}"/><rect x="683" y="62" width="14" height="26" rx="4" fill="#FFFFFF" stroke="{NAVY}" stroke-width="2"/>'
+b+=f'<polygon points="690,154 698,170 716,168 702,180 710,198 690,188 670,198 678,180 664,168 682,170" fill="{SUN}" stroke="{CORAL}" stroke-width="2"/>'
+b+=f'<rect x="880" y="190" width="70" height="110" rx="12" fill="{PURPLE}"/>'+''.join(line(886,206+i*14,944,206+i*14,'#FFFFFF',2) for i in range(6))
+b+=f'<path d="M915 190 L915 44 L690 44 L690 62" fill="none" stroke="{ELEC}" stroke-width="5" stroke-linejoin="round"/><path d="M915 300 L915 380" stroke="{ELEC}" stroke-width="5"/>'
+b+=f'<rect x="860" y="380" width="130" height="76" rx="10" fill="{NAVY}"/><rect x="880" y="368" width="22" height="14" rx="3" fill="{CORAL}"/><rect x="948" y="368" width="22" height="14" rx="3" fill="{SUN}"/>'
+b+=''.join(f'<path d="M270 {528+i*14} q30 -10 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0" fill="none" stroke="#A58BE0" stroke-width="4" stroke-dasharray="10 8"/>' for i in range(3))
+b+=f'<circle cx="1030" cy="560" r="26" fill="#FFFFFF" stroke="{NAVY}" stroke-width="4"/>'+''.join(f'<ellipse cx="1030" cy="548" rx="6" ry="12" fill="{NAVY}" transform="rotate({a} 1030 560)"/>' for a in (0,120,240))+arrow(1030,530,1030,480,SOFT,4,14)
+b+=num(100,300,1,CORAL)+num(290,160,2,CORAL)+num(850,170,3,CORAL)+num(250,560,4,CORAL)
+lbls=lab(X+56,Y+536,190,'Serbatoio',INK)+lab(X+150,Y+196,150,'Carburatore',SEA,align='right')+lab(X+384,Y+26,120,'Aria',BLUE)+lab(X+560,Y+6,120,'Candela',INK)+lab(X+960,Y+230,110,'Bobina',PURPLE)+lab(X+860,Y+460,140,'Batteria',INK)+lab(X+800,Y+118,120,'Scarico',SOFT)+lab(X+470,Y+574,300,'Vapori di benzina',PURPLE)+lab(X+880,Y+510,120,'Aspiratore',INK,align='right')
+txt=tcol(128,[(1,'Alimentazione','La pompa porta la benzina dal serbatoio, attraverso il filtro, al carburatore.',CORAL),
+ (2,'Carburatore','Mescola benzina e aria: la <b>miscela</b> entra nel cilindro. Ingolfato: il motore gira ma non parte.',CORAL),
+ (3,'Accensione','Batteria e bobina fanno scoccare la <b>scintilla della candela</b>. Esiste solo nei motori a scoppio.',CORAL),
+ (4,'Vano motore','I <b>vapori di benzina</b> sono più pesanti dell\'aria e ristagnano in basso: <b>aerare prima di avviare</b>.',CORAL)])
+sec('benzina', head('Il motore a benzina · da vicino','Benzina: miscela e scintilla')+txt, pinned=svgp(X,Y,W,Hh,b,'Schema del motore a benzina: serbatoio, pompa e filtro, carburatore con presa d\'aria, cilindro con candela, bobina e batteria, vapori sul fondo del vano e aspiratore')+lbls,
+ notes='Quiz 1.2.1-18 (il sistema di accensione esiste solo nei motori a scoppio), 1.2.1-2 e -3 (vapori di benzina nel vano: aerare prima di avviare), 1.2.2-1 e -14 (gira ma non parte: carburatore ingolfato o sporco, candele deteriorate, carburante che non arriva), 1.2.2-15 (fumo nero: cattiva combustione, carburazione difettosa). Molti motori recenti hanno l\'iniezione elettronica al posto del carburatore: il principio non cambia, miscela aria e benzina accesa dalla scintilla. L\'aspiratore (blower) va acceso qualche minuto prima dell\'avviamento.')
+# --- diesel: disegno a sinistra ---
+X,Y,W,Hh=128,290,1092,620
+b=f'<rect x="40" y="410" width="190" height="120" rx="18" fill="{GREEN_T}" stroke="{GREEN}" stroke-width="5"/><path d="M50 450 q20 -8 40 0 t40 0 t40 0 t40 0 L210 520 L50 520 Z" fill="{SUN}" fill-opacity="0.35"/>'
+b+=''.join(f'<path d="M{70+i*36} 518 q6 -12 0 -22 q-6 -10 2 -20" fill="none" stroke="{GREEN}" stroke-width="4" stroke-linecap="round"/>' for i in range(4))
+b+=f'<path d="M135 410 L135 340 L236 340 M294 340 L334 360 M386 360 L430 360" fill="none" stroke="{FUEL}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>'
+b+=f'<rect x="236" y="290" width="58" height="120" rx="12" fill="#FFFFFF" stroke="{NAVY}" stroke-width="4"/><rect x="240" y="370" width="50" height="36" rx="6" fill="{BLUE_T}"/><rect x="255" y="276" width="20" height="14" rx="3" fill="{SUN}"/>'
+b+=''.join(f'<circle cx="{252+i*14}" cy="{300+i*9}" r="5" fill="#FFFFFF" stroke="{SOFT}" stroke-width="2"/>' for i in range(3))
+b+=f'<circle cx="360" cy="360" r="26" fill="{NAVY}"/><circle cx="360" cy="360" r="8" fill="{SUN}"/>'
+b+=f'<rect x="430" y="320" width="170" height="90" rx="12" fill="{NAVY}"/>'+''.join(f'<rect x="{446+i*38}" y="300" width="20" height="22" rx="4" fill="{SUN}"/>' for i in range(4))
+b+=f'<path d="M515 300 L515 76 L720 76" fill="none" stroke="{FUEL}" stroke-width="4" stroke-linejoin="round"/>'
+b+=f'<path d="M760 104 L880 104 L910 80" fill="none" stroke="{GREY}" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>'
+b+=cylinder(730,226,'air','#FFD28A')
+b+=f'<rect x="720" y="64" width="20" height="92" rx="4" fill="{NAVY}"/>'+''.join(line(730,160,730+dx,210,FUEL,3) for dx in (-36,-18,0,18,36))
+b+=arrow(610,24,672,98,BLUE,6,18)
+b+=f'<path d="M870 196 L826 204" stroke="{SUN}" stroke-width="8" stroke-linecap="round"/><circle cx="822" cy="205" r="11" fill="{CORAL}" fill-opacity="0.6"/>'
+b+=f'<path d="M870 196 L970 196 L970 380" fill="none" stroke="{ELEC}" stroke-width="5" stroke-linejoin="round"/>'
+b+=f'<rect x="910" y="380" width="130" height="76" rx="10" fill="{NAVY}"/><rect x="930" y="368" width="22" height="14" rx="3" fill="{CORAL}"/><rect x="998" y="368" width="22" height="14" rx="3" fill="{SUN}"/>'
+b+=num(206,290,1,SEA)+num(515,450,2,SEA)+num(680,40,3,SEA)+num(890,160,4,SEA)
+lbls=lab(X+46,Y+536,190,'Serbatoio',INK)+lab(X+240,Y+424,190,'Filtro separatore',INK)+lab(X+304,Y+232,200,'Pompa di alimentazione',INK)+lab(X+430,Y+470,200,'Pompa di iniezione',INK)+lab(X+760,Y+10,130,'Iniettore',INK)+lab(X+470,Y+10,120,'Solo aria',BLUE)+lab(X+930,Y+140,150,'Candeletta',CORAL)+lab(X+910,Y+460,140,'Batteria',INK)
+txt=tcol(1260,[(1,'Filtro separatore','Trattiene <b>acqua e sporco</b>: nel gasolio si formano alghe. Serbatoio pulito e filtri cambiati spesso.',SEA),
+ (2,'Pompa di alimentazione e di iniezione','La prima pesca dal serbatoio, la seconda manda il gasolio <b>ad alta pressione</b>. Il diesel si spegne togliendo il gasolio alla pompa di iniezione.',SEA),
+ (3,'Iniettori','<b>Uno per cilindro</b>: nebulizzano il gasolio nell\'aria compressa e calda, che lo <b>accende da sola</b>.',SEA),
+ (4,'Candelette e batteria','Candelette a incandescenza per avviare i motori a iniezione indiretta; la batteria è essenziale.',SEA)])
+sec('diesel', head('Il motore diesel · da vicino','Diesel: aria compressa e iniettori')+txt, pinned=svgp(X,Y,W,Hh,b,'Schema del motore diesel: serbatoio con alghe, filtro separatore con acqua e vite di spurgo, pompa di alimentazione, pompa di iniezione, iniettore che nebulizza il gasolio nel cilindro pieno di aria compressa, candeletta e batteria')+lbls,
+ notes='Quiz 1.2.1-49 (pompa di alimentazione, pompa di iniezione, iniettori), -48 (un iniettore per cilindro), -29 (l\'iniettore nebulizza il gasolio), -50 (candeletta a incandescenza nell\'iniezione indiretta), -15 (batteria essenziale per l\'avviamento), -1 (si spegne impedendo al gasolio di arrivare alla pompa di iniezione), -57 e -58 (alghe nel gasolio, pulizia del serbatoio e cambio dei filtri), 1.2.2-24 (filtro separatore contro la contaminazione), 1.2.1-10 (spurgare: togliere l\'aria dal circuito prima di riavviare), 1.2.2-3, -8, -16 (aria nel circuito: gira ma non parte o si spegne subito). Le bollicine nel disegno sono l\'aria che si elimina con la vite di spurgo sul filtro.')
+
 # ============ BENZINA / DIESEL ============
 plug=f'<rect x="0" y="0" width="260" height="160" rx="26" fill="#FFFFFF"/><rect x="100" y="16" width="60" height="40" rx="8" fill="{NAVY}"/><rect x="108" y="56" width="44" height="40" fill="#E9EEF3" stroke="{NAVY}" stroke-width="3"/><rect x="118" y="96" width="24" height="26" fill="#7A8796"/><path d="M130 122 L130 134 L144 134" fill="none" stroke="{NAVY}" stroke-width="5"/><polygon points="150,126 160,136 150,146 156,136" fill="{SUN}"/><polygon points="164,122 176,138 162,150" fill="{SUN}"/>'
 inj=f'<rect x="0" y="0" width="260" height="160" rx="26" fill="#FFFFFF"/><rect x="110" y="10" width="40" height="70" rx="8" fill="{NAVY}"/><path d="M118 80 L142 80 L134 108 L126 108 Z" fill="#7A8796"/>'+''.join(line(130,110,130+dx,150,'#9DB9F2',4) for dx in (-40,-20,0,20,40))
@@ -96,24 +191,57 @@ cd=card(f'<div style="display:flex; gap:20px; align-items:center">{svgi(260,160,
 sec('benzinadiesel', head('Due motori a confronto','Motore a benzina e motore diesel')+f'<div style="display:flex; gap:24px">{cb}{cd}</div>'+note('1 kW = 1,36 CV · aerazione forzata del vano diesel: consigliata, non obbligatoria',PURPLE,34),
  notes='Quiz 1.2.1-2, -3 (vapori, aerare il vano), -18 (accensione solo nei motori a scoppio), -29, -48, -49 (iniettori, alimentazione diesel), -50 (candelette), -15 (batteria), -1 (spegnimento diesel), -32 (infiammabilità), -5 (aerazione forzata diesel non obbligatoria), -30 (1 kW = 1,36 CV).')
 
-# ============ RAFFREDDAMENTO ============
-fb=f'<rect x="0" y="170" width="764" height="130" fill="{WATER}" fill-opacity="0.22"/>'+line(0,170,764,170,SEA,3)
-fb+=f'<path d="M470 60 L470 190 L640 170 L640 70 Z" fill="{BOAT}" stroke="{NAVY}" stroke-width="4"/>'
-fb+=f'<rect x="300" y="26" width="130" height="86" rx="26" fill="{CORAL}" stroke="{NAVY}" stroke-width="4"/><rect x="340" y="112" width="44" height="100" fill="{NAVY}"/><path d="M330 212 L396 212 L390 250 L336 250 Z" fill="{NAVY}"/><path d="M320 200 L406 200" stroke="{NAVY}" stroke-width="6"/>'
-fb+=f'<ellipse cx="316" cy="226" rx="8" ry="22" fill="{NAVY}"/><circle cx="318" cy="228" r="6" fill="{SUN}"/>'+''.join(line(346+i*8,222,346+i*8,240,'#FFFFFF',3) for i in range(5))
-fb+=arrow(280,280,344,236,SEA,4,16)+arrow(440,282,380,238,SEA,4,16)+f'<path d="M430 96 Q470 100 486 136" fill="none" stroke="{WATER}" stroke-width="7" stroke-linecap="round"/>'
-fb+=num(250,272,1,SEA)+num(516,120,2,CORAL)
-eb=f'<rect x="0" y="210" width="764" height="90" fill="{WATER}" fill-opacity="0.22"/>'+line(0,210,764,210,SEA,3)
-eb+=f'<rect x="420" y="40" width="200" height="110" rx="18" fill="{NAVY}"/><rect x="200" y="60" width="150" height="70" rx="14" fill="{SUN_T}" stroke="{SUN}" stroke-width="5"/>'+''.join(f'<path d="M214 {76+i*14} q16 -8 32 0 t32 0 t32 0 t32 0" fill="none" stroke="{SUN}" stroke-width="3"/>' for i in range(3))
-eb+=f'<path d="M420 80 L350 80 M350 110 L420 110" stroke="{CORAL}" stroke-width="8"/>'
-eb+=f'<circle cx="120" cy="170" r="30" fill="#FFFFFF" stroke="{SEA}" stroke-width="6"/>'+''.join(line(120,170,120+20*math.cos(a),170+20*math.sin(a),SEA,4) for a in [0,1.05,2.1,3.14,4.19,5.24])
-eb+=f'<path d="M120 250 L120 200 M120 140 L120 95 L200 95" fill="none" stroke="{SEA}" stroke-width="8"/><path d="M275 130 L275 180 L700 180 L700 250" fill="none" stroke="{SEA}" stroke-width="8"/>'
-eb+=f'<rect x="100" y="250" width="40" height="22" rx="6" fill="{NAVY}"/>'+arrow(120,292,120,262,SEA,4,14)+arrow(700,236,700,280,SEA,4,14)
-eb+=num(80,262,1,SEA)+num(80,170,2,SEA)+num(275,40,3,SUN)+num(740,236,4,SEA)
-cf=card(svgi(764,300,fb,'Motore fuoribordo con le prese d\'acqua sul piede e il getto della spia di raffreddamento',dw=764,dh=300)+h3('Fuoribordo',30)+p('<b>1</b> prese d\'acqua sul piede · <b>2</b> la <b>spia</b>: il getto conferma che il circuito funziona. Mai far girare il motore con la presa fuori dall\'acqua: si danneggia la girante.',24),None,24,10)
-ce=card(svgi(764,300,eb,'Schema del raffreddamento entrobordo: presa a mare, pompa con girante, scambiatore di calore, scarico',dw=764,dh=300)+h3('Entrobordo',30)+p('<b>1</b> presa a mare · <b>2</b> pompa con girante · <b>3</b> scambiatore: l\'acqua di mare raffredda il liquido del circuito chiuso del motore · <b>4</b> scarico.',24),None,24,10)
-sec('raffreddamento', head('Il motore va raffreddato','Il raffreddamento')+f'<div style="display:flex; gap:24px">{cf}{ce}</div>',
- notes='Quiz 1.2.1-4 (girante danneggiata se la presa è fuori dall\'acqua), -13 (scambiatore di calore), -37 e -38 (figure: prese d\'acqua e spia), -8 (causa più comune di surriscaldamento: presa a mare occlusa), 1.2.2-11 (alghe e plastica sulla presa del fuoribordo).')
+# ============ RAFFREDDAMENTO: FUORIBORDO ============
+X,Y,W,Hh=700,290,1092,620
+b=f'<rect x="0" y="330" width="1092" height="290" fill="{WATER}" fill-opacity="0.22"/>'+line(0,330,1092,330,SEA,3)
+b+=f'<path d="M1092 150 L800 166 L800 400 Q900 440 1092 450 Z" fill="{BOAT}" stroke="{NAVY}" stroke-width="5" stroke-linejoin="round"/>'
+b+=f'<rect x="720" y="150" width="80" height="44" rx="8" fill="{NAVY}"/>'
+b+=f'<rect x="590" y="200" width="64" height="214" fill="#E9EEF3" stroke="{NAVY}" stroke-width="4"/>'
+b+=f'<rect x="510" y="54" width="220" height="156" rx="44" fill="#F3F6F9" stroke="{NAVY}" stroke-width="5"/><rect x="556" y="84" width="130" height="100" rx="14" fill="#DDE3EA"/>'
+b+=''.join(f'<path d="M566 {100+i*22} q14 -8 28 0 t28 0 t28 0 t28 0" fill="none" stroke="{SEA}" stroke-width="4"/>' for i in range(4))
+b+=f'<rect x="672" y="70" width="30" height="24" rx="5" fill="{SUN}" stroke="{NAVY}" stroke-width="2"/>'
+b+=f'<rect x="530" y="412" width="190" height="12" rx="4" fill="{NAVY}"/>'
+b+=f'<path d="M586 424 L660 424 L664 470 L700 486 Q704 520 660 522 L560 522 Q540 506 556 486 L582 470 Z" fill="#E9EEF3" stroke="{NAVY}" stroke-width="4" stroke-linejoin="round"/>'
+b+=''.join(f'<rect x="{600+i*12}" y="442" width="6" height="22" rx="3" fill="#FFFFFF" stroke="{NAVY}" stroke-width="2"/>' for i in range(4))
+b+=prop_side(540,500,2.4)
+b+=f'<path d="M622 440 L622 196" stroke="{SEA}" stroke-width="8"/>'+head_at(622,300,-90,SEA,16)+head_at(622,236,-90,SEA,16)
+b+=f'<circle cx="622" cy="386" r="22" fill="#FFFFFF" stroke="{SEA}" stroke-width="5"/>'+''.join(line(622,386,622+16*math.cos(a),386+16*math.sin(a),SEA,3) for a in [0,1.05,2.1,3.14,4.19,5.24])
+b+=f'<path d="M512 150 Q470 170 450 250 Q444 290 446 326" fill="none" stroke="{WATER}" stroke-width="7" stroke-linecap="round"/><path d="M512 158 Q480 180 466 250" fill="none" stroke="{WATER}" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 8"/>'
+b+=''.join(f'<circle cx="{470-i*34}" cy="{500+((-1)**i)*10}" r="{9-i}" fill="#FFFFFF" stroke="{SOFT}" stroke-width="2"/>' for i in range(5))
+b+=num(750,444,1,SEA)+num(560,370,2,SEA)+num(720,40,3,SEA)+num(420,150,4,SEA)
+lbls=lab(X+772,Y+430,220,'Prese d\'acqua',INK)+lab(X+670,Y+356,120,'Girante',SEA)+lab(X+744,Y+26,170,'Termostato',INK)+lab(X+300,Y+190,130,'Spia',SEA,align='right')+lab(X+250,Y+540,300,'Acqua e gas di scarico escono dal mozzo',SOFT)
+txt=tcol(128,[(1,'Prese d\'acqua sul piede','Aspirano acqua di mare. Alghe o un sacchetto di plastica le ostruiscono: il motore si surriscalda e si ferma.',SEA),
+ (2,'Girante','Pompa a palette di gomma nel piede. Se gira a secco, con la presa fuori dall\'acqua, si rovina.',SEA),
+ (3,'Circuito aperto','L\'acqua di mare passa <b>direttamente</b> nei condotti del motore; il termostato regola la temperatura.',SEA),
+ (4,'Spia','Il getto conferma che l\'acqua circola: all\'avviamento si guarda sempre. <b>Niente getto: spegnere</b>.',SEA)])
+sec('raffreddamento', head('Il raffreddamento · fuoribordo','Fuoribordo: acqua di mare diretta')+txt, pinned=svgp(X,Y,W,Hh,b,'Motore fuoribordo di profilo: prese d\'acqua sul piede, girante nella gamba, condotti nel blocco motore con termostato, getto della spia e scarico dal mozzo dell\'elica')+lbls,
+ notes='Quiz 1.2.1-37 (figura: le prese d\'acqua sul piede), -38 (figura: la spia, il getto che testimonia il corretto funzionamento del circuito), -4 (girante danneggiata se il motore gira con la presa fuori dall\'acqua), 1.2.2-11 e -26 (alghe o plastica sulla presa: surriscaldamento e arresto), -25 (surriscaldamento prolungato: grippaggio, danni alla testata e alle sue guarnizioni). Dopo l\'uso in mare, lavare il circuito con acqua dolce con l\'apposito attacco o le «cuffie».')
+
+# ============ RAFFREDDAMENTO: ENTROBORDO ============
+X,Y,W,Hh=128,290,1092,620
+b=f'<rect x="0" y="530" width="1092" height="90" fill="{WATER}" fill-opacity="0.22"/><path d="M0 520 L1040 520 L1040 180" fill="none" stroke="{NAVY}" stroke-width="6" stroke-linejoin="round"/><rect x="1040" y="440" width="52" height="180" fill="{WATER}" fill-opacity="0.22"/>'
+b+=f'<rect x="138" y="506" width="24" height="28" fill="{NAVY}"/><rect x="136" y="456" width="28" height="40" rx="6" fill="{NAVY}"/><rect x="164" y="466" width="48" height="10" rx="4" fill="{CORAL}"/>'
+b+=f'<rect x="120" y="300" width="60" height="110" rx="12" fill="#FFFFFF" stroke="{NAVY}" stroke-width="4"/>'+''.join(line(128,318+i*14,172,318+i*14,SOFT,2) for i in range(6))
+b+=f'<path d="M150 456 L150 410 M150 300 L150 250 L212 250 M268 250 L300 250 L300 150 L330 150" fill="none" stroke="{SEA}" stroke-width="8" stroke-linejoin="round"/>'
+b+=f'<circle cx="240" cy="250" r="30" fill="#FFFFFF" stroke="{SEA}" stroke-width="6"/>'+''.join(line(240,250,240+20*math.cos(a),250+20*math.sin(a),SEA,4) for a in [0,1.05,2.1,3.14,4.19,5.24])
+b+=f'<rect x="330" y="112" width="220" height="72" rx="36" fill="{SUN_T}" stroke="{SUN}" stroke-width="5"/>'+''.join(line(350,132+i*16,530,132+i*16,SEA,3) for i in range(3))
+b+=f'<rect x="420" y="80" width="40" height="34" rx="6" fill="{CORAL}"/><rect x="428" y="70" width="24" height="12" rx="3" fill="{NAVY}"/>'
+b+=f'<path d="M540 118 L540 50 L880 50 L880 236" fill="none" stroke="{SEA}" stroke-width="8" stroke-linejoin="round"/>'
+b+=f'<rect x="580" y="210" width="240" height="170" rx="20" fill="{NAVY}"/>'+''.join(f'<rect x="{596+i*56}" y="190" width="40" height="24" rx="6" fill="{SUN}"/>' for i in range(4))
+b+=f'<path d="M550 164 L640 164 L640 212" fill="none" stroke="{CORAL}" stroke-width="8" stroke-linejoin="round"/><rect x="626" y="176" width="28" height="22" rx="4" fill="{SUN}" stroke="{NAVY}" stroke-width="2"/>'
+b+=f'<path d="M580 330 L470 330 M406 330 L380 330 L380 184" fill="none" stroke="{CORAL}" stroke-width="8" stroke-linejoin="round"/><circle cx="438" cy="330" r="30" fill="#FFFFFF" stroke="{CORAL}" stroke-width="6"/>'+''.join(line(438,330,438+18*math.cos(a),330+18*math.sin(a),CORAL,4) for a in [0,1.57,3.14,4.71])
+b+=f'<path d="M608 250 q20 -10 40 0 t40 0 t40 0 t40 0 t40 0 M608 300 q20 -10 40 0 t40 0 t40 0 t40 0 t40 0" fill="none" stroke="{CORAL}" stroke-width="5"/>'
+b+=f'<path d="M820 260 L880 260" stroke="{GREY}" stroke-width="16" stroke-linecap="round"/><circle cx="880" cy="250" r="16" fill="{SEA}"/>'
+b+=f'<path d="M880 266 L880 330" stroke="{GREY}" stroke-width="16"/><rect x="840" y="330" width="100" height="110" rx="22" fill="#DDE3EA" stroke="{NAVY}" stroke-width="4"/>'
+b+=f'<path d="M940 380 L1000 380 L1000 470 L1040 470" fill="none" stroke="{GREY}" stroke-width="14" stroke-linejoin="round"/>'+arrow(1044,470,1086,470,SEA,5,14)
+b+=num(90,380,1,SEA)+num(240,196,2,SEA)+num(330,70,3,SEA)+num(980,300,4,SEA)
+lbls=lab(X+220,Y+452,220,'Presa a mare',INK)+lab(X+190,Y+324,110,'Filtro',INK)+lab(X+170,Y+118,120,'Girante',SEA,align='right')+lab(X+384,Y+196,180,'Scambiatore',SUN)+lab(X+390,Y+372,220,'Circuito chiuso',CORAL)+lab(X+616,Y+320,190,'Motore','#FFFFFF')+lab(X+830,Y+448,150,'Marmitta',INK)
+txt=tcol(1260,[(1,'Presa a mare e filtro','Valvola sul passascafo e filtro dell\'acqua di mare. <b>Presa occlusa</b>: la causa più comune di surriscaldamento.',SEA),
+ (2,'Pompa con girante','Aspira l\'acqua di mare e la manda allo scambiatore. La girante è di gomma: si controlla e si cambia.',SEA),
+ (3,'Scambiatore di calore','L\'acqua di mare raffredda il <b>liquido del circuito chiuso</b>, che gira nel motore con pompa, termostato e vaso di espansione.',SEA),
+ (4,'Scarico','L\'acqua di mare esce <b>insieme ai gas di scarico</b>: all\'avviamento si controlla che esca.',SEA)])
+sec('raffreddamentoeb', head('Il raffreddamento · entrobordo','Entrobordo: due circuiti e lo scambiatore')+txt, pinned=svgp(X,Y,W,Hh,b,'Schema del raffreddamento entrobordo: presa a mare con valvola, filtro, pompa con girante, scambiatore di calore con vaso di espansione, circuito chiuso del motore con termostato e pompa di circolazione, acqua di mare che esce con lo scarico attraverso la marmitta')+lbls,
+ notes='Quiz 1.2.1-13 (lo scambiatore raffredda il fluido del circuito chiuso con l\'acqua di mare), -8 (causa più comune di surriscaldamento: presa a mare della pompa occlusa), 1.1.1-64 (passascafo). Nel disegno l\'azzurro è l\'acqua di mare (circuito aperto), l\'arancio il liquido di raffreddamento (circuito chiuso, con il termostato giallo sul motore e il tappo del vaso di espansione sullo scambiatore). Alcuni entrobordo piccoli hanno il raffreddamento diretto, come il fuoribordo. Dopo una lunga navigazione: lasciar raffreddare il motore e controllare il livello dell\'olio (1.2.1-36).')
 
 quiz_slide('quiz1','Quiz 1 · Il motore',['1.2.1-6','1.2.1-14','1.2.1-13'],False)
 quiz_slide('quiz1r','Quiz 1 · Le risposte',['1.2.1-6','1.2.1-14','1.2.1-13'],True)
@@ -179,10 +307,29 @@ ph+=f'<path d="M40 190 C 80 60, 140 60, 170 130 S 250 250, 300 130" fill="none" 
 ph+=dim(40,226,380,226,INK)+dim(40,244,300,244,CORAL)
 pc=f'<rect x="0" y="0" width="420" height="260" rx="30" fill="#FFFFFF"/><g transform="translate(200 130)">'+''.join(f'<path d="M0 0 Q-34 -40 -8 -104 Q30 -96 22 -22 Z" fill="{NAVY}" transform="rotate({a})"/>' for a in (20,140,260))+f'<circle r="20" fill="{SEA}"/></g>'+''.join(f'<circle cx="{x}" cy="{y}" r="{r}" fill="#FFFFFF" stroke="{SEA}" stroke-width="3"/>' for x,y,r in [(300,60,10),(330,100,7),(320,150,12),(350,190,8),(290,210,6),(110,60,8),(90,190,10)])
 e1=card(svgi(420,260,pf,'Elica vista da dietro: mozzo al centro e tre pale',dw=440,dh=272)+h3('Mozzo e pale',30)+p('Alluminio, acciaio inox o composito. A passo fisso, a pale abbattibili (il minor rendimento in marcia indietro) o a pale orientabili.',24),None,24,10)
-e2=card(svgi(420,260,ph,'Percorso dell\'elica in un giro: il passo teorico è più lungo dell\'avanzamento reale, la differenza è il regresso',dw=440,dh=272)+h3('Passo e regresso',30)+p('<b>Passo teorico</b>: quanto l\'elica avanzerebbe in un giro se l\'acqua fosse solida. <b>Regresso</b>: la differenza con l\'avanzamento reale. Passo lungo e diametro piccolo: più velocità.',24),None,24,10)
+e2=card(svgi(420,260,ph,'Percorso dell\'elica in un giro: il passo teorico è più lungo dell\'avanzamento reale, la differenza è il regresso',dw=440,dh=272)+h3('Passo e regresso',30)+p('<b>Passo teorico</b> (freccia scura): quanto l\'elica avanzerebbe in un giro se l\'acqua fosse solida. <b>Regresso</b>: la differenza con l\'avanzamento reale (freccia rossa); più è alto, più giri si sprecano.',24),None,24,10)
 e3=card(svgi(420,260,pc,'Elica circondata da bolle: la cavitazione',dw=440,dh=272)+h3('Cavitazione',30)+p('L\'elica supera il limite dei giri e perde spinta. Sul fuoribordo può dipendere da un piede non adatto all\'altezza dello specchio di poppa.',24),None,24,10)
 sec('elica', head('L\'elica','Mozzo, pale, passo e regresso')+f'<div style="display:flex; gap:24px">{e1}{e2}{e3}</div>',
- notes='Quiz 1.2.1-31 (mozzo e pale), -34 (materiali), 1.1.2-1 (pale abbattibili, minor rendimento indietro), -16 (passo teorico), -11 (regresso), -17 (passo lungo e diametro piccolo = più velocità), -24 e 1.2.2-13 (cavitazione). Nel disegno centrale: freccia blu = passo teorico, freccia rossa = avanzamento reale.')
+ notes='Quiz 1.2.1-31 (mozzo e pale), -34 (materiali), 1.1.2-1 (pale abbattibili, minor rendimento indietro), -16 (passo teorico), -11 (regresso), -17 (passo lungo e diametro piccolo = più velocità), -24 e 1.2.2-13 (cavitazione). Nel disegno centrale: freccia scura = passo teorico, freccia rossa = avanzamento reale.')
+
+# ============ SPINTA E VELOCITÀ ============
+X,Y,W,Hh=128,290,1092,370
+b=f'<path d="M1070 150 L600 184" stroke="#7A8796" stroke-width="14" stroke-linecap="round"/><rect x="560" y="164" width="60" height="40" rx="14" fill="{NAVY}"/>'
+b+=prop_side(560,184,5.2,CORAL)
+b+=''.join(arrow(840,y,730,y,SEA,4,14) for y in (100,270))
+b+=''.join(arrow(470,y,120,y,SEA,9,24) for y in (110,184,258))
+b+=f'<path d="M500 340 L760 340" stroke="{CORAL}" stroke-width="14" stroke-linecap="round"/>'+head_at(790,340,0,CORAL,30)
+lbls=lab(X+760,Y+40,300,'Acqua che arriva lenta',SEA)+lab(X+60,Y+290,420,'Acqua spinta verso poppa, più veloce',SEA)+lab(X+830,Y+318,220,'Spinta',CORAL,30,800)
+chip=lambda t,s,c: f'<div style="display:flex; flex-direction:column; align-items:center; gap:2px; background:#FFFFFF; border:3px solid {c}; border-radius:22px; padding:10px 18px"><p style="font-family:{H}; font-size:40px; font-weight:700; line-height:1.1; color:{c}">{t}</p><p style="font-size:24px; color:{BODY}">{s}</p></div>'
+op=lambda t: f'<p style="font-family:{H}; font-size:44px; font-weight:700; color:{INK}">{t}</p>'
+ctitle=p('<b>Velocità teorica = passo × giri dell\'elica</b>. Il regresso la riduce.',26,INK)
+calc=f'<div style="position:absolute; left:128px; top:690px; width:1092px; display:flex; flex-direction:column; gap:14px; background:{SUN_T}; border-radius:28px; padding:22px 28px">{ctitle}<div style="display:flex; gap:14px; align-items:center">{chip("0,5 m","passo",PURPLE)}{op("×")}{chip("2.000","giri al minuto",PURPLE)}{op("=")}{chip("32 nodi","teorici",BLUE)}{op("−20%")}{chip("26 nodi","reali",CORAL)}</div></div>'
+txt=tcol(1260,[(1,'La pala è un\'ala','Ruotando, ogni pala ha una faccia in pressione e una in depressione, come un\'ala: <b>spinge l\'acqua verso poppa</b>.',CORAL),
+ (2,'La spinta','L\'acqua accelerata verso poppa spinge <b>per reazione</b> la barca in avanti. In retromarcia l\'elica rende meno.',CORAL),
+ (3,'Passo corto, diametro grande','Più <b>spinta</b> a bassa velocità: barche pesanti e dislocanti, barche a vela.',CORAL),
+ (4,'Passo lungo, diametro piccolo','Più <b>velocità</b>: barche plananti veloci.',CORAL)])
+sec('spinta', head('L\'elica · come spinge','Spinta e velocità')+txt+calc, pinned=svgp(X,Y,W,Hh,b,'Elica di profilo sull\'asse: l\'acqua arriva lenta da prua, esce accelerata verso poppa, e la reazione spinge la barca in avanti')+lbls,
+ notes='Quiz 1.1.2-17 (passo lungo e diametro piccolo: più velocità), 1.1.2-16 e -11 (passo teorico e regresso), 1.1.2-24 (cavitazione: oltre il limite dei giri si perde la spinta). Il conto: 0,5 m × 2.000 giri/min = 1.000 m al minuto = 60 km/h ≈ 32,4 nodi teorici; con il 20% di regresso ≈ 26 nodi reali. I giri sono quelli dell\'elica, cioè del motore divisi per il rapporto del riduttore. Il regresso dipende da carena, carico e mare: sulle barche veloci è intorno al 10–20%, sulle dislocanti anche di più.')
 
 # ============ ROTAZIONE ============
 def sternview(cw):
@@ -294,8 +441,8 @@ quiz_slide('finale2r','Verifica finale · 2 di 2 · risposte',['1.2.3-6','1.1.2-
 closing(['Motore + elica = sistema propulsivo; l\'invertitore cambia marcia, non il verso del motore','4 tempi: aspirazione, compressione, scoppio, scarico','Benzina: aerare il vano motore; diesel: niente aria nel circuito','Carburante = consumo orario × ore + 30%','Destrorsa in retro: la poppa va a sinistra; si compensa col timone'],
  'Prossima lezione · 03 · Ormeggi, cartografia e primi calcoli','A casa: i 104 quiz ufficiali di Motori e i 50 su elica, timone e stabilità.')
 write_deck(OUT,'Lezione 02 · Motori, elica e timone',
- ['cover','agenda','installazioni','lineaasse','quattrotempi','benzinadiesel','raffreddamento','quiz1','quiz1r','avarie1','avarie2','manutenzione','carburante','autonomia','quiz2','quiz2r',
-  'elica','rotazione','evolutivo','bielica','quiz3','quiz3r','timone','barraruota','combinati','quiz4','quiz4r','finale1','finale1r','finale2','finale2r','chiusura'],
- {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"Il motore: installazioni, trasmissione, funzionamento e raffreddamento","start":"installazioni"},
+ ['cover','agenda','installazioni','lineaasse','trasmissioni','quattrotempi','benzina','diesel','benzinadiesel','raffreddamento','raffreddamentoeb','quiz1','quiz1r','avarie1','avarie2','manutenzione','carburante','autonomia','quiz2','quiz2r',
+  'elica','spinta','rotazione','evolutivo','bielica','quiz3','quiz3r','timone','barraruota','combinati','quiz4','quiz4r','finale1','finale1r','finale2','finale2r','chiusura'],
+ {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"Il motore: installazioni, trasmissioni, funzionamento e raffreddamento","start":"installazioni"},
   "s3":{"description":"Avarie, manutenzione e calcolo dell'autonomia","start":"avarie1"},"s4":{"description":"Elica: passo, rotazione, effetto evolutivo, bielica","start":"elica"},
   "s5":{"description":"Timone ed effetti combinati, verifica finale","start":"timone"}})
