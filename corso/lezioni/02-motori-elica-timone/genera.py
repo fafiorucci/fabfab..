@@ -615,6 +615,9 @@ sec('timone', head('Massimo 30°–40° di angolo della pala','Tipi di timoni')+
  notes='Quiz 1.1.1-56 (pala), -33 (losca: apertura nella poppa per l\'asse del timone), 1.1.2-36 (ordinario: tutta la pala a poppavia dell\'anima), -9, -10, -27, -37 e 1.1.1-55, -57 (compensato: parte della pala a proravia dell\'asse, meno sforzo), -42 (timoni accoppiati), -13 (30-40 gradi). Agugliotti: perni fissati al timone; femminelle: anelli sul dritto di poppa in cui gli agugliotti girano.')
 
 
+sec('elicadx2', head('Elica destrorsa','Destrorsa: effetto evolutivo')+elicaslide('elicadx2',False),
+ notes='Ripresa della destrorsa, da confrontare subito con la sinistrorsa della slide successiva. Quiz 1.1.2-7 (destrorsa: in marcia avanti gira in senso orario vista da poppa), -35 (in marcia indietro antiorario), -44 (marcia avanti, timone al centro: prua a sinistra, poppa a dritta), -2, -12, -30 (marcia indietro: poppa a sinistra, prora a dritta). Promemoria: mano destra avanti.')
+
 sec('elicasx', head('Elica sinistrorsa','Sinistrorsa: effetto evolutivo')+elicaslide('elicasx',True),
  notes='Quiz 1.1.2-15 e -33 (sinistrorsa: in marcia avanti gira in senso antiorario vista da poppa), -45 e -39 (marcia avanti, timone al centro: prua a dritta, poppa a sinistra), -4, -25, -40 (marcia indietro: poppa a dritta). È tutto lo specchio della destrorsa. Promemoria: mano sinistra avanti.')
 
@@ -670,7 +673,7 @@ write_deck(OUT,'Lezione 02 · Motori, elica e timone',
  ['cover','agenda','benzina','quattrotempi','trasmissioni','lineaasse','installazioni','avariescoppio','raffreddamento','raffreddamentoeb','diesel','diesel4t','benzinadiesel','quiz1','quiz1r',
   'tipieliche','elicadx','evoluzione','spinta','elica','quiz3','quiz3r',
   'avariediesel','manutenzione','carburante','autonomia','quiz2','quiz2r',
-  'barraruota','effettitimone','timone','bielica','elicasx','elicatimone','combinati','quiz4','quiz4r','finale1','finale1r','finale2','finale2r','chiusura'],
+  'barraruota','effettitimone','timone','bielica','elicadx2','elicasx','elicatimone','combinati','quiz4','quiz4r','finale1','finale1r','finale2','finale2r','chiusura'],
  {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"Il motore: benzina, ciclo a 4 tempi, trasmissioni, linea d'asse, motore marino, avarie, raffreddamento, diesel","start":"benzina"},
   "s3":{"description":"L'elica: tipologie, effetto evolutivo, curva di evoluzione, spinta e velocità, passo e regresso","start":"tipieliche"},"s4":{"description":"Avarie del diesel, manutenzione e calcolo dell'autonomia","start":"avariediesel"},
   "s5":{"description":"Timone, doppia linea d'asse, effetti combinati elica e timone, verifica finale","start":"barraruota"}})

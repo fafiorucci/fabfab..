@@ -2,7 +2,7 @@
 
 Slide (artifact Slides): https://claude.ai/artifact/Pt6CpLG14fRT6oXxygkocd
 
-42 slide per 2 ore. La sequenza segue le 22 schede di riferimento della scuola (motore a benzina, 4 tempi,
+43 slide per 2 ore. La sequenza segue le 22 schede di riferimento della scuola (motore a benzina, 4 tempi,
 trasmissioni, linea d'asse, motore marino, inconvenienti, raffreddamento, diesel, tipologie di eliche, elica, timone, effetti combinati)
 e il programma ministeriale (All. A DM 323/2021).
 
