@@ -39,7 +39,7 @@ lbls=(lab(128+277-120,884,240,'Tappa 1',CORAL,24,900,'center')+lab(128+832-120,8
       +lab(128+1387-120,884,240,'Tappa 3',PURPLE,24,900,'center')+lab(128+1600-140,884,280,'L\'esame',NAVY,24,900,'center'))
 legs=[('Teoria e vela','Lezioni 1–9 · 18 ore','Scafo e motori, ormeggi e carte, ancoraggio, punto nave e fanali, segnalamento e sicurezza, meteo e normativa, vela ed emergenze.',CORAL),
       ('Carteggio','Lezioni 10–15 · 12 ore','Tutti i 135 esercizi d\'esame svolti passo per passo sulle carte 5/D e 42/D: costiera, carburante, scarroccio, correnti.',SEA),
-      ('Verso l\'esame','13 appendici e schede','10 prove d\'esame simulate, la prova pratica in barca, ripasso mirato e schede riassuntive per lo studio a casa.',PURPLE)]
+      ('Verso l\'esame','13 appendici e schede','20 prove d\'esame simulate, entro e oltre 12 miglia, la prova pratica, ripasso mirato e schede riassuntive per lo studio a casa.',PURPLE)]
 cards=''.join(f'<div style="flex:1; display:flex; flex-direction:column; gap:10px; background:#FFFFFF; border-top:10px solid {c_}; border-radius:28px; padding:28px 30px; box-shadow:0px 10px 28px rgba(27,42,65,0.10)">'
               f'{h3(t,38,c_)}<p style="font-size:24px; font-weight:900; letter-spacing:1px; text-transform:uppercase; color:{INK}">{s}</p>{p(d,28,BODY,400,1.4)}</div>' for t,s,d,c_ in legs)
 sec('rotta',header(EB,'Il corso in una rotta: 30 ore, tre tappe','map',SEA)
@@ -65,10 +65,10 @@ def route(title,sub,rows,aula,c_):
     return (f'<div style="flex:1; display:flex; flex-direction:column; gap:12px; background:#FFFFFF; border-top:10px solid {c_}; border-radius:28px; padding:24px 28px; box-shadow:0px 10px 28px rgba(27,42,65,0.10)">'
             f'<div style="display:flex; align-items:center; gap:16px">{h3(title,38,c_)}<p style="font-size:24px; font-weight:900; color:#FFFFFF; background:{c_}; padding:4px 14px; border-radius:14px">{sub}</p></div>'
             f'{tb}{p(aula,25,BODY,400,1.35)}</div>')
-R12=route('Entro 12 miglia','Lezioni 1–9 · 18 ore',[('Quiz di carteggio','5','20′','max 1'),('Quiz base','20','30′','max 4'),('Quiz vela (solo vela)','5','15′','max 1')],
-          '<b>In aula</b>: teoria, vela ed elementi di carteggio. Prova pratica in mare o in lago.',SEA)
+R12=route('Entro 12 miglia','Lezioni 1–10 · 20 ore',[('Quiz di carteggio','5','20′','max 1'),('Quiz base','20','30′','max 4'),('Quiz vela (solo vela)','5','15′','max 1')],
+          '<b>In aula</b>: teoria, vela e carteggio sulla carta 5/D. 10 prove simulate. Pratica anche su un lago.',SEA)
 RSL=route('Senza limiti','Lezioni 1–15 · 30 ore',[('Prova di carteggio','4 esercizi','60′','max 1'),('Quiz base','20','30′','max 4'),('Quiz vela (solo vela)','5','15′','max 1')],
-          '<b>In più</b>: tutto il carteggio su 5/D e 42/D, 135 esercizi svolti e 10 prove simulate. Prova pratica in mare.',CORAL)
+          '<b>In più</b>: tutto il carteggio su 5/D e 42/D, 135 esercizi svolti e altre 10 prove simulate. Pratica in mare.',CORAL)
 banner=(f'<div style="display:flex; align-items:center; gap:18px; background:{NAVY}; border-radius:24px; padding:16px 28px">'
         f'<p style="font-family:{HAND}; font-size:40px; font-weight:700; line-height:1; color:{DACC}; white-space:nowrap">Hai già la 12 miglia?</p>'
         f'<p style="font-size:26px; line-height:1.3; font-weight:700; color:#FFFFFF">Niente quiz base: solo carteggio (e quiz vela per la vela), con le lezioni 10–15.</p></div>')
@@ -132,8 +132,8 @@ hero=(f'<div style="width:560px; display:flex; flex-direction:column; gap:12px; 
       f'<p style="font-family:{HAND}; font-size:46px; font-weight:700; line-height:1.1; color:{DACC}">Si accende il proiettore, e si salpa.</p></div>')
 MAT=[('15','lezioni da 2 ore','594 slide con disegni, schemi e quiz ufficiali con le risposte',CORAL),
      ('135','esercizi di carteggio','tutti svolti: traccia, soluzione e tracciamento sulla carta',SEA),
-     ('13','appendici','397 slide: correnti, nomi, nodi, IALA, normativa, VHF, costa, meteo, soccorso, ancora, portanza',PURPLE),
-     ('10','prove d\'esame simulate','complete di carteggio, quiz base e quiz vela, con le soluzioni',BLUE),
+     ('13','appendici','489 slide: correnti, nomi, nodi, IALA, normativa, VHF, costa, meteo, soccorso, ancora, portanza',PURPLE),
+     ('20','prove d\'esame simulate','dieci entro e dieci oltre 12 miglia, con le soluzioni',BLUE),
      ('1','prova pratica','le manovre in barca dell\'Allegato D, passo per passo',GREEN),
      ('15','schede per gli allievi','regole da memorizzare e numeri dei quiz, da stampare',ORANGE)]
 mt=''.join(f'<div style="display:flex; align-items:center; gap:20px; background:#FFFFFF; border-left:12px solid {c_}; border-radius:24px; padding:12px 24px">'
@@ -141,7 +141,7 @@ mt=''.join(f'<div style="display:flex; align-items:center; gap:20px; background:
            f'<div style="flex:1; display:flex; flex-direction:column; gap:2px">{p(t,28,INK,800,1.2)}{p(d,24,BODY,400,1.3)}</div></div>' for n,t,d,c_ in MAT)
 sec('materiale',header(EB,'Il materiale: un corso chiavi in mano','book',PURPLE)
     +f'<div style="display:flex; gap:32px; align-items:stretch">{hero}<div style="flex:1; display:flex; flex-direction:column; gap:12px">{mt}</div></div>',
-    notes='Totale: 594 slide di lezione, 397 di appendici, 31 di schede riassuntive e 27 di indice del corso. Ogni deck si proietta dal browser e si scarica in PDF o PowerPoint.',gap=30)
+    notes='Totale: 594 slide di lezione, 489 di appendici, 31 di schede riassuntive e 27 di indice del corso. Ogni deck si proietta dal browser e si scarica in PDF o PowerPoint.',gap=30)
 
 # ============ PERCHÉ ============
 WHY=[('Allineato all\'esame','Programma del DM 323/2021; quiz ed esercizi dall\'elenco ufficiale del DD 131/2022.'),

@@ -74,7 +74,7 @@ Fonte dei testi: Allegato A al DD 131/2022 (atto ufficiale, art. 5 L. 633/1941),
 | A | I tre problemi della corrente | 13 | [slide](https://claude.ai/artifact/1hFQPJ6uzwJTcUD3iL8kQr) | [`lezioni/A-appendice-correnti`](lezioni/A-appendice-correnti/) |
 | B | I nomi della barca a vela | 26 | [slide](https://claude.ai/artifact/WNpiYhrUGGtCF1b8x3HwqV) | [`lezioni/B-appendice-nomenclatura`](lezioni/B-appendice-nomenclatura/) |
 | C | I nodi marinari | 20 | [slide](https://claude.ai/artifact/SgD9AT2riGF8Qn3Y3nkBeE) | [`lezioni/C-appendice-nodi`](lezioni/C-appendice-nodi/) |
-| D | Prove d'esame simulate (10 prove) | 105 | [slide](https://claude.ai/artifact/Lc3nDQhbwaT9W7StE9dSjE) | [`lezioni/D-appendice-prove`](lezioni/D-appendice-prove/) |
+| D | Prove d'esame simulate: parte 1 entro 12 miglia (10 prove), parte 2 oltre 12 miglia (10 prove) | 197 | [slide](https://claude.ai/artifact/Lc3nDQhbwaT9W7StE9dSjE) | [`lezioni/D-appendice-prove`](lezioni/D-appendice-prove/) |
 | E | La prova pratica | 25 | [slide](https://claude.ai/artifact/Mzyami3LS4DrJEUr91yHVB) | [`lezioni/E-appendice-pratica`](lezioni/E-appendice-pratica/) |
 | F | Schede IALA | 31 | [slide](https://claude.ai/artifact/8r66WpwATcTvjUVVmMDkcF) | [`lezioni/F-appendice-iala`](lezioni/F-appendice-iala/) |
 | G | La normativa in tabelle | 30 | [slide](https://claude.ai/artifact/1rxQdsHj5KsKWbzfQywxYK) | [`lezioni/G-appendice-normativa`](lezioni/G-appendice-normativa/) |
@@ -109,7 +109,7 @@ Fonti per le slide 3 e 4: art. 6 del DM 323/2021 e programma della prova pratica
 - 13 appendici A–M di ripasso ed esercitazione.
 - Schede riassuntive per lo studente, una o due pagine per lezione (addendum).
 - Presentazione del corso alla scuola nautica, 7 slide.
-- 10 prove d'esame simulate complete (appendice D).
+- 20 prove d'esame simulate complete (appendice D): 10 entro e 10 oltre 12 miglia.
 - 135 esercizi di carteggio del DD 131/2022, tutti svolti.
 
 Deck dell'indice: [slide](https://claude.ai/artifact/KWJagMPHLrNsJ7wsAJTQ2c) (slide 2 presentazione dell'istruttore, sorgente in [`template/slide_istruttore.html`](template/slide_istruttore.html); slide 5 carte d'esame entro e oltre 12 miglia ([`template/slide_carte.html`](template/slide_carte.html)); slide 26 appendici A–F, 27 appendici G–M, 28 presentazione alla scuola e schede riassuntive, 29 riepilogo), aggiornato con [`template/genera_indice_appendici.py`](template/genera_indice_appendici.py), [`template/genera_indice_extra.py`](template/genera_indice_extra.py) e [`template/genera_indice_M.py`](template/genera_indice_M.py).
