@@ -3,7 +3,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lezione_base import *
 import lezione_base as LB
 OUT=SP+'/lez02/project'
-LB.ICON_T.update({'Fuoribordo, entrofuoribordo, entrobordo, idrogetto':'propeller','Il ciclo del diesel':'fuel','Inconvenienti del motore a scoppio':'cloud','Inconvenienti del motore diesel':'cloud','Destrorsa: effetto evolutivo':'propeller','Sinistrorsa: effetto evolutivo':'propeller','Effetto evolutivo e curva di evoluzione':'current','Timone a barra e timone a ruota':'helm','Cosa fa il timone':'helm','Tipi di timoni':'helm','Doppia linea d\'asse':'propeller','Ormeggi: elica e timone in manovra':'anchor','Fuoribordo: circuito aperto':'current','Entrobordo: circuito chiuso':'current','La lezione di oggi':'lifebuoy','Entrobordo, entrofuoribordo, fuoribordo, idrogetto':'propeller','Dal motore all\'elica':'propeller','S-DRIVE, IPS, POD e IDROGETTO':'propeller','Il ciclo a quattro tempi':'fuel',
+LB.ICON_T.update({'Le tipologie di eliche':'propeller','Fuoribordo, entrofuoribordo, entrobordo, idrogetto':'propeller','Il ciclo del diesel':'fuel','Inconvenienti del motore a scoppio':'cloud','Inconvenienti del motore diesel':'cloud','Destrorsa: effetto evolutivo':'propeller','Sinistrorsa: effetto evolutivo':'propeller','Effetto evolutivo e curva di evoluzione':'current','Timone a barra e timone a ruota':'helm','Cosa fa il timone':'helm','Tipi di timoni':'helm','Doppia linea d\'asse':'propeller','Ormeggi: elica e timone in manovra':'anchor','Fuoribordo: circuito aperto':'current','Entrobordo: circuito chiuso':'current','La lezione di oggi':'lifebuoy','Entrobordo, entrofuoribordo, fuoribordo, idrogetto':'propeller','Dal motore all\'elica':'propeller','S-DRIVE, IPS, POD e IDROGETTO':'propeller','Il ciclo a quattro tempi':'fuel',
  'Motore a benzina e motore diesel':'fuel','Il raffreddamento':'current','Benzina: miscela e scintilla':'fuel','Diesel: aria compressa e iniettori':'fuel','Fuoribordo: acqua di mare diretta':'current','Entrobordo: due circuiti e lo scambiatore':'current','Il motore ci parla: fumo e avviamento':'cloud','Il motore ci parla: in navigazione':'helm',
  'Carburante e manutenzione':'fuel','Quanto carburante imbarcare':'fuel','Autonomia e consumi':'chart','Mozzo, pale, passo e regresso':'propeller',
  'Elica destrorsa e sinistrorsa':'propeller','Spinta e velocità':'propeller','L\'effetto evolutivo dell\'elica':'current','Due motori, due eliche':'propeller','Il timone':'helm','Barra e ruota':'helm','Effetti combinati elica e timone':'anchor'})
@@ -23,7 +23,7 @@ def boxn(title,body,c,bg):
 # ============ COVER + AGENDA ============
 cover(2,'Motori, elica e timone','Come funziona il motore, come spinge l\'elica, come governa il timone',
  'Lezione 2. Capitoli del programma della scuola: Motori ed Elica-Timone. All. A al DM 323/2021: materia 2 (motori, avarie, calcolo dell\'autonomia) e punto 1b (elica, timone). Ordine del manuale Il Frangente, cap. 1: motore e trasmissione, funzionamento, raffreddamento, irregolarità, elica, effetto evolutivo, timone, effetti combinati.')
-blocks=[('0:00','35′','Il motore: benzina, trasmissioni, raffreddamento, diesel · quiz 1',CORAL),('0:35','20′','L\'elica: effetto evolutivo, spinta, passo · quiz 2',BLUE),('0:55','20′','Avarie del diesel, manutenzione, autonomia · quiz 3',PURPLE),('1:15','30′','Timone, doppia linea d\'asse, effetti combinati · quiz 4',GREEN),('1:45','15′','Verifica finale',CORAL)]
+blocks=[('0:00','35′','Il motore: benzina, trasmissioni, raffreddamento, diesel · quiz 1',CORAL),('0:35','20′','L\'elica: tipi, effetto evolutivo, spinta, passo · quiz 2',BLUE),('0:55','20′','Avarie del diesel, manutenzione, autonomia · quiz 3',PURPLE),('1:15','30′','Timone, doppia linea d\'asse, effetti combinati · quiz 4',GREEN),('1:45','15′','Verifica finale',CORAL)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
 right=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:88px; font-weight:700; line-height:1.05; color:{INK}">1 + 1</p>'+p('domande su 20: una di Motori e una di Teoria dello scafo (elica e timone)',26,INK,700)+p('104 quiz ufficiali sui motori, di cui 27 sul calcolo dell\'autonomia; 50 su elica, timone e stabilità.',24))
 left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>riconoscere le installazioni del motore e la linea d\'asse</li><li>spiegare il ciclo a 4 tempi, benzina e diesel</li><li>capire cosa ti dice un motore che non va</li><li>calcolare carburante e autonomia con il 30% di riserva</li><li>prevedere l\'effetto dell\'elica e del timone</li></ul>',SEA_T,flex=1.4)
@@ -423,6 +423,30 @@ def evo(reverse):
 v1=card(svgi(600,480,evo(False),'Vista dall\'alto, marcia avanti con elica destrorsa: la poppa va a dritta e la prua a sinistra',dw=560,dh=448)+h3('Marcia avanti · destrorsa',30)+p('Timone al centro: <b>la poppa va a dritta</b>, la prua a sinistra.',25),None,24,10)
 v2=card(svgi(600,480,evo(True),'Vista dall\'alto, marcia indietro con elica destrorsa: la poppa va a sinistra',dw=560,dh=448)+h3('Marcia indietro · destrorsa',30)+p('<b>La poppa va a sinistra</b>, la prua a dritta. Con la sinistrorsa, tutto al contrario.',25),None,24,10)
 v3=card(note('Da ricordare',PURPLE,40)+'<ul style="font-size:25px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:12px"><li>L\'effetto è <b>massimo senza abbrivio e con la marcia inserita</b>.</li><li>Nasce dalla spinta laterale delle pale e dal flusso d\'acqua contro timone e carena.</li><li>Si compensa con il <b>timone</b>.</li><li>In marcia indietro è più forte: usalo in manovra.</li></ul>',None,30,12)
+# ============ TIPOLOGIE DI ELICHE ============
+BL='M0 0 Q-34 -40 -8 -104 Q30 -96 22 -22 Z'
+def pr(cx,cy,sc,n,c=CORAL,off=0):
+    return f'<g transform="translate({cx} {cy}) scale({sc})">'+''.join(f'<path d="{BL}" fill="{c}" stroke="{NAVY}" stroke-width="{4/sc:.1f}" transform="rotate({off+i*360/n})"/>' for i in range(n))+f'<circle r="20" fill="{NAVY}"/><circle r="7" fill="{SUN}"/></g>'
+PB='<rect x="0" y="0" width="220" height="170" rx="24" fill="#FFFFFF"/>'
+tp={
+'fisso':PB+pr(110,88,0.72,3),
+'abbatt':PB+f'<g opacity="0.35">'+pr(70,88,0.5,2,CORAL,90)+'</g>'+f'<circle cx="130" cy="88" r="12" fill="{NAVY}"/><ellipse cx="170" cy="78" rx="40" ry="8" fill="{SUN}" stroke="{NAVY}" stroke-width="3" transform="rotate(-6 130 88)"/><ellipse cx="170" cy="98" rx="40" ry="8" fill="{SUN}" stroke="{NAVY}" stroke-width="3" transform="rotate(6 130 88)"/>'+arrow(96,58,126,72,SOFT,3,10),
+'orient':PB+pr(110,88,0.72,3,SEA)+curved(110,30,26,200,340,CORAL,5)+curved(66,118,24,40,180,CORAL,5),
+'npale':PB+pr(40,88,0.34,2)+pr(110,88,0.34,3)+pr(180,88,0.34,4)+''.join(f'<text x="{x}" y="160" text-anchor="middle" font-family="Arial" font-size="24" font-weight="700" fill="{INK}">{t}</text>' for x,t in ((40,'2'),(110,'3'),(180,'4'))),
+'contro':PB+line(10,88,210,88,'#7A8796',8)+f'<g transform="translate(80 88)"><ellipse cx="0" cy="-26" rx="9" ry="24" fill="{CORAL}" stroke="{NAVY}" stroke-width="3"/><ellipse cx="0" cy="26" rx="9" ry="24" fill="{CORAL}" stroke="{NAVY}" stroke-width="3"/></g><g transform="translate(130 88)"><ellipse cx="0" cy="-26" rx="9" ry="24" fill="{SEA}" stroke="{NAVY}" stroke-width="3"/><ellipse cx="0" cy="26" rx="9" ry="24" fill="{SEA}" stroke="{NAVY}" stroke-width="3"/></g>'+curved(80,88,58,-130,-50,CORAL,4)+curved(130,88,58,-50,-130,SEA,4),
+'kort':PB+line(10,88,210,88,'#7A8796',8)+f'<g transform="translate(110 88)"><ellipse cx="0" cy="-28" rx="9" ry="26" fill="{CORAL}" stroke="{NAVY}" stroke-width="3"/><ellipse cx="0" cy="28" rx="9" ry="26" fill="{CORAL}" stroke="{NAVY}" stroke-width="3"/></g><path d="M70 22 L150 32 L150 44 L70 40 Z M70 154 L150 144 L150 132 L70 136 Z" fill="{PURPLE}" stroke="{NAVY}" stroke-width="3"/>',
+}
+TT={'fisso':('A passo fisso','La più comune: pale fuse con il mozzo, robusta ed economica. Il passo non si cambia.'),
+    'abbatt':('A pale abbattibili','Barche a vela: a motore spento le pale si chiudono e frenano meno. <b>Scarso rendimento in marcia indietro</b>.'),
+    'orient':('A pale orientabili','Le pale ruotano sul mozzo: a vela si mettono «in bandiera»; sulle navi il <b>passo variabile</b> regola la spinta.'),
+    'npale':('Numero di pale','2 pale: barche a vela, poca resistenza. 3: il compromesso più diffuso. 4-5: meno vibrazioni, più spinta.'),
+    'contro':('Controrotanti','Due eliche sullo stesso asse che girano in versi opposti (IPS, duoprop): l&#39;effetto evolutivo si annulla.'),
+    'kort':('Intubata (mantello Kort)','L&#39;elica gira dentro un anello: più spinta a bassa velocità. Rimorchiatori e pescherecci.')}
+def tcard(k): return f'<div style="flex:1; display:flex; gap:20px; align-items:center; background:#FFFFFF; border-radius:24px; padding:16px 22px; {SHADOW}">{svgi(220,170,tp[k],"Disegno: elica "+TT[k][0].lower(),dw=176,dh=136,pan=False)}<div style="display:flex; flex-direction:column; gap:4px">{h3(TT[k][0],28)}{p(TT[k][1],24,BODY,400,1.32)}</div></div>'
+rows=''.join(f'<div style="display:flex; gap:24px">{tcard(a)}{tcard(b)}</div>' for a,b in (('fisso','abbatt'),('orient','npale'),('contro','kort')))
+sec('tipieliche', head('Elica: acciaio, alluminio, composito','Le tipologie di eliche')+rows, gap=22,
+ notes='Quiz 1.1.2-1 (tra passo fisso, pale abbattibili e pale orientabili, il minor rendimento in marcia indietro è delle pale abbattibili), 1.2.1-34 (materiali), 1.2.1-52 (IPS: eliche traenti controrotanti). Pale orientabili: sulle barche a vela si parla di elica «feathering», che in navigazione a vela mette le pale in bandiera; sulle navi l\'elica a passo variabile cambia la spinta, e anche la marcia indietro, senza invertitore. Più pale significa spinta più regolare e meno vibrazioni, ma più resistenza quando l\'elica è ferma.')
+
 # ============ ELICA DESTRORSA / SINISTRORSA: EFFETTO EVOLUTIVO ============
 MIR=lambda s,w: f'<g transform="translate({w} 0) scale(-1 1)">{s}</g>'
 def propicon(cx,cy,cw,c):
@@ -633,9 +657,9 @@ closing(['Motore + elica = sistema propulsivo; l\'invertitore cambia marcia, non
  'Prossima lezione · 03 · Ormeggi, cartografia e primi calcoli','A casa: i 104 quiz ufficiali di Motori e i 50 su elica, timone e stabilità.')
 write_deck(OUT,'Lezione 02 · Motori, elica e timone',
  ['cover','agenda','benzina','quattrotempi','trasmissioni','lineaasse','installazioni','avariescoppio','raffreddamento','raffreddamentoeb','diesel','diesel4t','benzinadiesel','quiz1','quiz1r',
-  'elicadx','evoluzione','spinta','elica','quiz3','quiz3r',
+  'tipieliche','elicadx','evoluzione','spinta','elica','quiz3','quiz3r',
   'avariediesel','manutenzione','carburante','autonomia','quiz2','quiz2r',
   'barraruota','effettitimone','timone','bielica','elicasx','elicatimone','combinati','quiz4','quiz4r','finale1','finale1r','finale2','finale2r','chiusura'],
  {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"Il motore: benzina, ciclo a 4 tempi, trasmissioni, linea d'asse, motore marino, avarie, raffreddamento, diesel","start":"benzina"},
-  "s3":{"description":"L'elica: effetto evolutivo, curva di evoluzione, spinta e velocità, passo e regresso","start":"elicadx"},"s4":{"description":"Avarie del diesel, manutenzione e calcolo dell'autonomia","start":"avariediesel"},
+  "s3":{"description":"L'elica: tipologie, effetto evolutivo, curva di evoluzione, spinta e velocità, passo e regresso","start":"tipieliche"},"s4":{"description":"Avarie del diesel, manutenzione e calcolo dell'autonomia","start":"avariediesel"},
   "s5":{"description":"Timone, doppia linea d'asse, effetti combinati elica e timone, verifica finale","start":"barraruota"}})
