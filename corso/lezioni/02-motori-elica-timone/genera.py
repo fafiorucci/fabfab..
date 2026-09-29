@@ -363,19 +363,30 @@ quiz_slide('quiz2r','Quiz 3 · Le risposte',['1.2.2-9','1.2.2-5','1.2.3-7'],True
 pf=f'<rect x="0" y="0" width="420" height="260" rx="30" fill="#FFFFFF"/><circle cx="140" cy="130" r="112" fill="none" stroke="{BLUE}" stroke-width="3"/><g transform="translate(140 130)">'+''.join(f'<path d="M0 0 Q-34 -40 -8 -104 Q30 -96 22 -22 Z" fill="{CORAL}" stroke="{NAVY}" stroke-width="4" transform="rotate({a})"/>' for a in (0,120,240))+f'<circle r="22" fill="{NAVY}"/><circle r="7" fill="{SUN}"/></g>'
 pf+=f'<path d="M28 130 L252 130" stroke="{BLUE}" stroke-width="3" stroke-dasharray="10 6"/>'
 pf+=f'<circle cx="318" cy="130" r="14" fill="{NAVY}"/><ellipse cx="362" cy="120" rx="46" ry="9" fill="{SUN}" stroke="{NAVY}" stroke-width="3" transform="rotate(-6 318 130)"/><ellipse cx="362" cy="140" rx="46" ry="9" fill="{SUN}" stroke="{NAVY}" stroke-width="3" transform="rotate(6 318 130)"/>'
-ph=f'<rect x="0" y="0" width="420" height="260" rx="30" fill="#FFFFFF"/>'+line(30,190,400,190,'#7A8796',8)
-ph+=f'<path d="M40 190 C 80 60, 140 60, 170 130 S 250 250, 300 130" fill="none" stroke="{PURPLE}" stroke-width="5" stroke-dasharray="12 8"/>'
-ph+=dim(40,226,380,226,INK)+dim(40,244,300,244,CORAL)
+def helix(x0,per,col,y0=178,amp=40):
+    pts=' '.join(f'{x0+per*t/40:.1f},{y0-amp*math.sin(2*math.pi*t/40):.1f}' for t in range(41))
+    return f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="4" stroke-dasharray="9 6"/>'
+def blade(x,y,c): return f'<ellipse cx="{x}" cy="{y-18}" rx="7" ry="17" fill="{c}" stroke="{NAVY}" stroke-width="2"/><ellipse cx="{x}" cy="{y+18}" rx="7" ry="17" fill="{c}" stroke="{NAVY}" stroke-width="2"/><circle cx="{x}" cy="{y}" r="5" fill="{NAVY}"/>'
+tx=lambda x,y,t,c,a='middle': f'<text x="{x}" y="{y}" text-anchor="{a}" font-family="Arial" font-size="23" font-weight="700" fill="{c}">{t}</text>'
+ph=f'<rect x="0" y="0" width="420" height="260" rx="30" fill="#FFFFFF"/>'
+ph+=f'<path d="M50 126 L390 126 M50 230 L390 230" stroke="{DSOFT}" stroke-width="3"/><ellipse cx="50" cy="178" rx="16" ry="52" fill="#E1EAFD" stroke="{DSOFT}" stroke-width="3"/><ellipse cx="390" cy="178" rx="16" ry="52" fill="none" stroke="{DSOFT}" stroke-width="3"/>'
+ph+=line(40,178,400,178,'#7A8796',6)
+ph+=helix(60,300,BLUE)+helix(60,240,CORAL)
+ph+=blade(60,178,SUN)+blade(300,178,CORAL)+blade(360,178,BLUE)
+ph+=dim(60,44,360,44,BLUE)+tx(210,30,'passo teorico',BLUE)
+ph+=dim(60,98,300,98,CORAL)+tx(180,84,'passo effettivo',CORAL)
+ph+=dim(300,98,360,98,GREEN)+tx(372,84,'regresso',GREEN,'middle')
+ph+=f'<path d="M300 104 L300 150 M360 50 L360 150" stroke="{SOFT}" stroke-width="2" stroke-dasharray="4 4"/>'
 pc=f'<rect x="0" y="0" width="420" height="260" rx="30" fill="#FFFFFF"/><g transform="translate(200 130)">'+''.join(f'<path d="M0 0 Q-34 -40 -8 -104 Q30 -96 22 -22 Z" fill="{NAVY}" transform="rotate({a})"/>' for a in (20,140,260))+f'<circle r="20" fill="{SEA}"/></g>'+''.join(f'<circle cx="{x}" cy="{y}" r="{r}" fill="#FFFFFF" stroke="{SEA}" stroke-width="3"/>' for x,y,r in [(300,60,10),(330,100,7),(320,150,12),(350,190,8),(290,210,6),(110,60,8),(90,190,10)])
 pb=f'<rect x="0" y="0" width="420" height="260" rx="30" fill="#FFFFFF"/><path d="M110 260 L110 120 Q110 40 210 14 Q310 40 310 120 L310 260 Z" fill="{BOAT}" stroke="{NAVY}" stroke-width="5"/>'
 pb+=f'<rect x="110" y="96" width="200" height="30" fill="{DSOFT}" stroke="{NAVY}" stroke-width="3"/><g transform="translate(210 111)">'+''.join(f'<ellipse cx="0" cy="-8" rx="5" ry="9" fill="{NAVY}" transform="rotate({a})"/>' for a in (0,120,240))+'</g>'
 pb+=arrow(116,111,24,111,SEA,6,18)+arrow(304,111,396,111,SEA,6,18)+f'<text x="210" y="220" text-anchor="middle" font-family="Arial" font-size="26" font-weight="700" fill="{SOFT}">prua ↑</text>'
 e1=card(svgi(420,260,pf,'Elica a pale fisse vista da dietro, con il cerchio del diametro; a destra un&#39;elica a pale abbattibili chiusa',dw=350,dh=217)+h3('Mozzo, pale, diametro',30)+p('Pale fisse, orientabili o <b>abbattibili</b> (a destra, chiuse): scarso rendimento in marcia indietro.',24),None,24,10)
-e2=card(svgi(420,260,ph,'Percorso dell&#39;elica in un giro: il passo teorico è più lungo dell&#39;avanzamento reale, la differenza è il regresso',dw=350,dh=217)+h3('Passo e regresso',30)+p('<b>Passo teorico</b> (freccia scura): l&#39;avanzamento in un giro se l&#39;acqua fosse solida. <b>Regresso</b>: lo scarto dal passo effettivo (freccia rossa); <b>elevato</b> a bassa velocità e con molti giri.',24),None,24,10)
+e2=card(svgi(420,260,ph,'Il percorso della punta della pala in un giro: il passo teorico in blu è più lungo del passo effettivo in rosso; la differenza, in verde, è il regresso',dw=350,dh=217)+h3('Passo e regresso',30)+p('In un giro l&#39;elica avanzerebbe del <b>passo teorico</b> (blu) se l&#39;acqua fosse solida; avanza del <b>passo effettivo</b> (rosso). La differenza è il <b>regresso</b> (verde): elevato a bassa velocità e con molti giri.',24),None,24,10)
 e3=card(svgi(420,260,pc,'Elica circondata da bolle: la cavitazione',dw=350,dh=217)+h3('Cavitazione',30)+p('Elica fuori giri, <b>niente spinta</b>. Cause: <b>detriti sulle pale</b> (anche vibrazioni) o piede di lunghezza non corretta.',24),None,24,10)
 e4=card(svgi(420,260,pb,'Prua vista dall&#39;alto con il tunnel trasversale dell&#39;elica di prua e le frecce della spinta verso dritta e sinistra',dw=350,dh=217)+h3('Elica di prua',30)+p('<b>Bow thruster</b>: un&#39;elica in un tunnel trasversale spinge la prua a dritta o a sinistra. Aiuta in manovra e all&#39;ormeggio.',24),None,24,10)
 sec('elica', head('Elica: acciaio, alluminio, composito','Mozzo, pale, passo e regresso')+f'<div style="display:flex; gap:24px">{e1}{e2}{e3}{e4}</div>',
- notes='Quiz 1.2.1-31 (mozzo e pale), -34 (materiali), 1.1.2-1 (pale abbattibili, minor rendimento indietro), -16 (passo teorico), -11 (regresso), -24 e 1.2.2-13 (cavitazione, lunghezza del piede), 1.2.2-27 (alghe o detriti sull\'elica: vibrazioni). Nel disegno del passo: freccia scura = passo teorico, freccia rossa = avanzamento reale. Il regresso cresce quando la barca va piano e l\'elica gira forte, per esempio in partenza o con carena sporca. L\'elica di prua (bow thruster) non è nei quiz ma è ormai comune anche sulle barche da diporto.')
+ notes='Quiz 1.2.1-31 (mozzo e pale), -34 (materiali), 1.1.2-1 (pale abbattibili, minor rendimento indietro), -16 (passo teorico), -11 (regresso), -24 e 1.2.2-13 (cavitazione, lunghezza del piede), 1.2.2-27 (alghe o detriti sull\'elica: vibrazioni). Nel disegno del passo: in blu il passo teorico (un giro in «acqua solida»), in rosso il passo effettivo, in verde il regresso; le linee tratteggiate sono il percorso della punta della pala in un giro. Il regresso cresce quando la barca va piano e l\'elica gira forte, per esempio in partenza o con carena sporca. L\'elica di prua (bow thruster) non è nei quiz ma è ormai comune anche sulle barche da diporto.')
 
 # ============ SPINTA E VELOCITÀ ============
 X,Y,W,Hh=128,290,1092,370
