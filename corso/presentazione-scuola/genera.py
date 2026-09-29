@@ -65,7 +65,7 @@ def route(title,sub,rows,aula,c_):
     return (f'<div style="flex:1; display:flex; flex-direction:column; gap:12px; background:#FFFFFF; border-top:10px solid {c_}; border-radius:28px; padding:24px 28px; box-shadow:0px 10px 28px rgba(27,42,65,0.10)">'
             f'<div style="display:flex; align-items:center; gap:16px">{h3(title,38,c_)}<p style="font-size:24px; font-weight:900; color:#FFFFFF; background:{c_}; padding:4px 14px; border-radius:14px">{sub}</p></div>'
             f'{tb}{p(aula,25,BODY,400,1.35)}</div>')
-R12=route('Entro 12 miglia','Lezioni 1–9 · 18 ore',[('Quiz di carteggio','5','15′','max 1'),('Quiz base','20','30′','max 4'),('Quiz vela (solo vela)','5','15′','max 1')],
+R12=route('Entro 12 miglia','Lezioni 1–9 · 18 ore',[('Quiz di carteggio','5','20′','max 1'),('Quiz base','20','30′','max 4'),('Quiz vela (solo vela)','5','15′','max 1')],
           '<b>In aula</b>: teoria, vela ed elementi di carteggio. Prova pratica in mare o in lago.',SEA)
 RSL=route('Senza limiti','Lezioni 1–15 · 30 ore',[('Prova di carteggio','4 esercizi','60′','max 1'),('Quiz base','20','30′','max 4'),('Quiz vela (solo vela)','5','15′','max 1')],
           '<b>In più</b>: tutto il carteggio su 5/D e 42/D, 135 esercizi svolti e 10 prove simulate. Prova pratica in mare.',CORAL)
@@ -75,7 +75,7 @@ banner=(f'<div style="display:flex; align-items:center; gap:18px; background:{NA
 sec('percorsi',header(EB,'Due patenti, due rotte','compass',BLUE)+svgi(W3,H3,d,'Dalla costa al largo: una barca naviga entro la linea delle 12 miglia, un\'altra la supera verso il mare aperto',pan=False)
     +f'<div style="display:flex; gap:24px; align-items:stretch">{R12}{RSL}</div>'+banner,
     pinned=lbl3,
-    notes='Prove d\'esame secondo l\'art. 6 del DM 323/2021 (tabella riportata nel manuale dei quiz). Entro 12 miglia: 5 quiz su elementi di carteggio in 15 minuti con al massimo 1 errore, 20 quiz base in 30 minuti con al massimo 4 errori, per la vela 5 quiz vela in 15 minuti con al massimo 1 errore. Senza limiti: prova di carteggio con 4 esercizi in 60 minuti con al massimo 1 errore, quiz base solo per chi non ha già la patente entro 12 miglia, quiz vela per la vela. Prova pratica: entro 12 miglia in mare, in lago o in specchi acquei adeguati; senza limiti in mare.',gap=22)
+    notes='Prove d\'esame secondo l\'art. 6 del DM 323/2021 (tabella riportata nel manuale dei quiz). Entro 12 miglia: 5 quiz su elementi di carteggio, sulla carta 5/D, in 20 minuti con al massimo 1 errore, 20 quiz base in 30 minuti con al massimo 4 errori, per la vela 5 quiz vela in 15 minuti con al massimo 1 errore. Senza limiti: prova di carteggio con 4 esercizi in 60 minuti con al massimo 1 errore, quiz base solo per chi non ha già la patente entro 12 miglia, quiz vela per la vela. Prova pratica: entro 12 miglia in mare, in lago o in specchi acquei adeguati; senza limiti in mare.',gap=22)
 
 
 # ============ VELA E MOTORE O SOLO MOTORE ============
