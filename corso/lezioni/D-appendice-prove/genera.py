@@ -124,7 +124,7 @@ ST=[('Cronometro','Tempi veri: 20 minuti di carteggio entro 12 miglia, 60 oltre;
 g=''.join(f'<div style="display:flex; flex-direction:column; gap:8px; background:#FFFFFF; border-top:10px solid {c}; border-radius:24px; padding:22px; box-shadow:0px 10px 28px rgba(27,42,65,0.10)">{squiggle(c,110)}{h3(t,30,c)}{p(d,26,BODY,400,1.35)}</div>' for t,d,c in ST)
 sec('come', head('Appendice D · Prove d\'esame','Come usare le prove',SEA)+f'<div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:20px">{g}</div>'
     +note('Una prova a settimana nelle ultime cinque settimane, due nell\'ultima: all\'esame il tempo non sarà più un problema.',SEA,36),
- notes='Per il carteggio la risposta ufficiale è un intervallo (distanze, tempi, carburante, coordinate, rotte): la risposta è corretta se cade dentro. Gli esercizi oltre 12 miglia sono risolti passo per passo nelle lezioni 10-15 e nell\'Appendice A; quelli entro 12 miglia usano il metodo delle lezioni 03 e 04 (distanze, coordinate, tempo e velocità, carburante) e il lavoro sulla carta 5/D della lezione 10.')
+ notes='Per il carteggio la risposta ufficiale è un intervallo (distanze, tempi, carburante, coordinate, rotte): la risposta è corretta se cade dentro. Gli esercizi oltre 12 miglia sono risolti passo per passo nelle lezioni 10-15 e nell\'Appendice A; quelli entro 12 miglia usano il metodo delle lezioni 03 e 04 (distanze, coordinate, tempo e velocità, carburante) e la prova di carteggio entro 12 miglia della lezione 08, con due esercizi ufficiali svolti.')
 
 # ============ DIVISORI DELLE PARTI ============
 def divider(sid,n,t,sub,ids,c,info):
@@ -188,7 +188,7 @@ for i,P in enumerate(PROVE12,1):
         +f'<div style="display:flex; gap:32px"><div style="width:760px; display:flex; flex-direction:column; gap:8px">{tag("Carteggio · "+P["es"]["id"]+" · almeno 4 su 5",CORAL)}{ans}</div>'
          f'<div style="flex:1; display:flex; flex-direction:column; gap:12px">{tag("Quiz base · max 4 errori",SEA)}{grid}{tag("Quiz vela · max 1 errore",PURPLE)}{vg}</div></div>',
         notes='Carteggio '+P['es']['id']+': '+'; '.join(f'{q["n"]} {q["etichetta"]} → {q["risposta"].replace(chr(10)," ")}' for q in P['es']['quesiti'])
-              +'. La risposta è corretta se cade nell\'intervallo ufficiale. Metodo: lezioni 03 e 04 (distanze, coordinate, tempo e velocità, carburante) e lezione 10 (la carta 5/D). Risposte base: '
+              +'. La risposta è corretta se cade nell\'intervallo ufficiale. Metodo: lezioni 03 e 04 (distanze, coordinate, tempo e velocità, carburante) e lezione 08 (la prova di carteggio entro 12 miglia, con due esercizi ufficiali svolti). Risposte base: '
               +'; '.join(f'{n} {q["p"]} → {"abc"[q["x"]]}) {q["r"][q["x"]].strip()}' for n,q in enumerate(P['base'],1))
               +'. Vela: '+'; '.join(f'{n} {q["p"]} → {q["r"][q["x"]].strip()}' for n,q in enumerate(P['vela'],1))+'.')
 

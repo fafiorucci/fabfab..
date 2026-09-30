@@ -37,8 +37,8 @@ g+=(f'<g transform="translate(560 60)"><path d="M-46 22 L46 22 L34 40 L-34 40 Z"
 g+=tower(1600,190,1.35)+glow(1600,42,SUN,8)
 lbls=(lab(128+277-120,884,240,'Tappa 1',CORAL,24,900,'center')+lab(128+832-120,884,240,'Tappa 2',SEA,24,900,'center')
       +lab(128+1387-120,884,240,'Tappa 3',PURPLE,24,900,'center')+lab(128+1600-140,884,280,'L\'esame',NAVY,24,900,'center'))
-legs=[('Teoria e vela','Lezioni 1–9 · 18 ore','Scafo e motori, ormeggi e carte, ancoraggio, punto nave e fanali, segnalamento e sicurezza, meteo e normativa, vela ed emergenze.',CORAL),
-      ('Carteggio','Lezioni 10–15 · 12 ore','Tutti i 135 esercizi d\'esame svolti passo per passo sulle carte 5/D e 42/D: costiera, carburante, scarroccio, correnti.',SEA),
+legs=[('Entro 12 miglia','Lezioni 1–9 · 18 ore','Scafo e motori, ormeggi e carte, punto nave e fanali, segnalamento, sicurezza, meteo e normativa, emergenze e carteggio entro 12. La vela nella 9.',CORAL),
+      ('Senza limiti','Lezioni 10–15 · 12 ore','Tutti i 135 esercizi d\'esame svolti passo per passo sulle carte 5/D e 42/D: costiera, carburante, scarroccio, correnti.',SEA),
       ('Verso l\'esame','13 appendici e schede','20 prove d\'esame simulate, entro e oltre 12 miglia, la prova pratica, ripasso mirato e schede riassuntive per lo studio a casa.',PURPLE)]
 cards=''.join(f'<div style="flex:1; display:flex; flex-direction:column; gap:10px; background:#FFFFFF; border-top:10px solid {c_}; border-radius:28px; padding:28px 30px; box-shadow:0px 10px 28px rgba(27,42,65,0.10)">'
               f'{h3(t,38,c_)}<p style="font-size:24px; font-weight:900; letter-spacing:1px; text-transform:uppercase; color:{INK}">{s}</p>{p(d,28,BODY,400,1.4)}</div>' for t,s,d,c_ in legs)
@@ -65,10 +65,10 @@ def route(title,sub,rows,aula,c_):
     return (f'<div style="flex:1; display:flex; flex-direction:column; gap:12px; background:#FFFFFF; border-top:10px solid {c_}; border-radius:28px; padding:24px 28px; box-shadow:0px 10px 28px rgba(27,42,65,0.10)">'
             f'<div style="display:flex; align-items:center; gap:16px">{h3(title,38,c_)}<p style="font-size:24px; font-weight:900; color:#FFFFFF; background:{c_}; padding:4px 14px; border-radius:14px">{sub}</p></div>'
             f'{tb}{p(aula,25,BODY,400,1.35)}</div>')
-R12=route('Entro 12 miglia','Lezioni 1–10 · 20 ore',[('Quiz di carteggio','5','20′','max 1'),('Quiz base','20','30′','max 4'),('Quiz vela (solo vela)','5','15′','max 1')],
-          '<b>In aula</b>: teoria, vela e carteggio sulla carta 5/D. 10 prove simulate. Pratica anche su un lago.',SEA)
+R12=route('Entro 12 miglia','Lezioni 1–9 · 18 ore',[('Quiz di carteggio','5','20′','max 1'),('Quiz base','20','30′','max 4'),('Quiz vela (solo vela)','5','15′','max 1')],
+          '<b>In aula</b>: teoria, emergenze e carteggio sulla 5/D (lezione 8), vela nella 9. 10 prove simulate. Pratica anche su un lago.',SEA)
 RSL=route('Senza limiti','Lezioni 1–15 · 30 ore',[('Prova di carteggio','4 esercizi','60′','max 1'),('Quiz base','20','30′','max 4'),('Quiz vela (solo vela)','5','15′','max 1')],
-          '<b>In più</b>: tutto il carteggio su 5/D e 42/D, 135 esercizi svolti e altre 10 prove simulate. Pratica in mare.',CORAL)
+          '<b>In più</b>: lezioni 10–15, tutto il carteggio su 5/D e 42/D, 135 esercizi svolti e altre 10 prove simulate. Pratica in mare.',CORAL)
 banner=(f'<div style="display:flex; align-items:center; gap:18px; background:{NAVY}; border-radius:24px; padding:16px 28px">'
         f'<p style="font-family:{HAND}; font-size:40px; font-weight:700; line-height:1; color:{DACC}; white-space:nowrap">Hai già la 12 miglia?</p>'
         f'<p style="font-size:26px; line-height:1.3; font-weight:700; color:#FFFFFF">Niente quiz base: solo carteggio (e quiz vela per la vela), con le lezioni 10–15.</p></div>')
@@ -96,11 +96,11 @@ def rowsbox(title,sub,rows,c_):
 MOT=rowsbox('Solo motore','abilita alle unità a motore',[
     ('Esame','Carteggio e quiz base. Niente quiz vela.'),
     ('Pratica','Manovre a motore: ormeggio e disormeggio, uomo a mare, nodi, strumenti.'),
-    ('In aula','Tutte le lezioni tranne la 8 sulla vela: 2 ore in meno.')],ORANGE)
+    ('In aula','Tutte le lezioni tranne la 9 sulla vela: 16 ore entro 12 miglia, 28 senza limiti.')],ORANGE)
 VEL=rowsbox('Vela e motore','abilita a vela, motore e mista',[
     ('Esame','In più 5 quiz vela: 15′, al massimo 1 errore.'),
     ('Pratica','Andature e manovre a vela, più tutto il programma a motore, con l\'istruttore di vela a bordo.'),
-    ('In aula','Tutte le 15 lezioni, con la lezione 8 sulla vela e l\'appendice B sui nomi della barca a vela.')],SEA)
+    ('In aula','Anche la lezione 9 sulla vela e l\'appendice B sui nomi della barca: 18 ore entro 12 miglia, 30 senza limiti.')],SEA)
 banner4=(f'<div style="display:flex; align-items:center; gap:18px; background:{NAVY}; border-radius:24px; padding:16px 28px">'
          f'<p style="font-family:{HAND}; font-size:40px; font-weight:700; line-height:1; color:{DACC}; white-space:nowrap">E se la vela non va?</p>'
          f'<p style="font-size:26px; line-height:1.3; font-weight:700; color:#FFFFFF">Chi non è idoneo alla prova a vela può optare per la patente a solo motore, con le manovre a motore.</p></div>')
