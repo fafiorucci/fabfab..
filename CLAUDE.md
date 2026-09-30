@@ -15,8 +15,9 @@ o si crea un deck nuovo, dopo averlo pubblicato va rifatto l'export in `corso/ex
 2. Eseguire `corso/export/strumenti/esporta.sh <cartella>`: scrive
    `corso/export/html/<titolo>.html`, `pdf/<titolo>.pdf`, `pptx/<titolo>.pptx`
    (nome = titolo del deck, con « · » → « - » e senza `/ : ?`).
-3. Se il titolo è cambiato, cancellare i tre file col vecchio nome e aggiornare l'elenco
-   in `corso/export/README.md`.
+3. Se il titolo è cambiato o il deck è nuovo, cancellare i file col vecchio nome e aggiornare l'elenco
+   in `corso/export/README.md`, con i link di download diretto nella forma
+   `[PPTX](pptx/<nome URL-encoded>.pptx?raw=true)` (idem PDF e HTML).
 4. Controllare a campione il PDF (pymupdf), poi commit e push insieme alle altre modifiche.
 
 Requisiti dello script: Playwright + Chromium in `/opt/pw-browsers`, `python-pptx`, `Pillow`.
