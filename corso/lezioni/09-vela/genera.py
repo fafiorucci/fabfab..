@@ -2,9 +2,9 @@ import os, sys, math
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lezione_base import *
 import lezione_base as LB
-OUT=SP+'/lez08/project'
+OUT=SP+'/lez09/project'
 GREY='#97A6B4'; SKY='#DDEFF7'; LRED='#E23B3B'
-LB.ICON_T.update({'La lezione di oggi':'lifebuoy','La barca a vela':'sail','La randa':'sail','Le vele di prua':'sail','Gli armi':'sail',
+LB.ICON_T.update({'La vela in otto flash':'sail','La lezione di oggi':'lifebuoy','La barca a vela':'sail','La randa':'sail','Le vele di prua':'sail','Gli armi':'sail',
  'La ferramenta di bordo':'anchor','Le andature':'compass','Il vento apparente':'wind','Come spinge la vela':'wind','Orziera o poggiera':'helm',
  'Regolare le vele':'wind','Orzare e poggiare':'helm','Virata e abbattuta':'compass','Le precedenze a vela':'flag','Issare, ridurre, fermarsi':'sail'})
 def pcol(inner,w=532,gap=24,left=1260): return f'<div style="position:absolute; left:{left}px; top:290px; width:{w}px; display:flex; flex-direction:column; gap:{gap}px">{inner}</div>'
@@ -92,13 +92,13 @@ def pol(cx,cy,b,r): return (cx+r*math.sin(math.radians(b)), cy-r*math.cos(math.r
 def windarrow(x,y,l=110,c=GREY): return arrow(x,y,x,y+l,c,8,26)
 
 # ============ COVER + AGENDA ============
-cover(8,'Vela: attrezzatura, teoria e manovre','Com\'è fatta una barca a vela, perché va controvento e come si manovra',
- 'Lezione 8. Capitoli del programma della scuola: Vela (attrezzatura, teoria e manovre), All. A al DM 323/2021 punto 1c. All\'esame la prova di vela ha 5 quesiti Vero/Falso in più rispetto alla patente a motore: si supera con al massimo 1 errore. Banca ufficiale: 250 quiz (99 teoria, 86 attrezzatura, 65 manovre).')
-blocks=[('0:00','40′','Barca, randa, vele di prua, armi, ferramenta · quiz 1',CORAL),('0:40','35′','Andature, vento apparente, portanza, equilibrio, regolazioni · quiz 2',SEA),('1:15','30′','Timone, virata e abbattuta, precedenze, issare e ridurre · quiz 3',PURPLE),('1:45','15′','Verifica finale',BLUE)]
+cover(9,'Vela: attrezzatura, teoria e manovre','Com\'è fatta una barca a vela, perché va controvento e come si manovra',
+ 'Lezione 9, solo per chi fa la patente a vela: chi fa solo motore la salta. Capitoli del programma della scuola: Vela (attrezzatura, teoria, manovre e ripasso), All. A al DM 323/2021 punto 1c. All\'esame la prova di vela ha 5 quesiti Vero/Falso in più rispetto alla patente a motore: si supera con al massimo 1 errore. Banca ufficiale: 250 quiz (99 teoria, 86 attrezzatura, 65 manovre).')
+blocks=[('0:00','40′','Barca, randa, vele di prua, armi, ferramenta · quiz 1',CORAL),('0:40','35′','Andature, vento apparente, portanza, equilibrio, regolazioni · quiz 2',SEA),('1:15','30′','Timone, virata e abbattuta, precedenze, issare e ridurre · quiz 3',PURPLE),('1:45','15′','La vela in otto flash e verifica finale',BLUE)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
 right=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:88px; font-weight:700; line-height:1.05; color:{INK}">5 V/F</p>'+p('quesiti di vela: al massimo 1 errore',26,INK,700)+p('250 quiz ufficiali, tutti Vero o Falso: attenzione alle parole «sempre», «esclusivamente», «solo».',24))
 left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>chiamare per nome vele, manovre e ferramenta</li><li>riconoscere le andature e il vento apparente</li><li>spiegare perché la barca risale il vento</li><li>orzare, poggiare, virare e abbattere</li><li>applicare le precedenze tra barche a vela</li></ul>',SEA_T,flex=1.4)
-sec('agenda', head('Lezione 08 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
+sec('agenda', head('Lezione 09 · 2 ore · solo vela','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
  notes='Tre verifiche intermedie da 4 quiz e una finale da 8, tutti dalla banca vela del DD 131/2022: 2.1.1 teoria della vela (99), 2.2.1 attrezzatura (86), 2.3.1 manovre (65). La lezione 9 riprende la vela in un ripasso.')
 
 # ============ LA BARCA ============
@@ -347,16 +347,28 @@ sec('issare', head('Vela · le manovre','Issare, ridurre, fermarsi')+f'<div styl
 
 quiz_slide('quiz3','Quiz 3 · Le manovre',['2.3.1-4','2.3.1-47','2.3.1-62','2.3.1-65'],False)
 quiz_slide('quiz3r','Quiz 3 · Le risposte',['2.3.1-4','2.3.1-47','2.3.1-62','2.3.1-65'],True)
+# ============ RIPASSO VELA ============
+RV=[('Andature','Bolina 45°, traverso 90°, lasco 135°, poppa 180°. Controvento: angolo morto.',CORAL,CORAL_T),
+    ('Apparente','Sempre più a prua del reale; di bolina più forte, in poppa più debole.',SEA,SEA_T),
+    ('Mure','Il lato da cui entra il vento. Mure a dritta: precedenza.',PURPLE,LILAC_T),
+    ('Stesse mure','Chi è sopravento si scosta da chi è sottovento.',BLUE,BLUE_T),
+    ('CV e CD','CV a proravia del CD: poggiera. A poppavia: orziera.',GREEN,GREEN_T),
+    ('Virata e abbattuta','Prua nel vento, poppa nel vento. La strambata è l\'abbattuta involontaria.',CORAL,SUN_T),
+    ('Fisse e correnti','Stralli e sartie reggono l\'albero; drizze e scotte manovrano le vele.',SEA,SEA_T),
+    ('Ridurre','Se ci pensi, è il momento: terzaroli e genoa avvolto.',PURPLE,LILAC_T)]
+tiles=''.join(f'<div style="display:flex; flex-direction:column; gap:10px; background:{bg}; padding:30px; border-radius:28px"><p style="font-family:{H}; font-size:44px; font-weight:700; line-height:1.05; color:{c}">{t}</p>{p(d,26,INK,600,1.35)}</div>' for t,d,c,bg in RV)
+sec('ripassovela', head('Vela · ripasso','La vela in otto flash')+f'<div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:20px">{tiles}</div>'+note('Quiz di vela: tutti Vero o Falso. Diffida di «sempre», «solo», «esclusivamente».',PURPLE,36),
+ notes='Ripasso della lezione 8 in forma di domande rapide: per ogni riquadro chiedere alla classe prima di scoprirlo. Riferimenti: 2.1.1-16…-24 e -50…-54 (andature), -8…-15 e -20…-23 (vento apparente), 2.3.1-5, -7, -44…-49 (precedenze), 2.1.1-29…-34, -64, -65 (CV e CD), 2.3.1-9, -40, -61…-63 (virata, abbattuta, strambata), 2.2.1-28, -29, -75, -77 (manovre fisse e correnti), 2.3.1-58…-60 (ridurre).')
 quiz_slide('finale1','Verifica finale · 1 di 2',['2.1.1-24','2.2.1-81','2.3.1-28','2.1.1-97'],False)
 quiz_slide('finale1r','Verifica finale · 1 di 2 · risposte',['2.1.1-24','2.2.1-81','2.3.1-28','2.1.1-97'],True)
 quiz_slide('finale2','Verifica finale · 2 di 2',['2.1.1-94','2.2.1-19','2.3.1-9','2.2.1-60'],False)
 quiz_slide('finale2r','Verifica finale · 2 di 2 · risposte',['2.1.1-94','2.2.1-19','2.3.1-9','2.2.1-60'],True)
 closing(['Manovre fisse (strallo, sartie, paterazzo) reggono l\'albero; le correnti (drizze, scotte) manovrano le vele','Bolina 45°, traverso 90°, lasco 135°, poppa 180°; controvento c\'è l\'angolo morto','Il vento apparente è sempre più a prua del reale: di bolina più forte, in poppa più debole','CV a proravia del CD: poggiera; a poppavia: orziera. Meglio un po\' orziera','Mure a dritta ha la precedenza; con le stesse mure passa chi è sottovento'],
- 'Prossima lezione · 09 · Emergenze, ripasso vela e correnti','A casa: i 250 quiz di vela, tutti Vero o Falso.')
-write_deck(OUT,'Lezione 08 · Vela: attrezzatura, teoria e manovre',
+ 'Prossima lezione · 10 · Carteggio oltre 12 miglia: navigazione costiera','A casa: i 250 quiz di vela, tutti Vero o Falso.')
+write_deck(OUT,'Lezione 09 · Vela: attrezzatura, teoria e manovre',
  ['cover','agenda','barca','randa','vele','armi','ferramenta','quiz1','quiz1r','andature','apparente','portanza','equilibrio','regolazioni','quiz2','quiz2r',
-  'barra','virata','precedenze','issare','quiz3','quiz3r','finale1','finale1r','finale2','finale2r','chiusura'],
+  'barra','virata','precedenze','issare','quiz3','quiz3r','ripassovela','finale1','finale1r','finale2','finale2r','chiusura'],
  {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"Attrezzatura: barca, randa, vele, armi, ferramenta","start":"barca"},
   "s3":{"description":"Teoria: andature, vento apparente, portanza, equilibrio, regolazioni","start":"andature"},
   "s4":{"description":"Manovre: timone, virata e abbattuta, precedenze, issare e ridurre","start":"barra"},
-  "s5":{"description":"Verifica finale","start":"finale1"}})
+  "s5":{"description":"Ripasso della vela in otto flash e verifica finale","start":"ripassovela"}})
