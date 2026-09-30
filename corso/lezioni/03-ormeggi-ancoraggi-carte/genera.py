@@ -122,9 +122,9 @@ def inglese_dx():
     return s
 def poppa_giard():
     s=f'<rect x="0" y="0" width="480" height="70" fill="{QUAY}"/>'+line(0,70,480,70,NAVY,5)
-    for x in (70,150,330,410): s+=topboat(x,150,150,-90,'#FFFFFF',NAVY,3,0.4,False)
-    s+=topboat(250,190,150,-62,'#FFFFFF',NAVY,4)
-    s+=arrow(258,120,244,86,CORAL,6,18)+f'<circle cx="214" cy="236" r="14" fill="none" stroke="{SEA}" stroke-width="5"/>'
+    for x in (70,150,330,410): s+=topboat(x,150,150,90,'#FFFFFF',NAVY,3,0.4,False)
+    s+=topboat(228,210,150,118,'#FFFFFF',NAVY,4)
+    s+=arrow(276,132,286,92,CORAL,6,18)+f'<circle cx="260" cy="155" r="14" fill="none" stroke="{SEA}" stroke-width="5"/>'
     return s
 def thruster():
     s=f'<rect x="380" y="0" width="100" height="300" fill="{QUAY}"/>'+line(380,0,380,300,NAVY,5)
