@@ -42,7 +42,7 @@ Fonte: [`fonti/programma-lezioni-scuola.xlsx`](fonti/programma-lezioni-scuola.xl
 | 6 | Segnalamento, segnali sonori e sicurezza | Cartografia e segnalamento: fari, IALA (5) · Segnali sonori (5) · Sicurezza: dotazioni, mezzi di soccorso, incendio; emergenze: falla, incaglio, collisione, uomo a mare, abbandono, VHF, soccorso, tempo cattivo (3) · **+ dotazioni obbligatorie DM 133/2024 (3b) · + precauzioni in porto (4a) · + CIRM (3b) · + alcol e sostanze (3a)** |
 | 7 | Meteorologia e normativa | Meteorologia (6) · Normativa (8) · **+ visite e certificazioni (3b) · + autorità marittima e ordinanze (8b)** |
 | 8 | Carteggio entro 12 miglia | Carteggio: la prova entro 12 miglia, carta 5/D, coordinate, distanza, ora o velocità, carburante, metodo ed errori tipici, esercizi 4.1.1-1, -19, -35, -6 e prova simulata 4.1.1-40 (7) |
-| 9 | Vela (solo patente a vela) | Attrezzatura · Teoria e manovre · Ripasso in otto flash (1c) |
+| 9 | Vela (solo patente a vela) | Parte 1, teoria (1 ora): attrezzatura · teoria e manovre · ripasso in otto flash (1c) · Parte 2, esercitazione quiz vela (1 ora): 40 quesiti per argomento e simulazione d'esame |
 
 ### Argomenti dell'Allegato A aggiunti al programma della scuola
 
