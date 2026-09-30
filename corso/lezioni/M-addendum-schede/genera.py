@@ -19,8 +19,9 @@ def formulas(fs):
 
 ORDER=['cover','uso']
 SCHEDE=[]  # (n, titolo, icona, colore, ids)
-def scheda(n,title,icon,c,R,N=None,F=None,one=False,notes=''):
+def scheda(n,title,icon,c,R,N=None,F=None,one=False,notes='',part=0):
     eb=f'Scheda {n:02d} · {title}'
+    sx,pg=(('c','d'),('3/4','4/4')) if part else (('a','b'),('1/2','2/2'))
     if one or not N:
         inner=head_s(eb,'Regole e numeri da ricordare',icon,c)
         if F: inner+=formulas(F)
@@ -28,12 +29,13 @@ def scheda(n,title,icon,c,R,N=None,F=None,one=False,notes=''):
         if N: inner+=nums(N,len(N),44,24,'16px 22px')
         sec(f's{n:02d}',inner,notes=notes,gap=28); ids=[f's{n:02d}']
     else:
-        sec(f's{n:02d}a',head_s(eb+' · 1/2','Le regole da memorizzare',icon,c)+rules(R),notes=notes,gap=30)
-        inner=head_s(eb+' · 2/2','I numeri che tornano nei quiz',icon,c)
+        sec(f's{n:02d}{sx[0]}',head_s(eb+f' · {pg[0]}','Le regole da memorizzare',icon,c)+rules(R),notes=notes,gap=30)
+        inner=head_s(eb+f' · {pg[1]}','I numeri che tornano nei quiz',icon,c)
         if F: inner+=formulas(F)
         inner+=nums(N)
-        sec(f's{n:02d}b',inner,notes=notes,gap=26); ids=[f's{n:02d}a',f's{n:02d}b']
-    ORDER.extend(ids); SCHEDE.append((n,title,icon,c,ids))
+        sec(f's{n:02d}{sx[1]}',inner,notes=notes,gap=26); ids=[f's{n:02d}{sx[0]}',f's{n:02d}{sx[1]}']
+    ORDER.extend(ids)
+    if not part: SCHEDE.append((n,title,icon,c,ids))
 def head_s(e,t,icon,c): return header(e,t,icon,c)
 
 cover_app('M','Schede riassuntive','Una o due pagine per ogni lezione: le regole da memorizzare e i numeri che tornano nei quiz, cioè distanze, velocità e dotazioni',
@@ -126,6 +128,20 @@ scheda(6,'Segnalamento, segnali sonori e sicurezza','lighthouse',ORANGE,[
   ('12 mg','oltre: zattera, binocolo, GPS, riflettore radar'),('50 mg','oltre: EPIRB, 3 fuochi e 3 razzi'),('25 mg','visibilità di notte dei razzi a paracadute'),('4 anni','scadenza dei pirotecnici')],
  notes='Scheda della lezione 6. Dotazioni: Allegato V del DM 146/2008 come sostituito dal DM 133/2024. VHF oltre 6 miglia. Fuochi a mano visibili a circa 6 miglia. EPIRB su 406 e 121,5 MHz.')
 
+# ============ 06 · emergenze ============
+scheda(6,'Emergenze','lifebuoy',ORANGE,[
+ ('Falla','Tampone da fuori; falla a prua: ferma la barca. Irreparabile: MAYDAY.'),
+ ('Incendio','Fiamme sottovento: fuoco a poppa prua al vento, a prua poppa al vento. Chiudi il carburante.'),
+ ('Uomo a mare','Grida il lato e accosta da quel lato, salvagente e occhi sempre sul naufrago, arriva in folle.'),
+ ('Abbandono','Lo decide il comandante: prima MAYDAY e giubbotti, sagola della zattera legata alla barca.'),
+ ('Radio','MAYDAY pericolo grave e imminente, PAN PAN urgenza, SÉCURITÉ sicurezza: tre volte ciascuno.'),
+ ('Cattivo tempo','Mai onde al traverso; dal mare alla cappa, onde al mascone.'),
+ ('Alcol','Sospensione della patente sempre; revoca oltre 1,5 g/l con unità a noleggio.'),
+ ('CIRM e 1530','Consigli medici via radio: CIRM. Dal telefono: 1530, Guardia Costiera.')],
+ [('CH 16','156,8 MHz: soccorso e prima chiamata'),('1 W','potenza ridotta tra barche vicine'),('1530','Guardia Costiera dal telefono'),('00-03','e 30-33: minuti di silenzio radio sul 16'),
+  ('10-20 mg','portata VHF tra barche'),('40 mg','portata VHF con le stazioni costiere'),('2.755 €','sanzione minima per ebbrezza'),('3-24 mesi','di sospensione della patente')],
+ notes='Scheda della lezione 6, seconda parte: le emergenze. Canali tra barche: 6, 8, 72, 77. CIRM per i consigli medici. Soccorso: alza e abbassa lentamente le braccia allargate.',part=1)
+
 # ============ 07 ============
 scheda(7,'Meteorologia e normativa','cloud',CORAL,[
  ('Pressione','Normale 1013 hPa. Se scende in fretta arriva brutto tempo. Isobare fitte = vento forte.'),
@@ -141,7 +157,22 @@ scheda(7,'Meteorologia e normativa','cloud',CORAL,[
  notes='Scheda della lezione 7. Beaufort da 0 a 12, Douglas da 0 a 9. Nebbia: visibilità sotto 1 km. Visite: categorie A e B prima a 8 anni, C e D a 10, poi ogni 5. Senza patente: 2.755-11.017 euro.')
 
 # ============ 08 ============
-scheda(8,'Vela','sail',SEA,[
+scheda(8,'Carteggio entro 12 miglia','dividers',PURPLE,[
+ ('La prova','1 esercizio dell\'elenco 4.1.1 sulla carta 5/D: 5 quesiti in 20 minuti, almeno 4 giusti.'),
+ ('Coordinate','Squadretta sul punto: latitudine sul bordo verticale, longitudine su quello orizzontale.'),
+ ('Come si scrive','Gradi, primi e decimi di primo: 42°48′,5 N · 010°08′,4 E.'),
+ ('Distanza','Compasso sui due punti, poi sulla scala delle latitudini all\'altezza della rotta: 1′ = 1 miglio.'),
+ ('Mai le longitudini','Sulla carta di Mercatore un primo di longitudine è più corto di un miglio.'),
+ ('Ora o velocità','t = d ÷ V; ora di arrivo = partenza + t. Con l\'orario di arrivo dato: V = d ÷ t.'),
+ ('Carburante','Consumo orario × ore di moto, più il 30% di riserva.'),
+ ('L\'ordine','Prima le coordinate, poi distanza, ora o velocità e carburante; alla fine ricontrolla.')],
+ [('20′','per la prova'),('4 su 5','quesiti giusti per superarla'),('50','esercizi ufficiali 4.1.1'),('3','settori della carta 5/D'),
+  ('1′ = 1 M','sulla scala delle latitudini'),('1.852 m','un miglio'),('+30%','riserva di carburante'),('6′ = 0,1 h','minuti e ore decimali')],
+ F=[('d = V × t','miglia'),('t = d ÷ V','ore'),('V = d ÷ t','nodi'),('l = c × t × 1,3','litri')],
+ notes='Scheda della lezione 8. Forchette ufficiali: di solito ±0,3 miglia sulla distanza, ±3 minuti sull\'ora, ±0,3′ sulle coordinate. Per esercitarsi: i 50 esercizi dell\'elenco 4.1.1 e le 10 prove entro 12 miglia dell\'appendice D, parte 1.')
+
+# ============ 09 ============
+scheda(9,'Vela (solo patente a vela)','sail',SEA,[
  ('Manovre fisse e correnti','Strallo, sartie, paterazzo reggono l\'albero; drizze e scotte manovrano le vele.'),
  ('La randa','Tre angoli: penna, mura, scotta. Tre lati: inferitura, base, balumina.'),
  ('Le andature','Bolina, traverso, lasco, poppa. Controvento l\'angolo morto: si bordeggia.'),
@@ -152,21 +183,7 @@ scheda(8,'Vela','sail',SEA,[
  ('Precedenze','Mure a sinistra cede a mure a dritta; con le stesse mure cede chi è sopravento.')],
  [('45°','bolina, dal vento reale'),('90°','traverso'),('135°','lasco'),('180°','poppa o fil di ruota'),
   ('50%','sovrapposizione tipica del genoa'),('1','vela di prua: sloop'),('2','vele di prua insieme: cutter'),('2','alberi: ketch, mezzana a proravia del timone')],
- notes='Scheda della lezione 8. Quiz di vela: tutti Vero o Falso. Winch: sempre in senso orario. Si riduce appena ci si pensa.')
-
-# ============ 09 ============
-scheda(9,'Emergenze, ripasso vela e correnti','lifebuoy',PURPLE,[
- ('Corrente','Si nomina per dove va (Dc). La deriva è uguale per tutti gli scafi.'),
- ('Falla','Tampone da fuori; falla a prua: ferma la barca. Irreparabile: MAYDAY.'),
- ('Incendio','Fiamme sottovento: fuoco a poppa prua al vento, a prua poppa al vento. Chiudi il carburante.'),
- ('Uomo a mare','Grida il lato e accosta da quel lato, salvagente e occhi sempre sul naufrago, arriva in folle.'),
- ('Abbandono','Lo decide il comandante: prima MAYDAY e giubbotti, sagola della zattera legata alla barca.'),
- ('Radio','MAYDAY pericolo grave e imminente, PAN PAN urgenza, SÉCURITÉ sicurezza: tre volte ciascuno.'),
- ('Cattivo tempo','Mai onde al traverso; dal mare alla cappa, onde al mascone.'),
- ('Alcol','Sospensione della patente sempre; revoca oltre 1,5 g/l con unità a noleggio.')],
- [('CH 16','156,8 MHz: soccorso e prima chiamata'),('1 W','potenza ridotta tra barche vicine'),('1530','Guardia Costiera dal telefono'),('00-03','e 30-33: minuti di silenzio radio sul 16'),
-  ('10-20 mg','portata VHF tra barche'),('40 mg','portata VHF con le stazioni costiere'),('2.755 €','sanzione minima per ebbrezza'),('3-24 mesi','di sospensione della patente')],
- notes='Scheda della lezione 9. Canali tra barche: 6, 8, 72, 77. CIRM per i consigli medici. Soccorso: alza e abbassa lentamente le braccia allargate.')
+ notes='Scheda della lezione 9, solo per la patente a vela. Quiz di vela: tutti Vero o Falso. Winch: sempre in senso orario. Si riduce appena ci si pensa.')
 
 # ============ 10-15 carteggio ============
 scheda(10,'Carteggio: navigazione costiera','dividers',BLUE,[
@@ -253,7 +270,7 @@ closing(['Rileggi la scheda il giorno dopo la lezione',
 ORDER.append('chiusura')
 write_deck(OUT,'Addendum · Schede riassuntive',ORDER,
  {"s1":{"description":"Come usare le schede","start":"cover"},
-  "s2":{"description":"Schede 01-09: teoria e vela","start":"s01"},
-  "s3":{"description":"Schede 10-15: carteggio","start":"s10"},
+  "s2":{"description":"Schede 01-09: patente entro 12 miglia (la 09 solo vela)","start":"s01"},
+  "s3":{"description":"Schede 10-15: carteggio oltre 12 miglia","start":"s10"},
   "s4":{"description":"I numeri d'oro e la verifica","start":"numeri"}})
 print(len(ORDER))

@@ -62,7 +62,7 @@ nts=''.join(f'<div style="flex:1; display:flex; flex-direction:column; gap:6px">
 out['esame']=('esame',header('Com\'è fatto l\'esame · DM 323/2021, artt. 3 e 6','Tre prove scritte, poi la pratica','check')+f'<div style="display:flex; gap:12px; align-items:stretch">{row}</div><div style="display:flex; gap:40px">{nts}</div>',notes_of(src('esame')))
 
 # ---------- STRUTTURA ----------
-L=[('Teoria dello scafo','hull'),('Motori, elica e timone','propeller'),('Ormeggi, cartografia e primi calcoli','map'),('Ancoraggio, prora e rotta','anchor'),('Punto nave e fanali','lantern'),('Segnalamento, segnali sonori e sicurezza','lighthouse'),('Meteorologia e normativa','cloud'),('Vela','sail'),('Emergenze, ripasso vela e correnti','lifebuoy'),
+L=[('Teoria dello scafo','hull'),('Motori, elica e timone','propeller'),('Ormeggi, cartografia e primi calcoli','map'),('Ancoraggio, prora e rotta','anchor'),('Punto nave e fanali','lantern'),('Segnalamento, segnali sonori e sicurezza','lighthouse'),('Meteorologia e normativa','cloud'),('Carteggio entro 12 miglia','dividers'),('Vela','sail'),
    ('Carteggio: navigazione costiera','dividers'),('Carteggio: carburante','fuel'),('Carteggio: scarroccio','wind'),('Carteggio: correnti I','current'),('Carteggio: correnti II','current'),('Carteggio: carta 42/D','map')]
 cells=''
 for k,(t,ic) in enumerate(L):
@@ -70,10 +70,10 @@ for k,(t,ic) in enumerate(L):
     cells+=(f'<div style="display:flex; flex-direction:column; gap:6px; background:{bg}; padding:18px; border-radius:{RADIUS}px">'
             f'<div style="display:flex; align-items:center; justify-content:space-between"><p style="font-family:{H}; font-size:40px; font-weight:600; color:{c}">{k+1:02d}</p>{badge(ic,c,52)}</div>'
             f'<p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{t}</p></div>')
-out['struttura']=('struttura',header('30 ore · 9 di teoria e vela + 6 di carteggio','Le quindici lezioni','grid')+f'<div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:16px">{cells}</div>',notes_of(src('struttura')))
+out['struttura']=('struttura',header('30 ore · 9 entro 12 miglia + 6 oltre 12 miglia','Le quindici lezioni','grid')+f'<div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:16px">{cells}</div>',notes_of(src('struttura')))
 
 # ---------- PESI (grafico a barre) ----------
-rowsP=[('Navigazione cartografica ed elettronica',4,322,'03-05 · 09'),('Manovre e condotta',4,155,'03 · 04'),('Sicurezza della navigazione',3,215,'06 · 09'),('Normativa diportistica e ambientale',3,184,'07'),('COLREG e segnalamento marittimo',2,247,'05 · 06'),('Meteorologia',2,120,'07'),('Teoria dello scafo',1,125,'01 · 02'),('Motori',1,104,'02')]
+rowsP=[('Navigazione cartografica ed elettronica',4,322,'03-05 · 08'),('Manovre e condotta',4,155,'03 · 04'),('Sicurezza della navigazione',3,215,'06'),('Normativa diportistica e ambientale',3,184,'07'),('COLREG e segnalamento marittimo',2,247,'05 · 06'),('Meteorologia',2,120,'07'),('Teoria dello scafo',1,125,'01 · 02'),('Motori',1,104,'02')]
 def prow(t,e,n,l,vela=False):
     w=round(n/322*560); bg=f' background:{CARD}; border-radius:14px; padding:6px 12px;' if vela else ' padding:6px 12px;'
     return (f'<div style="display:flex; align-items:center; gap:24px;{bg} border-bottom:1px solid #D8D0BE">'

@@ -268,7 +268,7 @@ quiz_slide('finale1r','Verifica finale · 1 di 2 · risposte',['1.6.1-5','1.6.3-
 quiz_slide('finale2','Verifica finale · 2 di 2',['1.3.4-10','1.8.2-9','1.6.2-44'],False)
 quiz_slide('finale2r','Verifica finale · 2 di 2 · risposte',['1.3.4-10','1.8.2-9','1.6.2-44'],True)
 closing(['Pressione che cala in fretta: arriva brutto tempo; attorno alla bassa il vento gira in senso antiorario','Di giorno brezza di mare, di notte brezza di terra','Meteomar sul canale 68; gli avvisi di burrasca hanno la precedenza','Natanti fino a 10 m, imbarcazioni fino a 24, poi navi','Evento straordinario: denuncia entro 3 giorni all\'Autorità marittima'],
- 'Prossima lezione · 08 · Emergenze e carteggio entro 12 miglia','A casa: i 119 quiz di meteorologia e i 202 di normativa e ambiente.')
+ 'Prossima lezione · 08 · Carteggio entro 12 miglia','A casa: i 119 quiz di meteorologia e i 202 di normativa e ambiente.')
 write_deck(OUT,'Lezione 07 · Meteorologia e normativa',
  ['cover','agenda','pressione','brezze','venti','beaufort','quiz1','quiz1r','fronti','nubi','onde','meteomar','quiz2','quiz2r',
   'unita','documenti','patente','visite','quiz3','quiz3r','autorita','ambiente','scinautico','quiz4','quiz4r','finale1','finale1r','finale2','finale2r','chiusura'],

@@ -39,9 +39,9 @@ Fonte: [`fonti/programma-lezioni-scuola.xlsx`](fonti/programma-lezioni-scuola.xl
 | 3 | Ormeggi, cartografia e primi calcoli | Attracchi, ormeggi, ancoraggi (4b) · Cartografia (7) · Carteggio: navigazione stimata, miglia, velocità, carburante (7) |
 | 4 | Ancoraggio, prora e rotta | Attracchi, ormeggi, ancoraggi (4b) · Carteggio: prora e rotta, scarroccio, deriva, declinazione, deviazione (7) · **+ Condotta sottocosta: velocità, balneazione, corridoi di lancio (4a)** |
 | 5 | Punto nave e fanali | Carteggio: navigazione costiera, punto nave, GPS (7) · Prevenzione abbordi: fanali e precedenze (5) · **+ segnali diurni (5)** |
-| 6 | Segnalamento, segnali sonori e sicurezza | Cartografia e segnalamento: fari, IALA (5) · Segnali sonori (5) · Sicurezza parte 1: dotazioni, mezzi di soccorso, incendio (3) · **+ dotazioni obbligatorie DM 133/2024 (3b) · + precauzioni in porto (4a)** |
+| 6 | Segnalamento, segnali sonori e sicurezza | Cartografia e segnalamento: fari, IALA (5) · Segnali sonori (5) · Sicurezza: dotazioni, mezzi di soccorso, incendio; emergenze: falla, incaglio, collisione, uomo a mare, abbandono, VHF, soccorso, tempo cattivo (3) · **+ dotazioni obbligatorie DM 133/2024 (3b) · + precauzioni in porto (4a) · + CIRM (3b) · + alcol e sostanze (3a)** |
 | 7 | Meteorologia e normativa | Meteorologia (6) · Normativa (8) · **+ visite e certificazioni (3b) · + autorità marittima e ordinanze (8b)** |
-| 8 | Emergenze e carteggio entro 12 miglia | Sicurezza parte 2: falla, incaglio, collisione, incendio, uomo a mare, abbandono, VHF, soccorso, tempo cattivo (3) · **+ CIRM (3b) · + alcol e sostanze (3a)** · Carteggio: la prova entro 12 miglia, metodo per i 5 quesiti, esercizi 4.1.1-1 e 4.1.1-35 (7) |
+| 8 | Carteggio entro 12 miglia | Carteggio: la prova entro 12 miglia, carta 5/D, coordinate, distanza, ora o velocità, carburante, metodo ed errori tipici, esercizi 4.1.1-1, -19, -35, -6 e prova simulata 4.1.1-40 (7) |
 | 9 | Vela (solo patente a vela) | Attrezzatura · Teoria e manovre · Ripasso in otto flash (1c) |
 
 ### Argomenti dell'Allegato A aggiunti al programma della scuola
@@ -50,17 +50,17 @@ In grassetto nella tabella sopra; con questi inserimenti tutto l'Allegato A è c
 
 | Argomento | Punto | Quesiti in banca | Lezione |
 |---|---|---|---|
-| Alcol e sostanze stupefacenti o psicotrope | 3a | 12 | 8 |
+| Alcol e sostanze stupefacenti o psicotrope | 3a | 12 | 6 |
 | Dotazioni obbligatorie per distanza dalla costa (DM 133/2024) | 3b | 48 | 6 |
 | Visite, periodicità e certificazioni | 3b | 19 | 7 |
-| CIRM | 3b | 1 | 8 |
+| CIRM | 3b | 1 | 6 |
 | Navigazione sottocosta, limiti di velocità, balneazione | 4a | 32 | 4 |
 | Precauzioni all'ingresso e all'uscita dei porti | 4a | 21 | 6 |
 | Stabilità dell'unità (oggi solo nelle lezioni di vela) | 1b | 50* | 1 |
 | Segnali diurni: pallone, cilindro, rombo | 5 | 67* | 5 |
 | Autorità marittima e ordinanze | 8b | 98* | 7 |
 
-\* quesiti dell'intera voce che comprende l'argomento. Rispetto al file: la normativa ripetuta è stata tolta (resta nella 7); la seconda parte della sicurezza e la prova di carteggio entro 12 miglia sono nella lezione 8, per tutti; la vela è tutta nella lezione 9, che chi fa solo motore salta. Le correnti sono nelle lezioni 13-14 e nell'appendice A.
+\* quesiti dell'intera voce che comprende l'argomento. Rispetto al file: la normativa ripetuta è stata tolta (resta nella 7); le emergenze sono nella lezione 6, dopo la sicurezza; la lezione 8, per tutti, è tutta sul carteggio entro 12 miglia; la vela è tutta nella lezione 9, che chi fa solo motore salta. Le correnti sono nelle lezioni 13-14 e nell'appendice A.
 
 ## Lezioni di carteggio (135 esercizi)
 
@@ -95,7 +95,7 @@ Fonte dei testi: Allegato A al DD 131/2022 (atto ufficiale, art. 5 L. 633/1941),
 | L | L'ancoraggio | 22 | [slide](https://claude.ai/artifact/5N8Yqin6vPAdayCKswo4Ug) | [`lezioni/L-appendice-ancoraggio`](lezioni/L-appendice-ancoraggio/) |
 | M | La portanza, dall'ala alla vela (fonte: L. Romanò, «La fisica in barca a vela», cap. 4) | 33 | [slide](https://claude.ai/artifact/Ap7Q1MUK6AqSZtf58LmStt) | [`lezioni/M-appendice-portanza`](lezioni/M-appendice-portanza/) |
 
-**Addendum · Schede riassuntive per lo studente** (31 slide): una o due pagine per lezione con le regole da memorizzare e i numeri dei quiz. [Slide](https://claude.ai/artifact/NEHjtWa3XgzS6NMc4K18vC) · [`lezioni/M-addendum-schede`](lezioni/M-addendum-schede/)
+**Addendum · Schede riassuntive per lo studente** (33 slide): una o due pagine per lezione con le regole da memorizzare e i numeri dei quiz. [Slide](https://claude.ai/artifact/NEHjtWa3XgzS6NMc4K18vC) · [`lezioni/M-addendum-schede`](lezioni/M-addendum-schede/)
 
 ## Presentazione alla scuola nautica
 
