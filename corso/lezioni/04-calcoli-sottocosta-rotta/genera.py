@@ -4,7 +4,7 @@ from lezione_base import *
 import lezione_base as LB
 OUT=SP+'/lez04/project'
 LAND='#F2E2B3'; LAND_S='#C9A96B'; CHART='#FBF8EF'; SAND='#F3E3B8'; GREY='#97A6B4'; STEEL='#8E9BAA'
-LB.ICON_T.update({'La lezione di oggi':'lifebuoy','Com\'è fatta un\'ancora':'anchor','I tipi di ancora':'anchor','Il calumo':'anchor',
+LB.ICON_T.update({'La lezione di oggi':'lifebuoy','La rosa dei venti':'compass','Gli strumenti del carteggio':'dividers','La navigazione stimata':'pencil','Spazio, velocità, tempo':'chart','Tre esempi svolti':'pencil','Il carburante sulla carta':'fuel','Raccolta quiz':'quiz','Com\'è fatta un\'ancora':'anchor','I tipi di ancora':'anchor','Il calumo':'anchor',
  'La manovra di ancoraggio':'anchor','Alla ruota o afforcati':'anchor','Vicino alla spiaggia':'flag','Subacquei e piccoli natanti':'flag',
  'La bussola magnetica':'compass','Tre nord':'compass','Da bussola a vero e ritorno':'compass','Prora e rotta':'map',
  'Lo scarroccio':'wind','La deriva':'current','Vento «da», corrente «verso»':'wind'})
@@ -20,104 +20,123 @@ def anchor_icon(x,y,s=1,c=NAVY):
     return (f'<g transform="translate({x} {y}) scale({s})" fill="none" stroke="{c}" stroke-width="5" stroke-linecap="round">'
             f'<circle cx="0" cy="-26" r="7"/><path d="M0 -19 V26 M-13 -9 H13 M-24 10 Q-20 28 0 26 Q20 28 24 10"/></g>')
 
+def dot(n,c): return f'<p style="width:44px; height:44px; border-radius:22px; background:{c}; color:#FFFFFF; font-weight:900; font-size:22px; text-align:center; line-height:44px; flex:none">{n}</p>'
+
 # ============ COVER + AGENDA ============
-cover(4,'Ancoraggio, prora e rotta','Dare fondo all\'ancora, navigare sottocosta, passare dalla bussola alla carta: scarroccio e deriva',
- 'Lezione 4. Capitoli del programma della scuola: Attracchi, ormeggi e ancoraggi (ancoraggio) e Carteggio (prora e rotta, scarroccio, deriva, declinazione, deviazione). Aggiunta dall\'All. A: condotta sottocosta, limiti di velocità, balneazione e corridoi di lancio (punto 4a). Materia 7 per bussola e conversioni.')
-blocks=[('0:00','20′','L\'ancora: parti, tipi, calumo',CORAL),('0:20','20′','Manovra, ruota · quiz 1',SEA),('0:40','20′','Sottocosta e subacquei · quiz 2',PURPLE),('1:00','25′','Bussola e tre nord · quiz 3',BLUE),('1:25','20′','Prora, rotta, scarroccio, deriva · quiz 4',GREEN),('1:45','15′','Verifica finale',CORAL)]
+cover(4,'Primi calcoli, sottocosta, prora e rotta','Orientarsi e calcolare S = V × T, navigare vicino alla spiaggia, passare dalla bussola alla carta: scarroccio e deriva',
+ 'Lezione 4. Capitoli del programma della scuola: Carteggio (primi calcoli: navigazione stimata, miglia, velocità, carburante; prora e rotta, scarroccio, deriva, declinazione, deviazione). Aggiunta dall\'All. A: condotta sottocosta, limiti di velocità, balneazione e corridoi di lancio (punto 4a). Materia 7 per rosa dei venti, strumenti, bussola e conversioni. Gli ultimi 45 minuti sono una raccolta di quiz ufficiali. Attracchi, ormeggi e ancoraggi sono nella lezione 3.')
+blocks=[('0:00','30′','Rosa, strumenti, stima, S = V × T, carburante',CORAL),('0:30','15′','Sottocosta e subacquei',SEA),('0:45','30′','Bussola, tre nord, prora e rotta, scarroccio e deriva',PURPLE),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
-right=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:88px; font-weight:700; line-height:1.05; color:{INK}">4 + 4</p>'+p('domande su 20: Manovra e condotta, Navigazione cartografica',26,INK,700)+p('Nel carteggio: conversioni bussola-vero in quasi ogni esercizio e 24 esercizi di scarroccio (lezione 12).',24))
-left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>riconoscere le ancore e filare il calumo giusto</li><li>dare fondo, controllare la tenuta e salpare</li><li>rispettare le regole vicino alla spiaggia</li><li>passare da prora bussola a prora vera e ritorno</li><li>distinguere prora e rotta, scarroccio e deriva</li></ul>',SEA_T,flex=1.4)
+right=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:88px; font-weight:700; line-height:1.05; color:{INK}">4 + 4</p>'+p('domande su 20: Manovra e condotta, Navigazione cartografica',26,INK,700)+p('Nel carteggio: S = V × T e conversioni bussola-vero in quasi ogni esercizio.',24))
+left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>orientarti con la rosa dei venti e usare squadrette e compasso</li><li>risolvere S = V × T e calcolare il carburante</li><li>rispettare le regole vicino alla spiaggia</li><li>passare da prora bussola a prora vera e ritorno</li><li>distinguere prora e rotta, scarroccio e deriva</li></ul>',SEA_T,flex=1.4)
 sec('agenda', head('Lezione 04 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
- notes='Quattro verifiche intermedie da 3 quiz e una finale da 6, tutti ufficiali (DD 131/2022). Banca: ancoraggio 53 quiz (1.4.3), navigazione in prossimità della costa 32 (1.4.2), bussola e orientamento 49 (1.7.4), prora e rotta, scarroccio e deriva 30 (1.7.7).')
-
-# ============ L'ANCORA ============
-b=f'<circle cx="560" cy="80" r="28" fill="none" stroke="{NAVY}" stroke-width="12"/>'
-b+=f'<rect x="400" y="128" width="320" height="24" rx="12" fill="{STEEL}" stroke="{NAVY}" stroke-width="4"/><circle cx="400" cy="140" r="16" fill="{NAVY}"/><circle cx="720" cy="140" r="16" fill="{NAVY}"/>'
-b+=f'<rect x="546" y="104" width="28" height="410" rx="10" fill="{STEEL}" stroke="{NAVY}" stroke-width="4"/>'
-b+=f'<path d="M340 390 Q380 530 560 530 Q740 530 780 390" fill="none" stroke="{NAVY}" stroke-width="30" stroke-linecap="round"/><path d="M340 390 Q380 530 560 530 Q740 530 780 390" fill="none" stroke="{STEEL}" stroke-width="18" stroke-linecap="round"/>'
-b+=f'<path d="M340 390 L290 330 L330 318 L372 370 Z" fill="{CORAL}" stroke="{NAVY}" stroke-width="4" stroke-linejoin="round"/><path d="M780 390 L830 330 L790 318 L748 370 Z" fill="{CORAL}" stroke="{NAVY}" stroke-width="4" stroke-linejoin="round"/>'
-b+=f'<circle cx="560" cy="530" r="20" fill="{SUN}" stroke="{NAVY}" stroke-width="4"/>'
-for i in range(9):
-    t=i/8; x=596+t*420; y=74+t*t*160; a=math.degrees(math.atan2(2*t*160/420*1,1))
-    if i%2==0: b+=f'<ellipse cx="{x:.0f}" cy="{y:.0f}" rx="26" ry="14" fill="none" stroke="{NAVY}" stroke-width="7" transform="rotate({a:.0f} {x:.0f} {y:.0f})"/>'
-    else: b+=f'<rect x="{x-26:.0f}" y="{y-4:.0f}" width="52" height="8" rx="4" fill="{NAVY}" transform="rotate({a:.0f} {x:.0f} {y:.0f})"/>'
-b+=arrow(420,60,528,76,INK,3)+arrow(300,190,398,150,INK,3)+arrow(700,300,580,300,INK,3)+arrow(200,420,330,392,INK,3)+arrow(240,300,300,332,INK,3)+arrow(760,580,584,536,INK,3)
-lbl=lab(X+250,Y+40,170,'Cicala',INK,24,800,'right')+lab(X+130,Y+172,170,'Ceppo',INK,24,800,'right')+lab(X+712,Y+284,200,'Fuso',INK,24,800)+lab(X+40,Y+404,160,'Marra',CORAL,24,900,'right')+lab(X+60,Y+282,180,'Patta',CORAL,24,800,'right')+lab(X+770,Y+560,200,'Diamante',INK,24,900)+lab(X+800,Y+250,260,'catena: maglie ellittiche',NAVY,24,800)
-txt=term('Marre e diamante','I bracci che fanno presa sono le marre; al centro, in basso, c\'è il diamante.')+term('La tenuta','Dipende dal peso e, in parte, dalla forma. Barca di 10 m: ancora di 15-20 kg.')+term('Sul fondo','L\'ancora deve restare orizzontale anche quando la barca tira sul calumo.')+term('Il barbotin','La ruota del verricello salpancore con l\'impronta della catena: non la fa slittare.')
-sec('ancora', head('Ancoraggio · le parti','Com\'è fatta un\'ancora')+col(txt), pinned=svgp(X,Y,W,Hh,b,'Ancora classica con cicala, ceppo, fuso, marre con le patte e diamante, e catena a maglie ellittiche')+lbl,
- notes='Quiz 1.4.3-16 e -25 (marre), -19 e -33 (diamante), -1 (tenuta: peso e forma), -21 (10 m: 15-20 kg), -18 (ancora orizzontale sul fondo), -9 (maglie ellittiche), -10 (barbotin). Il disegno è un\'ancora ammiragliato, la più chiara per imparare i nomi; a bordo si usano i tipi della slide seguente.')
-
-# ============ TIPI DI ANCORA ============
-def danforth():
-    return (f'<rect x="146" y="20" width="18" height="140" rx="6" fill="{STEEL}" stroke="{NAVY}" stroke-width="3"/><circle cx="155" cy="22" r="12" fill="none" stroke="{NAVY}" stroke-width="5"/>'
-            f'<rect x="80" y="150" width="150" height="14" rx="7" fill="{NAVY}"/><path d="M146 160 L96 70 L128 60 L150 150 Z M164 160 L214 70 L182 60 L160 150 Z" fill="{CORAL}" stroke="{NAVY}" stroke-width="3" stroke-linejoin="round"/>')
-def cqr():
-    return (f'<path d="M150 22 Q190 60 170 110" fill="none" stroke="{STEEL}" stroke-width="16" stroke-linecap="round"/><circle cx="148" cy="22" r="12" fill="none" stroke="{NAVY}" stroke-width="5"/>'
-            f'<path d="M170 100 L100 150 L150 150 L170 170 L190 150 L240 150 Z" fill="{CORAL}" stroke="{NAVY}" stroke-width="3" stroke-linejoin="round"/>')
-def rocna():
-    return (f'<rect x="146" y="20" width="18" height="120" rx="6" fill="{STEEL}" stroke="{NAVY}" stroke-width="3"/><circle cx="155" cy="22" r="12" fill="none" stroke="{NAVY}" stroke-width="5"/>'
-            f'<path d="M70 120 Q155 190 240 120 L240 140 Q155 205 70 140 Z" fill="{CORAL}" stroke="{NAVY}" stroke-width="3"/><path d="M80 122 Q155 40 230 122" fill="none" stroke="{NAVY}" stroke-width="7"/>')
-def grappino():
-    s=f'<rect x="146" y="20" width="18" height="120" rx="6" fill="{STEEL}" stroke="{NAVY}" stroke-width="3"/><circle cx="155" cy="22" r="12" fill="none" stroke="{NAVY}" stroke-width="5"/>'
-    for dx,op in ((-1,1),(1,1),(-0.45,0.6),(0.45,0.6)):
-        s+=f'<path d="M155 140 Q{155+dx*60:.0f} 150 {155+dx*70:.0f} 100" fill="none" stroke="{NAVY}" stroke-opacity="{op}" stroke-width="10" stroke-linecap="round"/>'
-    return s
-def ombrello():
-    s=f'<rect x="146" y="20" width="18" height="130" rx="6" fill="{STEEL}" stroke="{NAVY}" stroke-width="3"/><circle cx="155" cy="22" r="12" fill="none" stroke="{NAVY}" stroke-width="5"/><circle cx="155" cy="140" r="9" fill="{SUN}" stroke="{NAVY}" stroke-width="3"/>'
-    for a in (-60,-25,25,60):
-        x2,y2=155+80*math.sin(math.radians(a)),140-60*math.cos(math.radians(a))*-1
-        s+=f'<path d="M155 140 L{x2:.0f} {y2-110:.0f}" stroke="{NAVY}" stroke-width="9" stroke-linecap="round"/>'
-    return s
-TP=[(danforth(),'Danforth','Due marre piatte e mobili: ottima su <b>sabbia e fango</b>.'),
-    (cqr(),'CQR e Delta','A vomere d\'aratro: vanno bene <b>su tutti i fondali</b>.'),
-    (rocna(),'Rocna, Mantus, Ultra','Marra concava; la Rocna ha il roll-bar. Tenuta dinamica, <b>tutti i fondali</b>.'),
-    (grappino(),'Grappino','Piccola, quattro marre fisse: per <b>piccole unità</b> e soste brevi.'),
-    (ombrello(),'A ombrello','Marre richiudibili: per <b>gonfiabili</b> e piccole unità.')]
-cc=''.join(card(svgi(310,190,s,f'Disegno dell\'ancora {t}',dw=270,dh=166)+h3(t,28)+p(d,23),None,22,8) for s,t,d in TP)
-sec('tipi', head('Ancoraggio · i modelli','I tipi di ancora')+f'<div style="display:flex; gap:18px">{cc}</div>'+note('Scegli l\'ancora in base al fondo: la carta nautica te lo dice (r, f, s).',SEA,38),
- notes='Quiz 1.4.3-39 (Danforth su sabbia e fango), -40 (CQR e Delta per tutti i fondali), -49 (Mantus e Ultra, tenuta dinamica), -52 (Rocna con roll-bar), -7 e -28 (grappino), -6 (ombrello per battelli gonfiabili). Il quiz 1.4.3-8 sulla Bruce è oscurato.')
-
-# ============ CALUMO
-X=128
-b=f'<rect x="0" y="140" width="1092" height="480" fill="{WATER}" fill-opacity="0.2"/>'+line(0,140,1092,140,SEA,3)
-b+=f'<path d="M0 560 Q400 548 700 560 T1092 556 L1092 620 L0 620 Z" fill="{SAND}"/>'
-b+=profile(60,146,320)
-b+=f'<path d="M372 108 Q420 120 480 250 Q560 470 720 556 L860 560" fill="none" stroke="{NAVY}" stroke-width="7" stroke-dasharray="12 6"/>'
-b+=f'<g transform="translate(900 546) rotate(-90)">{anchor_icon(0,0,1.1)}</g>'
-b+=dim(1010,140,1010,556,INK)
-lbl=lab(X+880,Y+320,200,'fondale',INK,26,900,bg='#FFFFFF')+lab(X+500,Y+330,220,'calumo',NAVY,26,900,bg='#FFFFFF')+lab(X+780,Y+480,300,'ancora orizzontale',CORAL,24,800)
-ex=''.join(f'<div style="display:flex; flex-direction:column; align-items:center; background:#FFFFFF; {SHADOW}; padding:12px 14px; border-radius:20px"><p style="font-size:24px; font-weight:800; color:{SOFT}; white-space:nowrap">fondo {a}</p><p style="font-family:{H}; font-size:40px; font-weight:700; color:{CORAL}">{c} m</p></div>' for a,c in [('5 m',15),('9 m',27),('16 m',48)])
-txt=term('Calumo','La lunghezza di catena o cima filata per dare fondo all\'ancora.')+term('Quanto filarne','Almeno 3 volte il fondale; da 3 a 5 volte secondo il vento e il mare.')+p('<b>Con mare calmo, almeno:</b>',26,INK)+f'<div style="display:flex; gap:12px">{ex}</div>'
-sec('calumo', head('Ancoraggio · la catena','Il calumo'), pinned=pcol(txt,540,20)+svgp(X,Y,W,Hh,b,'Barca alla fonda: la catena scende dalla prua con una curva e resta distesa sul fondo, l\'ancora giace orizzontale; a destra la misura del fondale')+lbl,
- notes='Quiz 1.4.3-34 (calumo), -50 (minimo 3 volte il fondale), -3 e -32 (da 3 a 5 volte), -27, -29, -30 (16 m → 48 m, 9 m → 27 m, 5 m → 15 m). Il tratto di catena sul fondo tiene l\'ancora orizzontale e fa lavorare le marre. Il quiz 1.4.3-20 sul calumo è oscurato: vale la definizione di -34.')
+ notes='Tre blocchi di teoria e poi 45 minuti di quiz. Banca DD 131/2022: orientamento e bussola 49 quiz (1.7.4), navigazione stimata 71 (1.7.5), navigazione in prossimità della costa 32 (1.4.2), prora e rotta, scarroccio e deriva 30 (1.7.7).')
 X=700
 
-# ============ MANOVRA ============
-b=''.join(arrow(x,30,x,110,GREY,8,24) for x in (140,540,940))
-b+=f'<path d="M0 0 L1092 0 L1092 20 Q800 40 546 18 Q300 0 0 24 Z" fill="{LAND}"/>'
-b+=dpath('M220 480 L220 330',CORAL,5)+topboat(220,300,180,-90,'#FFFFFF',NAVY,4)+anchor_icon(220,180,0.9,CORAL)+num(120,300,1,CORAL,22)
-b+=topboat(560,440,180,-90,'#FFFFFF',NAVY,4)+f'<path d="M560 350 L560 190" stroke="{NAVY}" stroke-width="5" stroke-dasharray="10 6"/>'+anchor_icon(560,180,0.9,NAVY)+arrow(640,300,640,420,SEA,6,20)+num(460,440,2,SEA,22)
-b+=topboat(900,440,180,-90,'#FFFFFF',NAVY,4)+f'<path d="M900 350 L900 190" stroke="{NAVY}" stroke-width="6"/>'+anchor_icon(900,180,0.9,NAVY)+num(800,440,3,PURPLE,22)
-b+=dash(900,440,1060,90,PURPLE,3)+dash(900,440,760,70,PURPLE,3)+f'<path d="M1050 70 l12 24 h-24 Z M750 50 l12 24 h-24 Z" fill="{PURPLE}"/>'
-lbl=lab(X+90,Y+530,300,'Prua al vento: cala a abbrivio finito',CORAL,24,800,'center')+lab(X+420,Y+530,300,'Fila il calumo indietreggiando',SEA,24,800,'center')+lab(X+760,Y+530,300,'Fa testa? Controlla con i rilevamenti',PURPLE,24,800,'center')+lab(X+460,Y+120,200,'vento',SOFT,24,800,'center')
-txt=term('Prima di dare fondo','Controlla divieti e previsioni del tempo.')+term('Fa testa · ara','L\'ancora fa testa quando ha preso il fondo; se non tiene «ara» o «speda».')+term('Per salpare','Un leggero colpo di marcia avanti toglie tensione alla catena.')+term('Vento forte, poi di poppa in banchina','Dai fondo leggermente sopravento al posto barca.')
-sec('manovra', head('Ancoraggio · passo passo','La manovra di ancoraggio')+col(txt), pinned=svgp(X,Y,W,Hh,b,'Vista dall\'alto in tre tempi: barca che arriva con la prua al vento e cala l\'ancora, poi fila il calumo indietreggiando, infine controlla la tenuta con due rilevamenti a terra')+lbl,
- notes='Quiz 1.4.3-12 e -43 (prua al vento, a abbrivio esaurito si cala), -42 (si indietreggia filando il calumo), -15 (controllo della tenuta con rilevamenti successivi di punti cospicui o con il GPS), -17 e -31 (fa testa), -24 (ara), -37 (speda), -2 (divieti e meteo), -51 (salpare), -46 (vento forte: filare in fretta allentando il barbotin), -47 (fondo sopravento al posto barca), -44, -45, -53 (figure).')
+# ================= PRIMI CALCOLI (dalla vecchia lezione 3) =================
+# ============ ROSA DEI VENTI ============
+rc,ry,RR=350,310,225
+pt=lambda a,r: (rc+r*math.sin(math.radians(a)), ry-r*math.cos(math.radians(a)))
+b=''
+for k,c in enumerate(['#FFE7A8','#CFEFF2','#FFD5C7','#E0D7FA']):
+    a0,a1=k*90,(k+1)*90; p0=pt(a0,RR); p1=pt(a1,RR)
+    b+=f'<path d="M{rc} {ry} L{p0[0]:.1f} {p0[1]:.1f} A{RR} {RR} 0 0 1 {p1[0]:.1f} {p1[1]:.1f} Z" fill="{c}"/>'
+b+=f'<circle cx="{rc}" cy="{ry}" r="{RR}" fill="none" stroke="{NAVY}" stroke-width="4"/>'
+tk=' '.join(f'M{pt(a,RR)[0]:.1f} {pt(a,RR)[1]:.1f} L{pt(a,RR-(22 if a%30==0 else 11))[0]:.1f} {pt(a,RR-(22 if a%30==0 else 11))[1]:.1f}' for a in range(0,360,10))
+b+=f'<path d="{tk}" stroke="{NAVY}" stroke-width="3"/>'
+star=[]
+for i in range(16):
+    a=i*22.5; r=200 if i%4==0 else (130 if i%2==0 else 34); star.append(pt(a,r))
+b+='<polygon points="'+' '.join(f'{x:.1f},{y:.1f}' for x,y in star)+f'" fill="{NAVY}" fill-opacity="0.88"/>'
+b+=f'<circle cx="{rc}" cy="{ry}" r="12" fill="{SUN}"/>'
+tip=pt(157,215); b+=arrow(rc,ry,tip[0],tip[1],CORAL,8,26)
+RX=1092
+lbl=''
+for a,t in [(0,'N'),(45,'NE'),(90,'E'),(135,'SE'),(180,'S'),(225,'SW'),(270,'W'),(315,'NW')]:
+    x,y=pt(a,262); lbl+=big(RX+x-50,Y+y-18,100,t,NAVY if a%90==0 else SOFT,34 if a%90==0 else 26)
+for a,t,c in [(45,'I','#B77900'),(135,'II',SEA),(225,'III',CORAL),(315,'IV',PURPLE)]:
+    x,y=pt(a,178); lbl+=big(RX+x-40,Y+y-24,80,t,c,44)
+x,y=pt(157,215); lbl+=lab(RX+x+14,Y+y-10,120,'157°',CORAL,30,900,bg='#FFFFFF')
+chips=''.join(f'<p style="font-size:22px; font-weight:800; color:{INK}; background:{bg}; padding:8px 14px; border-radius:18px">{t}</p>' for t,bg in [('N · Tramontana',SUN_T),('NE · Grecale',SUN_T),('E · Levante',SEA_T),('SE · Scirocco',SEA_T),('S · Ostro',CORAL_T),('SW · Libeccio',CORAL_T),('W · Ponente',LILAC_T),('NW · Maestrale',LILAC_T)])
+right=(term('Angoli da 000° a 360°','Si contano dal Nord in senso orario, sempre con tre cifre: 045°, 157°, 320°.')
+      +term('Quattro quadranti','I NE 000-090 · II SE 090-180 · III SW 180-270 · IV NW 270-360. Esempio: 157° è nel II.')
+      +term('Cardinali e intercardinali','N, E, S, W e NE, SE, SW, NW. Sulla carta il Nord è in alto.')
+      +f'<div style="display:flex; flex-wrap:wrap; gap:10px">{chips}</div>')
+sec('rosa', head('Orientarsi','La rosa dei venti')+f'<div style="width:920px; display:flex; flex-direction:column; gap:20px">{right}</div>', pinned=svgp(RX,Y,700,620,b,'Rosa dei venti con i quattro quadranti colorati, le direzioni cardinali e intercardinali e una freccia verso 157 gradi nel secondo quadrante')+lbl,
+ notes='Quiz 1.7.4-1, -4, -5, -6, -7 (in quale quadrante: 157° II, 224° III, 320° IV, 038° I, 099° II), -2 e -3 (sulla carta: 048° in alto a destra, 167° in basso a destra, 301° in alto a sinistra, 249° in basso a sinistra), -8 (senso orario), -9, -10, -11 (cardinali e intercardinali). I nomi dei venti tornano in meteorologia (lezione 7) e nel Portolano. Bussola, declinazione e deviazione: più avanti in questa lezione.')
 
-# ============ RUOTA
+# ============ STRUMENTI ============
 X=128
-b=f'<circle cx="290" cy="330" r="220" fill="{SEA}" fill-opacity="0.08" stroke="{SEA}" stroke-width="3" stroke-dasharray="12 8"/>'+anchor_icon(290,330,1,NAVY)
-b+=dash(290,330,290,160,NAVY,4)+topboat(290,120,150,-90,'#FFFFFF',NAVY,4)+topboat(450,440,150,40,'#FFFFFF',NAVY,3,0.45,False)+topboat(150,470,150,140,'#FFFFFF',NAVY,3,0.45,False)
-b+=f'<ellipse cx="820" cy="300" rx="120" ry="200" fill="{PURPLE}" fill-opacity="0.08" stroke="{PURPLE}" stroke-width="3" stroke-dasharray="12 8"/>'
-b+=anchor_icon(720,500,0.9,NAVY)+anchor_icon(920,500,0.9,NAVY)+line(820,260,724,480,NAVY,4)+line(820,260,916,480,NAVY,4)+topboat(820,180,150,-90,'#FFFFFF',NAVY,4)
-lbl=lab(X+140,Y+566,300,'Alla ruota: gira di 360°',SEA,24,900,'center')+lab(X+660,Y+566,320,'Afforcata: campo di giro ellittico',PURPLE,24,900,'center')
-txt=term('Alla ruota','Una sola ancora di prua: la barca gira di 360° e serve spazio libero attorno. Mai un\'ancora di poppa in più.')+term('Afforcata','Due ancore con i calumi aperti di circa 45°: il giro diventa un\'ellisse.')+term('La grippia','Una cima sottile legata al diamante, con un gavitello: aiuta a recuperare l\'ancora sui fondali rocciosi.')
-sec('ruota', head('Ancoraggio · stare alla fonda','Alla ruota o afforcati'), pinned=pcol(txt)+svgp(X,Y,W,Hh,b,'Vista dall\'alto: a sinistra una barca alla ruota con il cerchio di rotazione; a destra una barca afforcata su due ancore con il campo di giro ellittico')+lbl,
- notes='Quiz 1.4.3-35 e -36 (alla ruota), -4 (serve spazio libero), -23 (non dare ancora di poppa), -22 (afforcata a 45°), -11 (campo di giro ellittico), -5 (nei fiumi due ancore a 180° nella direzione della corrente), -38 (ancore appennellate), -13, -14, -26 (grippia e grippiale), -41 e -48 (in baia più unità a murata: sconsigliato).')
+b=f'<rect x="30" y="30" width="1032" height="560" rx="20" fill="{CHART}"/>'
+b+=''.join(line(30,y,1062,y,'#E4DCC8',2) for y in (160,300,440))+''.join(line(x,30,x,590,'#E4DCC8',2) for x in (260,520,780))
+def tri(dx,dy,rot,op):
+    arc=' '.join(f'M{330+150*math.cos(math.radians(a)):.1f} {540-150*math.sin(math.radians(a)):.1f} L{330+(150-(16 if a%30==0 else 8))*math.cos(math.radians(a)):.1f} {540-(150-(16 if a%30==0 else 8))*math.sin(math.radians(a)):.1f}' for a in range(0,181,10))
+    return (f'<g transform="translate({dx} {dy}) rotate({rot} 330 425)"><path d="M100 540 L560 540 L330 310 Z" fill="#BFE6EA" fill-opacity="{op}" stroke="{SEA}" stroke-width="4" stroke-linejoin="round"/>'
+            f'<path d="M180 540 A150 150 0 0 1 480 540" fill="none" stroke="{NAVY}" stroke-width="3"/><path d="{arc}" stroke="{NAVY}" stroke-width="2"/></g>')
+b+=tri(-20,20,0,0.75)+tri(70,-120,-14,0.55)
+b+=f'<path d="M846 120 L760 520 L770 522 L852 128 Z" fill="#9AA5B1" stroke="{NAVY}" stroke-width="3"/><path d="M854 120 L940 520 L930 522 L848 128 Z" fill="#9AA5B1" stroke="{NAVY}" stroke-width="3"/>'
+b+=f'<rect x="836" y="70" width="28" height="44" rx="8" fill="{NAVY}"/><circle cx="850" cy="124" r="14" fill="{SUN}" stroke="{NAVY}" stroke-width="3"/>'
+b+=dash(765,540,935,540,CORAL,3)
+b+=f'<g transform="rotate(-28 640 150)"><rect x="560" y="138" width="190" height="24" rx="4" fill="{SUN}" stroke="{NAVY}" stroke-width="3"/><path d="M750 138 L786 150 L750 162 Z" fill="{BOAT}" stroke="{NAVY}" stroke-width="3"/><path d="M774 146 L786 150 L774 154 Z" fill="{NAVY}"/><rect x="530" y="138" width="30" height="24" rx="4" fill="{CORAL_T}" stroke="{NAVY}" stroke-width="3"/></g>'
+lbl=lab(X+120,Y+556,420,'Squadrette nautiche',SEA,26,900)+lab(X+900,Y+190,160,'Compasso a punte secche',NAVY,24,900)+lab(X+470,Y+40,300,'Matita morbida e gomma',INK,24,900)
+txt=term('Squadrette nautiche','Usate in coppia come parallele: tracciano e misurano rotte e rilevamenti.')+term('Compasso a punte secche','Misura distanze e riporta coordinate.')+term('Come si misura','Apri il compasso sul tratto e riporta l\'apertura sulla scala delle latitudini, alla stessa latitudine.')+term('Obbligatori','A bordo oltre le 12 miglia dalla costa.')
+sec('strumenti', head('Il carteggio','Gli strumenti del carteggio'), pinned=pcol(txt)+svgp(X,Y,W,Hh,b,'Su una carta nautica: due squadrette nautiche con goniometro usate come parallele, un compasso a punte secche, una matita e una gomma')+lbl,
+ notes='Quiz 1.7.5-18 (squadrette e parallele), -19 (compasso: distanze e coordinate), 1.7.2-30 (compasso a punte secche per non rovinare la carta), 1.7.5-33 e -52 (distanza sulla scala delle latitudini, alla stessa latitudine), 1.7.2-37 (misura della distanza), -71 (strumenti obbligatori oltre 12 miglia). Portare in aula squadrette e compasso: da qui in poi ogni lezione ha un po\' di carteggio.')
 X=700
 
-quiz_slide('quiz1','Quiz 1 · Ancoraggio',['1.4.3-27','1.4.3-17','1.4.3-26'],False)
-quiz_slide('quiz1r','Quiz 1 · Le risposte',['1.4.3-27','1.4.3-17','1.4.3-26'],True)
+
+# ============ NAVIGAZIONE STIMATA ============
+b=f'<rect x="30" y="30" width="1032" height="560" rx="20" fill="{CHART}"/>'
+b+=f'<path d="M30 500 Q120 470 170 520 Q200 590 30 590 Z" fill="{LAND}" stroke="{LAND_S}" stroke-width="3"/>'
+DR=[(200,480),(390,370),(580,260),(770,150)]; RL=[(200,480),(410,400),(620,320),(830,240)]
+b+=f'<path d="M{DR[0][0]} {DR[0][1]} L{DR[-1][0]} {DR[-1][1]}" stroke="{NAVY}" stroke-width="5"/>'
+b+=dpath('M'+' L'.join(f'{a} {b_}' for a,b_ in RL),SOFT,4)
+for i,(x,y) in enumerate(DR[1:],1):
+    r=22+i*24; b+=f'<circle cx="{x}" cy="{y}" r="{r}" fill="{CORAL}" fill-opacity="0.1" stroke="{CORAL}" stroke-width="3" stroke-dasharray="8 6"/>'
+for x,y in DR: b+=f'<circle cx="{x}" cy="{y}" r="11" fill="#FFFFFF" stroke="{NAVY}" stroke-width="4"/><circle cx="{x}" cy="{y}" r="3" fill="{NAVY}"/>'
+b+=topboat(860,236,90,-21,'#FFFFFF',NAVY,3)
+for yy in (420,480): b+=arrow(880,yy,990,yy+40,'#97A6B4',7,22)
+lbl=lab(X+120,Y+500,240,'Partenza · 09:00',NAVY,24,800)+lab(X+290,Y+330,110,'10:00',NAVY,22,800)+lab(X+470,Y+210,110,'11:00',NAVY,22,800)+lab(X+400,Y+80,260,'12:00 · punto stimato',CORAL,24,900,'right')
+lbl+=lab(X+850,Y+180,220,'posizione reale',SOFT,22,800)+lab(X+840,Y+540,220,'vento e corrente',SOFT,22,800)+lab(X+460,Y+400,240,'zona di incertezza',CORAL,22,800)
+txt=term('Il punto stimato','Una posizione approssimata: si ricava da prora vera, velocità, punto di partenza e tempo trascorso.')+term('Gli strumenti','Bussola, solcometro e orologio. GPS e radar non danno un punto stimato.')+term('Perché si sbaglia','Scarroccio, deriva, declinazione, deviazione: l\'incertezza cresce col tempo.')
+sec('stimata', head('Primi calcoli','La navigazione stimata')+col(txt+note('Insostituibile, ma da confermare con un punto nave.',CORAL,36)), pinned=svgp(X,Y,W,Hh,b,'Rotta stimata con i punti orari e cerchi di incertezza sempre più grandi; la posizione reale si allontana per effetto di vento e corrente')+lbl,
+ notes='Quiz 1.7.5-9 e -28 (punto stimato), -30 (elementi: Pv, velocità, posizione iniziale, tempo), -23 (bussola, solcometro, orologio), -1 (GPS e radar non danno posizione stimata), -11 e -22 (cause di errore), -3 e -12 (zona di incertezza), -29 (insostituibile ma insufficiente), -36 (punto nave con almeno due luoghi di posizione: lezione 5), -2 e -10 (si risolve graficamente sulla carta di Mercatore).')
+
+# ============ FORMULA ============
+b=f'<path d="M280 40 L40 440 L520 440 Z" fill="{SUN_T}" stroke="{SUN}" stroke-width="10" stroke-linejoin="round"/>'+line(160,240,400,240,SUN,8)+line(280,240,280,440,SUN,8)
+TX=128
+lbl=big(TX+230,Y+110,100,'S',CORAL,120)+big(TX+110,Y+300,120,'V',SEA,120)+big(TX+330,Y+300,120,'T',PURPLE,120)+big(TX+250,Y+320,60,'×',INK,70)
+def chip2(t,c,u): return f'<div style="display:flex; align-items:center; gap:18px"><p style="font-family:{H}; font-size:44px; font-weight:700; color:#FFFFFF; background:{c}; padding:10px 28px; border-radius:40px; flex:none">{t}</p>{p(u,26,INK,700)}</div>'
+mins=''.join(f'<div style="display:flex; flex-direction:column; align-items:center; background:#FFFFFF; {SHADOW}; padding:10px 14px; border-radius:18px"><p style="font-family:{H}; font-size:30px; font-weight:700; color:{INK}">{a}</p><p style="font-size:22px; font-weight:800; color:{SEA}">{b_} h</p></div>' for a,b_ in [('6′','0,1'),('12′','0,2'),('15′','0,25'),('18′','0,3'),('20′','0,33'),('30′','0,5'),('45′','0,75')])
+right=(chip2('S = V × T',CORAL,'spazio in <b>miglia</b>')+chip2('V = S ÷ T',SEA,'velocità in <b>nodi</b> (miglia all\'ora)')+chip2('T = S ÷ V',PURPLE,'tempo in <b>ore e decimi</b>')
+       +p('<b>Minuti in ore:</b> dividi per 60. <b>Decimi in minuti:</b> moltiplica per 60 (0,4 h = 24′).',26,INK)+f'<div style="display:flex; gap:12px">{mins}</div>')
+sec('formula', head('Primi calcoli','Spazio, velocità, tempo')+f'<div style="position:absolute; left:748px; top:290px; width:1044px; display:flex; flex-direction:column; gap:22px">{right}</div>', pinned=svgp(TX,Y,560,480,b,'Il triangolo S sopra, V e T sotto: coprendo una lettera restano le altre due')+lbl+note('Copri la lettera che cerchi!',CORAL,40).replace('<p style="','<p style="position:absolute; left:'+str(TX+40)+'px; top:790px; width:500px; ',1),
+ notes='Quiz 1.7.5-13, -14, -25, -51 (nodo = un miglio all\'ora), -15, -16, -17 (le tre formule), -26 (miglio per le distanze), -35 (ricalcolare a ogni cambio di velocità), -54 (4,4 h = 4 h 24′). Il triangolo è un aiuto per la memoria: coprendo S restano V × T, coprendo V resta S ÷ T, coprendo T resta S ÷ V.')
+
+# ============ ESEMPI ============
+def ex(qid,prob,steps,res,c,bg):
+    st=''.join(p(s,24,BODY) for s in steps)
+    return card(note(f'Quiz {qid}',c,34)+p(prob,27,INK,800,1.3)+f'<div style="display:flex; flex-direction:column; gap:6px; background:{bg}; padding:18px; border-radius:22px">{st}</div>'+f'<p style="font-family:{H}; font-size:52px; font-weight:700; color:{c}">{res}</p>',None,28,14)
+e1=ex('1.7.5-31','15 nodi per 45 minuti: quante miglia?',['45′ ÷ 60 = <b>0,75 h</b>','S = 15 × 0,75'],'11,25 miglia',CORAL,CORAL_T)
+e2=ex('1.7.5-65','18 miglia a 7 nodi: quanto tempo?',['T = 18 ÷ 7 = <b>2,57 h</b>','0,57 × 60 ≈ <b>34′</b>'],'2 h 34′',SEA,SEA_T)
+e3=ex('1.7.5-63','24,5 miglia in 3 h 30′: che velocità?',['3 h 30′ = <b>3,5 h</b>','V = 24,5 ÷ 3,5'],'7 nodi',PURPLE,LILAC_T)
+sec('esempi', head('Primi calcoli','Tre esempi svolti')+f'<div style="display:flex; gap:24px">{e1}{e2}{e3}</div>'+note('Prima trasforma il tempo in ore e decimi, poi applica la formula.',BLUE,38),
+ notes='Esempi dai quiz ufficiali: 1.7.5-31 (15 kn, 45′ → 11,25 mg), -65 (18 mg, 7 kn → 2 h 34′), -63 (3 h 30′, 24,5 mg → 7 kn; attenzione, nell\'elenco il numero 1.7.5-63 compare due volte). Altri da fare alla lavagna: -39 (9 kn, 45′ → 6,75), -41, -44 (19 kn, 9′ → 2,85), -57 (11,6 mg a 6 kn → 1 h 56′), -60 (6 kn, 2 h 45′ → 16,5), -64 (2 h 20′ a 12 kn → 28 mg).')
+
+# ============ CARBURANTE SULLA CARTA ============
+b=f'<rect x="0" y="0" width="440" height="300" fill="{CHART}"/>'
+b+=f'<path d="M0 0 L180 0 Q150 60 90 80 Q40 110 0 100 Z" fill="{LAND}" stroke="{LAND_S}" stroke-width="3"/><path d="M300 300 Q320 230 400 220 Q440 222 440 240 L440 300 Z" fill="{LAND}" stroke="{LAND_S}" stroke-width="3"/>'
+b+=line(90,130,360,200,NAVY,5)+f'<circle cx="90" cy="130" r="11" fill="{CORAL}"/><circle cx="360" cy="200" r="11" fill="{SEA}"/>'
+b+=f'<path d="M216 40 L96 118 L104 122 L220 48 Z" fill="#9AA5B1" stroke="{NAVY}" stroke-width="2"/><path d="M224 40 L356 186 L348 190 L218 48 Z" fill="#9AA5B1" stroke="{NAVY}" stroke-width="2"/><circle cx="220" cy="42" r="10" fill="{SUN}" stroke="{NAVY}" stroke-width="2"/>'
+b+=f'<g transform="translate(40 190)"><rect x="0" y="12" width="70" height="86" rx="10" fill="{CORAL}" stroke="{NAVY}" stroke-width="3"/><rect x="40" y="0" width="20" height="16" rx="3" fill="{NAVY}"/><path d="M12 30 L58 80 M58 30 L12 80" stroke="#FFFFFF" stroke-opacity="0.6" stroke-width="6"/></g>'
+def chipc(t,c): return f'<p style="font-family:{H}; font-size:32px; font-weight:700; color:#FFFFFF; background:{c}; padding:12px 22px; border-radius:40px">{t}</p>'
+op=lambda t: f'<p style="font-family:{H}; font-size:40px; font-weight:700; color:{INK}">{t}</p>'
+formula=f'<div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap">{chipc("1 · miglia col compasso",BLUE)}{op("→")}{chipc("2 · T = S ÷ V",SEA)}{op("→")}{chipc("3 · litri = l/h × T",PURPLE)}{op("+")}{chipc("4 · 30% di riserva",CORAL)}</div>'
+boxes=''.join(f'<div style="flex:1; display:flex; flex-direction:column; gap:6px; background:{bg}; padding:18px; border-radius:24px">{p(a,22,SOFT,800)}<p style="font-family:{H}; font-size:44px; font-weight:700; color:{INK}">{b_}</p>{p(c,22)}</div>' for a,b_,c,bg in [('1 · da A a B','9 miglia','sulla scala delle latitudini',BLUE_T),('2 · tempo','1,5 h','9 ÷ 6 nodi',SEA_T),('3 · consumo','6 litri','4 l/h × 1,5',LILAC_T),('4 · con riserva','≈ 8 litri','6 + 30% = 7,8',CORAL_T)])
+exm=card(note('Esempio · 6 nodi, motore da 4 l/h',CORAL,36)+f'<div style="display:flex; gap:14px">{boxes}</div>',None,28,14)
+sec('carburante', head('Primi calcoli · verso il carteggio','Il carburante sulla carta')+formula+f'<div style="display:flex; gap:24px; align-items:stretch">{svgi(440,300,b,"Mini carta: rotta da A a B misurata con il compasso e una tanica di carburante",dw=440,dh=300)}{exm}</div>'
+ +p('All\'esame di carteggio la soluzione è un intervallo: per l\'esercizio 5.1.2-3 (consumo 4 l/h) la risposta ufficiale è «13÷15 litri».',26,INK),
+ notes='Anticipo della lezione 11 (23 esercizi di carburante, famiglie 5.x.2). Stessa regola dei quiz di motori (1.2.3-1: riserva del 30%). Nel carteggio le miglia si misurano sulla carta tra punti noti o calcolati; il tempo si ricava con T = S ÷ V. Tolleranza: le risposte ufficiali danno un intervallo, per es. 5.1.2-1 «29÷31 litri», 5.1.2-2 «19÷21 litri».')
 
 # ============ SOTTOCOSTA ============
 b=f'<rect x="0" y="0" width="1092" height="620" fill="{WATER}" fill-opacity="0.2"/><path d="M0 520 Q300 500 546 520 T1092 512 L1092 620 L0 620 Z" fill="{SAND}"/>'+f'<path d="M0 520 Q300 500 546 520 T1092 512" fill="none" stroke="{LAND_S}" stroke-width="4"/>'
@@ -155,8 +174,6 @@ cc=''.join(card(svgi(300,190,s,f'Disegno: {t}',dw=300,dh=190)+h3(t,28)+p(d,23),N
 sec('subacquei', head('Condotta · chi c\'è in acqua','Subacquei e piccoli natanti')+f'<div style="display:flex; gap:20px">{cc}</div>'+note('Gara o manifestazione sulla rotta? Cambia percorso e stanne lontano.',PURPLE,36),
  notes='Quiz 1.4.2-15 (bandierina rossa con diagonale bianca, sub entro 50 m), -2 e -12 (almeno 100 m, moderando la velocità), -19 (sub a non più di 50 m dalla boa), -8 (unità di appoggio: pallone rosso con bandiera), -14 (bandiera A: palombaro), -9 e -16 (di notte luce gialla lampeggiante, visibile ad almeno 300 m), -20…-24 (entro 1 miglio), -13 (manifestazioni sportive). Pesca: -18 (sportiva consentita entro limiti di cattura), -26 (subacquea oltre 500 m dalle spiagge frequentate), -27 (mai di notte col fucile), -31 (mai con autorespiratori), -30 (100 m dagli impianti fissi), -32 (500 m dai pescatori professionali), -28 e -29 (niente reti a circuizione né pesca professionale).')
 
-quiz_slide('quiz2','Quiz 2 · Sottocosta',['1.4.2-4','1.4.2-2','1.4.2-6'],False)
-quiz_slide('quiz2r','Quiz 2 · Le risposte',['1.4.2-4','1.4.2-2','1.4.2-6'],True)
 
 # ============ BUSSOLA
 X=128
@@ -208,8 +225,6 @@ e3=exc('Al contrario',CORAL,CORAL_T,['Voglio Pv = 120°, V = +3°','Pb = Pv − 
 sec('conversioni', head('Bussola · il calcolo','Da bussola a vero e ritorno')+formula+f'<div style="display:flex; gap:24px">{e1}{e2}{e3}</div>'+note('Stessa regola per i rilevamenti: Rilv = Rilb + V.',BLUE,38),
  notes='Esempi dagli esercizi ufficiali di carteggio (DD 131/2022): 5.1.3-1 (Pb 350°, d 1°E, δ 0° → Pv 351°) e 5.1.3-2 (Pb 086°, d 2°W, δ −2° → Pv 082°; lì anche Rilb 164° → Rilv 160°, Rilb 194° → Rilv 190°). Regola dei segni: Est positivo, Ovest negativo (quiz 1.7.4-34). In molti esercizi è data direttamente la variazione magnetica V (es. 5.1.2-2 e 5.1.3-3).')
 
-quiz_slide('quiz3','Quiz 3 · Bussola',['1.7.4-17','1.7.4-42','1.7.4-26'],False)
-quiz_slide('quiz3r','Quiz 3 · Le risposte',['1.7.4-17','1.7.4-42','1.7.4-26'],True)
 
 # ============ PRORA E ROTTA
 X=128
@@ -270,17 +285,29 @@ rules=card(note('Da ricordare',PURPLE,36)+'<ul style="font-size:25px; line-heigh
 sec('regole', head('Carteggio · attenzione ai versi','Vento «da», corrente «verso»')+f'<div style="display:flex; gap:24px">{wc}{ex}{rules}</div>',
  notes='Quiz 1.7.7-22 (vento 180 soffia verso nord, corrente 180 va verso sud), -29 (rotta Nord con vento e corrente 180: scarroccio favorevole, deriva contraria). Esempio dall\'esercizio ufficiale 5.1.4-2: Rv 090°, Grecale, Sc +10° → Pv 080°. Il Grecale da NE spinge la barca verso Sud, cioè a dritta rispetto a una prora a Est: per questo lo scarroccio è positivo.')
 
-quiz_slide('quiz4','Quiz 4 · Prora, rotta, scarroccio',['1.7.7-12','1.7.7-22','1.7.7-18'],False)
-quiz_slide('quiz4r','Quiz 4 · Le risposte',['1.7.7-12','1.7.7-22','1.7.7-18'],True)
-quiz_slide('finale1','Verifica finale · 1 di 2',['1.4.3-24','1.4.2-15','1.7.4-19'],False)
-quiz_slide('finale1r','Verifica finale · 1 di 2 · risposte',['1.4.3-24','1.4.2-15','1.7.4-19'],True)
-quiz_slide('finale2','Verifica finale · 2 di 2',['1.7.7-14','1.7.7-30','1.4.3-51'],False)
-quiz_slide('finale2r','Verifica finale · 2 di 2 · risposte',['1.7.7-14','1.7.7-30','1.4.3-51'],True)
-closing(['Calumo: almeno 3 volte il fondale, da 3 a 5 con vento e mare','Prua al vento, cala a abbrivio finito, fila indietreggiando, controlla che faccia testa','Spiagge: oltre 200 m; corridoi di lancio a lento moto; sub a 100 m','V = d + δ; Pv = Pb + V; Est positivo, Ovest negativo','Scarroccio dal vento, deriva dalla corrente: il vento viene «da», la corrente va «verso»'],
- 'Prossima lezione · 05 · Punto nave e fanali','A casa: i 53 quiz di ancoraggio, i 32 sulla navigazione costiera, i 49 sulla bussola e i 30 su prora e rotta.')
-write_deck(OUT,'Lezione 04 · Ancoraggio, prora e rotta',
- ['cover','agenda','ancora','tipi','calumo','manovra','ruota','quiz1','quiz1r','costa','subacquei','quiz2','quiz2r',
-  'bussola','trenord','conversioni','quiz3','quiz3r','prorarotta','scarroccio','deriva','regole','quiz4','quiz4r','finale1','finale1r','finale2','finale2r','chiusura'],
- {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"L'ancoraggio: ancore, calumo, manovra, ruota e afforcamento","start":"ancora"},
-  "s3":{"description":"Navigare vicino alla costa: balneazione, corridoi, subacquei","start":"costa"},"s4":{"description":"Bussola, declinazione, deviazione e conversioni","start":"bussola"},
-  "s5":{"description":"Prora, rotta, scarroccio e deriva, verifica finale","start":"prorarotta"}})
+# ============ RACCOLTA QUIZ (45 minuti) ============
+steps=[('1','Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.',CORAL,CORAL_T),
+ ('2','Tempo in ore','Nei calcoli trasforma subito i minuti in ore e decimi: 45′ = 0,75 h, 24′ = 0,4 h.',SEA,SEA_T),
+ ('3','Cerca lo scambio','Declinazione o deviazione, prora o rotta, vento «da» o corrente «verso»: il trabocchetto è lì.',PURPLE,LILAC_T),
+ ('4','Attento ai numeri','Metri o miglia, 100 o 200 metri, 1 miglio dalla costa: controlla l\'unità di misura.',BLUE,BLUE_T)]
+tiles=''.join(f'<div style="display:flex; flex-direction:column; gap:12px; background:{bg}; padding:30px; border-radius:28px"><p style="font-family:{H}; font-size:64px; font-weight:700; line-height:1; color:{c}">{n}</p>{p(t,30,INK,800,1.2)}{p(d,24,INK,500,1.35)}</div>' for n,t,d,c,bg in steps)
+exam=card(tag("La prova a quiz")+f'<div style="display:flex; gap:48px; align-items:end"><div>{p("quesiti",24,BODY,700)}<p style="font-family:{H}; font-size:80px; font-weight:700; line-height:1; color:{INK}">20</p></div><div>{p("errori ammessi",24,BODY,700)}<p style="font-family:{H}; font-size:80px; font-weight:700; line-height:1; color:{CORAL}">4</p></div><div>{p("tempo",24,BODY,700)}<p style="font-family:{H}; font-size:80px; font-weight:700; line-height:1; color:{INK}">30′</p></div></div>'+p('Tre risposte, una sola esatta. Oggi 36 quiz ufficiali della banca del DD 131/2022.',24),None,32,16)
+plan=card(tag("I 45 minuti",SEA)+'<ol style="font-size:24px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:6px"><li>Quiz 1-5 · rosa, strumenti, stima, S = V × T (15)</li><li>Quiz 6-7 · sottocosta e subacquei (6)</li><li>Quiz 8-12 · bussola, prora e rotta, scarroccio e deriva (15)</li></ol>',SEA_T,32,12)
+sec('quiz', head('Lezione 04 · ultimi 45 minuti','Raccolta quiz')+f'<div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:20px">{tiles}</div><div style="display:flex; gap:24px">{exam}{plan}</div>',
+ notes='Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. I calcoli (quiz 4 e 5) si fanno alla lavagna. Se il tempo stringe, lasciare per casa le slide 7 e 10.', gap=28)
+E='Raccolta quiz · DD 131/2022'
+QZ=[('q01','Quiz 1 · Rosa dei venti',['1.7.4-1','1.7.4-8','1.7.4-11']),('q02','Quiz 2 · Strumenti e distanze',['1.7.5-18','1.7.5-33','1.7.5-71']),
+    ('q03','Quiz 3 · Navigazione stimata',['1.7.5-1','1.7.5-30','1.7.5-11']),('q04','Quiz 4 · S = V × T',['1.7.5-27','1.7.5-39','1.7.5-24']),
+    ('q05','Quiz 5 · Tempo e velocità',['1.7.5-56','1.7.5-62','1.7.5-54']),('q06','Quiz 6 · Sottocosta',['1.4.2-4','1.4.2-17','1.4.2-20']),
+    ('q07','Quiz 7 · Subacquei',['1.4.2-2','1.4.2-15','1.4.2-19']),('q08','Quiz 8 · La bussola',['1.7.4-12','1.7.4-44','1.7.4-49']),
+    ('q09','Quiz 9 · Declinazione e deviazione',['1.7.4-17','1.7.4-19','1.7.4-26']),('q10','Quiz 10 · Tre nord',['1.7.4-22','1.7.4-42','1.7.4-40']),
+    ('q11','Quiz 11 · Prora e rotta',['1.7.7-1','1.7.7-4','1.7.7-6']),('q12','Quiz 12 · Scarroccio e deriva',['1.7.7-12','1.7.7-14','1.7.7-22'])]
+for id_,t,ps in QZ:
+    quiz_slide(id_,t,ps,False,E)
+    quiz_slide(id_+'r',t+' · risposte',ps,True)
+closing(['Angoli da 000° a 360° in senso orario; squadrette per le rotte, compasso per le distanze sulla scala delle latitudini','S = V × T con il tempo in ore e decimi; carburante + 30% di riserva','Entro 200 m dalle spiagge solo nei corridoi di lancio; 100 m dalle boe dei subacquei','Pv = Pb + deviazione + declinazione (Est +, Ovest −), e ritorno','Scarroccio dal vento, deriva dalla corrente: il vento «da», la corrente «verso»'],
+ 'Prossima lezione · 05 · Punto nave e fanali','A casa: i quiz 1.7.4 (bussola), 1.7.5 (navigazione stimata), 1.4.2 (costa) e 1.7.7 (prora e rotta).')
+write_deck(OUT,'Lezione 04 · Primi calcoli, sottocosta, prora e rotta',[s_[0] for s_ in slides],
+ {"s1":{"description":"Apertura e agenda","start":"cover"},"s2":{"description":"Rosa dei venti, strumenti, navigazione stimata, S = V × T e carburante","start":"rosa"},
+  "s3":{"description":"Condotta sottocosta e subacquei","start":"costa"},"s4":{"description":"Bussola, tre nord e conversioni","start":"bussola"},
+  "s5":{"description":"Prora e rotta, scarroccio e deriva","start":"prorarotta"},"s6":{"description":"Raccolta quiz","start":"quiz"}})

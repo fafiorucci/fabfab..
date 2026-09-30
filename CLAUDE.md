@@ -3,6 +3,8 @@
 - Rispondere sempre in italiano.
 - Le presentazioni sono artifact di tipo Slides (tabella degli URL in `corso/export/README.md`).
 - Lavorare sul branch `claude/corso-patente-nautica-indice-biov9q`: commit e push, niente PR.
+- Ogni lezione chiude con gli ultimi 45 minuti di raccolta quiz ufficiali (DD 131/2022) sugli argomenti della lezione,
+  ogni slide di quiz seguita dalla slide delle risposte; niente quiz intermedi durante la teoria.
 
 ## Export obbligatorio dopo ogni modifica
 
