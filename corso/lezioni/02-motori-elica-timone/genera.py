@@ -487,8 +487,6 @@ def elicaslide(sid,sx):
     mano='sinistra' if sx else 'destra'
     c3=card(svgi(420,440,sailor(sx),f'Marinaio alla barra: la mano {mano} spinge avanti',dw=400,dh=419,pan=False)+h3(f'Mano {mano} avanti',30,PURPLE)+p(f'Elica {nome} in marcia avanti: gira come la barra spinta dalla mano {mano}. Il verso si guarda da poppa, dall&#39;esterno.',24),None,24,10)
     return f'<div style="display:flex; gap:24px">{c1}{c2}{c3}</div>'
-sec('elicadx', head('Elica destrorsa','Destrorsa: effetto evolutivo')+elicaslide('elicadx',False),
- notes='Quiz 1.1.2-7 (destrorsa: in marcia avanti gira in senso orario vista da poppa), -35 (in marcia indietro antiorario), -44 (marcia avanti, timone al centro: prua a sinistra, poppa a dritta), -2, -12, -30 (marcia indietro: poppa a sinistra, prora a dritta). Nel disegno la sagoma chiara è la barca dopo l\'accostata; la freccia grigia è il verso del moto. Il promemoria della mano: immagina di spingere avanti con la mano destra una barra orizzontale davanti a te: la barra gira come l\'elica destrorsa vista da poppa.')
 
 # ============ CURVA DI EVOLUZIONE ============
 X,Y,W,Hh=128,290,1092,620
@@ -616,7 +614,7 @@ sec('timone', head('Massimo 30°–40° di angolo della pala','Tipi di timoni')+
 
 
 sec('elicadx2', head('Elica destrorsa','Destrorsa: effetto evolutivo')+elicaslide('elicadx2',False),
- notes='Ripresa della destrorsa, da confrontare subito con la sinistrorsa della slide successiva. Quiz 1.1.2-7 (destrorsa: in marcia avanti gira in senso orario vista da poppa), -35 (in marcia indietro antiorario), -44 (marcia avanti, timone al centro: prua a sinistra, poppa a dritta), -2, -12, -30 (marcia indietro: poppa a sinistra, prora a dritta). Promemoria: mano destra avanti.')
+ notes='Quiz 1.1.2-7 (destrorsa: in marcia avanti gira in senso orario vista da poppa), -35 (in marcia indietro antiorario), -44 (marcia avanti, timone al centro: prua a sinistra, poppa a dritta), -2, -12, -30 (marcia indietro: poppa a sinistra, prora a dritta). Nel disegno la sagoma chiara è la barca dopo l\'accostata; la freccia grigia è il verso del moto. Il promemoria della mano: immagina di spingere avanti con la mano destra una barra orizzontale davanti a te: la barra gira come l\'elica destrorsa vista da poppa. Subito dopo, lo specchio: la sinistrorsa.')
 
 sec('elicasx', head('Elica sinistrorsa','Sinistrorsa: effetto evolutivo')+elicaslide('elicasx',True),
  notes='Quiz 1.1.2-15 e -33 (sinistrorsa: in marcia avanti gira in senso antiorario vista da poppa), -45 e -39 (marcia avanti, timone al centro: prua a dritta, poppa a sinistra), -4, -25, -40 (marcia indietro: poppa a dritta). È tutto lo specchio della destrorsa. Promemoria: mano sinistra avanti.')
@@ -671,7 +669,7 @@ closing(['Motore + elica = sistema propulsivo; l\'invertitore cambia marcia, non
  'Prossima lezione · 03 · Ormeggi, cartografia e primi calcoli','A casa: i 104 quiz ufficiali di Motori e i 50 su elica, timone e stabilità.')
 write_deck(OUT,'Lezione 02 · Motori, elica e timone',
  ['cover','agenda','benzina','quattrotempi','trasmissioni','lineaasse','installazioni','avariescoppio','raffreddamento','raffreddamentoeb','diesel','diesel4t','benzinadiesel','quiz1','quiz1r',
-  'tipieliche','elicadx','evoluzione','spinta','elica','quiz3','quiz3r',
+  'tipieliche','evoluzione','spinta','elica','quiz3','quiz3r',
   'avariediesel','manutenzione','carburante','autonomia','quiz2','quiz2r',
   'barraruota','effettitimone','timone','bielica','elicadx2','elicasx','elicatimone','combinati','quiz4','quiz4r','finale1','finale1r','finale2','finale2r','chiusura'],
  {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"Il motore: benzina, ciclo a 4 tempi, trasmissioni, linea d'asse, motore marino, avarie, raffreddamento, diesel","start":"benzina"},
