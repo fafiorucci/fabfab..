@@ -236,9 +236,10 @@ b+=f'<rect x="200" y="150" width="120" height="52" rx="10" fill="#9AA5B1" stroke
 b+=''.join(f'<circle cx="{340+30*math.cos(math.radians(a)):.0f}" cy="{176+30*math.sin(math.radians(a)):.0f}" r="6" fill="{NAVY}"/>' for a in range(0,360,45))
 b+=chain('M340 212 L340 380 Q330 440 200 500',NAVY,6)+chain('M376 150 L960 150',NAVY,6)
 b+=f'<path d="M930 130 L1060 130 Q1080 150 1050 170 L960 176 Z" fill="#9AA5B1" stroke="{NAVY}" stroke-width="4"/><circle cx="1040" cy="150" r="10" fill="{NAVY}"/>'
-b+=chain('M1040 170 L1040 300',NAVY,6)+f'<g transform="translate(1040 350)">{anchor_icon(0,0,1.3,NAVY)}</g>'
+b+=chain('M1040 170 L1040 380',NAVY,6)+f'<g transform="translate(1040 430)">{anchor_icon(0,0,1.4,NAVY)}</g>'
+b+=arrow(958,532,1010,462,INK,2.5,11)+arrow(1046,566,1041,474,INK,2.5,11)
 for n,x,y,c in [(1,392,110,CORAL),(2,250,110,SEA),(3,640,110,NAVY),(4,1000,90,PURPLE)]: b+=num(x,y,n,c,20)
-lbl=lab(X+130,Y+400,190,'pozzo catene',SOFT,22,800,'center')
+lbl=lab(X+130,Y+400,190,'pozzo catene',SOFT,22,800,'center')+lab(X+860,Y+528,100,'marra',CORAL,24,900,'right')+lab(X+968,Y+566,120,'diamante',CORAL,24,900,'center')
 txt=item(1,CORAL,'Barbotin','Ruota sagomata con l\'impronta della catena.',26,22)+item(2,SEA,'Verricello salpa-ancora','Porta il barbotin e recupera la catena.',26,22)+item(3,NAVY,'Catena','A maglie ellittiche.',26,22)+item(4,PURPLE,'Musone','All\'estrema prua, con il passacatena: accoglie l\'ancora issata.',26,22)
 txt+=p('<b>Marra</b>: il braccio che fa presa. <b>Diamante</b>: la parte bassa al centro delle marre. L\'ancora <b>fa testa</b> se tiene, <b>ara</b> se non tiene, <b>speda</b> se si solleva dal fondo.',24,INK)
 sec('salpancora', head('Ancoraggi · a bordo','Ancora e salpa-ancora')+col(txt,540,16), pinned=svgp(X,Y,W,Hh,b,'Sezione della prua: verricello salpa-ancora con il barbotin sul ponte, catena che scende nel pozzo catene e che corre verso il musone all\'estrema prua, dove è appesa l\'ancora')+lbl,
