@@ -81,8 +81,32 @@ left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:24px; line-he
 sec('agenda', head('Lezione 03 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
  notes='Due capitoli di teoria e poi 45 minuti di quiz. Capitolo 1: 11 argomenti in circa 35 minuti. Capitolo 2: 26 argomenti in circa 40 minuti, quindi slide essenziali; se il tempo stringe si possono scorrere velocemente pubblicazioni, simboli e carta gnomonica. Banca DD 131/2022: ormeggio e disormeggio 49 quiz (1.4.4), ancoraggio 53 (1.4.3), coordinate 45 (1.7.1), carte e Mercatore 56 (1.7.2), pubblicazioni 8 (1.7.8), fanali e sistema IALA 120 (1.5.3).')
 
+def chart_scene():
+    s=f'<defs><clipPath id="chc"><rect x="0" y="0" width="500" height="220" rx="48"/></clipPath></defs><rect x="0" y="0" width="500" height="220" rx="48" fill="#FFFFFF" fill-opacity="0.06"/><g clip-path="url(#chc)">'
+    s+=f'<g transform="rotate(-6 150 120)"><rect x="40" y="40" width="230" height="150" rx="8" fill="{CHART}"/>'
+    s+=''.join(line(40+i*46,40,40+i*46,190,GRID,1.5) for i in range(1,5))+''.join(line(40,40+j*37.5,270,40+j*37.5,GRID,1.5) for j in range(1,4))
+    s+=f'<path d="M40 150 Q90 120 120 150 Q150 175 190 160 L270 170 L270 190 L40 190 Z" fill="{LAND}"/><path d="M70 70 L230 130" stroke="{CORAL}" stroke-width="4" stroke-dasharray="10 6"/><circle cx="70" cy="70" r="6" fill="{CORAL}"/><circle cx="230" cy="130" r="6" fill="{CORAL}"/>'
+    s+=f'<g transform="translate(210 75)"><circle r="24" fill="none" stroke="{NAVY}" stroke-width="2"/><path d="M0 -26 L6 0 L0 26 L-6 0 Z" fill="{NAVY}"/><path d="M-26 0 L0 6 L26 0 L0 -6 Z" fill="{NAVY}" fill-opacity="0.6"/><path d="M0 -26 L6 0 L-6 0 Z" fill="{CORAL}"/></g></g>'
+    s+=f'<path d="M330 220 L330 170 Q380 150 430 165 Q470 175 500 168 L500 220 Z" fill="#2A4A6B"/>'
+    s+=f'<path d="M395 52 L515 10 L515 100 Z" fill="{DACC}" fill-opacity="0.35"/>'
+    s+=f'<path d="M380 168 L386 70 L404 70 L410 168 Z" fill="#FFFFFF"/><rect x="384" y="94" width="22" height="12" fill="{CORAL}"/><rect x="382" y="128" width="26" height="12" fill="{CORAL}"/>'
+    s+=f'<rect x="381" y="52" width="28" height="20" rx="4" fill="{DACC}"/><path d="M378 52 L395 38 L412 52 Z" fill="{CORAL}"/>{glow(395,62,DACC,7)}'
+    s+=f'<path d="M-20 196 q30 -10 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 L540 220 L-20 220 Z" fill="{WATER}"/></g>'
+    return s
+def quiz_scene():
+    s=f'<defs><clipPath id="chq"><rect x="0" y="0" width="500" height="220" rx="48"/></clipPath></defs><rect x="0" y="0" width="500" height="220" rx="48" fill="#FFFFFF" fill-opacity="0.06"/><g clip-path="url(#chq)">'
+    s+=f'<g transform="rotate(-5 160 110)"><rect x="60" y="22" width="200" height="190" rx="14" fill="{CHART}"/><rect x="125" y="12" width="70" height="24" rx="8" fill="{PURPLE}"/>'
+    for i,(ok,yy) in enumerate(((1,62),(1,102),(0,142),(1,182))):
+        s+=f'<rect x="84" y="{yy-14}" width="26" height="26" rx="6" fill="#FFFFFF" stroke="{NAVY}" stroke-width="3"/>'
+        s+=(f'<path d="M89 {yy} l6 7 l12 -14" fill="none" stroke="{GREEN}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>' if ok else f'<path d="M90 {yy-8} l14 14 M104 {yy-8} l-14 14" stroke="{CORAL}" stroke-width="5" stroke-linecap="round"/>')
+        s+=f'<rect x="124" y="{yy-6}" width="{110-i*12}" height="10" rx="5" fill="{GRID}"/>'
+    s+='</g>'
+    s+=f'<g transform="translate(380 118)"><rect x="-10" y="-82" width="20" height="16" rx="4" fill="{DACC}"/><circle r="64" fill="#FFFFFF" stroke="{PURPLE}" stroke-width="10"/>'
+    s+=f'<path d="M0 0 L0 -64 A64 64 0 1 1 -45.3 -45.3 Z" fill="{PURPLE}" fill-opacity="0.25"/><path d="M0 0 L0 -46" stroke="{NAVY}" stroke-width="6" stroke-linecap="round"/><path d="M0 0 L-30 -30" stroke="{CORAL}" stroke-width="5" stroke-linecap="round"/><circle r="7" fill="{NAVY}"/></g>'
+    s+=f'<path d="M-20 200 q30 -10 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 L540 220 L-20 220 Z" fill="{WATER}"/></g>'
+    return s
 _cid=[0]
-def chapter(id_,n,title,subs,c,notes,dur='',cols=2,label=None,big=None):
+def chapter(id_,n,title,subs,c,notes,dur='',cols=2,label=None,big=None,art=None):
     _cid[0]+=1
     rows=-(-len(subs)//cols); fs=30 if len(subs)<=12 else 22; bs=52 if len(subs)<=12 else 40
     items=''.join(f'<div style="display:flex; gap:14px; align-items:center"><p style="width:{bs}px; height:{bs}px; flex:none; border-radius:{bs//2}px; background:{c}; color:#FFFFFF; font-size:{bs*0.45:.0f}px; font-weight:900; text-align:center; line-height:{bs}px">{i}</p><p style="font-size:{fs}px; line-height:1.2; font-weight:700; color:#FFFFFF">{t}</p></div>' for i,t in enumerate(subs,1))
@@ -91,7 +115,8 @@ def chapter(id_,n,title,subs,c,notes,dur='',cols=2,label=None,big=None):
           f'<p style="font-family:{H}; font-size:{200 if big is None else 150}px; font-weight:700; line-height:0.9; color:{DACC}">{big or n}</p>'
           f'<h2 style="font-family:{H}; font-size:56px; font-weight:700; line-height:1.08; color:#FFFFFF">{title}</h2>{squiggle(c,220)}'
           f'<p style="font-size:26px; font-weight:700; color:{DSOFT}">{dur}</p>'
-          f'<svg aria-label="Illustrazione: barca a vela sul mare" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 220" width="500" height="220" style="width:500px; height:220px">{sea_scene(500,220,True,True,"ch"+str(_cid[0]))}</svg></div>')
+          f'<div style="flex:1"></div>'
+          f'<svg aria-label="{art[1] if art else "Illustrazione: barca a vela sul mare"}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 220" width="500" height="220" style="width:500px; height:220px">{art[0] if art else sea_scene(500,220,True,True,"ch"+str(_cid[0]))}</svg></div>')
     right=f'<div style="flex:1; display:grid; grid-template-columns:repeat({cols},1fr); grid-template-rows:repeat({rows},auto); grid-auto-flow:column; gap:{24 if len(subs)<=12 else 16}px 32px; align-content:center; background:rgba(255,255,255,0.06); padding:36px; border-radius:32px">{items}</div>'
     sec(id_, f'<div style="display:flex; gap:56px; align-items:stretch; height:792px">{left}{right}</div>', notes=notes, dark=True, gap=0)
 
@@ -416,7 +441,7 @@ sec('tipi', head('Ancoraggi · una o due ancore','Tipi di ancoraggio')+cards(TA,
 
 # ================= CAPITOLO 2 =================
 chapter('cap2',2,'Cartografia e segnalamento marittimo',['Latitudine e longitudine','Meridiani','Paralleli','Circoli massimi','Latitudine','Longitudine','Grado, primo, miglio e nodo','Classificazione delle carte','Pubblicazioni e documenti','1111 INT 1','Simboli delle carte','Elenco dei fari','Caratteristiche dei fari','Portate dei fari','AISM-IALA','Laterali','Pericolo isolato','Acque sicure','Speciale','Cardinali','Navigazione fluviale','Mercatore','Meridiani e paralleli sulla carta','Latitudini crescenti','Isogonia e lossodromia','Carta gnomonica'],SEA,
- 'Circa 40 minuti per 26 argomenti: una slide per argomento, da scorrere con ritmo. I quiz di questo capitolo sono nella raccolta finale (quiz 7-12).','circa 40 minuti · 26 argomenti',3)
+ 'Circa 40 minuti per 26 argomenti: una slide per argomento, da scorrere con ritmo. I quiz di questo capitolo sono nella raccolta finale (quiz 7-12).','circa 40 minuti · 26 argomenti',3,art=(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso su un promontorio'))
 
 # ---- Latitudine e longitudine ----
 cx,cy,R=546,320,270
@@ -888,7 +913,7 @@ sec('gnomonica', head('Cartografia · per gli oceani','Carta gnomonica e ortodro
 
 # ================= RACCOLTA QUIZ (45 minuti) =================
 chapter('capquiz',3,'Raccolta quiz',['Ormeggi e attracchi','Cime e sistemi d\'ormeggio','Gavitello e vento','Ancora e ancore','Calumo, grippia, verifica','Tipi di ancoraggio','Latitudine e longitudine','Gradi, miglia, reticolo','Carte e pubblicazioni','Simboli e fari','AISM-IALA','Mercatore e fiumi'],PURPLE,
- 'Inizio degli ultimi 45 minuti: 12 slide da 3 quiz ufficiali, quiz 1-6 sul capitolo 1 e 7-12 sul capitolo 2, ognuna seguita dalle risposte.','36 quiz ufficiali · 18 per capitolo',2,'Ultimi 45 minuti','45′')
+ 'Inizio degli ultimi 45 minuti: 12 slide da 3 quiz ufficiali, quiz 1-6 sul capitolo 1 e 7-12 sul capitolo 2, ognuna seguita dalle risposte.','36 quiz ufficiali · 18 per capitolo',2,'Ultimi 45 minuti','45′',art=(quiz_scene(),'Illustrazione: scheda di quiz con le risposte segnate e un cronometro sui 45 minuti'))
 steps=[('1','Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.',CORAL,CORAL_T),
  ('2','Escludi le assurde','Di solito una risposta è palesemente sbagliata: toglila e ragiona sulle altre due.',SEA,SEA_T),
  ('3','Cerca lo scambio','Sopravento o sottovento, Nord o Sud, latitudine o longitudine, destrorsa o sinistrorsa: il trabocchetto è lì.',PURPLE,LILAC_T),
