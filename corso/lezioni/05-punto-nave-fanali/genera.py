@@ -295,7 +295,7 @@ raccolta(5,5,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
   ('Chi è a dritta?','A motore lascia la rotta chi vede l\'altro sulla propria dritta; a vela conta il vento.'),
   ('Attento ai numeri','Gradi, miglia e lunghezze delle navi: 12 e 50 metri cambiano i fanali.')],
  ['Quiz 1-5 · punto nave e GPS (15)','Quiz 6-9 · fanali e segnali diurni (12)','Quiz 10-12 · rischio di collisione e precedenze (9)'],
- 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 3 e 9.')
+ 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 3 e 9.',esame=('4 + 2', 'domande su 20: Navigazione cartografica e COLREG'))
 closing(['Punto nave: almeno due luoghi di posizione; Rlv = Pv + ρ','Sono a SW del faro: lo rilevo per 045°, aggiungi o togli 180°','Testa d\'albero 225°, laterali 112,5°, coronamento 135°','Rilevamento costante e distanza che cala: rischio di collisione','Motore: cede a chi viene da dritta; vela: mure a sinistra e sopravento cedono'],
  'Prossima lezione · 06 · Segnalamento, segnali sonori e sicurezza','A casa: i 49 quiz di navigazione costiera, i 13 sul GPS, i 67 su fanali e segnali diurni e i 60 sulle precedenze.')
 write_deck(OUT,'Lezione 05 · Punto nave e fanali',

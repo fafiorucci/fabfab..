@@ -274,7 +274,7 @@ raccolta(8,4,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
   ('Latitudine per le miglia','Un primo di latitudine è un miglio: le distanze si misurano sulla scala laterale.'),
   ('Attento ai numeri','Ore, minuti, miglia, nodi: controlla il numero e l\'unità prima di scegliere.')],
  ['Quiz 1-6 · coordinate, miglio e carte (18)','Quiz 7-10 · spazio, velocità, tempo (12)','Quiz 11-12 · rotta, prora e bussola (6)'],
- 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. I quiz di calcolo si risolvono alla lavagna con S = V × T. Se il tempo stringe, lasciare per casa le slide 2 e 10.')
+ 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. I quiz di calcolo si risolvono alla lavagna con S = V × T. Se il tempo stringe, lasciare per casa le slide 2 e 10.',esame=('4 su 5', 'risposte giuste nella prova di carteggio; nel quiz base, 4 domande su 20 di Navigazione cartografica'))
 closing(['Coordinate: squadretta sul punto, latitudine sul bordo verticale, longitudine su quello orizzontale','Distanza: compasso e scala delle latitudini, 1′ = 1 miglio','t = d ÷ V, V = d ÷ t: converti i minuti prima di sommarli','Carburante: consumo × ore × 1,3','20 minuti, 4 risposte su 5: coordinate prima, poi distanza, ora e carburante'],
  'Prossima lezione · 09 · Vela (patente a vela) · per il motore entro 12 miglia: l\'esame','A casa: i 50 esercizi dell\'elenco 4.1.1 e le 10 prove entro 12 miglia dell\'appendice D, parte 1.')
 write_deck(OUT,'Lezione 08 · Carteggio entro 12 miglia',

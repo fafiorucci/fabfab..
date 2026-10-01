@@ -79,14 +79,14 @@ def intermedi(spec):
         i=[s_[0] for s_ in slides].index(after)+1
         slides[i:i]=new
 
-def raccolta(lez,nchap,topics,QZ,steps,plan,notes_quiz,before='chiusura'):
+def raccolta(lez,nchap,topics,QZ,steps,plan,notes_quiz,before='chiusura',esame=None):
     """Apertura «Raccolta quiz», slide di istruzioni e 12 slide da 3 quiz con le risposte, inserite prima di `before`."""
     n0=len(slides)
     chapter('capquiz',nchap,'Raccolta quiz',topics,GREEN,
      'Inizio degli ultimi 45 minuti: 12 slide da 3 quiz ufficiali, ognuna seguita dalle risposte.','36 quiz ufficiali',2,'Ultimi 45 minuti','45′',art=(quiz_scene(),'Illustrazione: scheda di quiz con le risposte segnate e un cronometro sui 45 minuti'))
     cols=[(CORAL,CORAL_T),(SEA,SEA_T),(PURPLE,LILAC_T),(BLUE,BLUE_T)]
     tiles=''.join(f'<div style="display:flex; flex-direction:column; gap:12px; background:{bg}; padding:30px; border-radius:28px"><p style="font-family:{H}; font-size:64px; font-weight:700; line-height:1; color:{c}">{i}</p>{p(t,30,INK,800,1.2)}{p(d,24,INK,500,1.35)}</div>' for i,((t,d),(c,bg)) in enumerate(zip(steps,cols),1))
-    exam=card(tag("All'esame · la prova a quiz")+f'<div style="display:flex; gap:48px; align-items:end"><div>{p("domande",24,BODY,700)}<p style="font-family:{H}; font-size:80px; font-weight:700; line-height:1; color:{INK}">20</p></div><div>{p("errori ammessi",24,BODY,700)}<p style="font-family:{H}; font-size:80px; font-weight:700; line-height:1; color:{CORAL}">4</p></div><div>{p("tempo",24,BODY,700)}<p style="font-family:{H}; font-size:80px; font-weight:700; line-height:1; color:{INK}">30′</p></div></div>'+p('Il quiz base d\'esame: 20 domande della banca ufficiale, una sola risposta esatta su tre. Vela: altre 5 domande, 1 errore.',24),None,32,16)
+    exam=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:80px; font-weight:700; line-height:1.05; color:{INK}">{esame[0]}</p>'+p(esame[1],26,INK,700)+p('Il quiz base ha 20 domande: si passa con al massimo 4 errori, in 30 minuti.',24),None,32,12)
     li=''.join(f'<li>{x}</li>' for x in plan)
     pl=card(tag("I 45 minuti",SEA)+f'<ol style="font-size:24px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:6px">{li}</ol>',SEA_T,32,12)
     sec('quiz', head(f'Lezione {lez:02d} · ultimi 45 minuti','Raccolta quiz')+f'<div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:20px">{tiles}</div><div style="display:flex; gap:24px">{exam}{pl}</div>',

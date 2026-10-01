@@ -284,7 +284,7 @@ raccolta(7,5,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
   ('Chi decide','Comandante, Capitaneria, Motorizzazione: chiediti chi rilascia, chi controlla, chi sanziona.'),
   ('Attento ai numeri','hPa, metri, miglia, anni di validità: controlla il numero e l\'unità.')],
  ['Quiz 1-7 · meteorologia (21)','Quiz 8-10 · unità, patente e visite (9)','Quiz 11-12 · comandante, sci nautico e pesca (6)'],
- 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 4 e 7.')
+ 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 4 e 7.',esame=('2 + 3', 'domande su 20: Meteorologia e Normativa'))
 closing(['Pressione che cala in fretta: arriva brutto tempo; attorno alla bassa il vento gira in senso antiorario','Di giorno brezza di mare, di notte brezza di terra','Meteomar sul canale 68; gli avvisi di burrasca hanno la precedenza','Natanti fino a 10 m, imbarcazioni fino a 24, poi navi','Evento straordinario: denuncia entro 3 giorni all\'Autorità marittima'],
  'Prossima lezione · 08 · Carteggio entro 12 miglia','A casa: i 119 quiz di meteorologia e i 202 di normativa e ambiente.')
 write_deck(OUT,'Lezione 07 · Meteorologia e normativa',

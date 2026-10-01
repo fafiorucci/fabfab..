@@ -445,7 +445,7 @@ raccolta(1,4,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
   ('Quale asse','Rollio attorno all\'asse longitudinale, beccheggio attorno al trasversale: immagina la barca che si muove.'),
   ('Peso o volume','Il dislocamento è un peso, la stazza un volume, la portata un carico.')],
  ['Quiz 1-5 · unità, dimensioni, carene (15)','Quiz 6-10 · parti, struttura e coperta (15)','Quiz 11-12 · assi, stabilità e assetto (6)'],
- 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 8 e 10.')
+ 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 8 e 10.',esame=('1 / 20', 'domanda di Teoria dello scafo nella scheda del quiz base'))
 # =============== CHIUSURA ===============
 pts=['Natante fino a 10 m, imbarcazione fino a 24 m, nave oltre','Opera viva sotto la linea di galleggiamento, opera morta sopra','Rosso a sinistra, verde a dritta: masconi a prua, giardinetti a poppa','Carena tonda = dislocante; V profonda per il mare formato','G basso e carena larga = barca stabile; flaps e trim regolano l\'assetto']
 ul=''.join(f'<li>{x}</li>' for x in pts)
