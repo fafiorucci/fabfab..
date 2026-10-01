@@ -81,13 +81,23 @@ left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:24px; line-he
 sec('agenda', head('Lezione 03 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
  notes='Due capitoli di teoria e poi 45 minuti di quiz. Capitolo 1: 11 argomenti in circa 35 minuti. Capitolo 2: 26 argomenti in circa 40 minuti, quindi slide essenziali; se il tempo stringe si possono scorrere velocemente pubblicazioni, simboli e carta gnomonica. Banca DD 131/2022: ormeggio e disormeggio 49 quiz (1.4.4), ancoraggio 53 (1.4.3), coordinate 45 (1.7.1), carte e Mercatore 56 (1.7.2), pubblicazioni 8 (1.7.8), fanali e sistema IALA 120 (1.5.3).')
 
-def chapter(id_,n,title,subs,c,notes):
-    chips=''.join(f'<p style="font-size:26px; font-weight:800; color:#FFFFFF; background:rgba(255,255,255,0.10); padding:10px 18px; border-radius:18px">{t}</p>' for t in subs)
-    sec(id_, header(f'Capitolo {n}',title,LB.ICON_T.get(title,'map'),c,True)+f'<div style="display:flex; flex-wrap:wrap; gap:12px; width:1600px">{chips}</div>', notes=notes, dark=True)
+_cid=[0]
+def chapter(id_,n,title,subs,c,notes,dur='',cols=2,label=None,big=None):
+    _cid[0]+=1
+    rows=-(-len(subs)//cols); fs=30 if len(subs)<=12 else 22; bs=52 if len(subs)<=12 else 40
+    items=''.join(f'<div style="display:flex; gap:14px; align-items:center"><p style="width:{bs}px; height:{bs}px; flex:none; border-radius:{bs//2}px; background:{c}; color:#FFFFFF; font-size:{bs*0.45:.0f}px; font-weight:900; text-align:center; line-height:{bs}px">{i}</p><p style="font-size:{fs}px; line-height:1.2; font-weight:700; color:#FFFFFF">{t}</p></div>' for i,t in enumerate(subs,1))
+    left=(f'<div style="width:500px; flex:none; display:flex; flex-direction:column; gap:10px">'
+          f'<p style="font-size:24px; font-weight:900; letter-spacing:2px; text-transform:uppercase; color:{c}">{label or "Capitolo"}</p>'
+          f'<p style="font-family:{H}; font-size:{200 if big is None else 150}px; font-weight:700; line-height:0.9; color:{DACC}">{big or n}</p>'
+          f'<h2 style="font-family:{H}; font-size:56px; font-weight:700; line-height:1.08; color:#FFFFFF">{title}</h2>{squiggle(c,220)}'
+          f'<p style="font-size:26px; font-weight:700; color:{DSOFT}">{dur}</p>'
+          f'<svg aria-label="Illustrazione: barca a vela sul mare" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 220" width="500" height="220" style="width:500px; height:220px">{sea_scene(500,220,True,True,"ch"+str(_cid[0]))}</svg></div>')
+    right=f'<div style="flex:1; display:grid; grid-template-columns:repeat({cols},1fr); grid-template-rows:repeat({rows},auto); grid-auto-flow:column; gap:{24 if len(subs)<=12 else 16}px 32px; align-content:center; background:rgba(255,255,255,0.06); padding:36px; border-radius:32px">{items}</div>'
+    sec(id_, f'<div style="display:flex; gap:56px; align-items:stretch; height:792px">{left}{right}</div>', notes=notes, dark=True, gap=0)
 
 # ================= CAPITOLO 1 =================
 chapter('cap1',1,'Attracchi, ormeggi, ancoraggi',['Ormeggi e attracchi','Cime d\'ormeggio','Sistemi di cime d\'attracco','Ormeggio con vento','Attracco a boa e gavitello','Ancora e salpa-ancora','Ancore','Regole per l\'ancoraggio','Grippia e grippiale','Verifica dell\'ancoraggio','Tipi di ancoraggio'],CORAL,
- 'Circa 35 minuti. I quiz di questo capitolo sono nella raccolta finale (quiz 1-6).')
+ 'Circa 35 minuti. I quiz di questo capitolo sono nella raccolta finale (quiz 1-6).','circa 35 minuti · 11 argomenti',2)
 
 # ---- Ormeggi e attracchi: il vocabolario ----
 b=f'<rect x="330" y="330" width="762" height="290" fill="{WATER}" fill-opacity="0.2"/>'+line(330,330,1092,330,SEA,3)
@@ -406,7 +416,7 @@ sec('tipi', head('Ancoraggi · una o due ancore','Tipi di ancoraggio')+cards(TA,
 
 # ================= CAPITOLO 2 =================
 chapter('cap2',2,'Cartografia e segnalamento marittimo',['Latitudine e longitudine','Meridiani','Paralleli','Circoli massimi','Latitudine','Longitudine','Grado, primo, miglio e nodo','Classificazione delle carte','Pubblicazioni e documenti','1111 INT 1','Simboli delle carte','Elenco dei fari','Caratteristiche dei fari','Portate dei fari','AISM-IALA','Laterali','Pericolo isolato','Acque sicure','Speciale','Cardinali','Navigazione fluviale','Mercatore','Meridiani e paralleli sulla carta','Latitudini crescenti','Isogonia e lossodromia','Carta gnomonica'],SEA,
- 'Circa 40 minuti per 26 argomenti: una slide per argomento, da scorrere con ritmo. I quiz di questo capitolo sono nella raccolta finale (quiz 7-12).')
+ 'Circa 40 minuti per 26 argomenti: una slide per argomento, da scorrere con ritmo. I quiz di questo capitolo sono nella raccolta finale (quiz 7-12).','circa 40 minuti · 26 argomenti',3)
 
 # ---- Latitudine e longitudine ----
 cx,cy,R=546,320,270
@@ -877,6 +887,8 @@ sec('gnomonica', head('Cartografia · per gli oceani','Carta gnomonica e ortodro
  notes='Quiz 1.7.2-14 (la gnomonica serve a pianificare una traversata oceanica, non la costiera), -55 e -56 (ortodromia, circolo massimo). Esempio del disegno: tra due porti oceanici l\'ortodromia misura 6277 miglia, la lossodromia 7606.')
 
 # ================= RACCOLTA QUIZ (45 minuti) =================
+chapter('capquiz',3,'Raccolta quiz',['Ormeggi e attracchi','Cime e sistemi d\'ormeggio','Gavitello e vento','Ancora e ancore','Calumo, grippia, verifica','Tipi di ancoraggio','Latitudine e longitudine','Gradi, miglia, reticolo','Carte e pubblicazioni','Simboli e fari','AISM-IALA','Mercatore e fiumi'],PURPLE,
+ 'Inizio degli ultimi 45 minuti: 12 slide da 3 quiz ufficiali, quiz 1-6 sul capitolo 1 e 7-12 sul capitolo 2, ognuna seguita dalle risposte.','36 quiz ufficiali · 18 per capitolo',2,'Ultimi 45 minuti','45′')
 steps=[('1','Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.',CORAL,CORAL_T),
  ('2','Escludi le assurde','Di solito una risposta è palesemente sbagliata: toglila e ragiona sulle altre due.',SEA,SEA_T),
  ('3','Cerca lo scambio','Sopravento o sottovento, Nord o Sud, latitudine o longitudine, destrorsa o sinistrorsa: il trabocchetto è lì.',PURPLE,LILAC_T),

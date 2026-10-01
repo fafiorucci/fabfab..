@@ -2,7 +2,7 @@
 
 Slide (artifact Slides): https://claude.ai/artifact/PFnQXEjrpjDEFMPQjCCM3B
 
-71 slide per 2 ore, in due capitoli e la raccolta quiz finale. Traccia: le slide della scuola e l'elenco dei sottocapitoli.
+72 slide per 2 ore, in due capitoli e la raccolta quiz finale, ciascuno aperto da una slide di capitolo. Traccia: le slide della scuola e l'elenco dei sottocapitoli.
 
 - Capitolo 1 · Attracchi, ormeggi, ancoraggi (circa 35′, All. A punto 4b): ormeggi e attracchi, l'elica e l'ormeggio
   (destrorsa/sinistrorsa, giardinetto, bow thruster), cime d'ormeggio, ormeggio in andana e all'inglese (spring, traversini,
