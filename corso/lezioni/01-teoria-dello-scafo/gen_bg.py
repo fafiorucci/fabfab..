@@ -25,6 +25,6 @@ def backdrop(dark=False):
     return (f'<svg aria-label="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080" style="position:absolute; left:0px; top:0px; width:1920px; height:1080px">'
             f'{rosebody}{waves}{lines}</svg>')
 if __name__=='__main__':
-    open('bg_preview.html','w').write(f'<html><body style="margin:0"><div style="position:relative;width:1920px;height:1080px;background:#F5F1E8">{backdrop()}<h2 style="position:absolute;left:128px;top:128px;margin:0;font:700 64px Georgia;color:#14212E">Segnalamento, segnali sonori e sicurezza</h2><p style="position:absolute;left:192px;top:990px;margin:0;font:24px Arial;color:#5C6874">Fabrizio Fiorucci · Patente nautica Vela/Motore senza limiti dalla costa</p></div>'
+    open('bg_preview.html','w').write(f'<html><body style="margin:0"><div style="position:relative;width:1920px;height:1080px;background:#F5F1E8">{backdrop()}<h2 style="position:absolute;left:128px;top:128px;margin:0;font:700 64px Georgia;color:#14212E">Segnalamento, segnali sonori e sicurezza</h2><p style="position:absolute;left:192px;top:990px;margin:0;font:24px Arial;color:#5C6874">Fabrizio Fiorucci · Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa</p></div>'
       f'<div style="position:relative;width:1920px;height:1080px;background:#10263A">{backdrop(True)}<h1 style="position:absolute;left:128px;top:420px;margin:0;font:700 96px Georgia;color:#F5F1E8">Patente nautica Vela/Motore</h1></div></body></html>')
     print(len(backdrop()), len(backdrop(True)))

@@ -101,7 +101,7 @@ def logo(dark=False, style='', label='Logo Fabrizio Fiorucci'):
 def footer(n, dark=False):
     c = DSOFT if dark else SOFT
     return (logo(dark,'position:absolute; left:128px; bottom:56px; width:48px; height:48px')
-      +f'<p style="position:absolute; left:192px; bottom:64px; width:1200px; font-size:24px; font-weight:600; color:{c}">Fabrizio Fiorucci · Patente nautica Vela/Motore senza limiti dalla costa</p>'
+      +f'<p style="position:absolute; left:192px; bottom:64px; width:1200px; font-size:24px; font-weight:600; color:{c}">Fabrizio Fiorucci · Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa</p>'
       +f'<p style="position:absolute; right:128px; bottom:58px; width:64px; font-family:{H}; font-size:26px; font-weight:700; color:#FFFFFF; background:{CORAL if not dark else SEA}; text-align:center; padding:2px 0px; border-radius:20px">{n:02d}</p>')
 def lockup(dark=True, size=112):
     nc = '#FFFFFF' if dark else INK; sc = DACC if dark else CORAL

@@ -99,7 +99,7 @@ def cover(lesson_no, title, subtitle, notes):
 <h1 style="font-family:{H}; font-size:104px; font-weight:700; line-height:1.05; color:#FFFFFF">{title}</h1>{squiggle(DACC,330)}
 <p style="font-size:34px; line-height:1.4; color:{DSOFT}">{subtitle}</p>
 </div>
-<p style="font-size:24px; font-weight:600; color:{DSOFT}">Patente nautica Vela/Motore senza limiti dalla costa</p>
+<p style="font-size:24px; font-weight:600; color:{DSOFT}">Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa</p>
 <svg aria-label="Illustrazione: barca a vela e motoscafo sul mare con sole, nuvole e gabbiani" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 792 450" width="792" height="450" style="position:absolute; left:1000px; top:470px; width:792px; height:450px">{sea_scene(792,450)}</svg>
 <aside>{notes}</aside>
 </section>

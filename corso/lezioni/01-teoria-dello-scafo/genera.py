@@ -87,7 +87,7 @@ slides.append(('cover', f'''<section id="cover" data-transition="fade" style="ba
 <h1 style="font-family:{H}; font-size:112px; font-weight:600; line-height:1.1; color:{PAPER}">Teoria dello scafo</h1>{wave(DACC,330)}
 <p style="font-size:36px; line-height:1.4; color:{DSOFT}">Classificazione, nomenclatura, carene, assetto e stabilità</p>
 </div>
-<p style="font-size:24px; color:{DSOFT}">Patente nautica Vela/Motore senza limiti dalla costa</p>
+<p style="font-size:24px; color:{DSOFT}">Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa</p>
 {cover_boat}
 <aside>Benvenuto al corso. Presentarsi, spiegare come è organizzato l'esame e che questa lezione copre la Teoria dello scafo (All. A al DM 323/2021, punti 1a e 1b).</aside>
 </section>
