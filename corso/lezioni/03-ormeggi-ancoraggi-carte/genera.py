@@ -79,7 +79,7 @@ tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column
 right=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:80px; font-weight:700; line-height:1.05; color:{INK}">4 + 4 + 2</p>'+p('domande su 20: Manovra e condotta, Navigazione cartografica, Segnalamento',26,INK,700)+p('E il carteggio, la prima prova, si fa sulla carta di Mercatore.',24))
 left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:24px; line-height:1.35; color:#34465E; display:grid; grid-template-columns:1fr 1fr; gap:8px 40px"><li>dare le cime giuste in banchina, anche con il vento</li><li>prendere un gavitello e ormeggiarti in andana</li><li>scegliere l\'ancora, dare fondo e verificare la tenuta</li><li>leggere latitudine e longitudine</li><li>scegliere la carta e riconoscerne i simboli</li><li>riconoscere un faro e i segnali AISM-IALA</li><li>spiegare la carta di Mercatore</li><li>navigare su un fiume</li></ul>',SEA_T,flex=2.2)
 sec('agenda', head('Lezione 03 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
- notes='Due capitoli di teoria e poi 45 minuti di quiz. Capitolo 1: 11 argomenti in circa 35 minuti. Capitolo 2: 26 argomenti in circa 40 minuti, quindi slide essenziali; se il tempo stringe si possono scorrere velocemente pubblicazioni, simboli e carta gnomonica. Banca DD 131/2022: ormeggio e disormeggio 49 quiz (1.4.4), ancoraggio 53 (1.4.3), coordinate 45 (1.7.1), carte e Mercatore 56 (1.7.2), pubblicazioni 8 (1.7.8), fanali e sistema IALA 120 (1.5.3).')
+ notes='Due capitoli di teoria in 75 minuti, con 2 quiz di verifica alla fine di ogni paragrafo (3 nel capitolo 1, 3 nel capitolo 2): andare spediti sulle slide, il dettaglio è nelle note. Poi 45 minuti di raccolta quiz. Capitolo 1: 11 argomenti in circa 35 minuti. Capitolo 2: 26 argomenti in circa 40 minuti, quindi slide essenziali; se il tempo stringe si possono scorrere velocemente pubblicazioni, simboli e carta gnomonica. Banca DD 131/2022: ormeggio e disormeggio 49 quiz (1.4.4), ancoraggio 53 (1.4.3), coordinate 45 (1.7.1), carte e Mercatore 56 (1.7.2), pubblicazioni 8 (1.7.8), fanali e sistema IALA 120 (1.5.3).')
 
 def chart_scene():
     s=f'<defs><clipPath id="chc"><rect x="0" y="0" width="500" height="220" rx="48"/></clipPath></defs><rect x="0" y="0" width="500" height="220" rx="48" fill="#FFFFFF" fill-opacity="0.06"/><g clip-path="url(#chc)">'
@@ -122,7 +122,7 @@ def chapter(id_,n,title,subs,c,notes,dur='',cols=2,label=None,big=None,art=None)
 
 # ================= CAPITOLO 1 =================
 chapter('cap1',1,'Attracchi, ormeggi, ancoraggi',['Ormeggi e attracchi','Cime d\'ormeggio','Sistemi di cime d\'attracco','Ormeggio con vento','Attracco a boa e gavitello','Ancora e salpa-ancora','Ancore','Regole per l\'ancoraggio','Grippia e grippiale','Verifica dell\'ancoraggio','Tipi di ancoraggio'],CORAL,
- 'Circa 35 minuti. I quiz di questo capitolo sono nella raccolta finale (quiz 1-6).','circa 35 minuti · 11 argomenti',2)
+ 'Circa 35 minuti, comprese 2 verifiche da 2 quiz (dopo gli ormeggi e dopo l\'ancoraggio). Andare spediti. Altri quiz nella raccolta finale (quiz 1-6).','circa 35 minuti · 11 argomenti',2)
 
 # ---- Ormeggi e attracchi: il vocabolario ----
 b=f'<rect x="330" y="330" width="762" height="290" fill="{WATER}" fill-opacity="0.2"/>'+line(330,330,1092,330,SEA,3)
@@ -441,7 +441,7 @@ sec('tipi', head('Ancoraggi · una o due ancore','Tipi di ancoraggio')+cards(TA,
 
 # ================= CAPITOLO 2 =================
 chapter('cap2',2,'Cartografia e segnalamento marittimo',['Latitudine e longitudine','Meridiani','Paralleli','Circoli massimi','Latitudine','Longitudine','Grado, primo, miglio e nodo','Classificazione delle carte','Pubblicazioni e documenti','1111 INT 1','Simboli delle carte','Elenco dei fari','Caratteristiche dei fari','Portate dei fari','AISM-IALA','Laterali','Pericolo isolato','Acque sicure','Speciale','Cardinali','Navigazione fluviale','Mercatore','Meridiani e paralleli sulla carta','Latitudini crescenti','Isogonia e lossodromia','Carta gnomonica'],SEA,
- 'Circa 40 minuti per 26 argomenti: una slide per argomento, da scorrere con ritmo. I quiz di questo capitolo sono nella raccolta finale (quiz 7-12).','circa 40 minuti · 26 argomenti',3,art=(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso su un promontorio'))
+ 'Circa 40 minuti per 26 argomenti, comprese 4 verifiche da 2 quiz: una slide per argomento, da scorrere con ritmo. Altri quiz nella raccolta finale (quiz 7-12).','circa 40 minuti · 26 argomenti',3,art=(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso su un promontorio'))
 
 # ---- Latitudine e longitudine ----
 cx,cy,R=546,320,270
@@ -936,6 +936,13 @@ for id_,t,ps,e in QZ:
 
 closing(['Spring contro i movimenti avanti e indietro, traversini contro lo scostamento; in andana la trappa diventa l\'ormeggio di prua','Con il vento: ancora sopravento; in arrivo si dà per prima la cima sopravento, in partenza si molla per prima la sottovento','Calumo da 3 a 5 volte il fondale; se il rilevamento cambia, l\'ancora ara','Latitudine 0-90° N/S, longitudine 0-180° E/W; 1′ di latitudine = 1 miglio = 1852 m, sulla scala laterale','Entrando in porto rosso a sinistra; cardinali: i coni puntano al nero, i lampi come un orologio'],
  'Prossima lezione · 04 · Primi calcoli, sottocosta, prora e rotta','A casa: i quiz 1.4.4 (ormeggio), 1.4.3 (ancoraggio), 1.7.1 (coordinate), 1.7.2 (carte) e 1.5.3 (fanali e IALA).')
+exec(open('intermedi.py').read())
+intermedi([('vento','v1','Verifica · Ormeggi e attracchi',['1.4.4-13','1.4.4-30']),
+ ('tipi','v2','Verifica · Ancore e ancoraggio',['1.4.3-3','1.4.3-24']),
+ ('grado','v3','Verifica · Coordinate',['1.7.1-17','1.7.1-9']),
+ ('simboli','v4','Verifica · Carte e pubblicazioni',['1.7.2-38','1.7.8-6']),
+ ('cardinali','v5','Verifica · Fari e AISM-IALA',['1.5.3-43','1.5.3-71']),
+ ('gnomonica','v6','Verifica · Mercatore e gnomonica',['1.7.2-11','1.7.2-14'])])
 write_deck(OUT,'Lezione 03 · Ormeggi, ancoraggi, carte e segnali',[s_[0] for s_ in slides],
  {"s1":{"description":"Apertura e agenda","start":"cover"},"s2":{"description":"Capitolo 1 · Attracchi e ormeggi","start":"cap1"},
   "s3":{"description":"Capitolo 1 · Ancore e ancoraggi","start":"salpancora"},"s4":{"description":"Capitolo 2 · Coordinate e misure","start":"cap2"},

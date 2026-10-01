@@ -3,8 +3,11 @@
 - Rispondere sempre in italiano.
 - Le presentazioni sono artifact di tipo Slides (tabella degli URL in `corso/export/README.md`).
 - Lavorare sul branch `claude/corso-patente-nautica-indice-biov9q`: commit e push, niente PR.
-- Ogni lezione chiude con gli ultimi 45 minuti di raccolta quiz ufficiali (DD 131/2022) sugli argomenti della lezione,
-  ogni slide di quiz seguita dalla slide delle risposte; niente quiz intermedi durante la teoria.
+- Lezioni 01-08: teoria in 75 minuti divisa in capitoli, ognuno aperto da una slide di apertura (`chapter()`);
+  dopo ogni paragrafo una verifica da 2 quiz ufficiali (DD 131/2022) con la sua slide delle risposte
+  (helper `intermedi.py` nella cartella della lezione).
+- Ogni lezione chiude con gli ultimi 45 minuti di raccolta quiz ufficiali (12 slide da 3 quiz) sugli argomenti
+  della lezione, ogni slide di quiz seguita dalla slide delle risposte, senza ripetere i quiz delle verifiche.
 
 ## Export obbligatorio dopo ogni modifica
 

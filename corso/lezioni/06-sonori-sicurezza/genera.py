@@ -127,16 +127,16 @@ def chapter(id_,n,title,subs,c,notes,dur='',cols=2,label=None,big=None,art=None)
 # ============ COVER + AGENDA ============
 cover(6,'Segnali sonori, sicurezza ed emergenze','Fischi, nebbia e porti; le dotazioni del DM 133/2024, l&#39;incendio e le emergenze a bordo',
  'Lezione 6. Capitoli del programma della scuola: Segnali sonori, Sicurezza (dotazioni, mezzi di soccorso, incendio) ed emergenze (falla, incaglio, collisione, uomo a mare, abbandono, VHF, soccorso, tempo cattivo, 3). Aggiunte dall\'All. A: dotazioni obbligatorie secondo il DM 133/2024 (punto 3b), precauzioni all\'ingresso e all\'uscita dei porti (punto 4a), CIRM (3b), alcol e sostanze (3a). Fari e segnalamento AISM-IALA sono nella lezione 3. Gli ultimi 45 minuti sono una raccolta di quiz ufficiali.')
-blocks=[('0:00','15′','Suoni, nebbia, porti',CORAL),('0:15','15′','Dotazioni e segnali di soccorso',SEA),('0:30','15′','Incendio',PURPLE),('0:45','15′','Sinistri, uomo a mare, abbandono',BLUE),('1:00','15′','Radio, soccorso, meteo, alcol',CORAL),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
+blocks=[('0:00','25′','Suoni, porti, dotazioni e soccorso',CORAL),('0:25','25′','Incendio, sinistri e abbandono',PURPLE),('0:50','25′','Radio, soccorso, meteo, alcol',BLUE),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
 right=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:88px; font-weight:700; line-height:1.05; color:{INK}">1 + 3</p>'+p('domande su 20: COLREG (segnali sonori), Sicurezza (dotazioni ed emergenze)',26,INK,700)+p('Più la manovra in porto, che rientra nelle 4 domande di Manovra e condotta.',24))
 left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>capire e usare i segnali sonori</li><li>entrare e uscire da un porto in sicurezza</li><li>preparare la barca con le dotazioni giuste</li><li>spegnere un incendio e recuperare un uomo a mare</li><li>lanciare un MAYDAY sul canale 16</li></ul>',SEA_T,flex=1.4)
 sec('agenda', head('Lezione 06 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
- notes='Cinque blocchi di teoria e poi 45 minuti di quiz. Banca DD 131/2022: prevenire gli abbordi 60 (1.5.2, per i segnali sonori), porti 21 (1.4.1), incendio ed estintori 31 (1.3.1), dotazioni di sicurezza 48 (1.3.3, 14 oscurati), sinistri 36 (1.3.6), abbandono e soccorso 13 (1.3.7) più il CIRM (1.3.2.113), tempo cattivo 25 (1.3.8), radio 29 (1.3.9) più 1.3.5, alcol 12 (1.3.2). Attenzione: il DM 133/2024 ha riscritto l\'Allegato V del DM 146/2008; dove un quiz non oscurato diverge, all\'esame vale la risposta dell\'elenco ministeriale.')
+ notes='Tre capitoli di teoria in 75 minuti, ognuno con 2 quiz di verifica dopo ogni paragrafo: andare spediti sulle slide, il dettaglio è nelle note. Poi 45 minuti di raccolta quiz. Banca DD 131/2022: prevenire gli abbordi 60 (1.5.2, per i segnali sonori), porti 21 (1.4.1), incendio ed estintori 31 (1.3.1), dotazioni di sicurezza 48 (1.3.3, 14 oscurati), sinistri 36 (1.3.6), abbandono e soccorso 13 (1.3.7) più il CIRM (1.3.2.113), tempo cattivo 25 (1.3.8), radio 29 (1.3.9) più 1.3.5, alcol 12 (1.3.2). Attenzione: il DM 133/2024 ha riscritto l\'Allegato V del DM 146/2008; dove un quiz non oscurato diverge, all\'esame vale la risposta dell\'elenco ministeriale.')
 X=700
 
-chapter('cap1',1,'Segnali sonori e porti',['I segnali sonori di manovra','Nella nebbia','Entrare e uscire dal porto'],CORAL,
- 'Circa 15 minuti. Quiz 1-3 nella raccolta finale.','circa 15 minuti · 3 argomenti',1)
+chapter('cap1',1,'Segnali sonori, porti e dotazioni',['I segnali sonori di manovra','Nella nebbia','Entrare e uscire dal porto','Le dotazioni: salvarsi','Le dotazioni: navigare e comunicare','Chiedere soccorso'],CORAL,
+ 'Circa 25 minuti, compresi i 2 quiz di verifica dopo i porti e dopo i segnali di soccorso. Andare spediti. Quiz 1-5 nella raccolta finale.','circa 25 minuti · 6 argomenti',1,art=(ring_scene(),'Illustrazione: salvagente anulare con la sagola galleggiante'))
 # ============ SEGNALI SONORI ============
 def snd(seq):
     g=f'<rect x="0" y="0" width="260" height="60" rx="14" fill="{NIGHT}"/>'; x=18
@@ -176,8 +176,6 @@ sec('porto', head('Condotta · i porti','Entrare e uscire dal porto'), pinned=sv
 X=700
 
 
-chapter('cap2',2,'Dotazioni e segnali di soccorso',['Le dotazioni: salvarsi','Le dotazioni: navigare e comunicare','Chiedere soccorso'],SEA,
- 'Circa 15 minuti. Quiz 4-5 nella raccolta finale.','circa 15 minuti · 3 argomenti',1,art=(ring_scene(),'Illustrazione: salvagente anulare con la sagola galleggiante'))
 # ============ DOTAZIONI (tabelle) ============
 COLS=['oltre 50','entro 50','entro 12','entro 6','entro 3','entro 1','300 m']
 def table(rows,notes_col=None):
@@ -219,8 +217,8 @@ sec('soccorso', head('Sicurezza · i segnali di soccorso','Chiedere soccorso')+f
  notes='Quiz 1.3.3-3 e -20 (boetta fumogena arancione, segnale diurno), -16 (fuochi a mano 6 miglia), -17, -28, -29 (razzi: 25 miglia di notte, 7 di giorno, meno di 1 minuto), -21 (scadenza 4 anni), -22 e -34 (EPIRB oltre 50 miglia), -7 e -18 (quantità, coerenti con il DM 133/2024). Il riflettore radar (1.5.3-10, 1.3.3-24) rende la barca visibile ai radar. VHF e chiamate di soccorso più avanti in questa lezione.')
 
 
-chapter('cap3',3,'Incendio',['Il triangolo del fuoco','Classi di incendio ed estintori','Incendio a bordo'],PURPLE,
- 'Circa 15 minuti. Quiz 6-8 nella raccolta finale.','circa 15 minuti · 3 argomenti',1,art=(fire_scene(),'Illustrazione: estintore accanto a una fiamma'))
+chapter('cap2',2,'Incendio e sinistri',['Il triangolo del fuoco','Classi di incendio ed estintori','Incendio a bordo','La falla','Incaglio e collisione','Uomo a mare','Abbandonare la barca'],PURPLE,
+ 'Circa 25 minuti, compresi i 2 quiz di verifica dopo l\'incendio e dopo l\'abbandono. Andare spediti. Quiz 6-9 nella raccolta finale.','circa 25 minuti · 7 argomenti',1,art=(fire_scene(),'Illustrazione: estintore accanto a una fiamma'))
 # ============ TRIANGOLO DEL FUOCO ============
 A=(546,70); B_=(236,560); C=(856,560)
 b=f'<rect x="0" y="0" width="1092" height="620" fill="#FFF1E6"/>'
@@ -264,8 +262,6 @@ sec('incendio', head('Sicurezza · i sinistri','Incendio a bordo'), pinned=svgp(
 X=700
 
 X,Y,W,Hh=700,290,1092,620
-chapter('cap4',4,'Sinistri e abbandono',['La falla','Incaglio e collisione','Uomo a mare','Abbandonare la barca'],BLUE,
- 'Circa 15 minuti. Quiz 9 nella raccolta finale.','circa 15 minuti · 4 argomenti',1)
 # ============ FALLA ============
 b=f'<rect x="0" y="0" width="1092" height="620" fill="{SKY}"/>'
 wl=250
@@ -338,8 +334,8 @@ sec('abbandono', head('Sicurezza · l\'ultima scelta','Abbandonare la barca'), p
 X=700
 
 
-chapter('cap5',5,'Radio, soccorso, meteo, alcol',['Il VHF di bordo','Chiamare aiuto via radio','Chi ci aiuta','Il cattivo tempo','Alcol, droghe e farmaci'],CORAL,
- 'Circa 15 minuti. Quiz 10-12 nella raccolta finale.','circa 15 minuti · 5 argomenti',1,art=(radio_scene(),'Illustrazione: VHF portatile sul canale 16 che trasmette'))
+chapter('cap3',3,'Radio, soccorso, meteo, alcol',['Il VHF di bordo','Chiamare aiuto via radio','Chi ci aiuta','Il cattivo tempo','Alcol, droghe e farmaci'],BLUE,
+ 'Circa 25 minuti, compresi i 2 quiz di verifica finali del capitolo. Andare spediti. Quiz 10-12 nella raccolta finale.','circa 25 minuti · 5 argomenti',1,art=(radio_scene(),'Illustrazione: VHF portatile sul canale 16 che trasmette'))
 # ============ VHF ============
 b=f'<rect x="0" y="0" width="1092" height="620" fill="#F4FAFC"/>'
 b+=f'<rect x="40" y="170" width="460" height="300" rx="40" fill="{NAVY}"/><path d="M440 170 V50" stroke="{NAVY}" stroke-width="12" stroke-linecap="round"/>'
@@ -407,7 +403,7 @@ sec('alcol', head('Sicurezza · chi è al comando','Alcol, droghe e farmaci')+ti
  notes='Voce 3a dell\'All. A, 12 quiz (1.3.2). Quiz 1.3.2-2 (2.755-15.000 euro secondo il tasso), -3 (sospensione da 3 a 24 mesi), -1 e -5 (revoca con danno ambientale), -4 (stupefacenti: 2.755-11.017 euro), -8 (raddoppio in caso di sinistro), -6 e -10 (noleggio), -7 (sospensione della licenza di navigazione), -9 (effetti fino a 5 ore), -11 (sedativi e alcol), -12 (attenzione molto bassa). Le cifre sono quelle delle risposte della banca: il riferimento è l\'art. 53-bis del Codice della nautica.')
 
 
-chapter('capquiz',6,'Raccolta quiz',['Segnali sonori','Nebbia e porti','Entrare in porto','Le dotazioni','Segnali di soccorso','Il fuoco','Gli estintori','Incendio a bordo','Sinistri e abbandono','Radio e soccorso','Cattivo tempo','Alcol e farmaci'],GREEN,
+chapter('capquiz',4,'Raccolta quiz',['Segnali sonori','Nebbia e porti','Entrare in porto','Le dotazioni','Segnali di soccorso','Il fuoco','Gli estintori','Incendio a bordo','Sinistri e abbandono','Radio e soccorso','Cattivo tempo','Alcol e farmaci'],GREEN,
  'Inizio degli ultimi 45 minuti: 12 slide da 3 quiz ufficiali, ognuna seguita dalle risposte.','36 quiz ufficiali',2,'Ultimi 45 minuti','45′',art=(quiz_scene(),'Illustrazione: scheda di quiz con le risposte segnate e un cronometro sui 45 minuti'))
 # ============ RACCOLTA QUIZ (45 minuti) ============
 steps=[('1','Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.',CORAL,CORAL_T),
@@ -431,8 +427,14 @@ for id_,t,ps in QZ:
     quiz_slide(id_+'r',t+' · risposte',ps,True)
 closing(['1 breve a dritta, 2 brevi a sinistra, 3 brevi macchine indietro; nella nebbia 1 prolungato ogni 2 minuti','In porto rosso a sinistra e verde a dritta; velocità ridotta già a 500 m dall\'imboccatura','Oltre 12 miglia: zattera, binocolo, GPS, riflettore radar; oltre 50: EPIRB','Incendio: CO2 per l\'elettrico, mai acqua; fiamme sottovento, carburante chiuso','Uomo a mare: accosta dal suo lato; canale 16: MAYDAY, PAN PAN, SÉCURITÉ; 1530 per le emergenze'],
  'Prossima lezione · 07 · Meteorologia e normativa','A casa: i quiz su suoni e porti (1.5.2, 1.4.1), dotazioni e incendio (1.3.1, 1.3.3) e su sinistri, radio e soccorso (1.3.2, 1.3.5-1.3.9).')
+exec(open('intermedi.py').read())
+intermedi([('porto','v1','Verifica · Suoni, nebbia e porti',['1.5.2-49','1.4.1-14']),
+ ('soccorso','v2','Verifica · Dotazioni e soccorso',['1.3.3-34','1.3.3-3']),
+ ('incendio','v3','Verifica · Incendio',['1.3.1-1','1.3.6-22']),
+ ('abbandono','v4','Verifica · Sinistri e abbandono',['1.3.6-36','1.3.7-6']),
+ ('alcol','v5','Verifica · Radio, meteo, alcol',['1.3.9-13','1.3.8-8'])])
 write_deck(OUT,'Lezione 06 · Segnali sonori, sicurezza ed emergenze',[s_[0] for s_ in slides],
- {"s1":{"description":"Apertura e agenda","start":"cover"},"s2":{"description":"Segnali sonori, nebbia e porti","start":"cap1"},
-  "s3":{"description":"Dotazioni di sicurezza DM 133/2024 e segnali di soccorso","start":"cap2"},"s4":{"description":"Incendio: estintori e cosa fare a bordo","start":"cap3"},
-  "s5":{"description":"Emergenze: falla, incaglio, collisione, uomo a mare, abbandono","start":"cap4"},"s6":{"description":"Radio, soccorso, CIRM, cattivo tempo, alcol","start":"cap5"},
-  "s7":{"description":"Raccolta quiz","start":"capquiz"}})
+ {"s1":{"description":"Apertura e agenda","start":"cover"},"s2":{"description":"Segnali sonori, porti, dotazioni DM 133/2024 e segnali di soccorso","start":"cap1"},
+  "s3":{"description":"Incendio, falla, incaglio, collisione, uomo a mare, abbandono","start":"cap2"},
+  "s4":{"description":"Radio, soccorso, CIRM, cattivo tempo, alcol","start":"cap3"},
+  "s5":{"description":"Raccolta quiz","start":"capquiz"}})

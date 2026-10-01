@@ -96,12 +96,12 @@ tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column
 right=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:88px; font-weight:700; line-height:1.05; color:{INK}">4 + 4</p>'+p('domande su 20: Manovra e condotta, Navigazione cartografica',26,INK,700)+p('Nel carteggio: S = V × T e conversioni bussola-vero in quasi ogni esercizio.',24))
 left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>orientarti con la rosa dei venti e usare squadrette e compasso</li><li>risolvere S = V × T e calcolare il carburante</li><li>rispettare le regole vicino alla spiaggia</li><li>passare da prora bussola a prora vera e ritorno</li><li>distinguere prora e rotta, scarroccio e deriva</li></ul>',SEA_T,flex=1.4)
 sec('agenda', head('Lezione 04 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
- notes='Tre blocchi di teoria e poi 45 minuti di quiz. Banca DD 131/2022: orientamento e bussola 49 quiz (1.7.4), navigazione stimata 71 (1.7.5), navigazione in prossimità della costa 32 (1.4.2), prora e rotta, scarroccio e deriva 30 (1.7.7).')
+ notes='Tre capitoli di teoria in 75 minuti, con 2 quiz di verifica dopo i calcoli, dopo il sottocosta, dopo le conversioni di bussola e alla fine: andare spediti sulle slide, il dettaglio è nelle note. Poi 45 minuti di raccolta quiz. Banca DD 131/2022: orientamento e bussola 49 quiz (1.7.4), navigazione stimata 71 (1.7.5), navigazione in prossimità della costa 32 (1.4.2), prora e rotta, scarroccio e deriva 30 (1.7.7).')
 X=700
 
 # ================= PRIMI CALCOLI (dalla vecchia lezione 3) =================
 chapter('cap1',1,'Orientarsi e primi calcoli',['La rosa dei venti','Gli strumenti del carteggio','La navigazione stimata','Spazio, velocità, tempo','Tre esempi svolti','Il carburante sulla carta'],CORAL,
- 'Circa 30 minuti. I quiz di questa parte sono nella raccolta finale (quiz 1-5).','circa 30 minuti · 6 argomenti',1,art=(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso'))
+ 'Circa 30 minuti, compresa una verifica da 2 quiz alla fine. Andare spediti. Altri quiz nella raccolta finale (quiz 1-5).','circa 30 minuti · 6 argomenti',1,art=(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso'))
 # ============ ROSA DEI VENTI ============
 rc,ry,RR=350,310,225
 pt=lambda a,r: (rc+r*math.sin(math.radians(a)), ry-r*math.cos(math.radians(a)))
@@ -207,7 +207,7 @@ sec('carburante', head('Primi calcoli · verso il carteggio','Il carburante sull
  notes='Anticipo della lezione 11 (23 esercizi di carburante, famiglie 5.x.2). Stessa regola dei quiz di motori (1.2.3-1: riserva del 30%). Nel carteggio le miglia si misurano sulla carta tra punti noti o calcolati; il tempo si ricava con T = S ÷ V. Tolleranza: le risposte ufficiali danno un intervallo, per es. 5.1.2-1 «29÷31 litri», 5.1.2-2 «19÷21 litri».')
 
 chapter('cap2',2,'Navigare sottocosta',['Vicino alla spiaggia','Subacquei e piccoli natanti'],SEA,
- 'Circa 15 minuti. Quiz 6-7 nella raccolta finale.','circa 15 minuti · 2 argomenti',1)
+ 'Circa 15 minuti, compresa una verifica da 2 quiz. Quiz 6-7 nella raccolta finale.','circa 15 minuti · 2 argomenti',1)
 # ============ SOTTOCOSTA ============
 b=f'<rect x="0" y="0" width="1092" height="620" fill="{WATER}" fill-opacity="0.2"/><path d="M0 520 Q300 500 546 520 T1092 512 L1092 620 L0 620 Z" fill="{SAND}"/>'+f'<path d="M0 520 Q300 500 546 520 T1092 512" fill="none" stroke="{LAND_S}" stroke-width="4"/>'
 b+=''.join(f'<circle cx="{x}" cy="290" r="10" fill="{RED}" stroke="{NAVY}" stroke-width="2"/>' for x in range(40,1092,90) if not 660<x<860)
@@ -246,7 +246,7 @@ sec('subacquei', head('Condotta · chi c\'è in acqua','Subacquei e piccoli nata
 
 
 chapter('cap3',3,'Bussola, prora e rotta',['La bussola magnetica','Tre nord','Da bussola a vero e ritorno','Prora e rotta','Lo scarroccio','La deriva','Vento «da», corrente «verso»'],PURPLE,
- 'Circa 30 minuti. Quiz 8-12 nella raccolta finale.','circa 30 minuti · 7 argomenti',1,art=(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata'))
+ 'Circa 30 minuti, comprese 2 verifiche da 2 quiz (dopo le conversioni e alla fine). Andare spediti. Quiz 8-12 nella raccolta finale.','circa 30 minuti · 7 argomenti',1,art=(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata'))
 # ============ BUSSOLA
 X=128
 cx,cy=546,320
@@ -381,6 +381,11 @@ for id_,t,ps in QZ:
     quiz_slide(id_+'r',t+' · risposte',ps,True)
 closing(['Angoli da 000° a 360° in senso orario; squadrette per le rotte, compasso per le distanze sulla scala delle latitudini','S = V × T con il tempo in ore e decimi; carburante + 30% di riserva','Entro 200 m dalle spiagge solo nei corridoi di lancio; 100 m dalle boe dei subacquei','Pv = Pb + deviazione + declinazione (Est +, Ovest −), e ritorno','Scarroccio dal vento, deriva dalla corrente: il vento «da», la corrente «verso»'],
  'Prossima lezione · 05 · Punto nave e fanali','A casa: i quiz 1.7.4 (bussola), 1.7.5 (navigazione stimata), 1.4.2 (costa) e 1.7.7 (prora e rotta).')
+exec(open('intermedi.py').read())
+intermedi([('carburante','v1','Verifica · Orientarsi e primi calcoli',['1.7.4-9','1.7.5-59']),
+ ('subacquei','v2','Verifica · Sottocosta',['1.4.2-12','1.4.2-6']),
+ ('conversioni','v3','Verifica · Bussola e tre nord',['1.7.4-21','1.7.4-38']),
+ ('regole','v4','Verifica · Scarroccio e deriva',['1.7.7-26','1.7.7-27'])])
 write_deck(OUT,'Lezione 04 · Primi calcoli, sottocosta, prora e rotta',[s_[0] for s_ in slides],
  {"s1":{"description":"Apertura e agenda","start":"cover"},"s2":{"description":"Rosa dei venti, strumenti, navigazione stimata, S = V × T e carburante","start":"cap1"},
   "s3":{"description":"Condotta sottocosta e subacquei","start":"cap2"},"s4":{"description":"Bussola, tre nord e conversioni","start":"cap3"},

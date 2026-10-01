@@ -2,7 +2,7 @@
 
 Slide (artifact Slides): https://claude.ai/artifact/RsXdsFbux15NxGeKgby3fh
 
-52 slide per 2 ore, con una slide di apertura per ogni capitolo e per la raccolta quiz: 75 minuti di teoria e 45 di raccolta quiz. Programma della scuola: segnali sonori, sicurezza
+60 slide per 2 ore in tre capitoli (Segnali sonori, porti e dotazioni · Incendio e sinistri · Radio, soccorso, meteo, alcol), ognuno con la sua slide di apertura: 75 minuti di teoria con una verifica da 2 quiz dopo ogni paragrafo (5 in tutto) e 45 di raccolta quiz. Programma della scuola: segnali sonori, sicurezza
 (dotazioni, mezzi di soccorso, incendio) ed emergenze (3); dall'All. A DM 323/2021 anche le dotazioni secondo
 il DM 133/2024 (3b), le precauzioni all'ingresso e all'uscita dei porti (4a), il CIRM (3b) e alcol e sostanze (3a).
 
