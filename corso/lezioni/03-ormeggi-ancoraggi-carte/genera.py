@@ -939,7 +939,7 @@ closing(['Spring contro i movimenti avanti e indietro, traversini contro lo scos
 exec(open('intermedi.py').read())
 intermedi([('vento','v1','Verifica · Ormeggi e attracchi',['1.4.4-13','1.4.4-30']),
  ('tipi','v2','Verifica · Ancore e ancoraggio',['1.4.3-3','1.4.3-24']),
- ('grado','v3','Verifica · Coordinate',['1.7.1-17','1.7.1-9']),
+ ('grado','v3','Verifica · Coordinate',['1.7.1-12','1.7.1-9']),
  ('simboli','v4','Verifica · Carte e pubblicazioni',['1.7.2-38','1.7.8-6']),
  ('cardinali','v5','Verifica · Fari e AISM-IALA',['1.5.3-43','1.5.3-71']),
  ('gnomonica','v6','Verifica · Mercatore e gnomonica',['1.7.2-11','1.7.2-14'])])

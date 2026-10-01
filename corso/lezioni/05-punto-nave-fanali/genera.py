@@ -32,12 +32,12 @@ X,Y,W,Hh=700,290,1092,620
 # ============ COVER + AGENDA ============
 cover(5,'Punto nave e fanali','Dove sono? Rilevamenti, luoghi di posizione e GPS. Chi è quella luce? Fanali, segnali diurni e precedenze',
  'Lezione 5. Capitoli del programma della scuola: Carteggio (navigazione costiera, punto nave, GPS) e Prevenzione degli abbordi (fanali e precedenze). Aggiunta dall\'All. A: segnali diurni (materia 5). Segnali sonori e segnalamento IALA nella lezione 6.')
-blocks=[('0:00','30′','Rilevamenti e punto nave costiero',CORAL),('0:30','15′','GPS · quiz 1',SEA),('0:45','25′','Fanali di navigazione · quiz 2',PURPLE),('1:10','15′','Segnali diurni e luci speciali · quiz 3',BLUE),('1:25','20′','Precedenze · quiz 4',GREEN),('1:45','15′','Verifica finale',CORAL)]
+blocks=[('0:00','25′','Cap. 1 · Punto nave costiero e GPS · verifica',CORAL),('0:25','20′','Cap. 2 · Fanali di navigazione · verifica',PURPLE),('0:45','15′','Cap. 3 · Segnali diurni e precedenze · verifica',BLUE),('1:00','15′','Cap. 4 · Regole di rotta · verifica',SEA),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
 right=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:88px; font-weight:700; line-height:1.05; color:{INK}">4 + 2</p>'+p('domande su 20: Navigazione cartografica e COLREG',26,INK,700)+p('Il punto nave costiero è la base dei 26 esercizi di navigazione costiera (lezione 10).',24))
 left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>distinguere rilevamento vero e polare</li><li>fare il punto nave con due luoghi di posizione</li><li>usare il GPS con giudizio</li><li>riconoscere una barca di notte dai fanali</li><li>sapere chi lascia libera la rotta</li></ul>',SEA_T,flex=1.4)
 sec('agenda', head('Lezione 05 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
- notes='Quattro verifiche intermedie da 3 quiz e una finale da 6, tutti ufficiali (DD 131/2022). Banca: navigazione costiera 49 quiz (1.7.6), navigazione elettronica 13 (1.7.3), fanali e segnali diurni 67 (1.5.1), prevenire gli abbordi 60 (1.5.2). All. C: 4 quesiti di navigazione e 2 di COLREG e segnalamento nella scheda da 20.')
+ notes='Quattro capitoli di teoria in 75 minuti, ognuno chiuso da una verifica da 2 quiz ufficiali (DD 131/2022): andare spediti sulle slide, il dettaglio è nelle note. Poi 45 minuti di raccolta quiz: 36 quiz ufficiali. Banca: navigazione costiera 49 quiz (1.7.6), navigazione elettronica 13 (1.7.3), fanali e segnali diurni 67 (1.5.1), prevenire gli abbordi 60 (1.5.2). All. C: 4 quesiti di navigazione e 2 di COLREG e segnalamento nella scheda da 20.')
 
 # ============ COSTIERA ============
 b=f'<rect x="0" y="0" width="1092" height="620" fill="{WATER}" fill-opacity="0.18"/>'
@@ -138,8 +138,8 @@ txt=term('Cosa fa','Dà in ogni istante il punto nave, con un errore di pochi me
 sec('gps', head('Navigazione elettronica','Il GPS')+col(txt,540,20), pinned=svgp(X,Y,W,Hh,b,'Schermo di un GPS cartografico con la costa, la rotta tratteggiata tra due waypoint, la barca e il tasto rosso MOB',pan=True)+lbl,
  notes='Quiz 1.7.3-2 (distanza dai satelliti), -3 e -13 (informazioni), -5 (pochi metri), -6 (punto nave in ogni istante), -7 (obbligatorio oltre 12 miglia), -8 (waypoint a 500 m dai fanali del porto), -11 (non tiene conto degli ostacoli), -12 (navigazione per waypoint), -1, -9, -10 (MOB), -4 (apparati fissi e portatili). Il GPS non sostituisce la carta: il punto stimato e quello costiero restano indispensabili.')
 
-quiz_slide('quiz1','Quiz 1 · Punto nave e GPS',['1.7.6-1','1.7.6-20','1.7.3-8'],False)
-quiz_slide('quiz1r','Quiz 1 · Le risposte',['1.7.6-1','1.7.6-20','1.7.3-8'],True)
+quiz_slide('quiz1','Quiz 1 · Punto nave e GPS',['1.7.6-1', '1.7.6-20'],False)
+quiz_slide('quiz1r','Quiz 1 · Le risposte',['1.7.6-1', '1.7.6-20'],True)
 
 # ============ FANALI ============
 X=128
@@ -186,8 +186,8 @@ txt=term('La regola','A vela: fanali laterali e coronamento. Niente bianco di te
 sec('velanotte', head('COLREG · la vela','Le barche a vela di notte')+col(txt), pinned=svgp(X,Y,W,Hh,b,'Barca a vela di notte vista di fianco: laterale verde a prua, bianco di coronamento a poppa, tricolore o luci facoltative rossa sopra verde in cima all\'albero',pan=False)+lbl,
  notes='Quiz 1.5.1-39 e -67 (vela: laterali e coronamento), -61 (vela oltre 20 m: laterali e fanale di poppa), -40 (facoltativi rosso sopra verde, 360°), -58 e -59 (figure: vela sotto e sopra i 20 m, il tricolore è ammesso sotto i 20 m), -9 e -55 (cono con il vertice in basso: vela e motore insieme), -15 (natanti a vela sotto 7 m: torcia bianca), -6 (entro 3 miglia: torcia di sicurezza a luce bianca). Il tricolore non si usa insieme alle luci facoltative.')
 
-quiz_slide('quiz2','Quiz 2 · I fanali',['1.5.1-4','1.5.1-39','1.5.1-12'],False)
-quiz_slide('quiz2r','Quiz 2 · Le risposte',['1.5.1-4','1.5.1-39','1.5.1-12'],True)
+quiz_slide('quiz2','Quiz 2 · I fanali',['1.5.1-4', '1.5.1-39'],False)
+quiz_slide('quiz2r','Quiz 2 · Le risposte',['1.5.1-4', '1.5.1-39'],True)
 
 # ============ SEGNALI DIURNI E LUCI SPECIALI ============
 def ball(x,y,r=16): return f'<circle cx="{x}" cy="{y}" r="{r}" fill="{INK}"/>'
@@ -215,8 +215,8 @@ side=card(note('Regola generale',GREEN,38)+p('Ognuno lascia libera la rotta a ch
 sec('gerarchia', head('COLREG · la scala delle precedenze','Chi lascia la rotta a chi')+f'<div style="display:flex; gap:40px; align-items:start"><div style="flex:1; display:flex; flex-direction:column; gap:14px">{st}</div>{side}</div>',
  notes='Quiz 1.5.2-29 (una unità a motore dà precedenza, nell\'ordine, a: nave che non governa, manovrabilità limitata, intenta alla pesca, vela), -8 (la manovrabilità limitata lascia libera la rotta a chi non governa), 1.5.1-13 e 1.5.2-24 (chi pesca la lascia a chi non governa e a chi ha manovrabilità limitata), 1.5.1-16 (il motore la lascia sempre a chi non governa), 1.5.2-26 (draga = manovrabilità limitata), 1.5.2-19 (raggiungente), 1.5.2-5 (schemi di separazione del traffico), 1.5.1-14 (di notte il diporto non ha mai precedenza su navi con luci speciali), 1.5.2-2 (COLREG 72). Nel COLREG c\'è anche la nave condizionata dalla propria immersione, tra la manovrabilità limitata e la pesca.')
 
-quiz_slide('quiz3','Quiz 3 · Segnali e precedenze',['1.5.1-10','1.5.1-60','1.5.2-8'],False)
-quiz_slide('quiz3r','Quiz 3 · Le risposte',['1.5.1-10','1.5.1-60','1.5.2-8'],True)
+quiz_slide('quiz3','Quiz 3 · Segnali e precedenze',['1.5.1-10', '1.5.1-60'],False)
+quiz_slide('quiz3r','Quiz 3 · Le risposte',['1.5.1-10', '1.5.1-60'],True)
 
 # ============ RISCHIO DI COLLISIONE ============
 X=128
@@ -272,18 +272,36 @@ side=card(note('Vela e motore',CORAL,38)+p('Il motore lascia libera la rotta all
 sec('vela', head('COLREG · le regole di rotta','Due barche a vela')+f'<div style="display:flex; gap:24px">{cc}{side}</div>',
  notes='Quiz 1.5.2-6, -15, -31, -32 (mure diverse: chi ha il vento a sinistra cede), -7, -16, -59 (stesse mure: sopravento cede a sottovento), 1.5.2-29 (motore cede alla vela). Nei disegni il boma sta sottovento: se il boma è a dritta il vento arriva da sinistra (mure a sinistra).')
 
-quiz_slide('quiz4','Quiz 4 · Precedenze',['1.5.2-44','1.5.2-6','1.5.2-18'],False)
-quiz_slide('quiz4r','Quiz 4 · Le risposte',['1.5.2-44','1.5.2-6','1.5.2-18'],True)
-quiz_slide('finale1','Verifica finale · 1 di 2',['1.7.6-46','1.5.1-36','1.5.2-19'],False)
-quiz_slide('finale1r','Verifica finale · 1 di 2 · risposte',['1.7.6-46','1.5.1-36','1.5.2-19'],True)
-quiz_slide('finale2','Verifica finale · 2 di 2',['1.5.2-7','1.7.3-7','1.5.1-23'],False)
-quiz_slide('finale2r','Verifica finale · 2 di 2 · risposte',['1.5.2-7','1.7.3-7','1.5.1-23'],True)
+quiz_slide('quiz4','Quiz 4 · Precedenze',['1.5.2-44', '1.5.2-6'],False)
+quiz_slide('quiz4r','Quiz 4 · Le risposte',['1.5.2-44', '1.5.2-6'],True)
+exec(open('apertura.py').read())
+chapter('cap1',1,'Punto nave costiero e GPS',['Navigare in vista della costa','Rilevamento vero e polare','Dove sono rispetto al faro','I luoghi di posizione','Il punto nave costiero','Il GPS'],CORAL,
+ 'Circa 25 minuti, verifica da 2 quiz compresa: andare spediti, il dettaglio è nelle note.','circa 25 minuti · 6 argomenti',1,art=(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso'))
+chapter('cap2',2,'Fanali di navigazione',['I fanali di navigazione','Cosa vedo di notte','Le barche a vela di notte'],PURPLE,
+ 'Circa 20 minuti, verifica da 2 quiz compresa.','circa 20 minuti · 3 argomenti',1)
+chapter('cap3',3,'Segnali diurni e precedenze',['Segnali diurni e luci speciali','Chi lascia la rotta a chi'],BLUE,
+ 'Circa 15 minuti, verifica da 2 quiz compresa.','circa 15 minuti · 2 argomenti',1)
+chapter('cap4',4,'Regole di rotta',['C\'è rischio di collisione?','Due barche a motore','Due barche a vela'],SEA,
+ 'Circa 15 minuti, verifica da 2 quiz compresa.','circa 15 minuti · 3 argomenti',1,art=(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata'))
+QZ=[('q01','Quiz 1 · Navigazione costiera',['1.7.6-3','1.7.6-9','1.7.6-23']),('q02','Quiz 2 · Rilevamento e traverso',['1.7.6-8','1.7.6-17','1.7.6-29']),
+ ('q03','Quiz 3 · Luoghi di posizione',['1.7.6-2','1.7.6-14','1.7.6-38']),('q04','Quiz 4 · Il punto nave',['1.7.6-7','1.7.6-46','1.7.6-47']),
+ ('q05','Quiz 5 · GPS',['1.7.3-1','1.7.3-5','1.7.3-9']),('q06','Quiz 6 · I fanali',['1.5.1-5','1.5.1-18','1.5.1-30']),
+ ('q07','Quiz 7 · Motore di notte',['1.5.1-1','1.5.1-17','1.5.1-38']),('q08','Quiz 8 · Segnali diurni',['1.5.1-2','1.5.1-21','1.5.1-32']),
+ ('q09','Quiz 9 · Luci speciali',['1.5.1-13','1.5.1-19','1.5.1-24']),('q10','Quiz 10 · Rischio di collisione',['1.5.2-3','1.5.2-18','1.5.2-41']),
+ ('q11','Quiz 11 · Precedenze a motore',['1.5.2-9','1.5.2-39','1.5.2-46']),('q12','Quiz 12 · Vela, raggiunta, gerarchia',['1.5.2-7','1.5.2-19','1.5.2-29'])]
+raccolta(5,5,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
+ [('Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.'),
+  ('Disegna la barca','Fanali e settori: schizza la barca vista dall\'alto con 225°, 112,5° e 135°.'),
+  ('Chi è a dritta?','A motore lascia la rotta chi vede l\'altro sulla propria dritta; a vela conta il vento.'),
+  ('Attento ai numeri','Gradi, miglia e lunghezze delle navi: 12 e 50 metri cambiano i fanali.')],
+ ['Quiz 1-5 · punto nave e GPS (15)','Quiz 6-9 · fanali e segnali diurni (12)','Quiz 10-12 · rischio di collisione e precedenze (9)'],
+ 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 3 e 9.')
 closing(['Punto nave: almeno due luoghi di posizione; Rlv = Pv + ρ','Sono a SW del faro: lo rilevo per 045°, aggiungi o togli 180°','Testa d\'albero 225°, laterali 112,5°, coronamento 135°','Rilevamento costante e distanza che cala: rischio di collisione','Motore: cede a chi viene da dritta; vela: mure a sinistra e sopravento cedono'],
  'Prossima lezione · 06 · Segnalamento, segnali sonori e sicurezza','A casa: i 49 quiz di navigazione costiera, i 13 sul GPS, i 67 su fanali e segnali diurni e i 60 sulle precedenze.')
 write_deck(OUT,'Lezione 05 · Punto nave e fanali',
- ['cover','agenda','costiera','rilevamento','reciproco','luoghi','puntonave','gps','quiz1','quiz1r',
-  'fanali','cosavedo','velanotte','quiz2','quiz2r','diurni','gerarchia','quiz3','quiz3r',
-  'rischio','motore','vela','quiz4','quiz4r','finale1','finale1r','finale2','finale2r','chiusura'],
- {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"Navigazione costiera: rilevamenti, luoghi di posizione, punto nave, GPS","start":"costiera"},
-  "s3":{"description":"Fanali di navigazione e barche a vela di notte","start":"fanali"},"s4":{"description":"Segnali diurni, luci speciali e scala delle precedenze","start":"diurni"},
-  "s5":{"description":"Rischio di collisione e regole di rotta, verifica finale","start":"rischio"}})
+ ['cover','agenda','cap1','costiera','rilevamento','reciproco','luoghi','puntonave','gps','quiz1','quiz1r',
+  'cap2','fanali','cosavedo','velanotte','quiz2','quiz2r','cap3','diurni','gerarchia','quiz3','quiz3r',
+  'cap4','rischio','motore','vela','quiz4','quiz4r','capquiz','quiz']+[q+s for q,_,_ in QZ for s in ('','r')]+['chiusura'],
+ {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"Navigazione costiera: rilevamenti, luoghi di posizione, punto nave, GPS","start":"cap1"},
+  "s3":{"description":"Fanali di navigazione e barche a vela di notte","start":"cap2"},"s4":{"description":"Segnali diurni, luci speciali e scala delle precedenze","start":"cap3"},
+  "s5":{"description":"Rischio di collisione e regole di rotta","start":"cap4"},"s6":{"description":"Raccolta quiz","start":"capquiz"}})

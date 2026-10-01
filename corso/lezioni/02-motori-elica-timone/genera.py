@@ -23,12 +23,12 @@ def boxn(title,body,c,bg):
 # ============ COVER + AGENDA ============
 cover(2,'Motori, elica e timone','Come funziona il motore, come spinge l\'elica, come governa il timone',
  'Lezione 2. Capitoli del programma della scuola: Motori ed Elica-Timone. All. A al DM 323/2021: materia 2 (motori, avarie, calcolo dell\'autonomia) e punto 1b (elica, timone). Ordine del manuale Il Frangente, cap. 1: motore e trasmissione, funzionamento, raffreddamento, irregolarità, elica, effetto evolutivo, timone, effetti combinati.')
-blocks=[('0:00','35′','Il motore: benzina, trasmissioni, raffreddamento, diesel · quiz 1',CORAL),('0:35','20′','L\'elica: tipi, effetto evolutivo, spinta, passo · quiz 2',BLUE),('0:55','20′','Avarie del diesel, manutenzione, autonomia · quiz 3',PURPLE),('1:15','30′','Timone, doppia linea d\'asse, effetti combinati · quiz 4',GREEN),('1:45','15′','Verifica finale',CORAL)]
+blocks=[('0:00','25′','Cap. 1 · Il motore · verifica',CORAL),('0:25','15′','Cap. 2 · L\'elica · verifica',BLUE),('0:40','15′','Cap. 3 · Avarie e autonomia · verifica',PURPLE),('0:55','20′','Cap. 4 · Timone ed effetti combinati · verifica',SEA),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
 right=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:88px; font-weight:700; line-height:1.05; color:{INK}">1 + 1</p>'+p('domande su 20: una di Motori e una di Teoria dello scafo (elica e timone)',26,INK,700)+p('104 quiz ufficiali sui motori, di cui 27 sul calcolo dell\'autonomia; 50 su elica, timone e stabilità.',24))
 left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>riconoscere le installazioni del motore e la linea d\'asse</li><li>spiegare il ciclo a 4 tempi, benzina e diesel</li><li>capire cosa ti dice un motore che non va</li><li>calcolare carburante e autonomia con il 30% di riserva</li><li>prevedere l\'effetto dell\'elica e del timone</li></ul>',SEA_T,flex=1.4)
 sec('agenda', head('Lezione 02 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
- notes='Quattro verifiche intermedie da 3 quiz e una finale da 6, tutti ufficiali (DD 131/2022). Il capitolo dell\'Excel della scuola: motore marino, trasmissione, 4 tempi, diesel, raffreddamento EB/FB, inconvenienti; elica e timone.')
+ notes='Quattro capitoli di teoria in 75 minuti, ognuno chiuso da una verifica da 2 quiz ufficiali (DD 131/2022): andare spediti sulle slide, il dettaglio è nelle note. Poi 45 minuti di raccolta quiz: 36 quiz ufficiali. Il capitolo dell\'Excel della scuola: motore marino, trasmissione, 4 tempi, diesel, raffreddamento EB/FB, inconvenienti; elica e timone.')
 
 # ============ INSTALLAZIONI ============
 def mini_hull(extra, stern_tall=False):
@@ -280,8 +280,8 @@ txt=tcol(1260,[(1,'Presa a mare e pompa 1','La girante aspira l\'acqua di mare f
 sec('raffreddamentoeb', head('L\'impianto di raffreddamento','Entrobordo: circuito chiuso')+txt, pinned=svgp(X,Y,W,Hh,b,'Schema del raffreddamento entrobordo: presa a mare con valvola, filtro, pompa con girante, scambiatore di calore con vaso di espansione, circuito chiuso del motore con termostato e pompa di circolazione, acqua di mare che esce con lo scarico attraverso la marmitta')+lbls,
  notes='Quiz 1.2.1-13 (lo scambiatore raffredda il fluido del circuito chiuso con l\'acqua di mare), -8 (causa più comune di surriscaldamento: presa a mare della pompa occlusa), 1.1.1-64 (passascafo). Nel disegno l\'azzurro è l\'acqua di mare (circuito aperto), l\'arancio il liquido di raffreddamento (circuito chiuso, con il termostato giallo sul motore e il tappo del vaso di espansione sullo scambiatore). Alcuni entrobordo piccoli hanno il raffreddamento diretto, come il fuoribordo. Dopo una lunga navigazione: lasciar raffreddare il motore e controllare il livello dell\'olio (1.2.1-36).')
 
-quiz_slide('quiz1','Quiz 1 · Il motore',['1.2.1-6','1.2.1-14','1.2.1-13'],False)
-quiz_slide('quiz1r','Quiz 1 · Le risposte',['1.2.1-6','1.2.1-14','1.2.1-13'],True)
+quiz_slide('quiz1','Quiz 1 · Il motore',['1.2.1-6', '1.2.1-14'],False)
+quiz_slide('quiz1r','Quiz 1 · Le risposte',['1.2.1-6', '1.2.1-14'],True)
 
 # ============ INCONVENIENTI: MOTORE A SCOPPIO E DIESEL ============
 def sym(t,cs,c):
@@ -356,8 +356,8 @@ e3=card(tag('Cosa riduce l\'autonomia',CORAL)+p('Mare mosso (a pari velocità si
 sec('autonomia', head('Calcolo dell\'autonomia','Autonomia e consumi')+f'<div style="display:flex; gap:28px; align-items:start">{svgi(420,300,g,"Indicatore del carburante con la zona di riserva in rosso",pan=False)}<div style="flex:1; display:flex; flex-direction:column; gap:18px">{e1}{e2}</div></div>'+e3,
  notes='Quiz 1.2.3-6 (30 l, 20 l/h → 90 min, con il 30% circa 69 min), 1.2.3-2 (80 HP × 0,3 kg = 24 kg/h ÷ 0,75 = 32 l/h), 1.2.2-3 (autonomia dalla potenza e dal peso specifico), 1.2.3-3 (mare mosso), 1.2.2-28 e -29 (fattori), 1.2.2-5 (consumo a potenza massima).')
 
-quiz_slide('quiz2','Quiz 3 · Avarie e autonomia',['1.2.2-9','1.2.2-5','1.2.3-7'],False)
-quiz_slide('quiz2r','Quiz 3 · Le risposte',['1.2.2-9','1.2.2-5','1.2.3-7'],True)
+quiz_slide('quiz2','Quiz 3 · Avarie e autonomia',['1.2.2-9', '1.2.3-7'],False)
+quiz_slide('quiz2r','Quiz 3 · Le risposte',['1.2.2-9', '1.2.3-7'],True)
 
 # ============ ELICA ============
 pf=f'<rect x="0" y="0" width="420" height="260" rx="30" fill="#FFFFFF"/><circle cx="140" cy="130" r="112" fill="none" stroke="{BLUE}" stroke-width="3"/><g transform="translate(140 130)">'+''.join(f'<path d="M0 0 Q-34 -40 -8 -104 Q30 -96 22 -22 Z" fill="{CORAL}" stroke="{NAVY}" stroke-width="4" transform="rotate({a})"/>' for a in (0,120,240))+f'<circle r="22" fill="{NAVY}"/><circle r="7" fill="{SUN}"/></g>'
@@ -528,8 +528,8 @@ cR=colt('Rotazione sul posto',PURPLE,[tc(1,-1,'Sinistrorsa indietro, destrorsa a
 sec('bielica', head('Destrorsa a dritta · sinistrorsa a sinistra','Doppia linea d\'asse')+f'<div style="display:flex; gap:24px">{cA}{cI}{cR}</div>',
  notes='Quiz 1.1.2-5, -3, -26, -43 (destrorsa a dritta e sinistrorsa a sinistra, per compensare l\'effetto laterale delle pale), -42 (timoni accoppiati), -29 (solo motore di dritta in marcia indietro: prora a dritta). Frecce verdi: motore avanti; rosse: motore indietro; viola: dove va la prora.')
 
-quiz_slide('quiz3','Quiz 2 · L\'elica',['1.1.2-7','1.1.2-11','1.1.2-12'],False)
-quiz_slide('quiz3r','Quiz 2 · Le risposte',['1.1.2-7','1.1.2-11','1.1.2-12'],True)
+quiz_slide('quiz3','Quiz 2 · L\'elica',['1.1.2-7', '1.1.2-11'],False)
+quiz_slide('quiz3r','Quiz 2 · Le risposte',['1.1.2-7', '1.1.2-11'],True)
 
 # ============ TIMONE ============
 def rud(comp):
@@ -659,19 +659,38 @@ k3=card(note('Trucchi di manovra',CORAL,40)+'<ul style="font-size:25px; line-hei
 sec('combinati', head('Elica + timone','Ormeggi: elica e timone in manovra')+f'<div style="display:flex; gap:24px">{k1}{k2}{k3}</div>',
  notes='Quiz 1.1.2-21 (ormeggio di poppa con sinistrorsa), -22 (all\'inglese con destrorsa, banchina a sinistra), -28 (timone a dritta in retro con destrorsa), -38 (avaria al timone: remo a sinistra). Le prove pratiche dell\'All. D chiedono proprio gli effetti di timone ed elica in marcia avanti e indietro.')
 
-quiz_slide('quiz4','Quiz 4 · Il timone',['1.1.2-10','1.1.2-14','1.1.2-29'],False)
-quiz_slide('quiz4r','Quiz 4 · Le risposte',['1.1.2-10','1.1.2-14','1.1.2-29'],True)
-quiz_slide('finale1','Verifica finale · 1 di 2',['1.2.1-9','1.2.1-4','1.2.1-3'],False)
-quiz_slide('finale1r','Verifica finale · 1 di 2 · risposte',['1.2.1-9','1.2.1-4','1.2.1-3'],True)
-quiz_slide('finale2','Verifica finale · 2 di 2',['1.2.3-6','1.1.2-23','1.1.2-13'],False)
-quiz_slide('finale2r','Verifica finale · 2 di 2 · risposte',['1.2.3-6','1.1.2-23','1.1.2-13'],True)
+quiz_slide('quiz4','Quiz 4 · Il timone',['1.1.2-10', '1.1.2-14'],False)
+quiz_slide('quiz4r','Quiz 4 · Le risposte',['1.1.2-10', '1.1.2-14'],True)
+exec(open('apertura.py').read())
+chapter('cap1',1,'Il motore',['Benzina: miscela e scintilla','Il ciclo a quattro tempi','S-drive, IPS, POD e idrogetto','Dal motore all\'elica','Fuoribordo, entrofuoribordo, entrobordo','Inconvenienti del motore a scoppio','Raffreddamento a circuito aperto','Raffreddamento a circuito chiuso','Diesel: aria compressa e iniettori','Il ciclo del diesel','Benzina e diesel a confronto'],CORAL,
+ 'Circa 25 minuti, verifica da 2 quiz compresa: 11 slide, andare spediti e lasciare il dettaglio alle note.','circa 25 minuti · 11 argomenti',2)
+chapter('cap2',2,'L\'elica',['Le tipologie di eliche','Effetto evolutivo e curva di evoluzione','Spinta e velocità','Mozzo, pale, passo e regresso'],BLUE,
+ 'Circa 15 minuti, verifica da 2 quiz compresa.','circa 15 minuti · 4 argomenti',1)
+chapter('cap3',3,'Avarie, manutenzione e autonomia',['Inconvenienti del motore diesel','Carburante e manutenzione','Quanto carburante imbarcare','Autonomia e consumi'],PURPLE,
+ 'Circa 15 minuti, verifica da 2 quiz compresa.','circa 15 minuti · 4 argomenti',1,art=(fire_scene(),'Illustrazione: estintore accanto a una fiamma'))
+chapter('cap4',4,'Timone ed effetti combinati',['Timone a barra e a ruota','Cosa fa il timone','Tipi di timoni','Doppia linea d\'asse','Destrorsa: effetto evolutivo','Sinistrorsa: effetto evolutivo','Effetti combinati elica e timone','Ormeggi: elica e timone in manovra'],SEA,
+ 'Circa 20 minuti, verifica da 2 quiz compresa.','circa 20 minuti · 8 argomenti',1,art=(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata'))
+QZ=[('q01','Quiz 1 · Benzina e diesel',['1.2.1-2','1.2.1-3','1.2.1-32']),('q02','Quiz 2 · Ciclo e accensione',['1.2.1-16','1.2.1-17','1.2.1-18']),
+ ('q03','Quiz 3 · Trasmissioni e idrogetto',['1.2.1-9','1.2.1-45','1.2.1-47']),('q04','Quiz 4 · Il raffreddamento',['1.2.1-4','1.2.1-8','1.2.1-13']),
+ ('q05','Quiz 5 · Il diesel',['1.2.1-1','1.2.1-15','1.2.1-49']),('q06','Quiz 6 · Avarie del motore',['1.2.2-10','1.2.2-15','1.2.2-17']),
+ ('q07','Quiz 7 · Manutenzione e controlli',['1.2.1-36','1.2.1-50','1.2.2-12']),('q08','Quiz 8 · Autonomia e carburante',['1.2.2-2','1.2.2-29','1.2.3-12']),
+ ('q09','Quiz 9 · Le eliche',['1.1.2-1','1.1.2-8','1.1.2-15']),('q10','Quiz 10 · Effetto evolutivo',['1.1.2-2','1.1.2-25','1.1.2-35']),
+ ('q11','Quiz 11 · Il timone',['1.1.2-9','1.1.2-27','1.1.2-39']),('q12','Quiz 12 · Due eliche e manovre',['1.1.2-5','1.1.2-22','1.1.2-42'])]
+raccolta(2,5,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
+ [('Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.'),
+  ('Benzina o diesel?','Candele e carburatore sono della benzina, iniettori e candelette del diesel: guarda di che motore parla.'),
+  ('Destra o sinistra','Destrorsa in retro: la poppa va a sinistra. Disegna l\'elica vista da poppa prima di rispondere.'),
+  ('Attento ai numeri','Litri, ore, nodi e il 30% di riserva: rifai il conto sul foglio.')],
+ ['Quiz 1-5 · il motore (15)','Quiz 6-8 · avarie, manutenzione, autonomia (9)','Quiz 9-12 · elica e timone (12)'],
+ 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 7 e 11.')
 closing(['Motore + elica = sistema propulsivo; l\'invertitore cambia marcia, non il verso del motore','4 tempi: aspirazione, compressione, scoppio, scarico','Benzina: aerare il vano motore; diesel: niente aria nel circuito','Carburante = consumo orario × ore + 30%','Destrorsa in retro: la poppa va a sinistra; si compensa col timone'],
  'Prossima lezione · 03 · Ormeggi, cartografia e primi calcoli','A casa: i 104 quiz ufficiali di Motori e i 50 su elica, timone e stabilità.')
 write_deck(OUT,'Lezione 02 · Motori, elica e timone',
- ['cover','agenda','benzina','quattrotempi','trasmissioni','lineaasse','installazioni','avariescoppio','raffreddamento','raffreddamentoeb','diesel','diesel4t','benzinadiesel','quiz1','quiz1r',
-  'tipieliche','evoluzione','spinta','elica','quiz3','quiz3r',
-  'avariediesel','manutenzione','carburante','autonomia','quiz2','quiz2r',
-  'barraruota','effettitimone','timone','bielica','elicadx2','elicasx','elicatimone','combinati','quiz4','quiz4r','finale1','finale1r','finale2','finale2r','chiusura'],
- {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"Il motore: benzina, ciclo a 4 tempi, trasmissioni, linea d'asse, motore marino, avarie, raffreddamento, diesel","start":"benzina"},
-  "s3":{"description":"L'elica: tipologie, effetto evolutivo, curva di evoluzione, spinta e velocità, passo e regresso","start":"tipieliche"},"s4":{"description":"Avarie del diesel, manutenzione e calcolo dell'autonomia","start":"avariediesel"},
-  "s5":{"description":"Timone, doppia linea d'asse, effetti combinati elica e timone, verifica finale","start":"barraruota"}})
+ ['cover','agenda','cap1','benzina','quattrotempi','trasmissioni','lineaasse','installazioni','avariescoppio','raffreddamento','raffreddamentoeb','diesel','diesel4t','benzinadiesel','quiz1','quiz1r',
+  'cap2','tipieliche','evoluzione','spinta','elica','quiz3','quiz3r',
+  'cap3','avariediesel','manutenzione','carburante','autonomia','quiz2','quiz2r',
+  'cap4','barraruota','effettitimone','timone','bielica','elicadx2','elicasx','elicatimone','combinati','quiz4','quiz4r',
+  'capquiz','quiz']+[q+s for q,_,_ in QZ for s in ('','r')]+['chiusura'],
+ {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"Il motore: benzina, ciclo a 4 tempi, trasmissioni, linea d'asse, motore marino, avarie, raffreddamento, diesel","start":"cap1"},
+  "s3":{"description":"L'elica: tipologie, effetto evolutivo, curva di evoluzione, spinta e velocità, passo e regresso","start":"cap2"},"s4":{"description":"Avarie del diesel, manutenzione e calcolo dell'autonomia","start":"cap3"},
+  "s5":{"description":"Timone, doppia linea d'asse, effetti combinati elica e timone","start":"cap4"},"s6":{"description":"Raccolta quiz","start":"capquiz"}})

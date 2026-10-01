@@ -20,12 +20,12 @@ X,Y,W,Hh=700,290,1092,620
 # ============ COVER + AGENDA ============
 cover(7,'Meteorologia e normativa','Leggere il cielo e i bollettini; conoscere le regole, i documenti e le autorità del diporto',
  'Lezione 7. Capitoli del programma della scuola: Meteorologia e Normativa. Aggiunte dall\'All. A al DM 323/2021: visite e certificazioni (3b) e autorità marittima e ordinanze (8b). La meteo pesa 2 quesiti su 20, la normativa 3.')
-blocks=[('0:00','30′','Pressione, brezze, venti, Beaufort · quiz 1',CORAL),('0:30','25′','Fronti, nubi, onde, bollettini · quiz 2',SEA),('0:55','25′','Unità, documenti, patente, visite · quiz 3',PURPLE),('1:20','25′','Autorità, ambiente, sci nautico · quiz 4',BLUE),('1:45','15′','Verifica finale',CORAL)]
+blocks=[('0:00','20′','Cap. 1 · Pressione e venti · verifica',CORAL),('0:20','20′','Cap. 2 · Fronti, nubi, onde, bollettini · verifica',SEA),('0:40','20′','Cap. 3 · Unità, documenti, patente · verifica',PURPLE),('1:00','15′','Cap. 4 · Autorità e ambiente · verifica',BLUE),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
 right=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:88px; font-weight:700; line-height:1.05; color:{INK}">2 + 3</p>'+p('domande su 20: Meteorologia e Normativa',26,INK,700)+p('Oltre 400 quiz ufficiali in questi capitoli: qui i concetti, a casa l\'allenamento.',24))
 left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>leggere una carta del tempo e un bollettino</li><li>riconoscere venti, fronti e nubi</li><li>distinguere natanti, imbarcazioni e navi</li><li>sapere quali documenti tenere a bordo</li><li>conoscere doveri del comandante e autorità</li></ul>',SEA_T,flex=1.4)
 sec('agenda', head('Lezione 07 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
- notes='Quattro verifiche intermedie da 3 quiz e una finale da 6, tutti ufficiali (DD 131/2022). Banca: elementi di meteorologia 45 quiz (1.6.1), bollettini e previsioni 53 (1.6.2), venti 21 (1.6.3), leggi e regolamenti 124 (1.8.1), sci nautico, pesca, aree protette e ambiente 59 (1.8.2), visite e certificazioni 19 (1.3.4).')
+ notes='Quattro capitoli di teoria in 75 minuti, ognuno chiuso da una verifica da 2 quiz ufficiali (DD 131/2022): andare spediti sulle slide, il dettaglio è nelle note. Poi 45 minuti di raccolta quiz: 36 quiz ufficiali. Banca: elementi di meteorologia 45 quiz (1.6.1), bollettini e previsioni 53 (1.6.2), venti 21 (1.6.3), leggi e regolamenti 124 (1.8.1), sci nautico, pesca, aree protette e ambiente 59 (1.8.2), visite e certificazioni 19 (1.3.4).')
 
 # ============ PRESSIONE ============
 b=f'<rect x="0" y="0" width="1092" height="620" fill="#F4FAFC"/>'
@@ -102,8 +102,8 @@ bottom=f'<div style="position:absolute; left:128px; top:870px; width:1664px; dis
 sec('beaufort', head('Meteorologia · la forza del vento','Quanto soffia: la scala Beaufort'), pinned=svgp(128,Y,W2,H2,b,'Grafico a barre della scala Beaufort da 0 a 12, con i limiti delle categorie di progettazione CE D, C e B')+lbl+bottom,
  notes='Quiz 1.6.1-1 (scala Beaufort), -40 (vento 0-12, mare 0-9), 1.6.2-24 (burrasca = forza del vento), 1.8.1-116, -117, -119 (categorie di progettazione: B fino a forza 8 e onde 4 m, C forza 6 e onde 2 m, D forza 4 e onde 0,3 m, occasionalmente 0,5), 1.8.1-12 e -61 (i limiti delle unità CE dipendono da vento e onde). La categoria A va oltre la forza 8 e i 4 m. Nodi secondo la scala Beaufort dell\'Organizzazione meteorologica mondiale.')
 
-quiz_slide('quiz1','Quiz 1 · Pressione e venti',['1.6.1-19','1.6.1-28','1.6.3-7'],False)
-quiz_slide('quiz1r','Quiz 1 · Le risposte',['1.6.1-19','1.6.1-28','1.6.3-7'],True)
+quiz_slide('quiz1','Quiz 1 · Pressione e venti',['1.6.1-19', '1.6.1-28'],False)
+quiz_slide('quiz1r','Quiz 1 · Le risposte',['1.6.1-19', '1.6.1-28'],True)
 
 # ============ FRONTI ============
 def front(kind):
@@ -163,8 +163,8 @@ sec('meteomar', head('Meteorologia · le previsioni','Bollettini e segni del tem
  notes='Quiz 1.6.2-1 (Centro nazionale di meteorologia e climatologia aeronautica), -2, -14, -15, -21 (avvisi e avvisi di burrasca, Sécurité, precedenza), -16 (contenuto del Meteomar), -17 (canale 68 di continuo), -18 (emesso alle 12 UTC, vale fino alle 00 UTC), -19 e -22 (tendenza: 12 ore successive), -20 (stazioni radio costiere), -23 (Radioservizi). Previsioni locali: -3…-8 (segni premonitori), 1.6.1-39, 1.6.2-30 (venti freddi da N: pressione in aumento), -36 e -37 (vento teso, a raffiche), -38 (foehn).')
 X=700
 
-quiz_slide('quiz2','Quiz 2 · Fronti, nubi e bollettini',['1.6.2-17','1.6.1-41','1.6.2-31'],False)
-quiz_slide('quiz2r','Quiz 2 · Le risposte',['1.6.2-17','1.6.1-41','1.6.2-31'],True)
+quiz_slide('quiz2','Quiz 2 · Fronti, nubi e bollettini',['1.6.2-17', '1.6.1-41'],False)
+quiz_slide('quiz2r','Quiz 2 · Le risposte',['1.6.2-17', '1.6.1-41'],True)
 
 # ============ UNITÀ ============
 b=f'<rect x="0" y="0" width="1092" height="620" fill="#F4FAFC"/>'
@@ -221,8 +221,8 @@ sec('visite', head('Normativa · la sicurezza dell\'unità','Visite e certificat
  notes='Quiz 1.3.4-4 e -10 (solo imbarcazioni e navi), -14, -15, -17 (prima scadenza 8 anni per A e B, 10 per C e D), -8, -13, -16 (poi ogni 5 anni), -2, -7, -11 (visite occasionali), -3 (unità CE: periodiche e occasionali), -6 (visita iniziale: persone trasportabili), -12 (organismo tecnico), -18 (esito sul certificato), -1, -5, -9 (convalida del certificato presso gli STED), -19 (il certificato scade).')
 X=700
 
-quiz_slide('quiz3','Quiz 3 · Unità, patente e visite',['1.8.1-57','1.3.4-8','1.8.1-89'],False)
-quiz_slide('quiz3r','Quiz 3 · Le risposte',['1.8.1-57','1.3.4-8','1.8.1-89'],True)
+quiz_slide('quiz3','Quiz 3 · Unità, patente e visite',['1.8.1-57', '1.3.4-8'],False)
+quiz_slide('quiz3r','Quiz 3 · Le risposte',['1.8.1-57', '1.3.4-8'],True)
 
 # ============ AUTORITÀ ============
 lv=[('Ministero delle infrastrutture e dei trasporti',NAVY),('Comando generale delle Capitanerie di porto',BLUE),('Direzione marittima',PURPLE),('Capitaneria di porto · compartimento',SEA),('Ufficio circondariale marittimo · circondario',GREEN),('Uffici locali e delegazioni di spiaggia',CORAL)]
@@ -261,17 +261,35 @@ txt=term('Chi e quando','Patente sempre, anche con un natante. A bordo un\'altra
 sec('scinautico', head('Normativa · lo sci nautico','Lo sci nautico')+col(txt,540,20), pinned=svgp(X,Y,W,Hh,b,'Barca che traina uno sciatore con un cavo di almeno 12 metri, lontano dalla spiaggia')+lbl,
  notes='Quiz 1.8.2-3, -8, -14 (patente), -4, -9, -26 (una persona esperta nel nuoto oltre al conduttore), -7 e -11 (di giorno, tempo favorevole, mare calmo), -10 e -17 (200 m dalla batimetrica di 1,60 m; 100 m dalle coste a picco), -6 e -19 (partenza e rientro a 3 nodi, perpendicolari alla costa), -12 (cavo di 12 m), -24 (2 sciatori), -23 (specchietto convesso), -16, -18, -21 (gancio, specchietto, invertitore e messa in folle), -20 e -1, -2, -22 (salvagente per sciatore e pronto soccorso), -5 e -25 (distanze dalle altre unità), -15 (partenza lontano da bagnanti), 1.8.1-122 (moto d\'acqua: oltre 1000 m dalla costa, 500 dalle coste a picco).')
 
-quiz_slide('quiz4','Quiz 4 · Autorità, ambiente, sci nautico',['1.8.1-58','1.8.2-49','1.8.2-12'],False)
-quiz_slide('quiz4r','Quiz 4 · Le risposte',['1.8.1-58','1.8.2-49','1.8.2-12'],True)
-quiz_slide('finale1','Verifica finale · 1 di 2',['1.6.1-5','1.6.3-9','1.8.1-60'],False)
-quiz_slide('finale1r','Verifica finale · 1 di 2 · risposte',['1.6.1-5','1.6.3-9','1.8.1-60'],True)
-quiz_slide('finale2','Verifica finale · 2 di 2',['1.3.4-10','1.8.2-9','1.6.2-44'],False)
-quiz_slide('finale2r','Verifica finale · 2 di 2 · risposte',['1.3.4-10','1.8.2-9','1.6.2-44'],True)
+quiz_slide('quiz4','Quiz 4 · Autorità, ambiente, sci nautico',['1.8.1-58', '1.8.2-49'],False)
+quiz_slide('quiz4r','Quiz 4 · Le risposte',['1.8.1-58', '1.8.2-49'],True)
+exec(open('apertura.py').read())
+chapter('cap1',1,'Pressione e venti',['Alta e bassa pressione','Le brezze','I venti del Mediterraneo','La scala Beaufort'],CORAL,
+ 'Circa 20 minuti, verifica da 2 quiz compresa: andare spediti, il dettaglio è nelle note.','circa 20 minuti · 4 argomenti',1,art=(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata'))
+chapter('cap2',2,'Fronti, nubi, onde e bollettini',['I fronti','Le nubi','Le onde','Bollettini e segni del tempo'],SEA,
+ 'Circa 20 minuti, verifica da 2 quiz compresa.','circa 20 minuti · 4 argomenti',1,art=(radio_scene(),'Illustrazione: VHF portatile che riceve il bollettino'))
+chapter('cap3',3,'Unità, documenti e patente',['Natanti, imbarcazioni, navi','I documenti di bordo','La patente nautica','Visite e certificato di sicurezza'],PURPLE,
+ 'Circa 20 minuti, verifica da 2 quiz compresa.','circa 20 minuti · 4 argomenti',1)
+chapter('cap4',4,'Autorità e ambiente',['Il comandante e l\'autorità marittima','Aree marine protette e ambiente','Lo sci nautico'],BLUE,
+ 'Circa 15 minuti, verifica da 2 quiz compresa.','circa 15 minuti · 3 argomenti',1,art=(ring_scene(),'Illustrazione: salvagente anulare con la sagola galleggiante'))
+QZ=[('q01','Quiz 1 · Pressione e isobare',['1.6.1-5','1.6.1-6','1.6.1-38']),('q02','Quiz 2 · Le brezze',['1.6.1-24','1.6.1-27','1.6.1-31']),
+ ('q03','Quiz 3 · I venti',['1.6.3-1','1.6.3-7','1.6.3-13']),('q04','Quiz 4 · Beaufort e maree',['1.6.1-1','1.6.1-22','1.6.1-44']),
+ ('q05','Quiz 5 · Fronti',['1.6.1-11','1.6.1-17','1.6.2-32']),('q06','Quiz 6 · Bollettini e previsioni',['1.6.2-3','1.6.2-6','1.6.2-18']),
+ ('q07','Quiz 7 · Nebbia e temporali',['1.6.1-7','1.6.2-5','1.6.2-26']),('q08','Quiz 8 · Unità e regole',['1.8.1-4','1.8.1-64','1.8.1-86']),
+ ('q09','Quiz 9 · La patente nautica',['1.8.1-55','1.8.1-79','1.8.1-106']),('q10','Quiz 10 · Visite e certificati',['1.3.4-1','1.3.4-7','1.3.4-14']),
+ ('q11','Quiz 11 · Il comandante',['1.8.1-1','1.8.1-7','1.8.1-10']),('q12','Quiz 12 · Sci nautico e pesca',['1.8.2-1','1.8.2-18','1.8.2-36'])]
+raccolta(7,5,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
+ [('Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.'),
+  ('Da dove viene','Il vento si chiama con la direzione da cui soffia: Scirocco da SE, Libeccio da SW.'),
+  ('Chi decide','Comandante, Capitaneria, Motorizzazione: chiediti chi rilascia, chi controlla, chi sanziona.'),
+  ('Attento ai numeri','hPa, metri, miglia, anni di validità: controlla il numero e l\'unità.')],
+ ['Quiz 1-7 · meteorologia (21)','Quiz 8-10 · unità, patente e visite (9)','Quiz 11-12 · comandante, sci nautico e pesca (6)'],
+ 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 4 e 7.')
 closing(['Pressione che cala in fretta: arriva brutto tempo; attorno alla bassa il vento gira in senso antiorario','Di giorno brezza di mare, di notte brezza di terra','Meteomar sul canale 68; gli avvisi di burrasca hanno la precedenza','Natanti fino a 10 m, imbarcazioni fino a 24, poi navi','Evento straordinario: denuncia entro 3 giorni all\'Autorità marittima'],
  'Prossima lezione · 08 · Carteggio entro 12 miglia','A casa: i 119 quiz di meteorologia e i 202 di normativa e ambiente.')
 write_deck(OUT,'Lezione 07 · Meteorologia e normativa',
- ['cover','agenda','pressione','brezze','venti','beaufort','quiz1','quiz1r','fronti','nubi','onde','meteomar','quiz2','quiz2r',
-  'unita','documenti','patente','visite','quiz3','quiz3r','autorita','ambiente','scinautico','quiz4','quiz4r','finale1','finale1r','finale2','finale2r','chiusura'],
- {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"Pressione, brezze, venti e scala Beaufort","start":"pressione"},
-  "s3":{"description":"Fronti, nubi, onde e bollettini","start":"fronti"},"s4":{"description":"Unità, documenti, patente e visite","start":"unita"},
-  "s5":{"description":"Autorità marittima, ambiente e sci nautico, verifica finale","start":"autorita"}})
+ ['cover','agenda','cap1','pressione','brezze','venti','beaufort','quiz1','quiz1r','cap2','fronti','nubi','onde','meteomar','quiz2','quiz2r',
+  'cap3','unita','documenti','patente','visite','quiz3','quiz3r','cap4','autorita','ambiente','scinautico','quiz4','quiz4r','capquiz','quiz']+[q+s for q,_,_ in QZ for s in ('','r')]+['chiusura'],
+ {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"Pressione, brezze, venti e scala Beaufort","start":"cap1"},
+  "s3":{"description":"Fronti, nubi, onde e bollettini","start":"cap2"},"s4":{"description":"Unità, documenti, patente e visite","start":"cap3"},
+  "s5":{"description":"Autorità marittima, ambiente e sci nautico","start":"cap4"},"s6":{"description":"Raccolta quiz","start":"capquiz"}})

@@ -34,14 +34,14 @@ Fonte: [`fonti/programma-lezioni-scuola.xlsx`](fonti/programma-lezioni-scuola.xl
 
 | # | Lezione | Capitoli (All. A) |
 |---|---|---|
-| 1 | Teoria dello scafo | Teoria dello scafo (1a, 1b) · **+ stabilità dell'unità (1b)** |
-| 2 | Motori, elica e timone | Motori (2) · Elica e timone (1b) |
+| 1 | Teoria dello scafo | Teoria dello scafo (1a, 1b) · **+ stabilità dell'unità (1b)** · ultimi 45′: raccolta quiz |
+| 2 | Motori, elica e timone | Motori (2) · Elica e timone (1b) · ultimi 45′: raccolta quiz |
 | 3 | Ormeggi, ancoraggi, carte e segnali | Cap. 1 Attracchi, ormeggi, ancoraggi (4b) · Cap. 2 Cartografia e segnalamento marittimo: coordinate, carte, pubblicazioni, fari, AISM-IALA, navigazione fluviale, Mercatore e gnomonica (7, 5) · ultimi 45′: raccolta quiz |
 | 4 | Primi calcoli, sottocosta, prora e rotta | Carteggio: rosa dei venti, strumenti, navigazione stimata, S = V × T, carburante; prora e rotta, scarroccio, deriva, declinazione, deviazione (7) · **+ Condotta sottocosta: velocità, balneazione, corridoi di lancio (4a)** · ultimi 45′: raccolta quiz |
-| 5 | Punto nave e fanali | Carteggio: navigazione costiera, punto nave, GPS (7) · Prevenzione abbordi: fanali e precedenze (5) · **+ segnali diurni (5)** |
+| 5 | Punto nave e fanali | Carteggio: navigazione costiera, punto nave, GPS (7) · Prevenzione abbordi: fanali e precedenze (5) · **+ segnali diurni (5)** · ultimi 45′: raccolta quiz |
 | 6 | Segnali sonori, sicurezza ed emergenze | Segnali sonori (5) · Sicurezza: dotazioni, mezzi di soccorso, incendio; emergenze: falla, incaglio, collisione, uomo a mare, abbandono, VHF, soccorso, tempo cattivo (3) · **+ dotazioni obbligatorie DM 133/2024 (3b) · + precauzioni in porto (4a) · + CIRM (3b) · + alcol e sostanze (3a)** · ultimi 45′: raccolta quiz |
-| 7 | Meteorologia e normativa | Meteorologia (6) · Normativa (8) · **+ visite e certificazioni (3b) · + autorità marittima e ordinanze (8b)** |
-| 8 | Carteggio entro 12 miglia | Carteggio: la prova entro 12 miglia, carta 5/D, coordinate, distanza, ora o velocità, carburante, metodo ed errori tipici, esercizi 4.1.1-1, -19, -35, -6 e prova simulata 4.1.1-40 (7) |
+| 7 | Meteorologia e normativa | Meteorologia (6) · Normativa (8) · **+ visite e certificazioni (3b) · + autorità marittima e ordinanze (8b)** · ultimi 45′: raccolta quiz |
+| 8 | Carteggio entro 12 miglia | Carteggio: la prova entro 12 miglia, carta 5/D, coordinate, distanza, ora o velocità, carburante, metodo ed errori tipici, esercizi 4.1.1-1, -19, -35, -6 e prova simulata 4.1.1-40 (7) · ultimi 45′: raccolta quiz |
 | 9 | Vela (solo patente a vela) | Parte 1, teoria (1 ora): attrezzatura · teoria e manovre · ripasso in otto flash (1c) · Parte 2, esercitazione quiz vela (1 ora): 40 quesiti per argomento e simulazione d'esame |
 
 ### Argomenti dell'Allegato A aggiunti al programma della scuola
@@ -60,7 +60,7 @@ In grassetto nella tabella sopra; con questi inserimenti tutto l'Allegato A è c
 | Segnali diurni: pallone, cilindro, rombo | 5 | 67* | 5 |
 | Autorità marittima e ordinanze | 8b | 98* | 7 |
 
-\* quesiti dell'intera voce che comprende l'argomento. Rispetto al file: la normativa ripetuta è stata tolta (resta nella 7); le emergenze sono nella lezione 6, dopo la sicurezza; la lezione 8, per tutti, è tutta sul carteggio entro 12 miglia; la vela è tutta nella lezione 9, che chi fa solo motore salta; la lezione 3 raccoglie attracchi, ormeggi e ancoraggi e tutta la cartografia e il segnalamento (fari, AISM-IALA), mentre i primi calcoli sono passati nella 4. Le lezioni rifatte chiudono con 45 minuti di raccolta quiz. Le correnti sono nelle lezioni 13-14 e nell'appendice A.
+\* quesiti dell'intera voce che comprende l'argomento. Rispetto al file: la normativa ripetuta è stata tolta (resta nella 7); le emergenze sono nella lezione 6, dopo la sicurezza; la lezione 8, per tutti, è tutta sul carteggio entro 12 miglia; la vela è tutta nella lezione 9, che chi fa solo motore salta; la lezione 3 raccoglie attracchi, ormeggi e ancoraggi e tutta la cartografia e il segnalamento (fari, AISM-IALA), mentre i primi calcoli sono passati nella 4. Le lezioni 1-8 hanno 75 minuti di teoria divisa in capitoli, ognuno aperto da una slide di apertura, con una verifica da 2 quiz ufficiali dopo ogni paragrafo, e chiudono con 45 minuti di raccolta quiz (36 quiz ufficiali, ognuno con la slide delle risposte). Le correnti sono nelle lezioni 13-14 e nell'appendice A.
 
 ## Lezioni di carteggio (135 esercizi)
 

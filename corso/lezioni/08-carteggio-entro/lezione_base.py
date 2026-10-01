@@ -74,7 +74,7 @@ def profile(x0,wl,L,hull=BOAT,uw=CORAL,st=NAVY,sw=3,fly=False,deck2=False,sil=Fa
 def water(w,y0,y1,op=0.16):
     return f'<rect x="0" y="{y0}" width="{w}" height="{y1-y0}" fill="{WATER}" fill-opacity="{op}"/>'+line(0,y0,w,y0,SEA,3)
 # ---- quiz ----
-def quiz_slide(id_, title, ps, reveal):
+def quiz_slide(id_, title, ps, reveal, e=None):
     cards=''
     for i,pp in enumerate(ps):
         x=Q[pp]; assert not x.get('osc'), pp; opts=''
@@ -87,7 +87,7 @@ def quiz_slide(id_, title, ps, reveal):
                 opts+=f'<p style="font-size:24px; line-height:1.35; color:{c}; padding:10px 12px">{"abc"[j]}) {o}</p>'
         foot = f'<p style="font-size:24px; font-weight:800; color:{SEA}">Risposta esatta: {"abc"[x["x"]]}</p>' if reveal else ''
         cards+=card(f'<p style="font-size:24px; font-weight:800; color:{CORAL}">Domanda {i+1} · quiz {pp}</p><p style="font-size:26px; line-height:1.35; font-weight:800; color:{INK}">{x["d"].strip()}</p><div style="display:flex; flex-direction:column; gap:6px">{opts}</div>{foot}', None if not reveal else '#FFFFFF', 28, 14)
-    e = 'Verifica · risposte esatte' if reveal else 'Verifica · quiz ufficiali DD 131/2022'
+    e = 'Verifica · risposte esatte' if reveal else (e or 'Verifica · quiz ufficiali DD 131/2022')
     notes = ('Risposte: ' + '; '.join(f'{pp} → {"abc"[Q[pp]["x"]]}) {Q[pp]["r"][Q[pp]["x"]].strip()}' for pp in ps)) if reveal else 'Leggere le domande, lasciare un minuto per rispondere, poi passare alla slide con le risposte esatte.'
     sec(id_, head(e, title, SEA if reveal else CORAL)+f'<div style="display:flex; gap:24px; align-items:stretch">{cards}</div>', notes=notes)
 def cover(lesson_no, title, subtitle, notes):
