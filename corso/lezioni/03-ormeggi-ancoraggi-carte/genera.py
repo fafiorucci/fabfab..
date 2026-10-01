@@ -941,7 +941,7 @@ for id_,t,ps,e in QZ:
     quiz_slide(id_+'r',t+' · risposte',ps,True)
 
 closing(['Spring contro i movimenti avanti e indietro, traversini contro lo scostamento; in andana la trappa diventa l\'ormeggio di prua','Con il vento: ancora sopravento; in arrivo si dà per prima la cima sopravento, in partenza si molla per prima la sottovento','Calumo da 3 a 5 volte il fondale; se il rilevamento cambia, l\'ancora ara','Latitudine 0-90° N/S, longitudine 0-180° E/W; 1′ di latitudine = 1 miglio = 1852 m, sulla scala laterale','Entrando in porto rosso a sinistra; cardinali: i coni puntano al nero, i lampi come un orologio'],
- 'Prossima lezione · 04 · Primi calcoli, sottocosta, prora e rotta','A casa: i quiz 1.4.4 (ormeggio), 1.4.3 (ancoraggio), 1.7.1 (coordinate), 1.7.2 (carte) e 1.5.3 (fanali e IALA).')
+ 'Prossima lezione · 04 · Carteggio e Navigazione: primi calcoli, sottocosta, prora e rotta','A casa: i quiz 1.4.4 (ormeggio), 1.4.3 (ancoraggio), 1.7.1 (coordinate), 1.7.2 (carte) e 1.5.3 (fanali e IALA).')
 exec(open('intermedi.py').read())
 intermedi([('vento','v1','Verifica · Ormeggi e attracchi',['1.4.4-13','1.4.4-30']),
  ('tipi','v2','Verifica · Ancore e ancoraggio',['1.4.3-3','1.4.3-24']),

@@ -1,4 +1,4 @@
-# Lezione 04 · Primi calcoli, sottocosta, prora e rotta
+# Lezione 04 · Carteggio e Navigazione: primi calcoli, sottocosta, prora e rotta
 
 Slide (artifact Slides): https://claude.ai/artifact/6MGv79yzKh2XkuvwFxQQiQ
 

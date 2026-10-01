@@ -89,8 +89,8 @@ def chapter(id_,n,title,subs,c,notes,dur='',cols=2,label=None,big=None,art=None)
 
 
 # ============ COVER + AGENDA ============
-cover(4,'Primi calcoli, sottocosta, prora e rotta','Orientarsi e calcolare S = V × T, navigare vicino alla spiaggia, passare dalla bussola alla carta: scarroccio e deriva',
- 'Lezione 4. Capitoli del programma della scuola: Carteggio (primi calcoli: navigazione stimata, miglia, velocità, carburante; prora e rotta, scarroccio, deriva, declinazione, deviazione). Aggiunta dall\'All. A: condotta sottocosta, limiti di velocità, balneazione e corridoi di lancio (punto 4a). Materia 7 per rosa dei venti, strumenti, bussola e conversioni. Gli ultimi 45 minuti sono una raccolta di quiz ufficiali. Attracchi, ormeggi e ancoraggi sono nella lezione 3.')
+cover(4,'Carteggio e Navigazione: primi calcoli, sottocosta, prora e rotta','Orientarsi e calcolare S = V × T, navigare vicino alla spiaggia, passare dalla bussola alla carta: scarroccio e deriva',
+ 'Lezione 4. Capitoli del programma della scuola: Carteggio (primi calcoli: navigazione stimata, miglia, velocità, carburante; prora e rotta, scarroccio, deriva, declinazione, deviazione). Aggiunta dall\'All. A: condotta sottocosta, limiti di velocità, balneazione e corridoi di lancio (punto 4a). Materia 7 per rosa dei venti, strumenti, bussola e conversioni. Gli ultimi 45 minuti sono una raccolta di quiz ufficiali. Attracchi, ormeggi e ancoraggi sono nella lezione 3.', title_size=80)
 import os as _os; exec(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),'esame.py')).read())
 blocks=[('0:00','30′','Rosa, strumenti, stima, S = V × T, carburante',CORAL),('0:30','15′','Sottocosta e subacquei',SEA),('0:45','30′','Bussola, tre nord, prora e rotta, scarroccio e deriva',PURPLE),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
@@ -387,7 +387,7 @@ intermedi([('carburante','v1','Verifica · Orientarsi e primi calcoli',['1.7.4-9
  ('subacquei','v2','Verifica · Sottocosta',['1.4.2-12','1.4.2-6']),
  ('conversioni','v3','Verifica · Bussola e tre nord',['1.7.4-21','1.7.4-38']),
  ('regole','v4','Verifica · Scarroccio e deriva',['1.7.7-26','1.7.7-27'])])
-write_deck(OUT,'Lezione 04 · Primi calcoli, sottocosta, prora e rotta',[s_[0] for s_ in slides],
+write_deck(OUT,'Lezione 04 · Carteggio e Navigazione: primi calcoli, sottocosta, prora e rotta',[s_[0] for s_ in slides],
  {"s1":{"description":"Apertura e agenda","start":"cover"},"s2":{"description":"Rosa dei venti, strumenti, navigazione stimata, S = V × T e carburante","start":"cap1"},
   "s3":{"description":"Condotta sottocosta e subacquei","start":"cap2"},"s4":{"description":"Bussola, tre nord e conversioni","start":"cap3"},
   "s5":{"description":"Prora e rotta, scarroccio e deriva","start":"prorarotta"},"s6":{"description":"Raccolta quiz","start":"capquiz"}})
