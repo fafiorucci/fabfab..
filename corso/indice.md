@@ -1,4 +1,4 @@
-# Patente nautica Vela/Motore senza limiti dalla costa
+# Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa
 
 Corso di **Fabrizio Fiorucci**, skipper e istruttore di vela. Logo in [`logo/`](logo/) (SVG positivo e negativo, PNG).
 
@@ -99,7 +99,7 @@ Fonte dei testi: Allegato A al DD 131/2022 (atto ufficiale, art. 5 L. 633/1941),
 
 ## Presentazione alla scuola nautica
 
-**Rotta verso la Patente Nautica da Diporto · Il corso in sintesi** (7 slide): la presentazione del corso alla scuola nautica. [Slide](https://claude.ai/artifact/FxjVMj32rr5eymmibB5Eec) · sorgenti in [`presentazione-scuola/`](presentazione-scuola/).
+**Rotta verso la Patente Nautica da Diporto · Il corso in sintesi** (8 slide): la presentazione del corso alla scuola nautica. [Slide](https://claude.ai/artifact/FxjVMj32rr5eymmibB5Eec) · sorgenti in [`presentazione-scuola/`](presentazione-scuola/).
 
 | # | Slide | Contenuto |
 |---|---|---|
@@ -118,8 +118,8 @@ Fonti per le slide 3 e 4: art. 6 del DM 323/2021 e programma della prova pratica
 - 15 lezioni da 2 ore: 1-8 per tutti (entro 12 miglia), 9 vela, 10-15 carteggio senza limiti.
 - 13 appendici A–M di ripasso ed esercitazione.
 - Schede riassuntive per lo studente, una o due pagine per lezione (addendum).
-- Presentazione del corso alla scuola nautica, 7 slide.
+- Presentazione del corso alla scuola nautica, 8 slide.
 - 20 prove d'esame simulate complete (appendice D): 10 entro e 10 oltre 12 miglia.
 - 135 esercizi di carteggio del DD 131/2022, tutti svolti.
 
-Deck dell'indice: [slide](https://claude.ai/artifact/KWJagMPHLrNsJ7wsAJTQ2c) (slide 2 presentazione dell'istruttore, sorgente in [`template/slide_istruttore.html`](template/slide_istruttore.html); slide 5 carte d'esame entro e oltre 12 miglia ([`template/slide_carte.html`](template/slide_carte.html)); slide 25 appendici A–F, 26 appendici G–M, 27 presentazione alla scuola e schede riassuntive, 28 riepilogo; la slide sugli argomenti ministeriali aggiunti è stata tolta), aggiornato con [`template/genera_indice_appendici.py`](template/genera_indice_appendici.py), [`template/genera_indice_extra.py`](template/genera_indice_extra.py) e [`template/genera_indice_M.py`](template/genera_indice_M.py).
+Deck dell'indice: [slide](https://claude.ai/artifact/KWJagMPHLrNsJ7wsAJTQ2c) (slide 2 presentazione dell'istruttore, sorgente in [`template/slide_istruttore.html`](template/slide_istruttore.html); slide 5 le 20 domande del quiz base per materia, All. C al DM 323/2021 ([`template/aggiorna_indice_domande20.py`](template/aggiorna_indice_domande20.py)); slide 6 carte d'esame entro e oltre 12 miglia ([`template/slide_carte.html`](template/slide_carte.html)); slide 26 appendici A–F, 27 appendici G–M, 28 presentazione alla scuola e schede riassuntive, 29 riepilogo; la slide sugli argomenti ministeriali aggiunti è stata tolta), aggiornato con [`template/genera_indice_appendici.py`](template/genera_indice_appendici.py), [`template/genera_indice_extra.py`](template/genera_indice_extra.py) e [`template/genera_indice_M.py`](template/genera_indice_M.py).
