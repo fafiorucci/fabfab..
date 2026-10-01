@@ -2,6 +2,9 @@
 
 - Rispondere sempre in italiano.
 - Le presentazioni sono artifact di tipo Slides (tabella degli URL in `corso/export/README.md`).
+- Dicitura del corso, nel piè di pagina di ogni slide e in fondo alla copertina:
+  «Fabrizio Fiorucci · Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa»
+  (in copertina senza il nome). Vale per lezioni, appendici, schede, indice e presentazione della scuola.
 - Lavorare sul branch `claude/corso-patente-nautica-indice-biov9q`: commit e push, niente PR.
 - Lezioni 01-08: teoria in 75 minuti divisa in capitoli, ognuno aperto da una slide di apertura (`chapter()`);
   dopo ogni paragrafo una verifica da 2 quiz ufficiali (DD 131/2022) con la sua slide delle risposte
