@@ -8,7 +8,7 @@ SAND='#F3E3B8'; GREY='#97A6B4'; STEEL='#8E9BAA'; ROCK='#8C7B66'; NIGHT='#0F2238'
 LRED='#E23B3B'; LGREEN='#1FB35A'; LWHITE='#FFF7D6'; LYEL='#FFD84D'; MBLACK='#1B2330'; MYEL='#F2C230'; ORANGE='#F28C28'
 LB.ICON_T.update({'La lezione di oggi':'lifebuoy','Ormeggi e attracchi':'anchor','L\'elica e l\'ormeggio':'propeller','Le cime d\'ormeggio':'helm',
  'Ormeggio in andana':'anchor','Ormeggio all\'inglese':'anchor','Ormeggio con vento':'wind','Attracco a boa e gavitello':'lifebuoy',
- 'Ancora e salpa-ancora':'anchor','Le ancore':'anchor','Regole per l\'ancoraggio':'anchor','Calumo, peso e tenuta':'anchor','Grippia e grippiale':'anchor',
+ 'Ancora e salpa-ancora':'anchor','Com\'è fatta un\'ancora':'anchor','Le ancore':'anchor','Regole per l\'ancoraggio':'anchor','Calumo, peso e tenuta':'anchor','Grippia e grippiale':'anchor',
  'Verifica dell\'ancoraggio':'compass','Tipi di ancoraggio':'anchor','Latitudine e longitudine':'map','I meridiani':'map','I paralleli':'map',
  'I circoli massimi':'map','La latitudine':'map','La longitudine':'map','Grado, primo, miglio e nodo':'dividers','Classificazione delle carte nautiche':'map',
  'Pubblicazioni e documenti nautici':'book','La 1111 INT 1':'book','I simboli delle carte nautiche':'map','Elenco dei fari e segnali da nebbia':'lighthouse',
@@ -241,9 +241,26 @@ b+=arrow(958,532,1010,462,INK,2.5,11)+arrow(1046,566,1041,474,INK,2.5,11)
 for n,x,y,c in [(1,392,110,CORAL),(2,250,110,SEA),(3,640,110,NAVY),(4,1000,90,PURPLE)]: b+=num(x,y,n,c,20)
 lbl=lab(X+130,Y+400,190,'pozzo catene',SOFT,22,800,'center')+lab(X+860,Y+528,100,'marra',CORAL,24,900,'right')+lab(X+968,Y+566,120,'diamante',CORAL,24,900,'center')
 txt=item(1,CORAL,'Barbotin','Ruota sagomata con l\'impronta della catena.',26,22)+item(2,SEA,'Verricello salpa-ancora','Porta il barbotin e recupera la catena.',26,22)+item(3,NAVY,'Catena','A maglie ellittiche.',26,22)+item(4,PURPLE,'Musone','All\'estrema prua, con il passacatena: accoglie l\'ancora issata.',26,22)
-txt+=p('<b>Marra</b>: il braccio che fa presa. <b>Diamante</b>: la parte bassa al centro delle marre. L\'ancora <b>fa testa</b> se tiene, <b>ara</b> se non tiene, <b>speda</b> se si solleva dal fondo.',24,INK)
+txt+=p('<b>Marra</b>: il braccio che fa presa.',24,INK)+p('<b>Diamante</b>: la parte bassa al centro delle marre.',24,INK)+p('L\'ancora <b>fa testa</b> se tiene, <b>ara</b> se non tiene, <b>speda</b> se si solleva dal fondo.',24,INK)
 sec('salpancora', head('Ancoraggi · a bordo','Ancora e salpa-ancora')+col(txt,540,16), pinned=svgp(X,Y,W,Hh,b,'Sezione della prua: verricello salpa-ancora con il barbotin sul ponte, catena che scende nel pozzo catene e che corre verso il musone all\'estrema prua, dove è appesa l\'ancora')+lbl,
  notes='Quiz 1.4.3-10 (barbotin), -9 (maglie ellittiche), -16 e -25 (marre), -19 e -33 (diamante), -17 e -31 (fa testa), -24 (ara), -37 (speda). Le altre parti dell\'ancora ammiragliato (cicala, ceppo, fuso, patte) non sono chieste nei quiz.')
+
+# ---- Nomenclatura dell'ancora ----
+b=f'<circle cx="560" cy="80" r="28" fill="none" stroke="{NAVY}" stroke-width="12"/>'
+b+=f'<rect x="400" y="128" width="320" height="24" rx="12" fill="{STEEL}" stroke="{NAVY}" stroke-width="4"/><circle cx="400" cy="140" r="16" fill="{NAVY}"/><circle cx="720" cy="140" r="16" fill="{NAVY}"/>'
+b+=f'<rect x="546" y="104" width="28" height="410" rx="10" fill="{STEEL}" stroke="{NAVY}" stroke-width="4"/>'
+b+=f'<path d="M340 390 Q380 530 560 530 Q740 530 780 390" fill="none" stroke="{NAVY}" stroke-width="30" stroke-linecap="round"/><path d="M340 390 Q380 530 560 530 Q740 530 780 390" fill="none" stroke="{STEEL}" stroke-width="18" stroke-linecap="round"/>'
+b+=f'<path d="M340 390 L290 330 L330 318 L372 370 Z" fill="{CORAL}" stroke="{NAVY}" stroke-width="4" stroke-linejoin="round"/><path d="M780 390 L830 330 L790 318 L748 370 Z" fill="{CORAL}" stroke="{NAVY}" stroke-width="4" stroke-linejoin="round"/>'
+b+=f'<circle cx="560" cy="530" r="20" fill="{SUN}" stroke="{NAVY}" stroke-width="4"/>'
+for i in range(9):
+    t=i/8; x=596+t*420; y=74+t*t*160; a=math.degrees(math.atan2(2*t*160/420*1,1))
+    if i%2==0: b+=f'<ellipse cx="{x:.0f}" cy="{y:.0f}" rx="26" ry="14" fill="none" stroke="{NAVY}" stroke-width="7" transform="rotate({a:.0f} {x:.0f} {y:.0f})"/>'
+    else: b+=f'<rect x="{x-26:.0f}" y="{y-4:.0f}" width="52" height="8" rx="4" fill="{NAVY}" transform="rotate({a:.0f} {x:.0f} {y:.0f})"/>'
+b+=arrow(420,60,528,76,INK,3)+arrow(300,190,398,150,INK,3)+arrow(700,300,580,300,INK,3)+arrow(200,420,330,392,INK,3)+arrow(240,300,300,332,INK,3)+arrow(760,580,584,536,INK,3)
+lbl=lab(X+250,Y+40,170,'Cicala',INK,24,800,'right')+lab(X+130,Y+172,170,'Ceppo',INK,24,800,'right')+lab(X+712,Y+284,200,'Fuso',INK,24,800)+lab(X+40,Y+404,160,'Marra',CORAL,24,900,'right')+lab(X+60,Y+282,180,'Patta',CORAL,24,800,'right')+lab(X+770,Y+560,200,'Diamante',INK,24,900)+lab(X+800,Y+250,260,'catena: maglie ellittiche',NAVY,24,800)
+txt=term('Cicala','L\'anello in cima al fuso dove si fissa la catena.')+term('Ceppo','La barra trasversale: fa girare l\'ancora sul fondo così che una marra si pianti.')+term('Fuso','L\'asta centrale che unisce cicala e marre.')+term('Marre e patte','I bracci che fanno presa sul fondo; le patte sono le loro estremità allargate.')+term('Diamante','La parte bassa al centro delle marre: qui si lega la grippia.')
+sec('nomenclatura', head('Ancoraggi · le parti','Com\'è fatta un\'ancora')+col(txt,520,18), pinned=svgp(X,Y,W,Hh,b,'Ancora classica ammiragliato con cicala, ceppo, fuso, marre con le patte e diamante, e catena a maglie ellittiche')+lbl,
+ notes='Nomenclatura generale sull\'ancora ammiragliato, la più chiara per imparare i nomi; a bordo si usano i tipi della slide seguente. Quiz 1.4.3-16 e -25 (marre), -19 e -33 (diamante), -26 (grippia legata al diamante), -9 (catena a maglie ellittiche).')
 
 # ---- Le ancore ----
 def a_shank(h=120): return f'<rect x="146" y="20" width="18" height="{h}" rx="6" fill="{STEEL}" stroke="{NAVY}" stroke-width="3"/><circle cx="155" cy="22" r="12" fill="none" stroke="{NAVY}" stroke-width="5"/>'
