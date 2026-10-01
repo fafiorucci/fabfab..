@@ -6,7 +6,7 @@ Slide (artifact Slides): https://claude.ai/artifact/PFnQXEjrpjDEFMPQjCCM3B
 
 - Capitolo 1 · Attracchi, ormeggi, ancoraggi (circa 35′, All. A punto 4b): ormeggi e attracchi, l'elica e l'ormeggio
   (destrorsa/sinistrorsa, giardinetto, bow thruster), cime d'ormeggio, ormeggio in andana e all'inglese (spring, traversini,
-  doppino), ormeggio con vento, boa e gavitello, ancora e salpa-ancora, nomenclatura dell'ancora, le otto ancore, regole per l'ancoraggio, calumo e
+  doppino), ormeggio con vento, boa e gavitello, ancora e salpa-ancora, nomenclatura dell'ancora, le dieci ancore con i fondali adatti, regole per l'ancoraggio, calumo e
   peso, grippia e grippiale, verifica dell'ancoraggio, tipi di ancoraggio (ruota, appennellate, afforcate).
 - Capitolo 2 · Cartografia e segnalamento marittimo (circa 40′, materia 7 e punto 5): latitudine e longitudine, meridiani,
   paralleli, circoli massimi, grado-primo-miglio-nodo, classificazione delle carte, pubblicazioni, 1111 INT 1 e simboli,

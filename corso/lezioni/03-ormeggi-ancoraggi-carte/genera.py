@@ -290,13 +290,29 @@ def ultra():
             f'<path d="M150 160 Q190 100 260 150 L260 166 Z" fill="{CORAL}" stroke="{NAVY}" stroke-width="3" stroke-linejoin="round"/><path d="M200 120 Q220 150 206 160" fill="none" stroke="{NAVY}" stroke-width="4"/>')
 def rocna():
     return (a_shank(120)+f'<path d="M70 120 Q155 190 240 120 L240 140 Q155 205 70 140 Z" fill="{CORAL}" stroke="{NAVY}" stroke-width="3"/><path d="M80 122 Q155 40 230 122" fill="none" stroke="{NAVY}" stroke-width="7"/>')
-AN=[(ombrello(),'Ombrello','Marre richiudibili: piccole unità e gonfiabili.'),(grappino(),'Grappino','Quattro marre fisse: piccole imbarcazioni.'),
-    (bruce(),'Bruce','Un monoblocco, senza parti articolate.'),(danforth(),'Danforth','La catena passa nell\'occhio di cubia: fondi sabbiosi e fangosi.'),
-    (cqr(),'Delta e CQR','Una marra a vomere d\'aratro: tutti i fondali.'),(mantus(),'Mantus','A tenuta dinamica: tutti i fondali.'),
-    (ultra(),'Ultra','A tenuta dinamica: tutti i fondali.'),(rocna(),'Rocna','Marra a lama concava; con il roll-bar si posiziona sempre bene.')]
-grid_=''.join(card(svgi(310,190,s,f'Disegno dell\'ancora {t}',dw=230,dh=141)+h3(t,26)+p(d,21,BODY,400,1.3),None,16,4) for s,t,d in AN)
-sec('ancore', head('Ancoraggi · i modelli','Le ancore')+f'<div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:16px">{grid_}</div>'+note('Nessuna ancora è adatta allo scoglio o ai fondali rocciosi.',CORAL,34), gap=20,
- notes='Quiz 1.4.3-6 (ombrello per battelli gonfiabili), -7 e -28 (grappino), -39 (Danforth su sabbia e fango), -40 (CQR e Delta per tutti i fondali), -49 (Mantus e Ultra, tenuta dinamica), -52 (Rocna con roll-bar). Il quiz 1.4.3-8 sulla Bruce è oscurato. Sui fondali rocciosi: grippia e grippiale (più avanti).')
+def ammiragliato():
+    return (f'<rect x="146" y="30" width="18" height="130" rx="6" fill="{STEEL}" stroke="{NAVY}" stroke-width="3"/><circle cx="155" cy="22" r="12" fill="none" stroke="{NAVY}" stroke-width="5"/>'
+            f'<rect x="95" y="44" width="120" height="12" rx="6" fill="{STEEL}" stroke="{NAVY}" stroke-width="3"/>'
+            f'<path d="M95 115 Q105 172 155 172 Q205 172 215 115" fill="none" stroke="{NAVY}" stroke-width="14" stroke-linecap="round"/><path d="M95 115 Q105 172 155 172 Q205 172 215 115" fill="none" stroke="{STEEL}" stroke-width="8" stroke-linecap="round"/>'
+            f'<path d="M95 118 L78 92 L98 86 L108 110 Z M215 118 L232 92 L212 86 L202 110 Z" fill="{CORAL}" stroke="{NAVY}" stroke-width="3" stroke-linejoin="round"/>')
+def delta():
+    return (f'<path d="M100 30 L170 110" stroke="{STEEL}" stroke-width="16" stroke-linecap="round"/><circle cx="98" cy="28" r="12" fill="none" stroke="{NAVY}" stroke-width="5"/>'
+            f'<path d="M170 100 L100 150 L150 150 L170 170 L190 150 L240 150 Z" fill="{CORAL}" stroke="{NAVY}" stroke-width="3" stroke-linejoin="round"/>')
+def cqr2(): return cqr()+f'<circle cx="170" cy="104" r="9" fill="{SUN}" stroke="{NAVY}" stroke-width="3"/>'
+TUTTI='tutti i fondali: sabbia, fango, ghiaia, alghe'
+AN=[(ammiragliato(),'Ammiragliato','La classica, con ceppo e due marre.','alghe, ghiaia e fondi duri; meno su sabbia e fango',SEA),
+    (ombrello(),'Ombrello','Marre richiudibili: piccole unità e gonfiabili.','sabbia e fango, per soste brevi',SEA),
+    (grappino(),'Grappino','Quattro marre fisse: solo piccole unità.','roccia e alghe, dove si incastra; soste brevi',SEA),
+    (bruce(),'Bruce','Monoblocco con una marra ad ala, senza parti articolate.','sabbia, fango e ghiaia; meno sulle alghe',SEA),
+    (danforth(),'Danforth','Due marre piatte articolate; il fuso rientra nell\'occhio di cubia.','sabbia e fango, ottima; non su roccia e alghe',SEA),
+    (cqr2(),'CQR','A vomere d\'aratro, con il fuso snodato.',TUTTI,GREEN),
+    (delta(),'Delta','A vomere d\'aratro, fuso fisso: si raddrizza da sola.',TUTTI,GREEN),
+    (mantus(),'Mantus','Tenuta dinamica: marra a lama.',TUTTI,GREEN),
+    (ultra(),'Ultra','Tenuta dinamica: marra concava zavorrata in punta.',TUTTI,GREEN),
+    (rocna(),'Rocna','Marra concava con roll-bar: si posiziona sempre bene.',TUTTI,GREEN)]
+grid_=''.join(card(svgi(310,190,s,f'Disegno dell\'ancora {t}',dw=170,dh=104)+h3(t,26)+p(d,20,BODY,400,1.25)+f'<p style="font-size:20px; line-height:1.25; font-weight:800; color:{c}">Fondale: {fd}</p>',None,14,4) for s,t,d,fd,c in AN)
+sec('ancore', head('Ancoraggi · i modelli','Le ancore')+f'<div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr 1fr; gap:14px">{grid_}</div>'+note('Sulla roccia nessuna ancora tiene sicura: si usa la grippia con il grippiale.',CORAL,32), gap=18,
+ notes='Le dieci ancore più diffuse sulle unità da diporto. Quiz 1.4.3-6 (ombrello per battelli gonfiabili), -7 e -28 (grappino per piccole unità), -39 (Danforth ottima su sabbia e fango), -40 (CQR e Delta per tutti i fondali), -49 (Mantus e Ultra, tenuta dinamica, tutti i fondali), -52 (Rocna con roll-bar). Il quiz 1.4.3-8 sulla Bruce è oscurato. Le indicazioni sui fondali per ammiragliato, ombrello, grappino e Bruce sono di pratica marinara: la banca quiz non le chiede. Altri modelli (Spade, Fortress, Hall delle navi) non sono nei quiz.')
 
 # ---- Regole per l'ancoraggio ----
 b=''.join(arrow(x,30,x,110,GREY,8,24) for x in (140,540,940))
