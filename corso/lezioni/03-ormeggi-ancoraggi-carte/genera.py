@@ -583,10 +583,14 @@ PB=[(book(BLUE,ic_list),'Catalogo IIM','L\'elenco di tutte le carte e pubblicazi
     (book(SEA,ic_coast),'Portolano','Le notizie per la navigazione costiera: costa, pericoli, aspetto dei fari, servizi portuali, boe.'),
     (book(PURPLE,ic_light),'Elenco dei Fari e Segnali da nebbia','Posizione, descrizione e caratteristiche dei segnali luminosi e sonori.'),
     (book(CORAL,ic_warn),'Avvisi ai Naviganti','Gli AA.NN. aggiornano carte e pubblicazioni; le correzioni si annotano a margine della carta.')]
-cc=''.join(card(svgi(320,236,s,f'Copertina illustrata: {t}',dw=300,dh=221)+h3(t,28)+p(d,22),None,22,10) for s,t,d in PB)
+cc=''.join(card(svgi(320,236,s,f'Copertina illustrata: {t}',dw=170,dh=125)+h3(t,26)+p(d,22),None,20,8) for s,t,d in PB)
 sec('pubblicazioni', head('I documenti nautici','Pubblicazioni e documenti nautici')+f'<div style="display:flex; gap:20px">{cc}</div>'
- +p('<b>Ristampa</b>: nuova tiratura con le correzioni degli AA.NN. <b>Nuova edizione</b>: modifiche essenziali per la sicurezza, non riportabili con gli AA.NN. Le <b>carte didattiche</b> non sono aggiornate e non sono documenti ufficiali: non si carteggia in navigazione.',25,INK),
- notes='Quiz 1.7.8-1 (catalogo), -2 e -4 (aggiornamenti, Avvisi ai Naviganti), 1.7.2-3 (correzioni a margine della carta), -7 e -5 (Portolano), -6 (Elenco dei Fari), -8 (documenti nautici = carte e pubblicazioni), -3 e 1.7.2-36 (ristampa e nuova edizione), 1.7.2-26 (carte didattiche), 1.7.2-1 (l\'I.I.M.M. copre i mari italiani e il Mediterraneo).')
+ +f'<div style="display:flex; gap:20px">'
+ +card(tag('A bordo: obbligatori',GREEN)+p('<b>Oltre 12 miglia</b>: le <b>carte nautiche</b> della zona (anche elettroniche, se conformi) e gli strumenti da carteggio.',24,INK)+p('<b>Oltre 6 miglia</b>: la <b>tabella dei segnali</b> (COLREG) e la tabella delle deviazioni della bussola.',24,INK),GREEN_T,24,8,1.2)
+ +card(tag('Consigliati, non obbligatori',CORAL)+p('<b>Portolano</b>, <b>Elenco dei Fari</b> e <b>Avvisi ai Naviganti</b>: per il diporto non sono in tabella, ma servono a preparare la navigazione. Carte e pubblicazioni sempre aggiornate.',24,INK),CORAL_T,24,8,1)
+ +'</div>'
+ +p('<b>Ristampa</b>: tiratura corretta con gli AA.NN. · <b>Nuova edizione</b>: modifiche essenziali · Le <b>carte didattiche</b> non sono ufficiali.',22,INK), gap=24,
+ notes='Quiz 1.7.8-1 (catalogo), -2 e -4 (aggiornamenti, Avvisi ai Naviganti), 1.7.2-3 (correzioni a margine della carta), -7 e -5 (Portolano), -6 (Elenco dei Fari), -8 (documenti nautici = carte e pubblicazioni), -3 e 1.7.2-36 (ristampa e nuova edizione), 1.7.2-26 (carte didattiche), 1.7.2-1 (l\'I.I.M.M. copre i mari italiani e il Mediterraneo). Obbligo a bordo: tabella dell\'Allegato V al DM 146/2008 come sostituito dal DM 133/2024 (lezione 06): carte nautiche della zona e strumenti da carteggio oltre 12 miglia (quiz 1.7.5-71), tabella dei segnali e bussola con tabella delle deviazioni oltre 6 miglia (1.3.3-5). Portolano, Elenco dei Fari e Avvisi ai Naviganti non compaiono tra le dotazioni obbligatorie del diporto. I documenti di bordo (licenza, certificato di sicurezza, patente) sono un\'altra cosa: lezione 07.')
 
 # ---- 1111 INT 1 ----
 def light(x,y,s=1): return f'<path d="M{x} {y} Q{x+10*s} {y-30*s} {x+28*s} {y-44*s} Q{x+18*s} {y-18*s} {x} {y} Z" fill="{MAG}" fill-opacity="0.85"/><circle cx="{x}" cy="{y}" r="{5*s}" fill="{NAVY}"/>'
