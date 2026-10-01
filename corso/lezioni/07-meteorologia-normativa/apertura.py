@@ -86,7 +86,7 @@ def raccolta(lez,nchap,topics,QZ,steps,plan,notes_quiz,before='chiusura',esame=N
      'Inizio degli ultimi 45 minuti: 12 slide da 3 quiz ufficiali, ognuna seguita dalle risposte.','36 quiz ufficiali',2,'Ultimi 45 minuti','45′',art=(quiz_scene(),'Illustrazione: scheda di quiz con le risposte segnate e un cronometro sui 45 minuti'))
     cols=[(CORAL,CORAL_T),(SEA,SEA_T),(PURPLE,LILAC_T),(BLUE,BLUE_T)]
     tiles=''.join(f'<div style="display:flex; flex-direction:column; gap:12px; background:{bg}; padding:30px; border-radius:28px"><p style="font-family:{H}; font-size:64px; font-weight:700; line-height:1; color:{c}">{i}</p>{p(t,30,INK,800,1.2)}{p(d,24,INK,500,1.35)}</div>' for i,((t,d),(c,bg)) in enumerate(zip(steps,cols),1))
-    exam=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:80px; font-weight:700; line-height:1.05; color:{INK}">{esame[0]}</p>'+p(esame[1],26,INK,700)+p('Il quiz base ha 20 domande: si passa con al massimo 4 errori, in 30 minuti.',24),None,32,12)
+    exam=esame_box(esame,lez,compact=True)
     li=''.join(f'<li>{x}</li>' for x in plan)
     pl=card(tag("I 45 minuti",SEA)+f'<ol style="font-size:24px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:6px">{li}</ol>',SEA_T,32,12)
     sec('quiz', head(f'Lezione {lez:02d} · ultimi 45 minuti','Raccolta quiz')+f'<div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:20px">{tiles}</div><div style="display:flex; gap:24px">{exam}{pl}</div>',

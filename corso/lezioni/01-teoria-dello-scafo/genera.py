@@ -94,9 +94,10 @@ slides.append(('cover', f'''<section id="cover" data-transition="fade" style="ba
 '''))
 
 # =============== 2 AGENDA ===============
+import os as _os; exec(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),'esame.py')).read())
 blocks=[('0:00','25′','Cap. 1 · L\'unità, i pesi e la carena · verifica',ACC),('0:25','20′','Cap. 2 · Parti, struttura e coperta · verifica',PURPLE),('0:45','30′','Cap. 3 · Assi, stabilità e assetto · 2 verifiche',SEA),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:8px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:700; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.35; font-weight:600; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
-right=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:96px; font-weight:700; line-height:1.1; color:{INK}">1 / 20</p>'+p('domanda di Teoria dello scafo nella scheda del quiz base',26,INK,600)+p('125 quiz ufficiali sul tema: 75 di nomenclatura dello scafo, 50 su elica, timone e stabilità (elica e timone nella lezione 2).',24))
+right=esame_box(['scafo'],1,extra='')
 left=card(tag('Dopo questa lezione sai','#1F6F78')+'<ul style="font-size:26px; line-height:1.4; color:#3A4652; display:flex; flex-direction:column; gap:10px"><li>riconoscere natanti, imbarcazioni e navi</li><li>chiamare per nome ogni parte dello scafo</li><li>distinguere le carene e i movimenti della barca</li><li>spiegare stabilità, flaps e trim</li></ul>',TEALCARD,flex=1.4)
 sec('agenda', head('Lezione 01 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:16px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
  notes='Ordine degli argomenti come nel capitolo 1 del manuale Il Frangente (Teoria della nave): classificazione e caratteristiche, parti principali, attrezzatura di coperta, struttura in legno, assi, assetto, stabilità. Tre capitoli di teoria in 75 minuti con quattro verifiche da 2 quiz ufficiali (DD 131/2022), ognuna seguita dalle risposte: andare spediti sulle slide, il dettaglio è nelle note. Poi 45 minuti di raccolta quiz: 36 quiz ufficiali.')
@@ -445,7 +446,7 @@ raccolta(1,4,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
   ('Quale asse','Rollio attorno all\'asse longitudinale, beccheggio attorno al trasversale: immagina la barca che si muove.'),
   ('Peso o volume','Il dislocamento è un peso, la stazza un volume, la portata un carico.')],
  ['Quiz 1-5 · unità, dimensioni, carene (15)','Quiz 6-10 · parti, struttura e coperta (15)','Quiz 11-12 · assi, stabilità e assetto (6)'],
- 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 8 e 10.',esame=('1 / 20', 'domanda di Teoria dello scafo nella scheda del quiz base'))
+ 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 8 e 10.',esame=['scafo'])
 # =============== CHIUSURA ===============
 pts=['Natante fino a 10 m, imbarcazione fino a 24 m, nave oltre','Opera viva sotto la linea di galleggiamento, opera morta sopra','Rosso a sinistra, verde a dritta: masconi a prua, giardinetti a poppa','Carena tonda = dislocante; V profonda per il mare formato','G basso e carena larga = barca stabile; flaps e trim regolano l\'assetto']
 ul=''.join(f'<li>{x}</li>' for x in pts)

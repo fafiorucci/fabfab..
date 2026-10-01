@@ -20,9 +20,10 @@ X,Y,W,Hh=700,290,1092,620
 # ============ COVER + AGENDA ============
 cover(7,'Meteorologia e normativa','Leggere il cielo e i bollettini; conoscere le regole, i documenti e le autorità del diporto',
  'Lezione 7. Capitoli del programma della scuola: Meteorologia e Normativa. Aggiunte dall\'All. A al DM 323/2021: visite e certificazioni (3b) e autorità marittima e ordinanze (8b). La meteo pesa 2 quesiti su 20, la normativa 3.')
+import os as _os; exec(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),'esame.py')).read())
 blocks=[('0:00','20′','Cap. 1 · Pressione e venti · verifica',CORAL),('0:20','20′','Cap. 2 · Fronti, nubi, onde, bollettini · verifica',SEA),('0:40','20′','Cap. 3 · Unità, documenti, patente · verifica',PURPLE),('1:00','15′','Cap. 4 · Autorità e ambiente · verifica',BLUE),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
-right=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:88px; font-weight:700; line-height:1.05; color:{INK}">2 + 3</p>'+p('domande su 20: Meteorologia e Normativa',26,INK,700)+p('Oltre 400 quiz ufficiali in questi capitoli: qui i concetti, a casa l\'allenamento.',24))
+right=esame_box(['meteo', 'normativa'],7,extra='')
 left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>leggere una carta del tempo e un bollettino</li><li>riconoscere venti, fronti e nubi</li><li>distinguere natanti, imbarcazioni e navi</li><li>sapere quali documenti tenere a bordo</li><li>conoscere doveri del comandante e autorità</li></ul>',SEA_T,flex=1.4)
 sec('agenda', head('Lezione 07 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
  notes='Quattro capitoli di teoria in 75 minuti, ognuno chiuso da una verifica da 2 quiz ufficiali (DD 131/2022): andare spediti sulle slide, il dettaglio è nelle note. Poi 45 minuti di raccolta quiz: 36 quiz ufficiali. Banca: elementi di meteorologia 45 quiz (1.6.1), bollettini e previsioni 53 (1.6.2), venti 21 (1.6.3), leggi e regolamenti 124 (1.8.1), sci nautico, pesca, aree protette e ambiente 59 (1.8.2), visite e certificazioni 19 (1.3.4).')
@@ -284,7 +285,7 @@ raccolta(7,5,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
   ('Chi decide','Comandante, Capitaneria, Motorizzazione: chiediti chi rilascia, chi controlla, chi sanziona.'),
   ('Attento ai numeri','hPa, metri, miglia, anni di validità: controlla il numero e l\'unità.')],
  ['Quiz 1-7 · meteorologia (21)','Quiz 8-10 · unità, patente e visite (9)','Quiz 11-12 · comandante, sci nautico e pesca (6)'],
- 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 4 e 7.',esame=('2 + 3', 'domande su 20: Meteorologia e Normativa'))
+ 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 4 e 7.',esame=['meteo', 'normativa'])
 closing(['Pressione che cala in fretta: arriva brutto tempo; attorno alla bassa il vento gira in senso antiorario','Di giorno brezza di mare, di notte brezza di terra','Meteomar sul canale 68; gli avvisi di burrasca hanno la precedenza','Natanti fino a 10 m, imbarcazioni fino a 24, poi navi','Evento straordinario: denuncia entro 3 giorni all\'Autorità marittima'],
  'Prossima lezione · 08 · Carteggio entro 12 miglia','A casa: i 119 quiz di meteorologia e i 202 di normativa e ambiente.')
 write_deck(OUT,'Lezione 07 · Meteorologia e normativa',
