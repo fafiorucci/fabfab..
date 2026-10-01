@@ -22,6 +22,72 @@ def anchor_icon(x,y,s=1,c=NAVY):
 
 def dot(n,c): return f'<p style="width:44px; height:44px; border-radius:22px; background:{c}; color:#FFFFFF; font-weight:900; font-size:22px; text-align:center; line-height:44px; flex:none">{n}</p>'
 
+# ---- slide di apertura dei capitoli (stesse della lezione 03) ----
+GRID='#8FB3C6'; CHART='#FBF8EF'; LAND='#F2E2B3'
+if 'glow' not in globals():
+    def glow(x,y,c,r=9):
+        return f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r*2.6:.0f}" fill="{c}" fill-opacity="0.18"/><circle cx="{x:.0f}" cy="{y:.0f}" r="{r*1.6:.0f}" fill="{c}" fill-opacity="0.35"/><circle cx="{x:.0f}" cy="{y:.0f}" r="{r}" fill="{c}"/>'
+def _panel(cid,body): return f'<defs><clipPath id="{cid}"><rect x="0" y="0" width="500" height="220" rx="48"/></clipPath></defs><rect x="0" y="0" width="500" height="220" rx="48" fill="#FFFFFF" fill-opacity="0.06"/><g clip-path="url(#{cid})">{body}<path d="M-20 200 q30 -10 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 L540 220 L-20 220 Z" fill="{WATER}"/></g>'
+def compass_scene():
+    s=f'<g transform="translate(250 105)"><circle r="82" fill="{CHART}" stroke="{DACC}" stroke-width="8"/>'
+    s+=''.join(f'<path d="M0 -82 L0 -70" stroke="{NAVY}" stroke-width="3" transform="rotate({a_})"/>' for a_ in range(0,360,30))
+    s+=f'<path d="M0 -66 L12 0 L0 66 L-12 0 Z" fill="{NAVY}"/><path d="M-66 0 L0 12 L66 0 L0 -12 Z" fill="{NAVY}" fill-opacity="0.55"/><path d="M0 -66 L12 0 L-12 0 Z" fill="{CORAL}"/><circle r="7" fill="{DACC}"/></g>'
+    s+=f'<text x="250" y="20" text-anchor="middle" font-family="Arial" font-size="18" font-weight="900" fill="{DACC}">N</text>'
+    s+=f'<path d="M60 150 L120 120" stroke="{CORAL}" stroke-width="4" stroke-dasharray="8 6"/><path d="M380 140 L450 110" stroke="{CORAL}" stroke-width="4" stroke-dasharray="8 6"/>'
+    return _panel('chb',s)
+def ring_scene():
+    s=f'<g transform="translate(250 120)"><circle r="62" fill="none" stroke="{ORANGE if "ORANGE" in globals() else "#F28C28"}" stroke-width="30"/><circle r="62" fill="none" stroke="#FFFFFF" stroke-width="30" stroke-dasharray="32 33"/></g>'
+    s+=f'<path d="M312 120 Q380 90 420 140 Q440 170 470 160" fill="none" stroke="{DACC}" stroke-width="6"/>'
+    return _panel('chr',s)
+def fire_scene():
+    s=f'<g transform="translate(180 30)"><rect x="0" y="40" width="70" height="140" rx="22" fill="{CORAL}"/><rect x="20" y="16" width="30" height="28" rx="6" fill="{NAVY}"/><path d="M50 22 L96 8 L100 20 L56 32 Z" fill="{NAVY}"/><rect x="12" y="80" width="46" height="40" rx="6" fill="#FFFFFF"/></g>'
+    s+=f'<g transform="translate(340 140) scale(1.6)"><path d="M0 30 Q-26 10 -12 -22 Q-6 -8 0 -12 Q2 -34 16 -44 Q14 -20 24 -6 Q30 16 0 30 Z" fill="#F28C28"/><path d="M0 26 Q-12 12 -4 -6 Q2 4 6 -2 Q14 10 0 26 Z" fill="{DACC}"/></g>'
+    return _panel('chf',s)
+def radio_scene():
+    s=f'<g transform="translate(205 20)"><rect x="40" y="0" width="12" height="50" rx="5" fill="{NAVY}"/><rect x="10" y="40" width="80" height="150" rx="18" fill="#2A4A6B" stroke="{DACC}" stroke-width="4"/><rect x="24" y="58" width="52" height="34" rx="6" fill="{SEA}"/>'
+    s+=f'<text x="50" y="82" text-anchor="middle" font-family="Arial" font-size="20" font-weight="900" fill="#FFFFFF">16</text>'+''.join(f'<circle cx="{30+(i%3)*20}" cy="{112+(i//3)*20}" r="6" fill="{DACC}"/>' for i in range(9))+'</g>'
+    s+=''.join(f'<path d="M{330+k*22} {60-k*4} q14 30 0 60" fill="none" stroke="{DACC}" stroke-width="5" stroke-linecap="round" opacity="{1-k*0.25}"/>' for k in range(3))
+    return _panel('chv',s)
+def chart_scene():
+    s=f'<defs><clipPath id="chc"><rect x="0" y="0" width="500" height="220" rx="48"/></clipPath></defs><rect x="0" y="0" width="500" height="220" rx="48" fill="#FFFFFF" fill-opacity="0.06"/><g clip-path="url(#chc)">'
+    s+=f'<g transform="rotate(-6 150 120)"><rect x="40" y="40" width="230" height="150" rx="8" fill="{CHART}"/>'
+    s+=''.join(line(40+i*46,40,40+i*46,190,GRID,1.5) for i in range(1,5))+''.join(line(40,40+j*37.5,270,40+j*37.5,GRID,1.5) for j in range(1,4))
+    s+=f'<path d="M40 150 Q90 120 120 150 Q150 175 190 160 L270 170 L270 190 L40 190 Z" fill="{LAND}"/><path d="M70 70 L230 130" stroke="{CORAL}" stroke-width="4" stroke-dasharray="10 6"/><circle cx="70" cy="70" r="6" fill="{CORAL}"/><circle cx="230" cy="130" r="6" fill="{CORAL}"/>'
+    s+=f'<g transform="translate(210 75)"><circle r="24" fill="none" stroke="{NAVY}" stroke-width="2"/><path d="M0 -26 L6 0 L0 26 L-6 0 Z" fill="{NAVY}"/><path d="M-26 0 L0 6 L26 0 L0 -6 Z" fill="{NAVY}" fill-opacity="0.6"/><path d="M0 -26 L6 0 L-6 0 Z" fill="{CORAL}"/></g></g>'
+    s+=f'<path d="M330 220 L330 170 Q380 150 430 165 Q470 175 500 168 L500 220 Z" fill="#2A4A6B"/>'
+    s+=f'<path d="M395 52 L515 10 L515 100 Z" fill="{DACC}" fill-opacity="0.35"/>'
+    s+=f'<path d="M380 168 L386 70 L404 70 L410 168 Z" fill="#FFFFFF"/><rect x="384" y="94" width="22" height="12" fill="{CORAL}"/><rect x="382" y="128" width="26" height="12" fill="{CORAL}"/>'
+    s+=f'<rect x="381" y="52" width="28" height="20" rx="4" fill="{DACC}"/><path d="M378 52 L395 38 L412 52 Z" fill="{CORAL}"/>{glow(395,62,DACC,7)}'
+    s+=f'<path d="M-20 196 q30 -10 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 L540 220 L-20 220 Z" fill="{WATER}"/></g>'
+    return s
+def quiz_scene():
+    s=f'<defs><clipPath id="chq"><rect x="0" y="0" width="500" height="220" rx="48"/></clipPath></defs><rect x="0" y="0" width="500" height="220" rx="48" fill="#FFFFFF" fill-opacity="0.06"/><g clip-path="url(#chq)">'
+    s+=f'<g transform="rotate(-5 160 110)"><rect x="60" y="22" width="200" height="190" rx="14" fill="{CHART}"/><rect x="125" y="12" width="70" height="24" rx="8" fill="{PURPLE}"/>'
+    for i,(ok,yy) in enumerate(((1,62),(1,102),(0,142),(1,182))):
+        s+=f'<rect x="84" y="{yy-14}" width="26" height="26" rx="6" fill="#FFFFFF" stroke="{NAVY}" stroke-width="3"/>'
+        s+=(f'<path d="M89 {yy} l6 7 l12 -14" fill="none" stroke="{GREEN}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>' if ok else f'<path d="M90 {yy-8} l14 14 M104 {yy-8} l-14 14" stroke="{CORAL}" stroke-width="5" stroke-linecap="round"/>')
+        s+=f'<rect x="124" y="{yy-6}" width="{110-i*12}" height="10" rx="5" fill="{GRID}"/>'
+    s+='</g>'
+    s+=f'<g transform="translate(380 118)"><rect x="-10" y="-82" width="20" height="16" rx="4" fill="{DACC}"/><circle r="64" fill="#FFFFFF" stroke="{PURPLE}" stroke-width="10"/>'
+    s+=f'<path d="M0 0 L0 -64 A64 64 0 1 1 -45.3 -45.3 Z" fill="{PURPLE}" fill-opacity="0.25"/><path d="M0 0 L0 -46" stroke="{NAVY}" stroke-width="6" stroke-linecap="round"/><path d="M0 0 L-30 -30" stroke="{CORAL}" stroke-width="5" stroke-linecap="round"/><circle r="7" fill="{NAVY}"/></g>'
+    s+=f'<path d="M-20 200 q30 -10 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 L540 220 L-20 220 Z" fill="{WATER}"/></g>'
+    return s
+_cid=[0]
+def chapter(id_,n,title,subs,c,notes,dur='',cols=2,label=None,big=None,art=None):
+    _cid[0]+=1
+    rows=-(-len(subs)//cols); fs=30 if len(subs)<=12 else 22; bs=52 if len(subs)<=12 else 40
+    items=''.join(f'<div style="display:flex; gap:14px; align-items:center"><p style="width:{bs}px; height:{bs}px; flex:none; border-radius:{bs//2}px; background:{c}; color:#FFFFFF; font-size:{bs*0.45:.0f}px; font-weight:900; text-align:center; line-height:{bs}px">{i}</p><p style="font-size:{fs}px; line-height:1.2; font-weight:700; color:#FFFFFF">{t}</p></div>' for i,t in enumerate(subs,1))
+    left=(f'<div style="width:500px; flex:none; display:flex; flex-direction:column; gap:10px">'
+          f'<p style="font-size:24px; font-weight:900; letter-spacing:2px; text-transform:uppercase; color:{c}">{label or "Capitolo"}</p>'
+          f'<p style="font-family:{H}; font-size:{200 if big is None else 150}px; font-weight:700; line-height:0.9; color:{DACC}">{big or n}</p>'
+          f'<h2 style="font-family:{H}; font-size:56px; font-weight:700; line-height:1.08; color:#FFFFFF">{title}</h2>{squiggle(c,220)}'
+          f'<p style="font-size:26px; font-weight:700; color:{DSOFT}">{dur}</p>'
+          f'<div style="flex:1"></div>'
+          f'<svg aria-label="{art[1] if art else "Illustrazione: barca a vela sul mare"}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 220" width="500" height="220" style="width:500px; height:220px">{art[0] if art else sea_scene(500,220,True,True,"ch"+str(_cid[0]))}</svg></div>')
+    right=f'<div style="flex:1; display:grid; grid-template-columns:repeat({cols},1fr); grid-template-rows:repeat({rows},auto); grid-auto-flow:column; gap:{24 if len(subs)<=12 else 16}px 32px; align-content:center; background:rgba(255,255,255,0.06); padding:36px; border-radius:32px">{items}</div>'
+    sec(id_, f'<div style="display:flex; gap:56px; align-items:stretch; height:792px">{left}{right}</div>', notes=notes, dark=True, gap=0)
+
+
 # ============ COVER + AGENDA ============
 cover(4,'Primi calcoli, sottocosta, prora e rotta','Orientarsi e calcolare S = V × T, navigare vicino alla spiaggia, passare dalla bussola alla carta: scarroccio e deriva',
  'Lezione 4. Capitoli del programma della scuola: Carteggio (primi calcoli: navigazione stimata, miglia, velocità, carburante; prora e rotta, scarroccio, deriva, declinazione, deviazione). Aggiunta dall\'All. A: condotta sottocosta, limiti di velocità, balneazione e corridoi di lancio (punto 4a). Materia 7 per rosa dei venti, strumenti, bussola e conversioni. Gli ultimi 45 minuti sono una raccolta di quiz ufficiali. Attracchi, ormeggi e ancoraggi sono nella lezione 3.')
@@ -34,6 +100,8 @@ sec('agenda', head('Lezione 04 · 2 ore','La lezione di oggi')+f'<div style="dis
 X=700
 
 # ================= PRIMI CALCOLI (dalla vecchia lezione 3) =================
+chapter('cap1',1,'Orientarsi e primi calcoli',['La rosa dei venti','Gli strumenti del carteggio','La navigazione stimata','Spazio, velocità, tempo','Tre esempi svolti','Il carburante sulla carta'],CORAL,
+ 'Circa 30 minuti. I quiz di questa parte sono nella raccolta finale (quiz 1-5).','circa 30 minuti · 6 argomenti',1,art=(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso'))
 # ============ ROSA DEI VENTI ============
 rc,ry,RR=350,310,225
 pt=lambda a,r: (rc+r*math.sin(math.radians(a)), ry-r*math.cos(math.radians(a)))
@@ -138,6 +206,8 @@ sec('carburante', head('Primi calcoli · verso il carteggio','Il carburante sull
  +p('All\'esame di carteggio la soluzione è un intervallo: per l\'esercizio 5.1.2-3 (consumo 4 l/h) la risposta ufficiale è «13÷15 litri».',26,INK),
  notes='Anticipo della lezione 11 (23 esercizi di carburante, famiglie 5.x.2). Stessa regola dei quiz di motori (1.2.3-1: riserva del 30%). Nel carteggio le miglia si misurano sulla carta tra punti noti o calcolati; il tempo si ricava con T = S ÷ V. Tolleranza: le risposte ufficiali danno un intervallo, per es. 5.1.2-1 «29÷31 litri», 5.1.2-2 «19÷21 litri».')
 
+chapter('cap2',2,'Navigare sottocosta',['Vicino alla spiaggia','Subacquei e piccoli natanti'],SEA,
+ 'Circa 15 minuti. Quiz 6-7 nella raccolta finale.','circa 15 minuti · 2 argomenti',1)
 # ============ SOTTOCOSTA ============
 b=f'<rect x="0" y="0" width="1092" height="620" fill="{WATER}" fill-opacity="0.2"/><path d="M0 520 Q300 500 546 520 T1092 512 L1092 620 L0 620 Z" fill="{SAND}"/>'+f'<path d="M0 520 Q300 500 546 520 T1092 512" fill="none" stroke="{LAND_S}" stroke-width="4"/>'
 b+=''.join(f'<circle cx="{x}" cy="290" r="10" fill="{RED}" stroke="{NAVY}" stroke-width="2"/>' for x in range(40,1092,90) if not 660<x<860)
@@ -175,6 +245,8 @@ sec('subacquei', head('Condotta · chi c\'è in acqua','Subacquei e piccoli nata
  notes='Quiz 1.4.2-15 (bandierina rossa con diagonale bianca, sub entro 50 m), -2 e -12 (almeno 100 m, moderando la velocità), -19 (sub a non più di 50 m dalla boa), -8 (unità di appoggio: pallone rosso con bandiera), -14 (bandiera A: palombaro), -9 e -16 (di notte luce gialla lampeggiante, visibile ad almeno 300 m), -20…-24 (entro 1 miglio), -13 (manifestazioni sportive). Pesca: -18 (sportiva consentita entro limiti di cattura), -26 (subacquea oltre 500 m dalle spiagge frequentate), -27 (mai di notte col fucile), -31 (mai con autorespiratori), -30 (100 m dagli impianti fissi), -32 (500 m dai pescatori professionali), -28 e -29 (niente reti a circuizione né pesca professionale).')
 
 
+chapter('cap3',3,'Bussola, prora e rotta',['La bussola magnetica','Tre nord','Da bussola a vero e ritorno','Prora e rotta','Lo scarroccio','La deriva','Vento «da», corrente «verso»'],PURPLE,
+ 'Circa 30 minuti. Quiz 8-12 nella raccolta finale.','circa 30 minuti · 7 argomenti',1,art=(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata'))
 # ============ BUSSOLA
 X=128
 cx,cy=546,320
@@ -285,6 +357,8 @@ rules=card(note('Da ricordare',PURPLE,36)+'<ul style="font-size:25px; line-heigh
 sec('regole', head('Carteggio · attenzione ai versi','Vento «da», corrente «verso»')+f'<div style="display:flex; gap:24px">{wc}{ex}{rules}</div>',
  notes='Quiz 1.7.7-22 (vento 180 soffia verso nord, corrente 180 va verso sud), -29 (rotta Nord con vento e corrente 180: scarroccio favorevole, deriva contraria). Esempio dall\'esercizio ufficiale 5.1.4-2: Rv 090°, Grecale, Sc +10° → Pv 080°. Il Grecale da NE spinge la barca verso Sud, cioè a dritta rispetto a una prora a Est: per questo lo scarroccio è positivo.')
 
+chapter('capquiz',4,'Raccolta quiz',['Rosa dei venti','Strumenti e distanze','Navigazione stimata','S = V × T','Tempo e velocità','Sottocosta','Subacquei','La bussola','Declinazione e deviazione','Tre nord','Prora e rotta','Scarroccio e deriva'],GREEN,
+ 'Inizio degli ultimi 45 minuti: 12 slide da 3 quiz ufficiali, ognuna seguita dalle risposte.','36 quiz ufficiali',2,'Ultimi 45 minuti','45′',art=(quiz_scene(),'Illustrazione: scheda di quiz con le risposte segnate e un cronometro sui 45 minuti'))
 # ============ RACCOLTA QUIZ (45 minuti) ============
 steps=[('1','Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.',CORAL,CORAL_T),
  ('2','Tempo in ore','Nei calcoli trasforma subito i minuti in ore e decimi: 45′ = 0,75 h, 24′ = 0,4 h.',SEA,SEA_T),
@@ -308,6 +382,6 @@ for id_,t,ps in QZ:
 closing(['Angoli da 000° a 360° in senso orario; squadrette per le rotte, compasso per le distanze sulla scala delle latitudini','S = V × T con il tempo in ore e decimi; carburante + 30% di riserva','Entro 200 m dalle spiagge solo nei corridoi di lancio; 100 m dalle boe dei subacquei','Pv = Pb + deviazione + declinazione (Est +, Ovest −), e ritorno','Scarroccio dal vento, deriva dalla corrente: il vento «da», la corrente «verso»'],
  'Prossima lezione · 05 · Punto nave e fanali','A casa: i quiz 1.7.4 (bussola), 1.7.5 (navigazione stimata), 1.4.2 (costa) e 1.7.7 (prora e rotta).')
 write_deck(OUT,'Lezione 04 · Primi calcoli, sottocosta, prora e rotta',[s_[0] for s_ in slides],
- {"s1":{"description":"Apertura e agenda","start":"cover"},"s2":{"description":"Rosa dei venti, strumenti, navigazione stimata, S = V × T e carburante","start":"rosa"},
-  "s3":{"description":"Condotta sottocosta e subacquei","start":"costa"},"s4":{"description":"Bussola, tre nord e conversioni","start":"bussola"},
-  "s5":{"description":"Prora e rotta, scarroccio e deriva","start":"prorarotta"},"s6":{"description":"Raccolta quiz","start":"quiz"}})
+ {"s1":{"description":"Apertura e agenda","start":"cover"},"s2":{"description":"Rosa dei venti, strumenti, navigazione stimata, S = V × T e carburante","start":"cap1"},
+  "s3":{"description":"Condotta sottocosta e subacquei","start":"cap2"},"s4":{"description":"Bussola, tre nord e conversioni","start":"cap3"},
+  "s5":{"description":"Prora e rotta, scarroccio e deriva","start":"prorarotta"},"s6":{"description":"Raccolta quiz","start":"capquiz"}})

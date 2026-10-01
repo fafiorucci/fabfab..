@@ -58,6 +58,72 @@ CARD={'N':([MBLACK,MYEL],[('cone',True),('cone',True)]),'E':([MBLACK,MYEL,MBLACK
       'S':([MYEL,MBLACK],[('cone',False),('cone',False)]),'W':([MYEL,MBLACK,MYEL],[('cone',True),('cone',False)])}
 
 
+# ---- slide di apertura dei capitoli (stesse della lezione 03) ----
+GRID='#8FB3C6'; CHART='#FBF8EF'; LAND='#F2E2B3'
+if 'glow' not in globals():
+    def glow(x,y,c,r=9):
+        return f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r*2.6:.0f}" fill="{c}" fill-opacity="0.18"/><circle cx="{x:.0f}" cy="{y:.0f}" r="{r*1.6:.0f}" fill="{c}" fill-opacity="0.35"/><circle cx="{x:.0f}" cy="{y:.0f}" r="{r}" fill="{c}"/>'
+def _panel(cid,body): return f'<defs><clipPath id="{cid}"><rect x="0" y="0" width="500" height="220" rx="48"/></clipPath></defs><rect x="0" y="0" width="500" height="220" rx="48" fill="#FFFFFF" fill-opacity="0.06"/><g clip-path="url(#{cid})">{body}<path d="M-20 200 q30 -10 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 L540 220 L-20 220 Z" fill="{WATER}"/></g>'
+def compass_scene():
+    s=f'<g transform="translate(250 105)"><circle r="82" fill="{CHART}" stroke="{DACC}" stroke-width="8"/>'
+    s+=''.join(f'<path d="M0 -82 L0 -70" stroke="{NAVY}" stroke-width="3" transform="rotate({a_})"/>' for a_ in range(0,360,30))
+    s+=f'<path d="M0 -66 L12 0 L0 66 L-12 0 Z" fill="{NAVY}"/><path d="M-66 0 L0 12 L66 0 L0 -12 Z" fill="{NAVY}" fill-opacity="0.55"/><path d="M0 -66 L12 0 L-12 0 Z" fill="{CORAL}"/><circle r="7" fill="{DACC}"/></g>'
+    s+=f'<text x="250" y="20" text-anchor="middle" font-family="Arial" font-size="18" font-weight="900" fill="{DACC}">N</text>'
+    s+=f'<path d="M60 150 L120 120" stroke="{CORAL}" stroke-width="4" stroke-dasharray="8 6"/><path d="M380 140 L450 110" stroke="{CORAL}" stroke-width="4" stroke-dasharray="8 6"/>'
+    return _panel('chb',s)
+def ring_scene():
+    s=f'<g transform="translate(250 120)"><circle r="62" fill="none" stroke="{ORANGE if "ORANGE" in globals() else "#F28C28"}" stroke-width="30"/><circle r="62" fill="none" stroke="#FFFFFF" stroke-width="30" stroke-dasharray="32 33"/></g>'
+    s+=f'<path d="M312 120 Q380 90 420 140 Q440 170 470 160" fill="none" stroke="{DACC}" stroke-width="6"/>'
+    return _panel('chr',s)
+def fire_scene():
+    s=f'<g transform="translate(180 30)"><rect x="0" y="40" width="70" height="140" rx="22" fill="{CORAL}"/><rect x="20" y="16" width="30" height="28" rx="6" fill="{NAVY}"/><path d="M50 22 L96 8 L100 20 L56 32 Z" fill="{NAVY}"/><rect x="12" y="80" width="46" height="40" rx="6" fill="#FFFFFF"/></g>'
+    s+=f'<g transform="translate(340 140) scale(1.6)"><path d="M0 30 Q-26 10 -12 -22 Q-6 -8 0 -12 Q2 -34 16 -44 Q14 -20 24 -6 Q30 16 0 30 Z" fill="#F28C28"/><path d="M0 26 Q-12 12 -4 -6 Q2 4 6 -2 Q14 10 0 26 Z" fill="{DACC}"/></g>'
+    return _panel('chf',s)
+def radio_scene():
+    s=f'<g transform="translate(205 20)"><rect x="40" y="0" width="12" height="50" rx="5" fill="{NAVY}"/><rect x="10" y="40" width="80" height="150" rx="18" fill="#2A4A6B" stroke="{DACC}" stroke-width="4"/><rect x="24" y="58" width="52" height="34" rx="6" fill="{SEA}"/>'
+    s+=f'<text x="50" y="82" text-anchor="middle" font-family="Arial" font-size="20" font-weight="900" fill="#FFFFFF">16</text>'+''.join(f'<circle cx="{30+(i%3)*20}" cy="{112+(i//3)*20}" r="6" fill="{DACC}"/>' for i in range(9))+'</g>'
+    s+=''.join(f'<path d="M{330+k*22} {60-k*4} q14 30 0 60" fill="none" stroke="{DACC}" stroke-width="5" stroke-linecap="round" opacity="{1-k*0.25}"/>' for k in range(3))
+    return _panel('chv',s)
+def chart_scene():
+    s=f'<defs><clipPath id="chc"><rect x="0" y="0" width="500" height="220" rx="48"/></clipPath></defs><rect x="0" y="0" width="500" height="220" rx="48" fill="#FFFFFF" fill-opacity="0.06"/><g clip-path="url(#chc)">'
+    s+=f'<g transform="rotate(-6 150 120)"><rect x="40" y="40" width="230" height="150" rx="8" fill="{CHART}"/>'
+    s+=''.join(line(40+i*46,40,40+i*46,190,GRID,1.5) for i in range(1,5))+''.join(line(40,40+j*37.5,270,40+j*37.5,GRID,1.5) for j in range(1,4))
+    s+=f'<path d="M40 150 Q90 120 120 150 Q150 175 190 160 L270 170 L270 190 L40 190 Z" fill="{LAND}"/><path d="M70 70 L230 130" stroke="{CORAL}" stroke-width="4" stroke-dasharray="10 6"/><circle cx="70" cy="70" r="6" fill="{CORAL}"/><circle cx="230" cy="130" r="6" fill="{CORAL}"/>'
+    s+=f'<g transform="translate(210 75)"><circle r="24" fill="none" stroke="{NAVY}" stroke-width="2"/><path d="M0 -26 L6 0 L0 26 L-6 0 Z" fill="{NAVY}"/><path d="M-26 0 L0 6 L26 0 L0 -6 Z" fill="{NAVY}" fill-opacity="0.6"/><path d="M0 -26 L6 0 L-6 0 Z" fill="{CORAL}"/></g></g>'
+    s+=f'<path d="M330 220 L330 170 Q380 150 430 165 Q470 175 500 168 L500 220 Z" fill="#2A4A6B"/>'
+    s+=f'<path d="M395 52 L515 10 L515 100 Z" fill="{DACC}" fill-opacity="0.35"/>'
+    s+=f'<path d="M380 168 L386 70 L404 70 L410 168 Z" fill="#FFFFFF"/><rect x="384" y="94" width="22" height="12" fill="{CORAL}"/><rect x="382" y="128" width="26" height="12" fill="{CORAL}"/>'
+    s+=f'<rect x="381" y="52" width="28" height="20" rx="4" fill="{DACC}"/><path d="M378 52 L395 38 L412 52 Z" fill="{CORAL}"/>{glow(395,62,DACC,7)}'
+    s+=f'<path d="M-20 196 q30 -10 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 L540 220 L-20 220 Z" fill="{WATER}"/></g>'
+    return s
+def quiz_scene():
+    s=f'<defs><clipPath id="chq"><rect x="0" y="0" width="500" height="220" rx="48"/></clipPath></defs><rect x="0" y="0" width="500" height="220" rx="48" fill="#FFFFFF" fill-opacity="0.06"/><g clip-path="url(#chq)">'
+    s+=f'<g transform="rotate(-5 160 110)"><rect x="60" y="22" width="200" height="190" rx="14" fill="{CHART}"/><rect x="125" y="12" width="70" height="24" rx="8" fill="{PURPLE}"/>'
+    for i,(ok,yy) in enumerate(((1,62),(1,102),(0,142),(1,182))):
+        s+=f'<rect x="84" y="{yy-14}" width="26" height="26" rx="6" fill="#FFFFFF" stroke="{NAVY}" stroke-width="3"/>'
+        s+=(f'<path d="M89 {yy} l6 7 l12 -14" fill="none" stroke="{GREEN}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>' if ok else f'<path d="M90 {yy-8} l14 14 M104 {yy-8} l-14 14" stroke="{CORAL}" stroke-width="5" stroke-linecap="round"/>')
+        s+=f'<rect x="124" y="{yy-6}" width="{110-i*12}" height="10" rx="5" fill="{GRID}"/>'
+    s+='</g>'
+    s+=f'<g transform="translate(380 118)"><rect x="-10" y="-82" width="20" height="16" rx="4" fill="{DACC}"/><circle r="64" fill="#FFFFFF" stroke="{PURPLE}" stroke-width="10"/>'
+    s+=f'<path d="M0 0 L0 -64 A64 64 0 1 1 -45.3 -45.3 Z" fill="{PURPLE}" fill-opacity="0.25"/><path d="M0 0 L0 -46" stroke="{NAVY}" stroke-width="6" stroke-linecap="round"/><path d="M0 0 L-30 -30" stroke="{CORAL}" stroke-width="5" stroke-linecap="round"/><circle r="7" fill="{NAVY}"/></g>'
+    s+=f'<path d="M-20 200 q30 -10 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 L540 220 L-20 220 Z" fill="{WATER}"/></g>'
+    return s
+_cid=[0]
+def chapter(id_,n,title,subs,c,notes,dur='',cols=2,label=None,big=None,art=None):
+    _cid[0]+=1
+    rows=-(-len(subs)//cols); fs=30 if len(subs)<=12 else 22; bs=52 if len(subs)<=12 else 40
+    items=''.join(f'<div style="display:flex; gap:14px; align-items:center"><p style="width:{bs}px; height:{bs}px; flex:none; border-radius:{bs//2}px; background:{c}; color:#FFFFFF; font-size:{bs*0.45:.0f}px; font-weight:900; text-align:center; line-height:{bs}px">{i}</p><p style="font-size:{fs}px; line-height:1.2; font-weight:700; color:#FFFFFF">{t}</p></div>' for i,t in enumerate(subs,1))
+    left=(f'<div style="width:500px; flex:none; display:flex; flex-direction:column; gap:10px">'
+          f'<p style="font-size:24px; font-weight:900; letter-spacing:2px; text-transform:uppercase; color:{c}">{label or "Capitolo"}</p>'
+          f'<p style="font-family:{H}; font-size:{200 if big is None else 150}px; font-weight:700; line-height:0.9; color:{DACC}">{big or n}</p>'
+          f'<h2 style="font-family:{H}; font-size:56px; font-weight:700; line-height:1.08; color:#FFFFFF">{title}</h2>{squiggle(c,220)}'
+          f'<p style="font-size:26px; font-weight:700; color:{DSOFT}">{dur}</p>'
+          f'<div style="flex:1"></div>'
+          f'<svg aria-label="{art[1] if art else "Illustrazione: barca a vela sul mare"}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 220" width="500" height="220" style="width:500px; height:220px">{art[0] if art else sea_scene(500,220,True,True,"ch"+str(_cid[0]))}</svg></div>')
+    right=f'<div style="flex:1; display:grid; grid-template-columns:repeat({cols},1fr); grid-template-rows:repeat({rows},auto); grid-auto-flow:column; gap:{24 if len(subs)<=12 else 16}px 32px; align-content:center; background:rgba(255,255,255,0.06); padding:36px; border-radius:32px">{items}</div>'
+    sec(id_, f'<div style="display:flex; gap:56px; align-items:stretch; height:792px">{left}{right}</div>', notes=notes, dark=True, gap=0)
+
+
 # ============ COVER + AGENDA ============
 cover(6,'Segnali sonori, sicurezza ed emergenze','Fischi, nebbia e porti; le dotazioni del DM 133/2024, l&#39;incendio e le emergenze a bordo',
  'Lezione 6. Capitoli del programma della scuola: Segnali sonori, Sicurezza (dotazioni, mezzi di soccorso, incendio) ed emergenze (falla, incaglio, collisione, uomo a mare, abbandono, VHF, soccorso, tempo cattivo, 3). Aggiunte dall\'All. A: dotazioni obbligatorie secondo il DM 133/2024 (punto 3b), precauzioni all\'ingresso e all\'uscita dei porti (punto 4a), CIRM (3b), alcol e sostanze (3a). Fari e segnalamento AISM-IALA sono nella lezione 3. Gli ultimi 45 minuti sono una raccolta di quiz ufficiali.')
@@ -69,6 +135,8 @@ sec('agenda', head('Lezione 06 · 2 ore','La lezione di oggi')+f'<div style="dis
  notes='Cinque blocchi di teoria e poi 45 minuti di quiz. Banca DD 131/2022: prevenire gli abbordi 60 (1.5.2, per i segnali sonori), porti 21 (1.4.1), incendio ed estintori 31 (1.3.1), dotazioni di sicurezza 48 (1.3.3, 14 oscurati), sinistri 36 (1.3.6), abbandono e soccorso 13 (1.3.7) più il CIRM (1.3.2.113), tempo cattivo 25 (1.3.8), radio 29 (1.3.9) più 1.3.5, alcol 12 (1.3.2). Attenzione: il DM 133/2024 ha riscritto l\'Allegato V del DM 146/2008; dove un quiz non oscurato diverge, all\'esame vale la risposta dell\'elenco ministeriale.')
 X=700
 
+chapter('cap1',1,'Segnali sonori e porti',['I segnali sonori di manovra','Nella nebbia','Entrare e uscire dal porto'],CORAL,
+ 'Circa 15 minuti. Quiz 1-3 nella raccolta finale.','circa 15 minuti · 3 argomenti',1)
 # ============ SEGNALI SONORI ============
 def snd(seq):
     g=f'<rect x="0" y="0" width="260" height="60" rx="14" fill="{NIGHT}"/>'; x=18
@@ -108,6 +176,8 @@ sec('porto', head('Condotta · i porti','Entrare e uscire dal porto'), pinned=sv
 X=700
 
 
+chapter('cap2',2,'Dotazioni e segnali di soccorso',['Le dotazioni: salvarsi','Le dotazioni: navigare e comunicare','Chiedere soccorso'],SEA,
+ 'Circa 15 minuti. Quiz 4-5 nella raccolta finale.','circa 15 minuti · 3 argomenti',1,art=(ring_scene(),'Illustrazione: salvagente anulare con la sagola galleggiante'))
 # ============ DOTAZIONI (tabelle) ============
 COLS=['oltre 50','entro 50','entro 12','entro 6','entro 3','entro 1','300 m']
 def table(rows,notes_col=None):
@@ -149,6 +219,8 @@ sec('soccorso', head('Sicurezza · i segnali di soccorso','Chiedere soccorso')+f
  notes='Quiz 1.3.3-3 e -20 (boetta fumogena arancione, segnale diurno), -16 (fuochi a mano 6 miglia), -17, -28, -29 (razzi: 25 miglia di notte, 7 di giorno, meno di 1 minuto), -21 (scadenza 4 anni), -22 e -34 (EPIRB oltre 50 miglia), -7 e -18 (quantità, coerenti con il DM 133/2024). Il riflettore radar (1.5.3-10, 1.3.3-24) rende la barca visibile ai radar. VHF e chiamate di soccorso più avanti in questa lezione.')
 
 
+chapter('cap3',3,'Incendio',['Il triangolo del fuoco','Classi di incendio ed estintori','Incendio a bordo'],PURPLE,
+ 'Circa 15 minuti. Quiz 6-8 nella raccolta finale.','circa 15 minuti · 3 argomenti',1,art=(fire_scene(),'Illustrazione: estintore accanto a una fiamma'))
 # ============ TRIANGOLO DEL FUOCO ============
 A=(546,70); B_=(236,560); C=(856,560)
 b=f'<rect x="0" y="0" width="1092" height="620" fill="#FFF1E6"/>'
@@ -192,6 +264,8 @@ sec('incendio', head('Sicurezza · i sinistri','Incendio a bordo'), pinned=svgp(
 X=700
 
 X,Y,W,Hh=700,290,1092,620
+chapter('cap4',4,'Sinistri e abbandono',['La falla','Incaglio e collisione','Uomo a mare','Abbandonare la barca'],BLUE,
+ 'Circa 15 minuti. Quiz 9 nella raccolta finale.','circa 15 minuti · 4 argomenti',1)
 # ============ FALLA ============
 b=f'<rect x="0" y="0" width="1092" height="620" fill="{SKY}"/>'
 wl=250
@@ -264,6 +338,8 @@ sec('abbandono', head('Sicurezza · l\'ultima scelta','Abbandonare la barca'), p
 X=700
 
 
+chapter('cap5',5,'Radio, soccorso, meteo, alcol',['Il VHF di bordo','Chiamare aiuto via radio','Chi ci aiuta','Il cattivo tempo','Alcol, droghe e farmaci'],CORAL,
+ 'Circa 15 minuti. Quiz 10-12 nella raccolta finale.','circa 15 minuti · 5 argomenti',1,art=(radio_scene(),'Illustrazione: VHF portatile sul canale 16 che trasmette'))
 # ============ VHF ============
 b=f'<rect x="0" y="0" width="1092" height="620" fill="#F4FAFC"/>'
 b+=f'<rect x="40" y="170" width="460" height="300" rx="40" fill="{NAVY}"/><path d="M440 170 V50" stroke="{NAVY}" stroke-width="12" stroke-linecap="round"/>'
@@ -331,6 +407,8 @@ sec('alcol', head('Sicurezza · chi è al comando','Alcol, droghe e farmaci')+ti
  notes='Voce 3a dell\'All. A, 12 quiz (1.3.2). Quiz 1.3.2-2 (2.755-15.000 euro secondo il tasso), -3 (sospensione da 3 a 24 mesi), -1 e -5 (revoca con danno ambientale), -4 (stupefacenti: 2.755-11.017 euro), -8 (raddoppio in caso di sinistro), -6 e -10 (noleggio), -7 (sospensione della licenza di navigazione), -9 (effetti fino a 5 ore), -11 (sedativi e alcol), -12 (attenzione molto bassa). Le cifre sono quelle delle risposte della banca: il riferimento è l\'art. 53-bis del Codice della nautica.')
 
 
+chapter('capquiz',6,'Raccolta quiz',['Segnali sonori','Nebbia e porti','Entrare in porto','Le dotazioni','Segnali di soccorso','Il fuoco','Gli estintori','Incendio a bordo','Sinistri e abbandono','Radio e soccorso','Cattivo tempo','Alcol e farmaci'],GREEN,
+ 'Inizio degli ultimi 45 minuti: 12 slide da 3 quiz ufficiali, ognuna seguita dalle risposte.','36 quiz ufficiali',2,'Ultimi 45 minuti','45′',art=(quiz_scene(),'Illustrazione: scheda di quiz con le risposte segnate e un cronometro sui 45 minuti'))
 # ============ RACCOLTA QUIZ (45 minuti) ============
 steps=[('1','Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.',CORAL,CORAL_T),
  ('2','Conta i suoni','1 breve dritta, 2 brevi sinistra, 3 brevi indietro, 5 brevi dubbio: conta prima di rispondere.',SEA,SEA_T),
@@ -354,7 +432,7 @@ for id_,t,ps in QZ:
 closing(['1 breve a dritta, 2 brevi a sinistra, 3 brevi macchine indietro; nella nebbia 1 prolungato ogni 2 minuti','In porto rosso a sinistra e verde a dritta; velocità ridotta già a 500 m dall\'imboccatura','Oltre 12 miglia: zattera, binocolo, GPS, riflettore radar; oltre 50: EPIRB','Incendio: CO2 per l\'elettrico, mai acqua; fiamme sottovento, carburante chiuso','Uomo a mare: accosta dal suo lato; canale 16: MAYDAY, PAN PAN, SÉCURITÉ; 1530 per le emergenze'],
  'Prossima lezione · 07 · Meteorologia e normativa','A casa: i quiz su suoni e porti (1.5.2, 1.4.1), dotazioni e incendio (1.3.1, 1.3.3) e su sinistri, radio e soccorso (1.3.2, 1.3.5-1.3.9).')
 write_deck(OUT,'Lezione 06 · Segnali sonori, sicurezza ed emergenze',[s_[0] for s_ in slides],
- {"s1":{"description":"Apertura e agenda","start":"cover"},"s2":{"description":"Segnali sonori, nebbia e porti","start":"sonori"},
-  "s3":{"description":"Dotazioni di sicurezza DM 133/2024 e segnali di soccorso","start":"dotazioni1"},"s4":{"description":"Incendio: estintori e cosa fare a bordo","start":"fuoco"},
-  "s5":{"description":"Emergenze: falla, incaglio, collisione, uomo a mare, abbandono","start":"falla"},"s6":{"description":"Radio, soccorso, CIRM, cattivo tempo, alcol","start":"vhf"},
-  "s7":{"description":"Raccolta quiz","start":"quiz"}})
+ {"s1":{"description":"Apertura e agenda","start":"cover"},"s2":{"description":"Segnali sonori, nebbia e porti","start":"cap1"},
+  "s3":{"description":"Dotazioni di sicurezza DM 133/2024 e segnali di soccorso","start":"cap2"},"s4":{"description":"Incendio: estintori e cosa fare a bordo","start":"cap3"},
+  "s5":{"description":"Emergenze: falla, incaglio, collisione, uomo a mare, abbandono","start":"cap4"},"s6":{"description":"Radio, soccorso, CIRM, cattivo tempo, alcol","start":"cap5"},
+  "s7":{"description":"Raccolta quiz","start":"capquiz"}})
