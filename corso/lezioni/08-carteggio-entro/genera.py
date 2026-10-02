@@ -29,8 +29,8 @@ def ring(x,y,r=22): return f'<circle cx="{x}" cy="{y}" r="{r}" fill="none" strok
 X,Y,W,Hh=700,290,1092,620
 
 # ============ COVER + AGENDA ============
-cover(8,'Carteggio entro 12 miglia','Dalla carta 5/D ai 5 quesiti: coordinate, distanza, tempo e carburante, fino alla prova d&#39;esame in 20 minuti',
- 'Lezione 8, per tutti i percorsi: è l\'ultima lezione della patente entro 12 miglia a motore ed è tutta dedicata alla prova di carteggio entro 12 miglia (DM 323/2021 art. 6; elenco 4.1.1 del DD 131/2022, 50 esercizi sulla carta 5/D). Riprende gli strumenti e i calcoli delle lezioni 3, 4 e 5. Le emergenze sono nella lezione 6; la vela nella lezione 9, solo per chi fa la patente a vela; dalla 10 il carteggio oltre 12 miglia.')
+cover(8,'Quiz ed esercizi di carteggio di navigazione entro le 12 miglia','Dalla carta 5/D ai 5 quesiti: coordinate, distanza, tempo e carburante, fino alla prova d&#39;esame in 20 minuti',
+ 'Lezione 8, per tutti i percorsi: è l\'ultima lezione della patente entro 12 miglia a motore ed è tutta dedicata alla prova di carteggio entro 12 miglia (DM 323/2021 art. 6; elenco 4.1.1 del DD 131/2022, 50 esercizi sulla carta 5/D). Riprende gli strumenti e i calcoli delle lezioni 3, 4 e 5. Le emergenze sono nella lezione 6; la vela nella lezione 9, solo per chi fa la patente a vela; dalla 10 il carteggio oltre 12 miglia.', title_size=72)
 import os as _os; exec(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),'esame.py')).read())
 blocks=[('0:00','10′','Cap. 1 · La prova e la carta 5/D',NAVY),('0:10','20′','Cap. 2 · Coordinate, distanza, tempo, carburante · 2 verifiche',SEA),('0:30','45′','Cap. 3 · Il metodo, quattro esercizi e la prova simulata',CORAL),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
@@ -278,7 +278,7 @@ raccolta(8,4,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
  'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. I quiz di calcolo si risolvono alla lavagna con S = V × T. Se il tempo stringe, lasciare per casa le slide 2 e 10.',esame=['navigazione'])
 closing(['Coordinate: squadretta sul punto, latitudine sul bordo verticale, longitudine su quello orizzontale','Distanza: compasso e scala delle latitudini, 1′ = 1 miglio','t = d ÷ V, V = d ÷ t: converti i minuti prima di sommarli','Carburante: consumo × ore × 1,3','20 minuti, 4 risposte su 5: coordinate prima, poi distanza, ora e carburante'],
  'Prossima lezione · 09 · Vela (patente a vela) · per il motore entro 12 miglia: l\'esame','A casa: i 50 esercizi dell\'elenco 4.1.1 e le 10 prove entro 12 miglia dell\'appendice D, parte 1.')
-write_deck(OUT,'Lezione 08 · Carteggio entro 12 miglia',
+write_deck(OUT,'Lezione 08 · Quiz ed esercizi di carteggio di navigazione entro le 12 miglia',
  ['cover','agenda','cap1','provaentro','carta5d','cap2','coordinate','distanza','quiz1','quiz1r','tempo','carburante','quiz2','quiz2r','cap3','metodo12','errori',
   'e1_t','e1_s','e2_t','e2_s','e3_t','e3_s','e4_t','e4_s','sim_t','sim_s','capquiz','quiz']+[q+s for q,_,_ in QZ for s in ('','r')]+['chiusura'],
  {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"La prova e la carta 5/D","start":"cap1"},

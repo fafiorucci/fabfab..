@@ -92,7 +92,7 @@ def pol(cx,cy,b,r): return (cx+r*math.sin(math.radians(b)), cy-r*math.cos(math.r
 def windarrow(x,y,l=110,c=GREY): return arrow(x,y,x,y+l,c,8,26)
 
 # ============ COVER + AGENDA ============
-cover(9,'Vela: attrezzatura, teoria e manovre','Com\'è fatta una barca a vela, perché va controvento e come si manovra',
+cover(9,'Vela','Com\'è fatta una barca a vela, perché va controvento e come si manovra',
  'Lezione 9, solo per chi fa la patente a vela: chi fa solo motore la salta. Capitoli del programma della scuola: Vela (attrezzatura, teoria, manovre e ripasso), All. A al DM 323/2021 punto 1c. All\'esame la prova di vela ha 5 quesiti Vero/Falso in più rispetto alla patente a motore: si supera con al massimo 1 errore. Banca ufficiale: 250 quiz (99 teoria, 86 attrezzatura, 65 manovre). La lezione è divisa in due parti: la prima ora di teoria, la seconda di esercitazione sui quiz vela.')
 P1=[('0:00','20′','Barca, randa, vele di prua, armi, ferramenta',CORAL),('0:20','20′','Andature, vento apparente, portanza, equilibrio, regolazioni',SEA),('0:40','15′','Timone, virata e abbattuta, precedenze, issare e ridurre',PURPLE),('0:55','5′','Ripasso',BLUE)]
 P2=[('1:00','5′','Metodo',BLUE),('1:05','15′','Quiz 1 · attrezzatura',CORAL),('1:20','15′','Quiz 2 · teoria',SEA),('1:35','15′','Quiz 3 · manovre',PURPLE),('1:50','10′','Verifica finale e simulazione',GREEN)]
@@ -382,7 +382,7 @@ quiz_slide('simulazione','Verifica · simulazione d\'esame',SIM,False,'Esercitaz
 quiz_slide('simulazioner','Verifica · simulazione d\'esame · risposte',SIM,True)
 closing(['Manovre fisse (strallo, sartie, paterazzo) reggono l\'albero; le correnti (drizze, scotte) manovrano le vele','Bolina 45°, traverso 90°, lasco 135°, poppa 180°; controvento c\'è l\'angolo morto','Il vento apparente è sempre più a prua del reale: di bolina più forte, in poppa più debole','CV a proravia del CD: poggiera; a poppavia: orziera. Meglio un po\' orziera','Mure a dritta ha la precedenza; con le stesse mure passa chi è sottovento'],
  'Prossima lezione · 10 · Carteggio oltre 12 miglia: navigazione costiera','A casa: i 250 quiz di vela, tutti Vero o Falso. Chi alla simulazione ha fatto più di 1 errore ripassi l\'argomento del quesito sbagliato.')
-write_deck(OUT,'Lezione 09 · Vela: attrezzatura, teoria e manovre',
+write_deck(OUT,'Lezione 09 · Vela',
  ['cover','agenda','barca','randa','vele','armi','ferramenta','andature','apparente','portanza','equilibrio','regolazioni',
   'barra','virata','precedenze','issare','ripassovela',
   'parte2','quiz1','quiz1r','quiz1b','quiz1br','quiz2','quiz2r','quiz2b','quiz2br','quiz3','quiz3r','quiz3b','quiz3br',

@@ -90,13 +90,13 @@ def quiz_slide(id_, title, ps, reveal, e=None):
     e = 'Verifica · risposte esatte' if reveal else (e or 'Verifica · quiz ufficiali DD 131/2022')
     notes = ('Risposte: ' + '; '.join(f'{pp} → {"abc"[Q[pp]["x"]]}) {Q[pp]["r"][Q[pp]["x"]].strip()}' for pp in ps)) if reveal else 'Leggere le domande, lasciare un minuto per rispondere, poi passare alla slide con le risposte esatte.'
     sec(id_, head(e, title, SEA if reveal else CORAL)+f'<div style="display:flex; gap:24px; align-items:stretch">{cards}</div>', notes=notes)
-def cover(lesson_no, title, subtitle, notes):
+def cover(lesson_no, title, subtitle, notes, title_size=104):
     slides.append(('cover', f'''<section id="cover" data-transition="fade" style="background:{NAVY}; color:#FFFFFF; font-family:{B}; padding:128px; display:flex; flex-direction:column; justify-content:space-between">
 {backdrop(True,0)}
 {lockup(True,112)}
 <div style="display:flex; flex-direction:column; gap:20px; width:840px">
 <p style="font-family:{HAND}; font-size:48px; font-weight:700; line-height:1.1; color:{DACC}">Lezione {lesson_no:02d} · 2 ore</p>
-<h1 style="font-family:{H}; font-size:104px; font-weight:700; line-height:1.05; color:#FFFFFF">{title}</h1>{squiggle(DACC,330)}
+<h1 style="font-family:{H}; font-size:{title_size}px; font-weight:700; line-height:1.05; color:#FFFFFF">{title}</h1>{squiggle(DACC,330)}
 <p style="font-size:34px; line-height:1.4; color:{DSOFT}">{subtitle}</p>
 </div>
 <p style="font-size:24px; font-weight:600; color:{DSOFT}">Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa</p>

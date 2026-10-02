@@ -1,4 +1,4 @@
-# Lezione 09 · Vela: attrezzatura, teoria e manovre
+# Lezione 09 · Vela
 
 Slide (artifact Slides): https://claude.ai/artifact/QDzUrT8vLw7EQj765Hyrxe
 

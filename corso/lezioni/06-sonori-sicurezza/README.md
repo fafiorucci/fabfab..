@@ -1,4 +1,4 @@
-# Lezione 06 · Segnali sonori, sicurezza ed emergenze
+# Lezione 06 · La sicurezza e i suoi elementi nella navigazione
 
 Slide (artifact Slides): https://claude.ai/artifact/RsXdsFbux15NxGeKgby3fh
 

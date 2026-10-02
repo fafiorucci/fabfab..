@@ -18,8 +18,8 @@ def cloudp(x,y,s=1,c='#FFFFFF',op=1):
 X,Y,W,Hh=700,290,1092,620
 
 # ============ COVER + AGENDA ============
-cover(7,'Meteorologia e normativa','Leggere il cielo e i bollettini; conoscere le regole, i documenti e le autorità del diporto',
- 'Lezione 7. Capitoli del programma della scuola: Meteorologia e Normativa. Aggiunte dall\'All. A al DM 323/2021: visite e certificazioni (3b) e autorità marittima e ordinanze (8b). La meteo pesa 2 quesiti su 20, la normativa 3.')
+cover(7,'Meteorologia e Normativa','Leggere il cielo e i bollettini; conoscere le regole, i documenti e le autorità del diporto',
+ 'Lezione 7. Capitoli del programma della scuola: Meteorologia e Normativa. Aggiunte dall\'All. A al DM 323/2021: visite e certificazioni (3b) e autorità marittima e ordinanze (8b). La meteo pesa 2 quesiti su 20, la normativa 3.', title_size=96)
 import os as _os; exec(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),'esame.py')).read())
 blocks=[('0:00','20′','Cap. 1 · Pressione e venti · verifica',CORAL),('0:20','20′','Cap. 2 · Fronti, nubi, onde, bollettini · verifica',SEA),('0:40','20′','Cap. 3 · Unità, documenti, patente · verifica',PURPLE),('1:00','15′','Cap. 4 · Autorità e ambiente · verifica',BLUE),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
@@ -287,8 +287,8 @@ raccolta(7,5,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
  ['Quiz 1-7 · meteorologia (21)','Quiz 8-10 · unità, patente e visite (9)','Quiz 11-12 · comandante, sci nautico e pesca (6)'],
  'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 4 e 7.',esame=['meteo', 'normativa'])
 closing(['Pressione che cala in fretta: arriva brutto tempo; attorno alla bassa il vento gira in senso antiorario','Di giorno brezza di mare, di notte brezza di terra','Meteomar sul canale 68; gli avvisi di burrasca hanno la precedenza','Natanti fino a 10 m, imbarcazioni fino a 24, poi navi','Evento straordinario: denuncia entro 3 giorni all\'Autorità marittima'],
- 'Prossima lezione · 08 · Carteggio entro 12 miglia','A casa: i 119 quiz di meteorologia e i 202 di normativa e ambiente.')
-write_deck(OUT,'Lezione 07 · Meteorologia e normativa',
+ 'Prossima lezione · 08 · Quiz ed esercizi di carteggio di navigazione entro le 12 miglia','A casa: i 119 quiz di meteorologia e i 202 di normativa e ambiente.')
+write_deck(OUT,'Lezione 07 · Meteorologia e Normativa',
  ['cover','agenda','cap1','pressione','brezze','venti','beaufort','quiz1','quiz1r','cap2','fronti','nubi','onde','meteomar','quiz2','quiz2r',
   'cap3','unita','documenti','patente','visite','quiz3','quiz3r','cap4','autorita','ambiente','scinautico','quiz4','quiz4r','capquiz','quiz']+[q+s for q,_,_ in QZ for s in ('','r')]+['chiusura'],
  {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"Pressione, brezze, venti e scala Beaufort","start":"cap1"},

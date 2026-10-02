@@ -549,7 +549,7 @@ for id_,t,ps in QZ:
     quiz_slide(id_,t,ps,False,E)
     quiz_slide(id_+'r',t+' · risposte',ps,True)
 closing(['Angoli da 000° a 360° in senso orario; rotte con le squadrette sulla rosa della carta, miglia col compasso sulla scala delle latitudini','M = V × Tᵐ : 60 con il tempo in minuti; carburante × 1,3, sola riserva il 30%','Rv e Pv dal Nord vero; scarroccio dal vento («da»), deriva dalla corrente («verso»): + a dritta, − a sinistra','Pv = Pb + V con V = d + δ (Est +, Ovest −); δ dalla tabella delle deviazioni','Entro 200 m dalle spiagge solo nei corridoi di lancio; 100 m dalle boe dei subacquei'],
- 'Prossima lezione · 05 · Punto nave e fanali','A casa: i quiz 1.7.4 (bussola), 1.7.5 (navigazione stimata), 1.7.7 (prora e rotta), 1.2.3 (carburante) e 1.4.2 (costa).')
+ 'Prossima lezione · 05 · COLREG e prevenzione degli abbordi','A casa: i quiz 1.7.4 (bussola), 1.7.5 (navigazione stimata), 1.7.7 (prora e rotta), 1.2.3 (carburante) e 1.4.2 (costa).')
 exec(open('intermedi.py').read())
 intermedi([('coordinate','v1','Verifica · Orientarsi sulla carta',['1.7.4-9','1.7.4-45']),
  ('carburante','v2','Verifica · Navigazione stimata e calcoli',['1.7.5-59','1.7.5-44']),

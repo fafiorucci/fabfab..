@@ -32,8 +32,8 @@ def sailtop(cx,cy,L,ang,side,fill='#FFFFFF',op=1):
 X,Y,W,Hh=700,290,1092,620
 
 # ============ COVER + AGENDA ============
-cover(5,'Punto nave e fanali','Dove sono? Navigazione costiera, punto nave, rilevamenti e GPS. Chi è quella luce? Fanali, segnali diurni e precedenze',
- 'Lezione 5. Capitoli del programma della scuola: Carteggio (navigazione costiera, punto nave 1 e 2, rilevamento polare, rilevamenti, GPS: la parte finale della scaletta «Carteggio · Navigazione», che nella lezione 4 arriva fino alla tabella delle deviazioni) e Prevenzione degli abbordi (fanali e precedenze). Aggiunta dall\'All. A: segnali diurni (materia 5). Segnali sonori e segnalamento IALA nella lezione 6.')
+cover(5,'COLREG e prevenzione degli abbordi','Dove sono? Navigazione costiera, punto nave, rilevamenti e GPS. Chi è quella luce? Fanali, segnali diurni e precedenze',
+ 'Lezione 5. Capitoli del programma della scuola: Carteggio (navigazione costiera, punto nave 1 e 2, rilevamento polare, rilevamenti, GPS: la parte finale della scaletta «Carteggio · Navigazione», che nella lezione 4 arriva fino alla tabella delle deviazioni) e Prevenzione degli abbordi (fanali e precedenze). Aggiunta dall\'All. A: segnali diurni (materia 5). Segnali sonori e segnalamento IALA nella lezione 6.', title_size=88)
 import os as _os; exec(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),'esame.py')).read())
 blocks=[('0:00','16′','Cap. 1 · Costiera e punto nave',CORAL),('0:16','18′','Cap. 2 · Rilevamenti e GPS',SUN),('0:34','16′','Cap. 3 · Fanali di navigazione',PURPLE),('0:50','12′','Cap. 4 · Segnali e precedenze',BLUE),('1:02','13′','Cap. 5 · Regole di rotta',SEA),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
 tl=''.join(f'<div style="flex:{max(int(d[:-1]),14)}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
@@ -399,8 +399,8 @@ raccolta(5,6,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
  ['Quiz 1-5 · punto nave, rilevamenti e GPS (15)','Quiz 6-9 · fanali e segnali diurni (12)','Quiz 10-12 · rischio di collisione e precedenze (9)'],
  'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 3 e 9.',esame=['navigazione', 'colreg'])
 closing(['Punto nave: almeno due luoghi di posizione; Rilv = Rilb + V = Pv + ρ','Sono a SW del faro: lo rilevo per 045°, aggiungi o togli 180°','Testa d\'albero 225°, laterali 112,5°, coronamento 135°','Rilevamento costante e distanza che cala: rischio di collisione','Motore: cede a chi viene da dritta; vela: mure a sinistra e sopravento cedono'],
- 'Prossima lezione · 06 · Segnalamento, segnali sonori e sicurezza','A casa: i 49 quiz di navigazione costiera, i 13 sul GPS, i 67 su fanali e segnali diurni e i 60 sulle precedenze.')
-write_deck(OUT,'Lezione 05 · Punto nave e fanali',
+ 'Prossima lezione · 06 · La sicurezza e i suoi elementi nella navigazione','A casa: i 49 quiz di navigazione costiera, i 13 sul GPS, i 67 su fanali e segnali diurni e i 60 sulle precedenze.')
+write_deck(OUT,'Lezione 05 · COLREG e prevenzione degli abbordi',
  ['cover','agenda','cap1','costiera','luoghi','pn1','pn2','puntonave','quiz1','quiz1r','caprl','rilevamento','rilevamenti','reciproco','tecniche','gps','quiz1b','quiz1br',
   'cap2','fanali','cosavedo','velanotte','quiz2','quiz2r','cap3','diurni','gerarchia','quiz3','quiz3r',
   'cap4','rischio','motore','vela','quiz4','quiz4r','capquiz','quiz']+[q+s for q,_,_ in QZ for s in ('','r')]+['chiusura'],

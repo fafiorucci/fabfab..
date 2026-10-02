@@ -1,4 +1,4 @@
-# Lezione 05 · Punto nave e fanali
+# Lezione 05 · COLREG e prevenzione degli abbordi
 
 Slide (artifact Slides): https://claude.ai/artifact/XZEiJ8kirirnR7Ys3FpjYT
 

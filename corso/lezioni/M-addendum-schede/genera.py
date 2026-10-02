@@ -101,7 +101,7 @@ scheda(4,'Carteggio e Navigazione: primi calcoli, sottocosta, prora e rotta','di
  notes='Scheda della lezione 4. Esempi: 15 nodi per 45 minuti = 15 × 45 : 60 = 11,25 miglia (1.7.5-31); 18 miglia a 7 nodi = 18 : 7 × 60 ≈ 154′ = 2 h 34′ (1.7.5-65). Quiz 1.7.4 (bussola), 1.7.5 (stima), 1.7.7 (prora e rotta), 1.2.3 (carburante), 1.4.2 (costa).')
 
 # ============ 05 ============
-scheda(5,'Punto nave e fanali','lantern',GREEN,[
+scheda(5,'COLREG e prevenzione degli abbordi','lantern',GREEN,[
  ('Punto nave','Serve l\'incrocio di almeno due luoghi di posizione: con uno solo non si fa.'),
  ('Rilevamento polare','Rlv = Pv + ρ; ρ positivo a dritta, negativo a sinistra; al traverso ρ = 90°.'),
  ('Reciproco','Dove sono rispetto al faro: aggiungi o togli 180°. A SW del faro lo rilevo per 045°.'),
@@ -115,7 +115,7 @@ scheda(5,'Punto nave e fanali','lantern',GREEN,[
  notes='Scheda della lezione 5. GPS obbligatorio oltre 12 miglia. Tricolore in testa d\'albero ammesso sotto i 20 m.')
 
 # ============ 06 ============
-scheda(6,'Segnali sonori, sicurezza ed emergenze','lighthouse',ORANGE,[
+scheda(6,'La sicurezza e i suoi elementi nella navigazione','lighthouse',ORANGE,[
  ('Fischio','1 breve accosto a dritta, 2 brevi a sinistra, 3 brevi macchine indietro, 5 brevi: non capisco.'),
  ('Nebbia','A motore in moto: 1 prolungato ogni 2 minuti; fermo: 2 prolungati. A vela: 1 prolungato e 2 brevi.'),
  ('Sorpasso nei canali','2 prolungati e 1 breve: ti sorpasso a dritta; 2 prolungati e 2 brevi: a sinistra.'),
@@ -143,7 +143,7 @@ scheda(6,'Emergenze','lifebuoy',ORANGE,[
  notes='Scheda della lezione 6, seconda parte: le emergenze. Canali tra barche: 6, 8, 72, 77. CIRM per i consigli medici. Soccorso: alza e abbassa lentamente le braccia allargate.',part=1)
 
 # ============ 07 ============
-scheda(7,'Meteorologia e normativa','cloud',CORAL,[
+scheda(7,'Meteorologia e Normativa','cloud',CORAL,[
  ('Pressione','Normale 1013 hPa. Se scende in fretta arriva brutto tempo. Isobare fitte = vento forte.'),
  ('Giro del vento','Nel nostro emisfero antiorario attorno alla bassa, orario attorno all\'alta.'),
  ('Brezze','Di giorno brezza di mare (la più forte), di notte brezza di terra.'),
@@ -157,7 +157,7 @@ scheda(7,'Meteorologia e normativa','cloud',CORAL,[
  notes='Scheda della lezione 7. Beaufort da 0 a 12, Douglas da 0 a 9. Nebbia: visibilità sotto 1 km. Visite: categorie A e B prima a 8 anni, C e D a 10, poi ogni 5. Senza patente: 2.755-11.017 euro.')
 
 # ============ 08 ============
-scheda(8,'Carteggio entro 12 miglia','dividers',PURPLE,[
+scheda(8,'Quiz ed esercizi di carteggio entro le 12 miglia','dividers',PURPLE,[
  ('La prova','1 esercizio dell\'elenco 4.1.1 sulla carta 5/D: 5 quesiti in 20 minuti, almeno 4 giusti.'),
  ('Coordinate','Squadretta sul punto: latitudine sul bordo verticale, longitudine su quello orizzontale.'),
  ('Come si scrive','Gradi, primi e decimi di primo: 42°48′,5 N · 010°08′,4 E.'),

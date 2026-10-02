@@ -125,8 +125,8 @@ def chapter(id_,n,title,subs,c,notes,dur='',cols=2,label=None,big=None,art=None)
 
 
 # ============ COVER + AGENDA ============
-cover(6,'Segnali sonori, sicurezza ed emergenze','Fischi, nebbia e porti; le dotazioni del DM 133/2024, l&#39;incendio e le emergenze a bordo',
- 'Lezione 6. Capitoli del programma della scuola: Segnali sonori, Sicurezza (dotazioni, mezzi di soccorso, incendio) ed emergenze (falla, incaglio, collisione, uomo a mare, abbandono, VHF, soccorso, tempo cattivo, 3). Aggiunte dall\'All. A: dotazioni obbligatorie secondo il DM 133/2024 (punto 3b), precauzioni all\'ingresso e all\'uscita dei porti (punto 4a), CIRM (3b), alcol e sostanze (3a). Fari e segnalamento AISM-IALA sono nella lezione 3. Gli ultimi 45 minuti sono una raccolta di quiz ufficiali.')
+cover(6,'La sicurezza e i suoi elementi nella navigazione','Fischi, nebbia e porti; le dotazioni del DM 133/2024, l&#39;incendio e le emergenze a bordo',
+ 'Lezione 6. Capitoli del programma della scuola: Segnali sonori, Sicurezza (dotazioni, mezzi di soccorso, incendio) ed emergenze (falla, incaglio, collisione, uomo a mare, abbandono, VHF, soccorso, tempo cattivo, 3). Aggiunte dall\'All. A: dotazioni obbligatorie secondo il DM 133/2024 (punto 3b), precauzioni all\'ingresso e all\'uscita dei porti (punto 4a), CIRM (3b), alcol e sostanze (3a). Fari e segnalamento AISM-IALA sono nella lezione 3. Gli ultimi 45 minuti sono una raccolta di quiz ufficiali.', title_size=80)
 import os as _os; exec(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),'esame.py')).read())
 blocks=[('0:00','25′','Suoni, porti, dotazioni e soccorso',CORAL),('0:25','25′','Incendio, sinistri e abbandono',PURPLE),('0:50','25′','Radio, soccorso, meteo, alcol',BLUE),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
@@ -427,14 +427,14 @@ for id_,t,ps in QZ:
     quiz_slide(id_,t,ps,False,E)
     quiz_slide(id_+'r',t+' · risposte',ps,True)
 closing(['1 breve a dritta, 2 brevi a sinistra, 3 brevi macchine indietro; nella nebbia 1 prolungato ogni 2 minuti','In porto rosso a sinistra e verde a dritta; velocità ridotta già a 500 m dall\'imboccatura','Oltre 12 miglia: zattera, binocolo, GPS, riflettore radar; oltre 50: EPIRB','Incendio: CO2 per l\'elettrico, mai acqua; fiamme sottovento, carburante chiuso','Uomo a mare: accosta dal suo lato; canale 16: MAYDAY, PAN PAN, SÉCURITÉ; 1530 per le emergenze'],
- 'Prossima lezione · 07 · Meteorologia e normativa','A casa: i quiz su suoni e porti (1.5.2, 1.4.1), dotazioni e incendio (1.3.1, 1.3.3) e su sinistri, radio e soccorso (1.3.2, 1.3.5-1.3.9).')
+ 'Prossima lezione · 07 · Meteorologia e Normativa','A casa: i quiz su suoni e porti (1.5.2, 1.4.1), dotazioni e incendio (1.3.1, 1.3.3) e su sinistri, radio e soccorso (1.3.2, 1.3.5-1.3.9).')
 exec(open('intermedi.py').read())
 intermedi([('porto','v1','Verifica · Suoni, nebbia e porti',['1.5.2-49','1.4.1-14']),
  ('soccorso','v2','Verifica · Dotazioni e soccorso',['1.3.3-34','1.3.3-3']),
  ('incendio','v3','Verifica · Incendio',['1.3.1-1','1.3.6-22']),
  ('abbandono','v4','Verifica · Sinistri e abbandono',['1.3.6-36','1.3.7-6']),
  ('alcol','v5','Verifica · Radio, meteo, alcol',['1.3.9-13','1.3.8-8'])])
-write_deck(OUT,'Lezione 06 · Segnali sonori, sicurezza ed emergenze',[s_[0] for s_ in slides],
+write_deck(OUT,'Lezione 06 · La sicurezza e i suoi elementi nella navigazione',[s_[0] for s_ in slides],
  {"s1":{"description":"Apertura e agenda","start":"cover"},"s2":{"description":"Segnali sonori, porti, dotazioni DM 133/2024 e segnali di soccorso","start":"cap1"},
   "s3":{"description":"Incendio, falla, incaglio, collisione, uomo a mare, abbandono","start":"cap2"},
   "s4":{"description":"Radio, soccorso, CIRM, cattivo tempo, alcol","start":"cap3"},

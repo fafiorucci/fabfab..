@@ -1,4 +1,4 @@
-# Lezione 08 · Carteggio entro 12 miglia
+# Lezione 08 · Quiz ed esercizi di carteggio di navigazione entro le 12 miglia
 
 Slide (artifact Slides): https://claude.ai/artifact/FDFp7FksintFpbuEAdo4sx
 

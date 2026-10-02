@@ -37,7 +37,7 @@ g+=(f'<g transform="translate(560 60)"><path d="M-46 22 L46 22 L34 40 L-34 40 Z"
 g+=tower(1600,190,1.35)+glow(1600,42,SUN,8)
 lbls=(lab(128+277-120,884,240,'Tappa 1',CORAL,24,900,'center')+lab(128+832-120,884,240,'Tappa 2',SEA,24,900,'center')
       +lab(128+1387-120,884,240,'Tappa 3',PURPLE,24,900,'center')+lab(128+1600-140,884,280,'L\'esame',NAVY,24,900,'center'))
-legs=[('Entro 12 miglia','Lezioni 1–9 · 18 ore','Scafo e motori, ormeggi e carte, punto nave e fanali, segnalamento, sicurezza, meteo e normativa, emergenze e carteggio entro 12. La vela nella 9.',CORAL),
+legs=[('Entro 12 miglia','Lezioni 1–9 · 18 ore','Scafo e motori, ormeggi, carte e segnali, carteggio e navigazione, COLREG, sicurezza, meteo e normativa, quiz ed esercizi di carteggio entro 12. La vela nella 9.',CORAL),
       ('Senza limiti','Lezioni 10–15 · 12 ore','Tutti i 135 esercizi d\'esame svolti passo per passo sulle carte 5/D e 42/D: costiera, carburante, scarroccio, correnti.',SEA),
       ('Verso l\'esame','13 appendici e schede','20 prove d\'esame simulate, entro e oltre 12 miglia, la prova pratica, ripasso mirato e schede riassuntive per lo studio a casa.',PURPLE)]
 cards=''.join(f'<div style="flex:1; display:flex; flex-direction:column; gap:10px; background:#FFFFFF; border-top:10px solid {c_}; border-radius:28px; padding:28px 30px; box-shadow:0px 10px 28px rgba(27,42,65,0.10)">'
@@ -66,7 +66,7 @@ def route(title,sub,rows,aula,c_):
             f'<div style="display:flex; align-items:center; gap:16px">{h3(title,38,c_)}<p style="font-size:24px; font-weight:900; color:#FFFFFF; background:{c_}; padding:4px 14px; border-radius:14px">{sub}</p></div>'
             f'{tb}{p(aula,25,BODY,400,1.35)}</div>')
 R12=route('Entro 12 miglia','Lezioni 1–9 · 18 ore',[('Quiz di carteggio','5','20′','max 1'),('Quiz base','20','30′','max 4'),('Quiz vela (solo vela)','5','15′','max 1')],
-          '<b>In aula</b>: teoria, emergenze e carteggio sulla 5/D (lezione 8), vela nella 9. 10 prove simulate. Pratica anche su un lago.',SEA)
+          '<b>In aula</b>: teoria, quiz ed esercizi di carteggio sulla 5/D (lezione 8), vela nella 9. 10 prove simulate. Pratica anche su un lago.',SEA)
 RSL=route('Senza limiti','Lezioni 1–15 · 30 ore',[('Prova di carteggio','4 esercizi','60′','max 1'),('Quiz base','20','30′','max 4'),('Quiz vela (solo vela)','5','15′','max 1')],
           '<b>In più</b>: lezioni 10–15, tutto il carteggio su 5/D e 42/D, 135 esercizi svolti e altre 10 prove simulate. Pratica in mare.',CORAL)
 banner=(f'<div style="display:flex; align-items:center; gap:18px; background:{NAVY}; border-radius:24px; padding:16px 28px">'

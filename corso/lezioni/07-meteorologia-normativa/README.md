@@ -1,4 +1,4 @@
-# Lezione 07 · Meteorologia e normativa
+# Lezione 07 · Meteorologia e Normativa
 
 Slide (artifact Slides): https://claude.ai/artifact/2czz37ppZ21LU43Ajij4J7
 
