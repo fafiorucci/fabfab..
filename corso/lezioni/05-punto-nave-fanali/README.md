@@ -2,7 +2,7 @@
 
 Slide (artifact Slides): https://claude.ai/artifact/XZEiJ8kirirnR7Ys3FpjYT
 
-46 slide per 2 ore, in tre capitoli aperti da una slide di capitolo: 75 minuti di teoria e 45 di raccolta quiz. Programma della scuola: prevenzione
+47 slide per 2 ore: si apre con «Che cos'è il COLREG», poi tre capitoli aperti da una slide di capitolo: 75 minuti di teoria e 45 di raccolta quiz. Programma della scuola: prevenzione
 degli abbordi (fanali e precedenze); dall'All. A DM 323/2021 anche i segnali diurni (materia 5).
 Il carteggio (navigazione costiera, punto nave, rilevamenti, GPS) è passato nella lezione 04.
 

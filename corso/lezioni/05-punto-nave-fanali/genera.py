@@ -42,6 +42,32 @@ left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:26px; line-he
 sec('agenda', head('Lezione 05 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
  notes='Tre capitoli di teoria in 75 minuti, ognuno chiuso da una verifica da 2 quiz ufficiali (DD 131/2022): c\'è tempo per far disegnare le luci alla lavagna e discutere i casi. Poi 45 minuti di raccolta quiz: 36 quiz ufficiali. Banca: fanali e segnali diurni 67 (1.5.1), prevenire gli abbordi 60 (1.5.2). All. C: 2 quesiti di COLREG e segnalamento nella scheda da 20. La navigazione costiera, il punto nave, i rilevamenti e il GPS sono nella lezione 4.')
 
+# ============ IL COLREG ============
+LB.ICON_T['Che cos\'è il COLREG']='helm'
+def colreg_art():
+    s=f'<rect x="0" y="0" width="520" height="600" rx="40" fill="{NIGHT}"/>'
+    s+=''.join(f'<circle cx="{x}" cy="{y}" r="2" fill="#FFFFFF" opacity="0.6"/>' for x,y in ((40,40),(120,70),(470,50),(400,110),(70,150),(300,30),(480,170)))
+    g=(260,190); R=130
+    s+=f'<circle cx="{g[0]}" cy="{g[1]}" r="{R}" fill="#2A6FB0"/>'
+    s+=f'<path d="M170 120 Q200 90 240 110 Q250 140 220 160 Q190 170 175 150 Z M280 90 Q330 80 350 120 Q340 160 300 150 Q270 130 280 90 Z M230 220 Q270 200 300 230 Q310 270 270 290 Q240 280 230 220 Z M330 200 Q360 190 370 220 Q350 250 330 230 Z" fill="#3FAE6B"/>'
+    s+=f'<ellipse cx="{g[0]}" cy="{g[1]}" rx="{R}" ry="44" fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="2"/><ellipse cx="{g[0]}" cy="{g[1]}" rx="52" ry="{R}" fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="2"/><line x1="{g[0]-R}" y1="{g[1]}" x2="{g[0]+R}" y2="{g[1]}" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="2"/>'
+    s+=f'<path d="M120 300 Q260 380 400 300" fill="none" stroke="{SUN}" stroke-width="6" stroke-dasharray="2 12" stroke-linecap="round"/>'
+    s+=f'<rect x="150" y="268" width="220" height="56" rx="28" fill="{CORAL}"/><text x="260" y="306" text-anchor="middle" font-family="Arial" font-size="30" font-weight="900" fill="#FFFFFF">COLREG 72</text>'
+    parts=[('A','Generalità',SEA),('B','Governo e navigazione',BLUE),('C','Fanali e segnali',SUN),('D','Segnali sonori e luminosi',PURPLE),('E','Esenzioni',GREEN),('F','Verifica IMO',CORAL)]
+    for i,(k,t,c) in enumerate(parts):
+        y=356+i*38
+        s+=f'<rect x="60" y="{y}" width="400" height="32" rx="10" fill="#FFFFFF" fill-opacity="0.08"/><rect x="60" y="{y}" width="40" height="32" rx="10" fill="{c}"/>'
+        s+=f'<text x="80" y="{y+23}" text-anchor="middle" font-family="Arial" font-size="20" font-weight="900" fill="#FFFFFF">{k}</text><text x="116" y="{y+23}" font-family="Arial" font-size="20" font-weight="700" fill="#FFFFFF">{t}</text>'
+    s+=f'<text x="260" y="590" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#FFFFFF" opacity="0.75">41 regole in 6 parti + 4 allegati</text>'
+    return s
+CQ=[('Che cos\'è','COLREG sta per <i>Collision Regulations</i>: la Convenzione di Londra del <b>1972</b> (IMO), in vigore dal <b>1977</b>. In italiano: <b>Regolamento internazionale per prevenire gli abbordi in mare</b>. Abbordo = collisione tra navi.',NAVY,BLUE_T),
+    ('Perché è così importante','È la <b>lingua comune del mare</b>: in ogni paese le barche manovrano allo stesso modo e si riconoscono da luci, forme e suoni. Non basta però: vale sempre la buona pratica marinaresca e, per evitare un pericolo immediato, si può derogare.',CORAL,CORAL_T),
+    ('Quando e dove si applica','<b>Sempre</b>, di giorno e di notte, in alto mare e in tutte le acque collegate navigabili dalle navi: anche sotto costa. Porti, fiumi e laghi possono avere <b>regole locali</b> (ordinanze), il più possibile conformi.',SEA,SEA_T),
+    ('Chi lo deve rispettare','<b>Ogni nave</b>, cioè qualsiasi mezzo che galleggia e trasporta sull\'acqua: dalla petroliera al gommone, a vela, a motore o a remi, anche cuscini d\'aria e idrovolanti. Ne risponde chi ha il comando.',PURPLE,LILAC_T)]
+cc=''.join(f'<div style="display:flex; flex-direction:column; gap:8px; background:{bg}; padding:24px 26px; border-radius:28px">{tag(t,c)}{p(d,24,INK,500,1.38)}</div>' for t,d,c,bg in CQ)
+sec('colreg', head('COLREG · le regole di tutti','Che cos\'è il COLREG')+f'<div style="display:flex; gap:32px; align-items:start">{svgi(520,600,colreg_art(),"Il globo con una rotta tratteggiata e la fascia COLREG 72; sotto le sei parti del regolamento: A generalità, B governo e navigazione, C fanali e segnali, D segnali sonori e luminosi, E esenzioni, F verifica IMO",dw=460,dh=531,pan=False)}<div style="flex:1; display:grid; grid-template-columns:1fr 1fr; gap:18px">{cc}</div></div>',
+ notes='Prima slide della lezione: tutta la lezione applica il COLREG. Convention on the International Regulations for Preventing Collisions at Sea, adottata a Londra il 20 ottobre 1972 dall\'IMO, in vigore dal 15 luglio 1977; in Italia resa esecutiva con la legge 27 dicembre 1977, n. 1085. Regola 1 (applicazione): alto mare e acque collegate navigabili; le regole locali di porti, rade, fiumi e laghi devono essere il più possibile conformi. Regola 2 (responsabilità): il rispetto delle regole non esonera dalla buona pratica marinaresca. Regola 3: «nave» è ogni tipo di galleggiante usato o utilizzabile come mezzo di trasporto sull\'acqua. Parte C: fanali e segnali (oggi capitolo 1); Parte B: precedenze e regole di rotta; Parte D: segnali sonori. Quiz 1.5.2-2 (la norma è il COLREG \'72), 1.5.1-62 (l\'elenco completo dei fanali è nel COLREG), 1.5.1-25 e -26. Trucchetto di Ancorotto: nei quiz sui fanali la risposta che cita il Regolamento per prevenire gli abbordi in mare (COLREG) è sempre quella giusta.')
+
 # ============ FANALI ============
 X=128
 cx,cy=546,320
@@ -198,7 +224,7 @@ raccolta(5,4,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
 closing(['Fanali accesi dal tramonto al sorgere del sole e con visibilità ridotta','Un pallone nero: alla fonda; un cono a vertice in giù: vela con il motore acceso','Testa d\'albero 225°, laterali 112,5°, coronamento 135°','Rilevamento costante e distanza che cala: rischio di collisione','Motore: cede a chi viene da dritta; vela: mure a sinistra e sopravento cedono'],
  'Prossima lezione · 06 · La sicurezza e i suoi elementi nella navigazione','A casa: i 67 quiz su fanali e segnali diurni e i 60 sulle precedenze.')
 write_deck(OUT,'Lezione 05 · COLREG e prevenzione degli abbordi',
- ['cover','agenda',
+ ['cover','agenda','colreg',
   'cap2','fanali','cosavedo','velanotte','quiz2','quiz2r','cap3','diurni','gerarchia','quiz3','quiz3r',
   'cap4','rischio','motore','vela','quiz4','quiz4r','capquiz','quiz']+[q+s for q,_,_ in QZ for s in ('','r')]+['chiusura'],
  {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"Fanali di navigazione e barche a vela di notte","start":"cap2"},
