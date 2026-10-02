@@ -685,7 +685,7 @@ raccolta(2,5,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
  ['Quiz 1-5 · il motore (15)','Quiz 6-8 · avarie, manutenzione, autonomia (9)','Quiz 9-12 · elica e timone (12)'],
  'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 7 e 11.',esame=['scafo', 'motori'])
 closing(['Motore + elica = sistema propulsivo; l\'invertitore cambia marcia, non il verso del motore','4 tempi: aspirazione, compressione, scoppio, scarico','Benzina: aerare il vano motore; diesel: niente aria nel circuito','Carburante = consumo orario × ore + 30%','Destrorsa in retro: la poppa va a sinistra; si compensa col timone'],
- 'Prossima lezione · 03 · Ormeggi, cartografia e primi calcoli','A casa: i 104 quiz ufficiali di Motori e i 50 su elica, timone e stabilità.')
+ 'Prossima lezione · 03 · Ormeggi, ancoraggi, carte e segnali','A casa: i 104 quiz ufficiali di Motori e i 50 su elica, timone e stabilità.')
 write_deck(OUT,'Lezione 02 · Motori, elica e timone',
  ['cover','agenda','cap1','benzina','quattrotempi','trasmissioni','lineaasse','installazioni','avariescoppio','raffreddamento','raffreddamentoeb','diesel','diesel4t','benzinadiesel','quiz1','quiz1r',
   'cap2','tipieliche','evoluzione','spinta','elica','quiz3','quiz3r',

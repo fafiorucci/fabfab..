@@ -71,34 +71,34 @@ scheda(2,'Motori, elica e timone','propeller',SEA,[
  notes='Scheda della lezione 2. Esempio del carburante: quiz 1.2.3-7. Consumo dalla potenza: 80 HP × 300 g = 24 kg/h, diviso 0,75 = 32 l/h.')
 
 # ============ 03 ============
-scheda(3,'Ormeggi, cartografia e primi calcoli','map',PURPLE,[
+scheda(3,'Ormeggi, ancoraggi, carte e segnali','map',PURPLE,[
  ('Cavi d\'ormeggio','Spring contro i movimenti avanti e indietro; traversini contro lo scostamento dalla banchina.'),
- ('Ormeggio di poppa','Cime di poppa incrociate; a prua la trappa collegata alla catenaria.'),
  ('Gavitello','Si arriva a lento moto con la prua al vento o alla corrente; ci si lega alla cima sotto il gavitello.'),
- ('Nodi','Gassa d\'amante: occhio che non scorre. Parlato: per i parabordi.'),
- ('Coordinate','Latitudine da 0° a 90° N o S; longitudine da 0° a 180° E o W.'),
- ('Mercatore','Isogona: la lossodromia è una retta. Le distanze si misurano sulla scala delle latitudini, alla stessa latitudine.'),
- ('Scala','Scala più grande = denominatore più piccolo: 1:5.000 è più grande di 1:100.000.'),
- ('Rosa','Angoli da 000° a 360° da Nord in senso orario, sempre con tre cifre.')],
- [('1852 m','1 miglio = 1′ di latitudine'),('60 mg','in 1° di latitudine'),('90°','latitudine massima'),('180°','longitudine massima'),
-  ('1:100.000','scala della carta 5/D'),('70°','oltre, Mercatore non si usa'),('12 mg','oltre: strumenti da carteggio obbligatori'),('0,1 h','= 6 minuti')],
- [('S = V × T','miglia = nodi × ore'),('min ÷ 60','minuti in ore'),('0,4 h = 24′','decimi × 60')],
- notes='Scheda della lezione 3. Esempi: 15 nodi per 45 minuti = 11,25 miglia (1.7.5-31); 18 miglia a 7 nodi = 2 h 34′ (1.7.5-65).')
-
-# ============ 04 ============
-scheda(4,'Ancoraggio, prora e rotta','anchor',BLUE,[
  ('Tipi di ancora','Danforth su sabbia e fango; CQR, Delta e Rocna su tutti i fondali; grappino e ombrello per piccole unità.'),
  ('Dare fondo','Prua al vento, cala a abbrivio finito, fila indietreggiando, controlla che faccia testa.'),
- ('Alla ruota','Una sola ancora: la barca gira di 360°. Afforcata: due ancore aperte di circa 45°.'),
- ('Vicino alla spiaggia','Oltre 200 m; corridoi di lancio a lento moto; in emergenza verso riva perpendicolari alla costa.'),
- ('Subacquei','Bandiera rossa con diagonale bianca o bandiera «A»: rallenta e passa lontano.'),
- ('Tre nord','Declinazione d (vero-magnetico), deviazione δ (magnetico-bussola), variazione V = d + δ.'),
- ('Scarroccio e deriva','Scarroccio dal vento, deriva dalla corrente. Vento «da», corrente «verso».'),
- ('Orzare','Per tenere la rotta con il vento: Pv = Rv − Sc, la prua va un po\' verso il vento.')],
- [('3-5 ×','il fondale: il calumo'),('15-20 kg','ancora per una barca di 10 m'),('200 m','dalla spiaggia: oltre si naviga e si ancora'),('50 m','gavitelli rossi uno ogni'),
-  ('100 m','dal segnale del subacqueo'),('50 m','raggio dove c\'è il sub, dalla bandiera'),('300 m','visibilità della luce gialla della boa sub'),('1 mg','limite per moto d\'acqua, pedalò, vele fino a 4 m²')],
- [('V = d + δ','Est +, Ovest −'),('Pv = Pb + V','bussola → vero'),('Rv = Pv + Sc','vento da sinistra: Sc +')],
- notes='Scheda della lezione 4. Quiz 1.4.3 (ancoraggio), 1.4.2 (distanze), 1.7.3 (bussola).')
+ ('Coordinate','Latitudine da 0° a 90° N o S; longitudine da 0° a 180° E o W.'),
+ ('Mercatore','Isogona: la lossodromia è una retta. Le distanze si misurano sulla scala delle latitudini, alla stessa latitudine.'),
+ ('Fari','Si riconoscono da tipo di luce, colore e periodo: «Lam (2) 12s».'),
+ ('AISM-IALA (regione A)','Entrando in porto rosso a sinistra, verde a dritta. Cardinali: si passa dal lato del nome.')],
+ [('1852 m','1 miglio = 1′ di latitudine'),('90°','latitudine massima'),('180°','longitudine massima'),('1:100.000','scala della carta 5/D'),
+  ('3-5 ×','il fondale: il calumo'),('15-20 kg','ancora per una barca di 10 m'),('70°','oltre, Mercatore non si usa'),('3 · 6 · 9','lampi bianchi delle cardinali E, S, W')],
+ [('1′ = 1 mg','scala delle latitudini'),('3-5 × fondale','il calumo'),('1:5.000 > 1:100.000','scala grande, denominatore piccolo')],
+ notes='Scheda della lezione 3: ormeggi e ancoraggi, cartografia, fari e segnalamento AISM-IALA. Cardinali: N luce continua (scintillante), E 3 lampi, S 6 lampi più un lampo lungo, W 9 lampi.')
+
+# ============ 04 ============
+scheda(4,'Carteggio e Navigazione: primi calcoli, sottocosta, prora e rotta','dividers',BLUE,[
+ ('Rosa e quadranti','Angoli da 000° a 360° da Nord in senso orario, sempre con tre cifre: I NE, II SE, III SW, IV NW.'),
+ ('Misurare le miglia','Compasso sul tratto, poi sulla scala delle latitudini all\'altezza del tratto: mai su quella delle longitudini.'),
+ ('Navigazione stimata','Pv, velocità, punto di partenza e tempo danno il punto stimato: va confermato con un punto nave.'),
+ ('Carburante','Totale: l/h × ore × 1,3. Sola riserva: il 30% del consumo del viaggio.'),
+ ('Prora e rotta','Pv: dove punta la chiglia. Rv: il percorso sul fondo. Coincidono senza vento e corrente.'),
+ ('Scarroccio e deriva','Scarroccio dal vento, che «viene»; deriva dalla corrente, che «va». + a dritta, − a sinistra.'),
+ ('Declinazione e deviazione','d tra Nv e Nm, dalla carta; δ tra Nm e Nb, dalla tabella delle deviazioni. Est +, Ovest −.'),
+ ('Vicino alla spiaggia','Oltre 200 m; corridoi di lancio a lento moto; almeno 100 m dal segnale del subacqueo.')],
+ [('1852 m','un miglio'),('0,1 mg','una tacca piccola della scala'),('60','al centro del triangolo M · V · Tᵐ'),('30%','riserva di carburante'),
+  ('180°','tra due rotte opposte'),('200 m','dalla spiaggia: oltre si naviga e si ancora'),('50 m','gavitelli rossi uno ogni'),('1 mg','limite per moto d\'acqua, pedalò, vele fino a 4 m²')],
+ [('M = V × Tᵐ : 60','miglia, tempo in minuti'),('l/h × T × 1,3','carburante con la riserva'),('Pv = Pb + V','con V = d + δ')],
+ notes='Scheda della lezione 4. Esempi: 15 nodi per 45 minuti = 15 × 45 : 60 = 11,25 miglia (1.7.5-31); 18 miglia a 7 nodi = 18 : 7 × 60 ≈ 154′ = 2 h 34′ (1.7.5-65). Quiz 1.7.4 (bussola), 1.7.5 (stima), 1.7.7 (prora e rotta), 1.2.3 (carburante), 1.4.2 (costa).')
 
 # ============ 05 ============
 scheda(5,'Punto nave e fanali','lantern',GREEN,[
@@ -115,13 +115,13 @@ scheda(5,'Punto nave e fanali','lantern',GREEN,[
  notes='Scheda della lezione 5. GPS obbligatorio oltre 12 miglia. Tricolore in testa d\'albero ammesso sotto i 20 m.')
 
 # ============ 06 ============
-scheda(6,'Segnalamento, segnali sonori e sicurezza','lighthouse',ORANGE,[
- ('Caratteristica','Un faro si riconosce da tipo di luce, colore e periodo: «Lam (2) 12s».'),
- ('Laterali (regione A)','Entrando in porto: rosso a sinistra (cilindro), verde a dritta (cono).'),
- ('Cardinali','Si passa dal lato del nome. Luci bianche: 3 lampi E, 6 + 1 lungo S, 9 W, continua N.'),
- ('Altri segnali','Pericolo isolato: 2 lampi bianchi. Acque sicure: isofase. Speciale: giallo.'),
+scheda(6,'Segnali sonori, sicurezza ed emergenze','lighthouse',ORANGE,[
  ('Fischio','1 breve accosto a dritta, 2 brevi a sinistra, 3 brevi macchine indietro, 5 brevi: non capisco.'),
+ ('Nebbia','A motore in moto: 1 prolungato ogni 2 minuti; fermo: 2 prolungati. A vela: 1 prolungato e 2 brevi.'),
+ ('Sorpasso nei canali','2 prolungati e 1 breve: ti sorpasso a dritta; 2 prolungati e 2 brevi: a sinistra.'),
+ ('Segnali di soccorso','Fuochi a mano rossi, razzi a paracadute, boetta fumogena arancione, MAYDAY sul canale 16.'),
  ('In porto','Chi esce ha la precedenza; nel canale tieni la dritta; non si entra a vela, salvo ordinanze.'),
+ ('Dotazioni','Dipendono dalla distanza dalla costa: tabelle dell\'Allegato V al DM 146/2008, come sostituito dal DM 133/2024.'),
  ('Fuoco','Triangolo: combustibile, comburente, calore. Si spegne togliendo un lato.'),
  ('Estintori','Polvere su tutto; CO2 su B, C, E; schiuma su A, B; acqua mai su D ed E.')],
  [('1 s','suono breve'),('4-6 s','suono prolungato'),('2 min','nella nebbia: un segnale almeno ogni'),('500 m','dall\'ingresso del porto: rallenta'),
