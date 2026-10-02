@@ -1,12 +1,13 @@
 # Lezione 06 · La sicurezza e i suoi elementi nella navigazione
 
+Segnali sonori, nebbia e porti sono passati nella lezione 05; la lezione sarà rivista sul programma della scuola (solo sicurezza).
+
 Slide (artifact Slides): https://claude.ai/artifact/RsXdsFbux15NxGeKgby3fh
 
-60 slide per 2 ore in tre capitoli (Segnali sonori, porti e dotazioni · Incendio e sinistri · Radio, soccorso, meteo, alcol), ognuno con la sua slide di apertura: 75 minuti di teoria con una verifica da 2 quiz dopo ogni paragrafo (5 in tutto) e 45 di raccolta quiz. Programma della scuola: segnali sonori, sicurezza
+55 slide per 2 ore in tre capitoli (Dotazioni e soccorso · Incendio e sinistri · Radio, soccorso, meteo, alcol), ognuno con la sua slide di apertura: 75 minuti di teoria con una verifica da 2 quiz dopo ogni paragrafo (4 in tutto) e 45 di raccolta quiz. Programma della scuola: sicurezza
 (dotazioni, mezzi di soccorso, incendio) ed emergenze (3); dall'All. A DM 323/2021 anche le dotazioni secondo
-il DM 133/2024 (3b), le precauzioni all'ingresso e all'uscita dei porti (4a), il CIRM (3b) e alcol e sostanze (3a).
+il DM 133/2024 (3b), il CIRM (3b) e alcol e sostanze (3a).
 
-- Segnali sonori di manovra, segnali in nebbia, regole nei porti.
 - Dotazioni: tabelle dall'Allegato V al DM 146/2008 come sostituito dal DM 17/09/2024 n. 133
   (G.U. S.O. n. 35 del 21/09/2024); segnali di soccorso.
 - Incendio: triangolo del fuoco, classi, estintori, cosa fare a bordo (fiamme sottovento).

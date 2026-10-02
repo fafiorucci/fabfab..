@@ -114,17 +114,30 @@ scheda(5,'COLREG e prevenzione degli abbordi','lantern',GREEN,[
   ('50 m','oltre: secondo bianco di testa d\'albero'),('7 m','vela sotto: basta una torcia bianca'),('20 m','sotto: tricolore ammesso in testa d\'albero'),('2','palloni neri: nave che non governa')],
  notes='Scheda della lezione 5: fanali, segnali diurni, rischio di collisione e precedenze. Quiz 1.5.1 (fanali e segnali diurni) e 1.5.2 (prevenire gli abbordi).')
 
+# ============ 05 · segnali sonori e porti ============
+scheda(5,'Segnali sonori e porti','flag',GREEN,[
+ ('Apparecchi','Sotto i 12 m un mezzo sonoro efficace; da 12 m il fischio, da 20 m la campana, da 100 m il gong.'),
+ ('Manovra','1 breve accosto a dritta, 2 brevi a sinistra, 3 brevi macchine indietro, 5 brevi: non capisco.'),
+ ('Sorpasso nei canali','2 prolungati e 1 breve: a dritta; 2 prolungati e 2 brevi: a sinistra. Benestare: prolungato, breve, prolungato, breve.'),
+ ('Nebbia in navigazione','Ogni 2 minuti: motore con abbrivio 1 prolungato; ferma 2 prolungati; vela 1 prolungato e 2 brevi.'),
+ ('Nebbia alla fonda','Da 20 m campana a prora per 5 secondi, almeno ogni minuto. Pericolo: suono continuo.'),
+ ('Entrare in porto','Rallenta a 500 m e cedi a chi entra ed esce; verso il fanale verde; a vela non si entra.'),
+ ('Precedenza in porto','A chi esce e alle navi grandi, salvo ordinanze locali.'),
+ ('Nei marina','Ormeggi in transito 72 ore; quelli per disabili si lasciano su richiesta fatta 24 ore prima.')],
+ [('1 s','suono breve'),('4-6 s','suono prolungato'),('2 min','nella nebbia: un segnale almeno ogni'),('1 min','alla fonda con nebbia: la campana almeno ogni'),
+  ('500 m','dall\'ingresso del porto: rallenta'),('3 nodi','velocità di norma in porto'),('72 h','ormeggi in transito'),('12 m','da qui il fischio a bordo')],
+ notes='Scheda della lezione 5, seconda parte: segnali sonori, nebbia e porti (prima erano nella lezione 6). Regole 32-35 del COLREG; porti salvo ordinanze locali.',part=1)
+
 # ============ 06 ============
 scheda(6,'La sicurezza e i suoi elementi nella navigazione','lighthouse',ORANGE,[
- ('Fischio','1 breve accosto a dritta, 2 brevi a sinistra, 3 brevi macchine indietro, 5 brevi: non capisco.'),
- ('Nebbia','A motore in moto: 1 prolungato ogni 2 minuti; fermo: 2 prolungati. A vela: 1 prolungato e 2 brevi.'),
- ('Sorpasso nei canali','2 prolungati e 1 breve: ti sorpasso a dritta; 2 prolungati e 2 brevi: a sinistra.'),
- ('Segnali di soccorso','Fuochi a mano rossi, razzi a paracadute, boetta fumogena arancione, MAYDAY sul canale 16.'),
- ('In porto','Chi esce ha la precedenza; nel canale tieni la dritta; non si entra a vela, salvo ordinanze.'),
+ ('Cinture di salvataggio','Oltre 300 m dalla costa una per ogni persona a bordo. Il salvagente anulare con la cima serve anche entro i 300 m.'),
+ ('VHF','Obbligatorio oltre 6 miglia dalla costa.'),
+ ('Segnali di soccorso','Fuochi a mano rossi quando vedi chi ti può aiutare; razzi a paracadute per farti vedere da lontano; boetta fumogena arancione.'),
+ ('Radio','MAYDAY sul canale 16 per il pericolo grave e imminente.'),
  ('Dotazioni','Dipendono dalla distanza dalla costa: tabelle dell\'Allegato V al DM 146/2008, come sostituito dal DM 133/2024.'),
  ('Fuoco','Triangolo: combustibile, comburente, calore. Si spegne togliendo un lato.'),
  ('Estintori','Polvere su tutto; CO2 su B, C, E; schiuma su A, B; acqua mai su D ed E.')],
- [('1 s','suono breve'),('4-6 s','suono prolungato'),('2 min','nella nebbia: un segnale almeno ogni'),('500 m','dall\'ingresso del porto: rallenta'),
+ [('300 m','oltre: una cintura per persona'),('6 mg','oltre: VHF obbligatorio'),('6 mg','portata dei fuochi a mano'),('300 m','altezza dei razzi a paracadute'),
   ('12 mg','oltre: zattera, binocolo, GPS, riflettore radar'),('50 mg','oltre: EPIRB, 3 fuochi e 3 razzi'),('25 mg','visibilità di notte dei razzi a paracadute'),('4 anni','scadenza dei pirotecnici')],
  notes='Scheda della lezione 6. Dotazioni: Allegato V del DM 146/2008 come sostituito dal DM 133/2024. VHF oltre 6 miglia. Fuochi a mano visibili a circa 6 miglia. EPIRB su 406 e 121,5 MHz.')
 
