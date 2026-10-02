@@ -87,32 +87,32 @@ scheda(3,'Ormeggi, ancoraggi, carte e segnali','map',PURPLE,[
 
 # ============ 04 ============
 scheda(4,'Carteggio e Navigazione: primi calcoli, sottocosta, prora e rotta','dividers',BLUE,[
- ('Rosa e quadranti','Angoli da 000° a 360° da Nord in senso orario, sempre con tre cifre: I NE, II SE, III SW, IV NW.'),
- ('Misurare le miglia','Compasso sul tratto, poi sulla scala delle latitudini all\'altezza del tratto: mai su quella delle longitudini.'),
- ('Navigazione stimata','Pv, velocità, punto di partenza e tempo danno il punto stimato: va confermato con un punto nave.'),
- ('Carburante','Totale: l/h × ore × 1,3. Sola riserva: il 30% del consumo del viaggio.'),
+ ('Rosa e miglia','Angoli da 000° a 360° da Nord in senso orario. Miglia col compasso sulla scala delle latitudini, mai delle longitudini.'),
+ ('Stima e carburante','Il punto stimato va confermato con un punto nave. Carburante: l/h × ore × 1,3; sola riserva il 30%.'),
  ('Prora e rotta','Pv: dove punta la chiglia. Rv: il percorso sul fondo. Coincidono senza vento e corrente.'),
  ('Scarroccio e deriva','Scarroccio dal vento, che «viene»; deriva dalla corrente, che «va». + a dritta, − a sinistra.'),
  ('Declinazione e deviazione','d tra Nv e Nm, dalla carta; δ tra Nm e Nb, dalla tabella delle deviazioni. Est +, Ovest −.'),
+ ('Punto nave','Almeno due luoghi di posizione: due rilevamenti, rilevamento e distanza, rilevamenti successivi.'),
+ ('Rilevamenti','Rilv = Rilb + V = Pv + ρ; ρ + a dritta, − a sinistra. Dal faro: aggiungi o togli 180°.'),
  ('Vicino alla spiaggia','Oltre 200 m; corridoi di lancio a lento moto; almeno 100 m dal segnale del subacqueo.')],
- [('1852 m','un miglio'),('0,1 mg','una tacca piccola della scala'),('60','al centro del triangolo M · V · Tᵐ'),('30%','riserva di carburante'),
-  ('180°','tra due rotte opposte'),('200 m','dalla spiaggia: oltre si naviga e si ancora'),('50 m','gavitelli rossi uno ogni'),('1 mg','limite per moto d\'acqua, pedalò, vele fino a 4 m²')],
+ [('1852 m','un miglio'),('8-10 mg','distanza utile dei punti cospicui'),('60','al centro del triangolo M · V · Tᵐ'),('30%','riserva di carburante'),
+  ('500 m','waypoint fuori dai fanali del porto'),('200 m','dalla spiaggia: oltre si naviga e si ancora'),('50 m','gavitelli rossi uno ogni'),('1 mg','limite per moto d\'acqua, pedalò, vele fino a 4 m²')],
  [('M = V × Tᵐ : 60','miglia, tempo in minuti'),('l/h × T × 1,3','carburante con la riserva'),('Pv = Pb + V','con V = d + δ')],
- notes='Scheda della lezione 4. Esempi: 15 nodi per 45 minuti = 15 × 45 : 60 = 11,25 miglia (1.7.5-31); 18 miglia a 7 nodi = 18 : 7 × 60 ≈ 154′ = 2 h 34′ (1.7.5-65). Quiz 1.7.4 (bussola), 1.7.5 (stima), 1.7.7 (prora e rotta), 1.2.3 (carburante), 1.4.2 (costa).')
+ notes='Scheda della lezione 4. Esempi: 15 nodi per 45 minuti = 15 × 45 : 60 = 11,25 miglia (1.7.5-31); 18 miglia a 7 nodi = 18 : 7 × 60 ≈ 154′ = 2 h 34′ (1.7.5-65). Quiz 1.7.4 (bussola), 1.7.5 (stima), 1.7.6 (navigazione costiera), 1.7.3 (GPS, obbligatorio oltre 12 miglia), 1.7.7 (prora e rotta), 1.2.3 (carburante), 1.4.2 (costa).')
 
 # ============ 05 ============
 scheda(5,'COLREG e prevenzione degli abbordi','lantern',GREEN,[
- ('Punto nave','Serve l\'incrocio di almeno due luoghi di posizione: con uno solo non si fa.'),
- ('Rilevamento polare','Rlv = Pv + ρ; ρ positivo a dritta, negativo a sinistra; al traverso ρ = 90°.'),
- ('Reciproco','Dove sono rispetto al faro: aggiungi o togli 180°. A SW del faro lo rilevo per 045°.'),
+ ('Quando si accendono','Dal tramonto al sorgere del sole e ogni volta che la visibilità è ridotta.'),
+ ('Segnali diurni','Pallone nero: alla fonda. Cono con il vertice in basso: vela con il motore acceso.'),
+ ('Luci speciali','Non governa: due rossi. Manovrabilità limitata: rosso, bianco, rosso. Strascico: verde sopra bianco.'),
  ('Fanali','Di notte a motore: testa d\'albero bianco, verde a dritta, rosso a sinistra, coronamento.'),
  ('Vela di notte','Laterali e coronamento, niente testa d\'albero. A vela e motore insieme: sei a motore.'),
  ('Rischio di collisione','Rilevamento che non cambia e distanza che cala: manovra decisa e per tempo.'),
  ('Scala delle precedenze','Non governa, manovrabilità limitata, pesca, vela, motore. Chi raggiunge cede sempre.'),
  ('Regole di rotta','Motore: cede a chi viene da dritta, rotte opposte si accosta a dritta. Vela: mure a sinistra e sopravento cedono.')],
  [('225°','bianco di testa d\'albero'),('112,5°','ciascun fanale laterale'),('135°','bianco di coronamento'),('2 mg','portata dei laterali, unità 12-50 m'),
-  ('50 m','oltre: secondo bianco di testa d\'albero'),('7 m','vela sotto: basta una torcia bianca'),('500 m','waypoint fuori dai fanali del porto'),('8-10 mg','distanza utile dei punti cospicui')],
- notes='Scheda della lezione 5. GPS obbligatorio oltre 12 miglia. Tricolore in testa d\'albero ammesso sotto i 20 m.')
+  ('50 m','oltre: secondo bianco di testa d\'albero'),('7 m','vela sotto: basta una torcia bianca'),('20 m','sotto: tricolore ammesso in testa d\'albero'),('2','palloni neri: nave che non governa')],
+ notes='Scheda della lezione 5: fanali, segnali diurni, rischio di collisione e precedenze. Quiz 1.5.1 (fanali e segnali diurni) e 1.5.2 (prevenire gli abbordi).')
 
 # ============ 06 ============
 scheda(6,'La sicurezza e i suoi elementi nella navigazione','lighthouse',ORANGE,[

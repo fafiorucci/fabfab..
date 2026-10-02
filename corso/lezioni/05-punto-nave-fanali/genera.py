@@ -32,214 +32,15 @@ def sailtop(cx,cy,L,ang,side,fill='#FFFFFF',op=1):
 X,Y,W,Hh=700,290,1092,620
 
 # ============ COVER + AGENDA ============
-cover(5,'COLREG e prevenzione degli abbordi','Dove sono? Navigazione costiera, punto nave, rilevamenti e GPS. Chi è quella luce? Fanali, segnali diurni e precedenze',
- 'Lezione 5. Capitoli del programma della scuola: Carteggio (navigazione costiera, punto nave 1 e 2, rilevamento polare, rilevamenti, GPS: la parte finale della scaletta «Carteggio · Navigazione», che nella lezione 4 arriva fino alla tabella delle deviazioni) e Prevenzione degli abbordi (fanali e precedenze). Aggiunta dall\'All. A: segnali diurni (materia 5). Segnali sonori e segnalamento IALA nella lezione 6.', title_size=88)
+cover(5,'COLREG e prevenzione degli abbordi','Chi è quella luce? Fanali e segnali diurni. Chi passa per primo? Rischio di collisione, precedenze e regole di rotta',
+ 'Lezione 5. Capitolo del programma della scuola: Prevenzione degli abbordi (fanali e precedenze). Aggiunta dall\'All. A: segnali diurni (materia 5). La navigazione costiera, il punto nave, i rilevamenti e il GPS sono passati nella lezione 4; segnali sonori e segnalamento IALA nella lezione 6.', title_size=88)
 import os as _os; exec(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),'esame.py')).read())
-blocks=[('0:00','16′','Cap. 1 · Costiera e punto nave',CORAL),('0:16','18′','Cap. 2 · Rilevamenti e GPS',SUN),('0:34','16′','Cap. 3 · Fanali di navigazione',PURPLE),('0:50','12′','Cap. 4 · Segnali e precedenze',BLUE),('1:02','13′','Cap. 5 · Regole di rotta',SEA),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
+blocks=[('0:00','28′','Cap. 1 · Fanali di navigazione',PURPLE),('0:28','22′','Cap. 2 · Segnali diurni e precedenze',BLUE),('0:50','25′','Cap. 3 · Regole di rotta',SEA),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
 tl=''.join(f'<div style="flex:{max(int(d[:-1]),14)}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
-right=esame_box(['navigazione', 'colreg'],5,extra='')
-left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>fare il punto nave con due luoghi di posizione</li><li>usare tutti i rilevamenti: vero, bussola, polare, reciproco</li><li>usare il GPS con giudizio</li><li>riconoscere una barca di notte dai fanali</li><li>sapere chi lascia libera la rotta</li></ul>',SEA_T,flex=1.4)
+right=esame_box(['colreg'],5,extra='')
+left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>riconoscere una barca di notte dai fanali</li><li>leggere i segnali diurni e le luci speciali</li><li>capire se c\'è rischio di collisione</li><li>sapere chi lascia libera la rotta, a motore e a vela</li></ul>',SEA_T,flex=1.4)
 sec('agenda', head('Lezione 05 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
- notes='Cinque capitoli di teoria in 75 minuti, ognuno chiuso da una verifica da 2 quiz ufficiali (DD 131/2022): andare spediti sulle slide, il dettaglio è nelle note. Poi 45 minuti di raccolta quiz: 36 quiz ufficiali. Banca: navigazione costiera 49 quiz (1.7.6), navigazione elettronica 13 (1.7.3), fanali e segnali diurni 67 (1.5.1), prevenire gli abbordi 60 (1.5.2). All. C: 4 quesiti di navigazione e 2 di COLREG e segnalamento nella scheda da 20.')
-
-# ============ COSTIERA ============
-b=f'<rect x="0" y="0" width="1092" height="620" fill="{WATER}" fill-opacity="0.18"/>'
-b+=f'<path d="M0 0 L1092 0 L1092 150 Q980 190 880 150 Q760 110 640 170 Q520 230 400 160 Q280 100 160 150 Q80 180 0 140 Z" fill="{LAND}" stroke="{LAND_S}" stroke-width="4"/>'
-b+=tower(250,140,1.3)+bell(780,140,1.1)+f'<rect x="522" y="112" width="26" height="80" fill="#FFFFFF" stroke="{NAVY}" stroke-width="3"/><rect x="516" y="102" width="38" height="14" fill="{NAVY}"/>'
-PN=(560,470)
-b+=dash(250,90,PN[0]+(PN[0]-250)*0.3,PN[1]+(PN[1]-90)*0.3,SEA,4)+dash(780,100,PN[0]-(780-PN[0])*0.3,PN[1]+(PN[1]-100)*0.3,CORAL,4)
-b+=topboat(PN[0]-40,PN[1]+70,120,-60,'#FFFFFF',NAVY,3,0.5,False)
-b+=f'<circle cx="{PN[0]}" cy="{PN[1]}" r="16" fill="none" stroke="{NAVY}" stroke-width="5"/><circle cx="{PN[0]}" cy="{PN[1]}" r="4" fill="{NAVY}"/>'
-lbl=lab(X+150,Y+190,200,'Faro',NAVY,24,900,'center')+lab(X+690,Y+190,200,'Campanile',NAVY,24,900,'center')+lab(X+450,Y+200,220,'Torre',NAVY,24,900,'center')+lab(X+600,Y+450,260,'punto nave',NAVY,26,900,bg='#FFFFFF')
-txt=(term('Navigazione costiera','Il punto nave si ricava da punti cospicui riconoscibili dal mare: fari, campanili, torri, capi.')
-     +term('Cosa serve','Essere in vista della costa, carte a scala adeguata e pubblicazioni per riconoscerla; strumenti affidabili ed esperienza marinaresca.')
-     +term('Punti cospicui','Ben visibili, entro 8-10 miglia. Strumenti da carteggio obbligatori oltre le 12 miglia.'))
-sec('costiera', head('Carteggio · navigazione costiera','Navigare in vista della costa')+col(txt), pinned=svgp(X,Y,W,Hh,b,'Costa con faro, torre e campanile; due rette di rilevamento partono da due punti cospicui e si incrociano nel punto nave della barca')+lbl,
- notes='Quiz 1.7.6-23 e -41 (navigazione costiera: punti cospicui, vista della costa), -3 e -4 (carte a scala adeguata e pubblicazioni), -7 (punti ben visibili entro 8-10 miglia), -45 (il campanile è un punto cospicuo), -5, -6, -49 (precisione e affidabilità), 1.7.5-71 (strumenti da carteggio obbligatori oltre 12 miglia). L\'esperienza conta: riconoscere un faro di giorno dalla forma e dai colori, di notte dalla caratteristica (lezione 3).')
-
-# ============ LUOGHI DI POSIZIONE ============
-def lp_ret():
-    return f'<rect x="0" y="0" width="300" height="190" fill="{CHART}"/>'+tower(70,90,0.9)+line(70,50,280,170,SEA,4)+f'<circle cx="70" cy="50" r="6" fill="{SEA}"/>'+topboat(210,130,60,30,'#FFFFFF',NAVY,3)
-def lp_bat():
-    s=f'<rect x="0" y="0" width="300" height="190" fill="{CHART}"/><path d="M0 0 L300 0 L300 34 Q220 54 150 38 Q70 22 0 44 Z" fill="{LAND}" stroke="{LAND_S}" stroke-width="3"/>'
-    s+=f'<path d="M0 82 Q80 66 150 96 T300 84" fill="none" stroke="{BLUE}" stroke-width="3" stroke-dasharray="4 6" opacity="0.6"/><path d="M0 122 Q80 104 150 128 T300 118" fill="none" stroke="{BLUE}" stroke-width="5" stroke-dasharray="12 7"/>'
-    s+=dash(150,186,150,30,NAVY,3)+topboat(150,150,56,-90,'#FFFFFF',NAVY,3)
-    return s
-def lp_dist():
-    return f'<rect x="0" y="0" width="300" height="190" fill="{CHART}"/>'+tower(150,110,0.9)+f'<circle cx="150" cy="80" r="80" fill="none" stroke="{CORAL}" stroke-width="4" stroke-dasharray="10 7"/>'+topboat(222,120,56,60,'#FFFFFF',NAVY,3)
-def lp_cap():
-    s=f'<rect x="0" y="0" width="300" height="190" fill="{CHART}"/><circle cx="150" cy="120" r="90" fill="none" stroke="{PURPLE}" stroke-width="4" stroke-dasharray="10 7"/>'
-    s+=tower(80,160,0.7)+tower(220,160,0.7)+line(150,30,80,124,PURPLE,3)+line(150,30,220,124,PURPLE,3)+f'<circle cx="150" cy="30" r="9" fill="{NAVY}"/>'
-    return s
-LP=[(lp_ret(),'Semiretta di rilevamento','Vedo il faro per 045°: sono sulla semiretta che parte dal faro verso 225°.'),
-    (lp_bat(),'Batimetrica','L\'ecoscandaglio legge la profondità della linea: sono lì. Attraversala a 90° per riconoscerla.'),
-    (lp_dist(),'Cerchio di egual distanza','Conosco la distanza da un punto: sono su un cerchio con il centro nel punto.'),
-    (lp_cap(),'Cerchio capace','Vedo due punti sotto lo stesso angolo: sono su un arco di cerchio che passa per i due.')]
-cc=''.join(card(svgi(300,190,s,f'Disegno: {t}',dw=300,dh=190)+h3(t,28)+p(d,24),None,22,10) for s,t,d in LP)
-sec('luoghi', head('Carteggio · gli strumenti del punto','I luoghi di posizione')+p('<b>Luogo di posizione</b>: l\'insieme dei punti che godono della stessa proprietà, per esempio «da qui vedo il faro per 045°».',28,INK)+f'<div style="display:flex; gap:20px">{cc}</div>'+note('Il punto nave vuole almeno due luoghi di posizione. La rosa dei venti non lo è!',CORAL,36),
- notes='Quiz 1.7.6-39 (definizione: insieme di punti con la stessa proprietà), -2 (rette di rilevamento, cerchi capaci, cerchi di uguale distanza, batimetriche), -38 (la rosa dei venti non lo è), -14 (cerchio capace), -46 (un solo luogo non basta). Semiretta e non retta: il faro si vede solo da una parte, quella da cui lo guardo. La batimetrica si usa con l\'ecoscandaglio, tagliandola perpendicolarmente per non confondere le linee vicine.')
-
-# ============ PUNTO NAVE 1 · DUE PUNTI COSPICUI ============
-def coast(w=440):
-    return f'<rect x="0" y="0" width="{w}" height="250" fill="{CHART}"/><path d="M0 0 L{w} 0 L{w} 60 Q{w*0.75:.0f} 86 {w*0.5:.0f} 62 Q{w*0.25:.0f} 40 0 70 Z" fill="{LAND}" stroke="{LAND_S}" stroke-width="3"/>'
-def pnmark(x,y): return f'<circle cx="{x}" cy="{y}" r="13" fill="none" stroke="{NAVY}" stroke-width="5"/><circle cx="{x}" cy="{y}" r="4" fill="{NAVY}"/>'
-def ext(a,b_,k=1.25): return (a[0]+(b_[0]-a[0])*k, a[1]+(b_[1]-a[1])*k)
-def pn_two():
-    s=coast()+tower(90,60,0.8)+bell(340,64,0.8); P=(230,190)
-    e1=ext((90,24),P); e2=ext((340,22),P)
-    return s+line(90,24,*e1,SEA,4)+line(340,22,*e2,CORAL,4)+pnmark(*P)
-def pn_allin():
-    s=coast()+tower(70,62,0.7)+f'<rect x="124" y="46" width="16" height="40" fill="#FFFFFF" stroke="{NAVY}" stroke-width="3"/>'+tower(360,60,0.8)
-    P=(300,206); a=(70,40); e=ext(a,P,1.12)
-    return s+line(*a,*e,PURPLE,4)+line(360,22,*ext((360,22),P,1.2),SEA,4)+pnmark(*P)
-def pn_one():
-    s=coast()+tower(70,62,0.7)+f'<rect x="124" y="46" width="16" height="40" fill="#FFFFFF" stroke="{NAVY}" stroke-width="3"/>'
-    a=(70,40); e=ext(a,(300,206),1.25)
-    s+=line(*a,*e,PURPLE,4)
-    for t,op in ((0.55,0.35),(0.8,0.35),(1.05,0.35)):
-        q=ext(a,(300,206),t); s+=topboat(q[0],q[1],56,36,'#FFFFFF',NAVY,3,op,False)
-    return s
-PN1=[(pn_two(),'Due semirette','Due punti rilevati nello stesso momento: le semirette si incrociano nel punto nave. Meglio se si tagliano quasi a 90°.'),
-     (pn_allin(),'Semiretta e allineamento','Due punti uno dietro l\'altro (rilevamento uguale, o a 180°) più il rilevamento di un terzo punto.'),
-     (pn_one(),'Un allineamento non basta','So solo di essere su quella linea: serve almeno un altro luogo di posizione.')]
-cc=''.join(card(svgi(440,250,s,f'Disegno: {t}',dw=480,dh=273)+h3(t,30)+p(d,24),None,24,10) for s,t,d in PN1)
-sec('pn1', head('Carteggio · punto nave 1','Due punti cospicui')+f'<div style="display:flex; gap:22px">{cc}</div>'+note('Punto nave = almeno 2 luoghi di posizione',CORAL,40),
- notes='Quiz 1.7.6-1 (intersezione di due o più luoghi di posizione), -46 (un solo luogo non basta), -11 e -32 (allineamento: rilevamenti uguali o a 180°), -48 (due torri allineate: serve un altro luogo di posizione), -12 (squadrette per tracciare i rilevamenti). All\'esame: «PN per due rilevamenti simultanei», per es. 5.2.3-2, 5.4.3-2, 5.6.3-1 (lì i rilevamenti sono tre: il terzo è la verifica). Prima di tracciare: Rilv = Rilb + V.')
-
-# ============ PUNTO NAVE 2 · RILEVAMENTO E DISTANZA ============
-X=128
-F=(660,240); RD=190
-b=f'<rect x="30" y="30" width="1032" height="560" rx="20" fill="{CHART}"/><path d="M500 30 L1062 30 L1062 300 Q960 250 880 180 Q800 110 700 140 Q600 160 540 90 Q520 60 500 30 Z" fill="{LAND}" stroke="{LAND_S}" stroke-width="3"/>'
-b+=f'<circle cx="{F[0]}" cy="{F[1]}" r="{RD}" fill="{CORAL}" fill-opacity="0.06" stroke="{CORAL}" stroke-width="4" stroke-dasharray="12 8"/>'
-PN=pol(*F,225,RD); far=pol(*F,225,RD+170)
-b+=line(*F,*far,SEA,5)+tower(F[0],F[1]+30,1.2)
-b+=dim(F[0]+10,F[1]+10,*pol(*F,135,RD))
-b+=pnmark(*PN)
-lc=pol(*F,135,RD*0.55); lr=pol(*F,225,RD+170)
-lbl=(lab(X+F[0]+40,Y+F[1]-20,120,'faro',NAVY,26,900)+lab(X+lc[0]+20,Y+lc[1]-10,200,'1,5 miglia',CORAL,28,900,bg='#FFFFFF')
-     +lab(X+lr[0]+30,Y+lr[1]-10,300,'semiretta Rlv 045°',SEA,26,900)+lab(X+PN[0]+30,Y+PN[1]+6,120,'PN',NAVY,30,900)
-     +lab(X+F[0]-170,Y+F[1]+RD+14,340,'cerchio di egual distanza',CORAL,24,900,'center'))
-txt=(term('Un punto, due luoghi','Dallo stesso faro prendo rilevamento e distanza: la semiretta e il cerchio si tagliano nel punto nave.')
-     +term('La distanza','Dal radar o da un\'altra misura: col compasso si traccia il cerchio, centro nel faro.')
-     +term('Esempio','Vedo il faro per 045° a 1,5 miglia: sono a SW del faro, a 1,5 miglia.')
-     +term('All\'esame','La tecnica più frequente: «PN per rilevamento e distanza», per es. 5.4.3-6.'))
-sec('pn2', head('Carteggio · punto nave 2','Un punto cospicuo: rilevamento e distanza'), pinned=pcol(txt,gap=18)+svgp(X,Y,W,Hh,b,'Faro sulla costa con il cerchio di egual distanza di 1,5 miglia e la semiretta di rilevamento per 045 gradi: si tagliano a Sud-Ovest del faro nel punto nave')+lbl,
- notes='Quiz 1.7.6-19 (servono un rilevamento e una distanza del punto cospicuo), -47 (con un solo punto cospicuo si può, se nota la distanza), -16 (5 miglia sul Rlv 180° del faro: sono a Nord, a 5 miglia), -21 (6 miglia sul Rlv SW: sono a NE). All\'esame «PN per rilevamento e distanza» compare in circa 30 esercizi, per es. 5.4.3-6, 5.4.3-8, 5.8.3-3, 5.1.1-1. Variante: allineamento e distanza (5.1.1-3).')
-
-# ============ PUNTO NAVE 2 · RILEVAMENTI SUCCESSIVI ============
-b=f'<rect x="30" y="30" width="1032" height="560" rx="20" fill="{CHART}"/><path d="M30 30 L1062 30 L1062 120 Q800 170 546 110 Q300 60 30 130 Z" fill="{LAND}" stroke="{LAND_S}" stroke-width="3"/>'
-F=(620,110); b+=tower(F[0],F[1]+20,1.2)
-P1=(300,450); P2=(620,450)
-b+=line(80,450,1000,450,NAVY,5)+arrow(900,450,1000,450,NAVY,5,20)
-dx,dy=P1[0]-F[0],P1[1]-F[1]
-b+=line(F[0],F[1],P1[0]+dx*0.25,P1[1]+dy*0.25,SEA,4)+dash(P2[0]-dx*0.9,P2[1]-dy*0.9,P2[0]+dx*0.25,P2[1]+dy*0.25,SEA,4)
-b+=line(F[0],F[1],P2[0],P2[1]+110,CORAL,4)
-b+=arrow(P1[0],P1[1]+40,P2[0],P2[1]+40,PURPLE,5,18)
-b+=pnmark(*P2)
-lbl=lab(X+130,Y+370,280,'1° rilevamento · 12:00',SEA,24,900)+lab(X+640,Y+300,280,'2° rilevamento · 12:20',CORAL,24,900)+lab(X+310,Y+500,360,'20′ a 9 nodi = 3 miglia',PURPLE,24,900,'center')
-lbl+=lab(X+650,Y+180,330,'1° rilevamento trasportato',SEA,24,800)+lab(X+640,Y+410,200,'PN 12:20',NAVY,26,900,bg='#FFFFFF')+lab(X+860,Y+410,160,'Pv',NAVY,26,900)
-txt=(term('Una sola mira, due volte','Rilevo lo stesso faro due volte: trasporto la prima semiretta lungo la rotta per le miglia percorse (M = V × Tᵐ : 60).')
-     +term('Il punto','L\'incrocio della prima semiretta trasportata con la seconda è il punto nave dell\'ora del secondo rilevamento.')
-     +term('All\'esame','Esercizi 5.x.3, come il 5.1.3-1: Rilb 075° alle 12:00, 125° alle 12:20, 9 nodi.'))
-sec('puntonave', head('Carteggio · punto nave 2','Rilevamenti successivi'), pinned=svgp(X,Y,W,Hh,b,'Rilevamenti successivi dello stesso faro: la prima retta viene trasportata per le miglia percorse e incrocia la seconda nel punto nave')+lbl+pcol(txt),
- notes='Quiz 1.7.6-1 (intersezione di due o più luoghi di posizione), -12 e -13 (squadrette e compasso). Esercizi ufficiali «PN per rilevamenti successivi sulla stessa mira» (5.1.3-1…-5, 5.4.3-1, -5, 5.5.3-1): si convertono i rilevamenti bussola in veri (Rilv = Rilb + V), si tracciano le due semirette, si trasporta la prima parallelamente a sé stessa lungo la rotta per le miglia percorse; l\'incrocio con la seconda è il punto nave. Nel 5.1.3-1: 20′ a 9 nodi = 9 × 20 : 60 = 3 miglia. Si risolvono nella lezione 10.')
-X=700
-
-# ============ RILEVAMENTO POLARE ============
-X=128
-C=(546,330); RG=230
-b=f'<rect x="30" y="30" width="1032" height="560" rx="20" fill="{CHART}"/>'
-b+=f'<circle cx="{C[0]}" cy="{C[1]}" r="{RG}" fill="#FFFFFF" stroke="{NAVY}" stroke-width="4"/>'
-b+='<path d="'+' '.join(f'M{pol(*C,a,RG)[0]:.1f} {pol(*C,a,RG)[1]:.1f} L{pol(*C,a,RG-(20 if a%30==0 else 10))[0]:.1f} {pol(*C,a,RG-(20 if a%30==0 else 10))[1]:.1f}' for a in range(0,360,10))+f'" stroke="{NAVY}" stroke-width="3"/>'
-for a in (90,270): b+=dash(*pol(*C,a,70),*pol(*C,a,RG-24),GREY,3)
-b+=topboat(C[0],C[1],300,-90,'#FFFFFF',NAVY,4,0.85)
-FO=pol(*C,300,RG+60); b+=line(*C,*pol(*C,300,RG+30),SEA,5)+tower(FO[0],FO[1]+10,1.0)
-p0=pol(*C,0,120); p1=pol(*C,300,120); b+=f'<path d="M{p0[0]:.1f} {p0[1]:.1f} A120 120 0 1 1 {p1[0]:.1f} {p1[1]:.1f}" fill="none" stroke="{NAVY}" stroke-width="5" stroke-dasharray="10 7"/>'
-q0=pol(*C,0,203); q1=pol(*C,300,203); b+=f'<path d="M{q0[0]:.1f} {q0[1]:.1f} A203 203 0 0 0 {q1[0]:.1f} {q1[1]:.1f}" fill="none" stroke="{CORAL}" stroke-width="7"/>'
-lbl=''
-for a,t1,t2 in ((0,'000°','0°'),(90,'090°','+90°'),(180,'180°','±180°'),(270,'270°','−90°')):
-    o=pol(*C,a,RG+34); i=pol(*C,a,RG-50)
-    lbl+=lab(X+o[0]-50,Y+o[1]-16,100,t1,NAVY,26,900,'center')+lab(X+i[0]-50,Y+i[1]-16,100,t2,CORAL,26,900,'center')
-lc=pol(*C,330,215); ln=pol(*C,150,125)
-lbl+=(lab(X+lc[0]-230,Y+lc[1]-70,250,'ρ −60° semicircolare',CORAL,26,900,'right',bg='#FFFFFF')+lab(X+ln[0]+10,Y+ln[1]-10,250,'ρ 300° circolare',NAVY,26,900,bg='#FFFFFF')
-      +lab(X+FO[0]-150,Y+FO[1]+20,140,'faro',SEA,26,900,'right')+lab(X+C[0]+70,Y+C[1]+8,160,'traverso',SOFT,24,800)+lab(X+C[0]-230,Y+C[1]+8,160,'traverso',SOFT,24,800,'right'))
-txt=(term('Rilevamento polare ρ','L\'angolo tra la prora (asse longitudinale) e l\'oggetto. Si misura con il grafometro.')
-     +term('Grafometro circolare','Da 000° a 360° in senso orario dalla prora, sempre positivo: traverso a dritta 090°, a sinistra 270°.')
-     +term('Grafometro semicircolare','Da 0° a 180°: + a dritta, − a sinistra. Traverso a sinistra −090°.')
-     +term('Il traverso','ρ 90° e traverso coincidono sempre. Con vento o corrente accosti quando l\'oggetto è perpendicolare all\'asse della barca.'))
-sec('rilevamento', head('Carteggio · dalla prora','Rilevamento polare'), pinned=svgp(X,Y,W,Hh,b,'Barca al centro del grafometro: fuori la scala circolare da 000 a 360 gradi dalla prora, dentro quella semicircolare con più a dritta e meno a sinistra; un faro a sinistra prora si legge 300 gradi oppure meno 60 gradi')+lbl+pcol(txt,gap=16),
- notes='Quiz 1.7.6-8 (angolo tra asse longitudinale e oggetto), -9 (circolare da 000° a 360° in senso orario dalla prora), -10 e -29 (semicircolare: positivo a dritta, negativo a sinistra), -17 (ρ 90° e traverso coincidono sempre), -33 (traverso = polare 90°), -18 (con scarroccio o deriva si accosta quando il punto è perpendicolare all\'asse longitudinale), -35 (grafometro). Nel disegno lo stesso faro si legge 300° sul grafometro circolare e −60° su quello semicircolare: con Pv 040° dà sempre Rilv 340°.')
-X=700
-
-# ============ I RILEVAMENTI ============
-RT=[('Rilv','vero','dal Nord vero, sulla carta',NAVY,BLUE_T),('Rilm','magnetico','dal Nord magnetico',SEA,SEA_T),('Rilb','bussola','dal Nord bussola: lo leggi a bordo',CORAL,CORAL_T),('ρ','polare','dalla prora, col grafometro',PURPLE,LILAC_T),('±180°','reciproco','dal faro verso di me',GREEN,'#DDF3E4')]
-cards=''.join(f'<div style="flex:1; display:flex; flex-direction:column; gap:8px; background:{bg}; padding:22px; border-radius:26px"><p style="font-family:{H}; font-size:46px; font-weight:700; line-height:1; color:{c}">{s}</p>{p(n,28,INK,800)}{p(d,24)}</div>' for s,n,d,c,bg in RT)
-forms=f'<div style="display:flex; gap:14px; flex-wrap:wrap">{chip("Rilv = Rilb + V",CORAL,32)}{chip("Rilv = Rilm + d",SEA,32)}{chip("Rilv = Pv + ρ",PURPLE,32)}{chip("reciproco = Rilv ± 180°",GREEN,32)}</div>'
-EXR=[('Esercizio 5.1.3-2','Rilb 164°, V −4°','Rilv 160°',CORAL),('Polare semicircolare','Pv 040°, ρ −60°','Rilv 340°',PURPLE),('Polare circolare','Pv 040°, ρ 300°','400° − 360° = 340°',PURPLE),('Reciproco','vedo il faro per 160°','dal faro sono a 340°',GREEN)]
-exs=''.join(f'<div style="flex:1; display:flex; flex-direction:column; gap:6px; background:#FFFFFF; {SHADOW}; padding:20px; border-radius:24px">{tag(t,c)}{p(a,26,INK,700)}<p style="font-family:{H}; font-size:36px; font-weight:700; color:{c}">{r}</p></div>' for t,a,r,c in EXR)
-sec('rilevamenti', head('Carteggio · tutte le opzioni','I rilevamenti')+f'<div style="display:flex; gap:16px">{cards}</div>'+forms+f'<div style="display:flex; gap:18px">{exs}</div>',
- notes='Riepilogo dei cinque modi di indicare la direzione di un punto cospicuo. Il rilevamento bussola si converte come la prora: Rilv = Rilb + V, con V = d + δ e δ letta per la prora della barca (non per il rilevamento). Il polare si somma alla prora vera: col grafometro semicircolare il segno fa da solo, con quello circolare si toglie 360° se si supera. Il reciproco serve per sapere dove sono rispetto al faro e per tracciare la semiretta dal faro. Quiz 1.7.6-24 (angolo di rilevamento dal Nord), -8 e -9 (polare), 1.7.4-34 (segni). Esercizio 5.1.3-2: Pb 086°, d 2°W, δ −2° → V −4°: Rilb 164° → Rilv 160°, Rilb 194° → Rilv 190°.')
-
-# ============ DOVE SONO RISPETTO AL FARO ============
-cx,cy=546,310
-b=f'<rect x="30" y="30" width="1032" height="560" rx="20" fill="{CHART}"/><circle cx="{cx}" cy="{cy}" r="230" fill="none" stroke="#D9D2BF" stroke-width="3" stroke-dasharray="6 8"/>'
-b+=tower(cx,cy+30,1.3)
-bp=pol(cx,cy,225,165); b+=topboat(bp[0],bp[1],110,-45,'#FFFFFF',NAVY,4)
-b+=arrow(bp[0]+30,bp[1]-30,cx-40,cy+10,CORAL,6,24)
-bp2=pol(cx,cy,0,190); b+=topboat(bp2[0],bp2[1],100,90,'#FFFFFF',NAVY,3,0.5,False)+arrow(bp2[0],bp2[1]+40,cx,cy-80,SEA,5,20)
-lbl=''
-for a,t in [(0,'N'),(90,'E'),(180,'S'),(270,'W'),(45,'NE'),(135,'SE'),(225,'SW'),(315,'NW')]:
-    x,y=pol(cx,cy,a,272); lbl+=lab(X+x-40,Y+y-16,80,t,NAVY if a%90==0 else SOFT,26,900,'center')
-lbl+=lab(X+bp[0]-330,Y+bp[1]+40,300,'sono a SW: lo rilevo per 045°',CORAL,24,900,bg='#FFFFFF')+lab(X+bp2[0]+40,Y+bp2[1]-10,280,'sono a N: lo rilevo per 180°',SEA,24,900,bg='#FFFFFF')
-ex=''.join(f'<div style="display:flex; justify-content:space-between; gap:12px; background:#FFFFFF; {SHADOW}; padding:10px 16px; border-radius:16px">{p(a,25,INK,700)}{p(b_,25,SEA,900)}</div>' for a,b_ in [('Sono a Sud-Est','Rlv 315°'),('Sono sul Rlv 270°','sono a Est'),('Sono sul Rlv 157,5°','sono a NNW')])
-txt=term('Il rilevamento reciproco','Il faro si rileva dalla parte opposta a quella in cui mi trovo: aggiungi o togli 180°.')+ex
-sec('reciproco', head('Carteggio · il rilevamento reciproco','Dove sono rispetto al faro')+col(txt,540,16), pinned=svgp(X,Y,W,Hh,b,'Faro al centro della rosa: una barca a Sud-Ovest lo rileva per 045°, una barca a Nord lo rileva per 180°')+lbl,
- notes='Quiz 1.7.6-15, -20, -22, -25, -30, -31, -36 (sono a … del faro: lo rilevo per …), -16, -21, -26, -27, -28, -34, -37, -40, -42, -43 (sono sul Rlv … del faro: mi trovo a …), -44 (faro a prora con Rv Ovest: lo rilevo per 270°). Il quiz 1.7.6-28 ha una formulazione ambigua («sono sul Rlv 225°… lo rilevo per Sud-Ovest»): risposta ministeriale b.')
-
-# ============ IL PUNTO NAVE: TUTTE LE TECNICHE ============
-def tk_bg(): return f'<rect x="0" y="0" width="300" height="140" fill="{CHART}"/><path d="M0 0 L300 0 L300 30 Q220 46 150 32 Q70 18 0 38 Z" fill="{LAND}" stroke="{LAND_S}" stroke-width="2"/>'
-def tk_sim(): return tk_bg()+tower(70,36,0.6)+bell(230,38,0.6)+line(70,12,*ext((70,12),(150,110),1.2),SEA,3)+line(230,12,*ext((230,12),(150,110),1.2),CORAL,3)+pnmark(150,110)
-def tk_dist(): return tk_bg()+f'<circle cx="150" cy="20" r="90" fill="none" stroke="{CORAL}" stroke-width="3" stroke-dasharray="8 6"/>'+tower(150,36,0.6)+line(150,12,*pol(150,12,200,130),SEA,3)+pnmark(*pol(150,12,200,90))
-def tk_all(): return tk_bg()+tower(60,40,0.5)+f'<rect x="96" y="22" width="12" height="28" fill="#FFFFFF" stroke="{NAVY}" stroke-width="2"/>'+line(60,22,*ext((60,22),(220,116),1.15),PURPLE,3)+f'<circle cx="60" cy="22" r="110" fill="none" stroke="{CORAL}" stroke-width="3" stroke-dasharray="8 6"/>'+pnmark(*ext((60,22),(220,116),0.58))
-def tk_succ():
-    s=tk_bg()+tower(150,36,0.6)+line(20,112,290,112,NAVY,3)
-    return s+line(150,12,70,112,SEA,3)+dash(230,12,150,112,SEA,3)+line(150,12,175,140,CORAL,3)+arrow(70,128,150,128,PURPLE,3,10)+pnmark(150,112)
-def tk_div():
-    s=tk_bg()+tower(80,36,0.6)+bell(230,38,0.6)+line(20,112,290,112,NAVY,3)
-    return s+line(80,12,60,112,SEA,3)+dash(160,12,140,112,SEA,3)+line(230,12,140,112,CORAL,3)+arrow(60,128,140,128,PURPLE,3,10)+pnmark(140,112)
-def tk_pol():
-    s=tk_bg()+tower(200,36,0.6)+line(20,112,290,112,NAVY,3)+topboat(120,112,40,0,'#FFFFFF',NAVY,2)
-    return s+dash(120,112,200,32,SEA,3)+dash(200,112,200,32,CORAL,3)+pnmark(200,112)
-TK=[(tk_sim(),'Due rilevamenti simultanei','Due punti cospicui nello stesso istante.','24 esercizi · 5.2.3-2, 5.6.3-1'),
-    (tk_dist(),'Rilevamento e distanza','Semiretta e cerchio di egual distanza.','30 esercizi · 5.4.3-6, 5.8.3-3'),
-    (tk_all(),'Allineamento e distanza','Due punti allineati e la distanza da uno.','2 esercizi · 5.1.1-3'),
-    (tk_succ(),'Successivi, stessa mira','Trasporto la prima semiretta del cammino fatto.','9 esercizi · 5.1.3-1'),
-    (tk_div(),'Successivi, mire diverse','Prima un punto, poi un altro: trasporto il primo.','10 esercizi · 5.2.3-1, 5.3.3-1'),
-    (tk_pol(),'Polari e traverso','Rilv = Pv + ρ; a ρ 90° sono al traverso.','21 + 31 esercizi · 5.3.3-2, -4')]
-cc=''.join(f'<div style="display:flex; flex-direction:column; gap:6px; background:#FFFFFF; {SHADOW}; padding:16px; border-radius:24px">{svgi(300,140,s,"Disegno: "+t,dw=300,dh=140)}{h3(t,28)}{p(d,24)}{p(e,24,SEA,800)}</div>' for s,t,d,e in TK)
-sec('tecniche', head('Carteggio · tutte le opzioni','Il punto nave: tutte le tecniche')+f'<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px 22px">{cc}</div>',
- notes='Le tecniche del punto nave negli esercizi ufficiali di carteggio (DD 131/2022), con quante volte compaiono: due rilevamenti simultanei (24, per es. 5.2.3-2, 5.4.3-2, 5.6.3-1), rilevamento e distanza (30, 5.4.3-6, 5.4.3-8, 5.8.3-3), allineamento e distanza (2, 5.1.1-3, 5.4.1-13), rilevamenti successivi sulla stessa mira (9, 5.1.3-1…-5), su mire diverse (10, 5.2.3-1, 5.3.3-1, 5.3.3-5), rilevamenti polari successivi (21, 5.3.3-4, 5.3.3-6) e punto al traverso (31, 5.3.3-2, 5.3.3-3). In tutte prima si convertono i rilevamenti in veri. Il cerchio capace è un luogo di posizione ma negli esercizi non serve. Le tecniche si fanno sulla carta nelle lezioni 8 e 10.')
-
-# ============ GPS ============
-b=f'<rect x="210" y="40" width="680" height="540" rx="46" fill="{NAVY}"/><rect x="250" y="80" width="600" height="380" rx="18" fill="#DDF1F5"/>'
-b+=f'<path d="M250 80 L850 80 L850 170 Q720 210 600 160 Q480 110 380 170 Q300 210 250 180 Z" fill="{LAND}"/>'
-b+=f'<path d="M330 420 L520 300 L720 230" fill="none" stroke="{CORAL}" stroke-width="5" stroke-dasharray="12 8"/>'
-for x,y in ((520,300),(720,230)): b+=f'<path d="M{x} {y} V{y-40} L{x+26} {y-30} L{x} {y-20}" fill="{SUN}" stroke="{NAVY}" stroke-width="3"/>'
-b+=f'<path d="M700 184 h40 M700 184 v-16" stroke="{NAVY}" stroke-width="5"/><circle cx="742" cy="168" r="7" fill="{LGREEN}"/><circle cx="700" cy="160" r="7" fill="{LRED}"/>'
-b+=topboat(330,420,70,-32,'#FFFFFF',NAVY,3)
-b+=f'<rect x="290" y="490" width="160" height="60" rx="16" fill="{LRED}"/><rect x="480" y="490" width="120" height="60" rx="16" fill="#2B4A6B"/><rect x="630" y="490" width="120" height="60" rx="16" fill="#2B4A6B"/>'
-b+=''.join(f'<g transform="translate({x} {y}) rotate(-30)"><rect x="-14" y="-8" width="28" height="16" rx="3" fill="{SUN}" stroke="{NAVY}" stroke-width="2"/><rect x="-40" y="-6" width="22" height="12" fill="{BLUE}"/><rect x="18" y="-6" width="22" height="12" fill="{BLUE}"/></g>' for x,y in ((110,90),(990,120),(980,420)))
-lbl=lab(X+290,Y+504,160,'MOB',('#FFFFFF'),28,900,'center')+lab(X+620,Y+250,220,'waypoint',NAVY,24,900)
-txt=(term('Come funziona','Misura la distanza da più satelliti: dà il punto nave in ogni istante, con un errore di pochi metri.')
-     +term('Cosa ti dice','Latitudine e longitudine, Rv e Ve sul fondo, rotta e distanza dal waypoint, fuori rotta, ETA e tempo di percorrenza, data e ora.')
-     +term('I limiti','Non vede ostacoli né costa: controlla il percorso sulla carta. Waypoint del porto almeno 500 m fuori dai fanali.')
-     +term('Obbligo e MOB','Obbligatorio oltre le 12 miglia, fisso o portatile a batterie alcaline. Il tasto MOB segna dove è caduto l\'uomo in mare.'))
-sec('gps', head('Navigazione elettronica','Il GPS')+col(txt,540,16), pinned=svgp(X,Y,W,Hh,b,'Schermo di un GPS cartografico con la costa, la rotta tratteggiata tra due waypoint, la barca e il tasto rosso MOB; intorno i satelliti',pan=True)+lbl,
- notes='Quiz 1.7.3-2 (distanza dai satelliti), -3 e -13 (informazioni: lat e long, rotta e distanza dal waypoint, fuori rotta, tempo stimato di arrivo), -5 (pochi metri), -6 (punto nave in ogni istante), -7 (obbligatorio oltre 12 miglia), -4 (apparati fissi e portatili), -8 (waypoint a 500 m dai fanali del porto), -11 (non tiene conto degli ostacoli), -12 (navigazione per waypoint), -1, -9, -10 (MOB). Le dotazioni oltre le 12 miglia: lezione 6. Il GPS non sostituisce la carta: il punto stimato e quello costiero restano indispensabili.')
-quiz_slide('quiz1','Quiz 1 · Navigazione costiera e punto nave',['1.7.6-1', '1.7.6-48'],False)
-quiz_slide('quiz1r','Quiz 1 · Le risposte',['1.7.6-1', '1.7.6-48'],True)
-quiz_slide('quiz1b','Quiz 2 · Rilevamenti e GPS',['1.7.6-20', '1.7.3-8'],False)
-quiz_slide('quiz1br','Quiz 2 · Le risposte',['1.7.6-20', '1.7.3-8'],True)
+ notes='Tre capitoli di teoria in 75 minuti, ognuno chiuso da una verifica da 2 quiz ufficiali (DD 131/2022): c\'è tempo per far disegnare le luci alla lavagna e discutere i casi. Poi 45 minuti di raccolta quiz: 36 quiz ufficiali. Banca: fanali e segnali diurni 67 (1.5.1), prevenire gli abbordi 60 (1.5.2). All. C: 2 quesiti di COLREG e segnalamento nella scheda da 20. La navigazione costiera, il punto nave, i rilevamenti e il GPS sono nella lezione 4.')
 
 # ============ FANALI ============
 X=128
@@ -286,8 +87,8 @@ txt=term('La regola','A vela: fanali laterali e coronamento. Niente bianco di te
 sec('velanotte', head('COLREG · la vela','Le barche a vela di notte')+col(txt), pinned=svgp(X,Y,W,Hh,b,'Barca a vela di notte vista di fianco: laterale verde a prua, bianco di coronamento a poppa, tricolore o luci facoltative rossa sopra verde in cima all\'albero',pan=False)+lbl,
  notes='Quiz 1.5.1-39 e -67 (vela: laterali e coronamento), -61 (vela oltre 20 m: laterali e fanale di poppa), -40 (facoltativi rosso sopra verde, 360°), -58 e -59 (figure: vela sotto e sopra i 20 m, il tricolore è ammesso sotto i 20 m), -9 e -55 (cono con il vertice in basso: vela e motore insieme), -15 (natanti a vela sotto 7 m: torcia bianca), -6 (entro 3 miglia: torcia di sicurezza a luce bianca). Il tricolore non si usa insieme alle luci facoltative.')
 
-quiz_slide('quiz2','Quiz 3 · I fanali',['1.5.1-4', '1.5.1-39'],False)
-quiz_slide('quiz2r','Quiz 3 · Le risposte',['1.5.1-4', '1.5.1-39'],True)
+quiz_slide('quiz2','Quiz 1 · I fanali',['1.5.1-4', '1.5.1-39'],False)
+quiz_slide('quiz2r','Quiz 1 · Le risposte',['1.5.1-4', '1.5.1-39'],True)
 
 # ============ SEGNALI DIURNI E LUCI SPECIALI ============
 def ball(x,y,r=16): return f'<circle cx="{x}" cy="{y}" r="{r}" fill="{INK}"/>'
@@ -315,8 +116,8 @@ side=card(note('Regola generale',GREEN,38)+p('Ognuno lascia libera la rotta a ch
 sec('gerarchia', head('COLREG · la scala delle precedenze','Chi lascia la rotta a chi')+f'<div style="display:flex; gap:40px; align-items:start"><div style="flex:1; display:flex; flex-direction:column; gap:14px">{st}</div>{side}</div>',
  notes='Quiz 1.5.2-29 (una unità a motore dà precedenza, nell\'ordine, a: nave che non governa, manovrabilità limitata, intenta alla pesca, vela), -8 (la manovrabilità limitata lascia libera la rotta a chi non governa), 1.5.1-13 e 1.5.2-24 (chi pesca la lascia a chi non governa e a chi ha manovrabilità limitata), 1.5.1-16 (il motore la lascia sempre a chi non governa), 1.5.2-26 (draga = manovrabilità limitata), 1.5.2-19 (raggiungente), 1.5.2-5 (schemi di separazione del traffico), 1.5.1-14 (di notte il diporto non ha mai precedenza su navi con luci speciali), 1.5.2-2 (COLREG 72). Nel COLREG c\'è anche la nave condizionata dalla propria immersione, tra la manovrabilità limitata e la pesca.')
 
-quiz_slide('quiz3','Quiz 4 · Segnali e precedenze',['1.5.1-10', '1.5.1-60'],False)
-quiz_slide('quiz3r','Quiz 4 · Le risposte',['1.5.1-10', '1.5.1-60'],True)
+quiz_slide('quiz3','Quiz 2 · Segnali e precedenze',['1.5.1-10', '1.5.1-60'],False)
+quiz_slide('quiz3r','Quiz 2 · Le risposte',['1.5.1-10', '1.5.1-60'],True)
 
 # ============ RISCHIO DI COLLISIONE ============
 X=128
@@ -372,39 +173,34 @@ side=card(note('Vela e motore',CORAL,38)+p('Il motore lascia libera la rotta all
 sec('vela', head('COLREG · le regole di rotta','Due barche a vela')+f'<div style="display:flex; gap:24px">{cc}{side}</div>',
  notes='Quiz 1.5.2-6, -15, -31, -32 (mure diverse: chi ha il vento a sinistra cede), -7, -16, -59 (stesse mure: sopravento cede a sottovento), 1.5.2-29 (motore cede alla vela). Nei disegni il boma sta sottovento: se il boma è a dritta il vento arriva da sinistra (mure a sinistra).')
 
-quiz_slide('quiz4','Quiz 5 · Precedenze',['1.5.2-44', '1.5.2-6'],False)
-quiz_slide('quiz4r','Quiz 5 · Le risposte',['1.5.2-44', '1.5.2-6'],True)
+quiz_slide('quiz4','Quiz 3 · Precedenze',['1.5.2-44', '1.5.2-6'],False)
+quiz_slide('quiz4r','Quiz 3 · Le risposte',['1.5.2-44', '1.5.2-6'],True)
 exec(open('apertura.py').read())
-chapter('cap1',1,'Navigazione costiera e punto nave',['Navigare in vista della costa','I luoghi di posizione','Punto nave 1 · due punti cospicui','Punto nave 2 · rilevamento e distanza','Punto nave 2 · rilevamenti successivi'],CORAL,
- 'Circa 16 minuti, verifica da 2 quiz compresa: andare spediti, il dettaglio è nelle note.','circa 16 minuti · 5 argomenti',1,art=(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso'))
-chapter('caprl',2,'Rilevamenti e GPS',['Rilevamento polare','I rilevamenti: vero, bussola, polare','Dove sono rispetto al faro','Il punto nave: tutte le tecniche','Il GPS'],SUN,
- 'Circa 18 minuti, verifica da 2 quiz compresa. È la parte finale della scaletta della scuola: tutti i rilevamenti e le tecniche del punto nave.','circa 18 minuti · 5 argomenti',1,art=(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata'))
-chapter('cap2',3,'Fanali di navigazione',['I fanali di navigazione','Cosa vedo di notte','Le barche a vela di notte'],PURPLE,
- 'Circa 16 minuti, verifica da 2 quiz compresa.','circa 16 minuti · 3 argomenti',1)
-chapter('cap3',4,'Segnali diurni e precedenze',['Segnali diurni e luci speciali','Chi lascia la rotta a chi'],BLUE,
- 'Circa 12 minuti, verifica da 2 quiz compresa.','circa 12 minuti · 2 argomenti',1)
-chapter('cap4',5,'Regole di rotta',['C\'è rischio di collisione?','Due barche a motore','Due barche a vela'],SEA,
- 'Circa 13 minuti, verifica da 2 quiz compresa.','circa 13 minuti · 3 argomenti',1,art=(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata'))
-QZ=[('q01','Quiz 1 · Navigazione costiera',['1.7.6-3','1.7.6-9','1.7.6-23']),('q02','Quiz 2 · Rilevamento polare e traverso',['1.7.6-8','1.7.6-17','1.7.6-29']),
- ('q03','Quiz 3 · Luoghi di posizione',['1.7.6-2','1.7.6-14','1.7.6-38']),('q04','Quiz 4 · Il punto nave',['1.7.6-7','1.7.6-46','1.7.6-47']),
- ('q05','Quiz 5 · GPS',['1.7.3-1','1.7.3-5','1.7.3-9']),('q06','Quiz 6 · I fanali',['1.5.1-5','1.5.1-18','1.5.1-30']),
- ('q07','Quiz 7 · Motore di notte',['1.5.1-1','1.5.1-17','1.5.1-38']),('q08','Quiz 8 · Segnali diurni',['1.5.1-2','1.5.1-21','1.5.1-32']),
- ('q09','Quiz 9 · Luci speciali',['1.5.1-13','1.5.1-19','1.5.1-24']),('q10','Quiz 10 · Rischio di collisione',['1.5.2-3','1.5.2-18','1.5.2-41']),
- ('q11','Quiz 11 · Precedenze a motore',['1.5.2-9','1.5.2-39','1.5.2-46']),('q12','Quiz 12 · Vela, raggiunta, gerarchia',['1.5.2-7','1.5.2-19','1.5.2-29'])]
-raccolta(5,6,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
+chapter('cap2',1,'Fanali di navigazione',['I fanali di navigazione','Cosa vedo di notte','Le barche a vela di notte'],PURPLE,
+ 'Circa 28 minuti, verifica da 2 quiz compresa: far disegnare i settori alla lavagna.','circa 28 minuti · 3 argomenti',1)
+chapter('cap3',2,'Segnali diurni e precedenze',['Segnali diurni e luci speciali','Chi lascia la rotta a chi'],BLUE,
+ 'Circa 22 minuti, verifica da 2 quiz compresa.','circa 22 minuti · 2 argomenti',1)
+chapter('cap4',3,'Regole di rotta',['C\'è rischio di collisione?','Due barche a motore','Due barche a vela'],SEA,
+ 'Circa 25 minuti, verifica da 2 quiz compresa: provare i casi con due modellini.','circa 25 minuti · 3 argomenti',1,art=(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata'))
+QZ=[('q01','Quiz 1 · Quando si accendono',['1.5.1-23','1.5.1-56','1.5.1-27']),('q02','Quiz 2 · Colori e settori',['1.5.1-7','1.5.1-12','1.5.1-36']),
+ ('q03','Quiz 3 · I fanali',['1.5.1-5','1.5.1-18','1.5.1-30']),('q04','Quiz 4 · Motore di notte',['1.5.1-1','1.5.1-17','1.5.1-38']),
+ ('q05','Quiz 5 · Navi grandi e vela',['1.5.1-29','1.5.1-66','1.5.1-61']),('q06','Quiz 6 · Segnali diurni',['1.5.1-2','1.5.1-21','1.5.1-32']),
+ ('q07','Quiz 7 · Luci speciali',['1.5.1-13','1.5.1-19','1.5.1-24']),('q08','Quiz 8 · Rischio di collisione',['1.5.2-3','1.5.2-18','1.5.2-41']),
+ ('q09','Quiz 9 · Evitare la collisione',['1.5.2-4','1.5.2-43','1.5.2-55']),('q10','Quiz 10 · Precedenze a motore',['1.5.2-9','1.5.2-39','1.5.2-46']),
+ ('q11','Quiz 11 · Chi raggiunge',['1.5.2-17','1.5.2-45','1.5.2-54']),('q12','Quiz 12 · Vela, raggiunta, gerarchia',['1.5.2-7','1.5.2-19','1.5.2-29'])]
+raccolta(5,4,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
  [('Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.'),
   ('Disegna la barca','Fanali e settori: schizza la barca vista dall\'alto con 225°, 112,5° e 135°.'),
   ('Chi è a dritta?','A motore lascia la rotta chi vede l\'altro sulla propria dritta; a vela conta il vento.'),
   ('Attento ai numeri','Gradi, miglia e lunghezze delle navi: 12 e 50 metri cambiano i fanali.')],
- ['Quiz 1-5 · punto nave, rilevamenti e GPS (15)','Quiz 6-9 · fanali e segnali diurni (12)','Quiz 10-12 · rischio di collisione e precedenze (9)'],
- 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 3 e 9.',esame=['navigazione', 'colreg'])
-closing(['Punto nave: almeno due luoghi di posizione; Rilv = Rilb + V = Pv + ρ','Sono a SW del faro: lo rilevo per 045°, aggiungi o togli 180°','Testa d\'albero 225°, laterali 112,5°, coronamento 135°','Rilevamento costante e distanza che cala: rischio di collisione','Motore: cede a chi viene da dritta; vela: mure a sinistra e sopravento cedono'],
- 'Prossima lezione · 06 · La sicurezza e i suoi elementi nella navigazione','A casa: i 49 quiz di navigazione costiera, i 13 sul GPS, i 67 su fanali e segnali diurni e i 60 sulle precedenze.')
+ ['Quiz 1-5 · fanali (15)','Quiz 6-7 · segnali diurni e luci speciali (6)','Quiz 8-12 · rischio di collisione e precedenze (15)'],
+ 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Far rispondere ad alta voce con la lettera, poi chiedere perché le altre due sono sbagliate. Se il tempo stringe, lasciare per casa le slide 5 e 11.',esame=['colreg'])
+closing(['Fanali accesi dal tramonto al sorgere del sole e con visibilità ridotta','Un pallone nero: alla fonda; un cono a vertice in giù: vela con il motore acceso','Testa d\'albero 225°, laterali 112,5°, coronamento 135°','Rilevamento costante e distanza che cala: rischio di collisione','Motore: cede a chi viene da dritta; vela: mure a sinistra e sopravento cedono'],
+ 'Prossima lezione · 06 · La sicurezza e i suoi elementi nella navigazione','A casa: i 67 quiz su fanali e segnali diurni e i 60 sulle precedenze.')
 write_deck(OUT,'Lezione 05 · COLREG e prevenzione degli abbordi',
- ['cover','agenda','cap1','costiera','luoghi','pn1','pn2','puntonave','quiz1','quiz1r','caprl','rilevamento','rilevamenti','reciproco','tecniche','gps','quiz1b','quiz1br',
+ ['cover','agenda',
   'cap2','fanali','cosavedo','velanotte','quiz2','quiz2r','cap3','diurni','gerarchia','quiz3','quiz3r',
   'cap4','rischio','motore','vela','quiz4','quiz4r','capquiz','quiz']+[q+s for q,_,_ in QZ for s in ('','r')]+['chiusura'],
- {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"Navigazione costiera, luoghi di posizione, punto nave 1 e 2","start":"cap1"},
-  "s3":{"description":"Rilevamento polare, tutti i rilevamenti, tecniche del punto nave, GPS","start":"caprl"},"s4":{"description":"Fanali di navigazione e barche a vela di notte","start":"cap2"},
-  "s5":{"description":"Segnali diurni, luci speciali e scala delle precedenze","start":"cap3"},"s6":{"description":"Rischio di collisione e regole di rotta","start":"cap4"},
-  "s7":{"description":"Raccolta quiz","start":"capquiz"}})
+ {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"Fanali di navigazione e barche a vela di notte","start":"cap2"},
+  "s3":{"description":"Segnali diurni, luci speciali e scala delle precedenze","start":"cap3"},"s4":{"description":"Rischio di collisione e regole di rotta","start":"cap4"},
+  "s5":{"description":"Raccolta quiz","start":"capquiz"}})

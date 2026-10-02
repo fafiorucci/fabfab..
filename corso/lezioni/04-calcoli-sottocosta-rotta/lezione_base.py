@@ -109,7 +109,7 @@ def closing(points, nxt, notes=''):
     n=len(slides)+1
     slides.append(('chiusura', f'''<section id="chiusura" data-transition="fade" style="background:{NAVY}; color:#FFFFFF; font-family:{B}; padding:128px 128px 160px; display:flex; flex-direction:column; gap:40px">
 {backdrop(True,n)}
-{header('In sintesi','Cinque cose da ricordare','flag',CORAL,True)}
+{header('In sintesi',['Tre','Quattro','Cinque','Sei','Sette'][len(points)-3]+' cose da ricordare','flag',CORAL,True)}
 <ol style="font-size:30px; line-height:1.45; color:{DSOFT}; display:flex; flex-direction:column; gap:14px; width:1500px">{ul}</ol>
 <p style="font-family:{HAND}; font-size:44px; font-weight:700; color:{DACC}">{nxt}</p>
 {footer(n,True)}
