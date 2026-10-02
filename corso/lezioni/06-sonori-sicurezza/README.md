@@ -1,21 +1,22 @@
 # Lezione 06 · La sicurezza e i suoi elementi nella navigazione
 
-Segnali sonori, nebbia e porti sono passati nella lezione 05; la lezione sarà rivista sul programma della scuola (solo sicurezza).
-
 Slide (artifact Slides): https://claude.ai/artifact/RsXdsFbux15NxGeKgby3fh
 
-55 slide per 2 ore in tre capitoli (Dotazioni e soccorso · Incendio e sinistri · Radio, soccorso, meteo, alcol), ognuno con la sua slide di apertura: 75 minuti di teoria con una verifica da 2 quiz dopo ogni paragrafo (4 in tutto) e 45 di raccolta quiz. Programma della scuola: sicurezza
-(dotazioni, mezzi di soccorso, incendio) ed emergenze (3); dall'All. A DM 323/2021 anche le dotazioni secondo
-il DM 133/2024 (3b), il CIRM (3b) e alcol e sostanze (3a).
+69 slide per 2 ore in cinque capitoli, ognuno aperto da una slide di capitolo e chiuso da una verifica da 2 quiz:
+75 minuti di teoria e 45 di raccolta quiz. Segue la scaletta della scuola (22 argomenti, dalla zattera all'ancora
+galleggiante; 22 immagini del materiale della scuola); dall'All. A DM 323/2021 materia 3 (sicurezza), con il DM 133/2024 (3b),
+il CIRM (3b) e alcol e sostanze (3a). Segnali sonori, nebbia e porti sono nella lezione 05.
 
-- Dotazioni: tabelle dall'Allegato V al DM 146/2008 come sostituito dal DM 17/09/2024 n. 133
-  (G.U. S.O. n. 35 del 21/09/2024); segnali di soccorso.
-- Incendio: triangolo del fuoco, classi, estintori, cosa fare a bordo (fiamme sottovento).
-- Emergenze (dopo la parte sulla sicurezza): falla, incaglio e collisione, uomo a mare, abbandono;
-  VHF e canale 16, MAYDAY, PAN PAN e SÉCURITÉ, 1530, CIRM, SAR; cattivo tempo; alcol, droghe e farmaci.
-- Ultimi 45′: raccolta di 36 quiz ufficiali (senza oscurati), ogni slide seguita dalle risposte;
-  nelle note delle slide sulle dotazioni i quiz che divergono dal DM 133/2024.
+- Le dotazioni di sicurezza (20′): le due tabelle dell'Allegato V (DM 146/2008 come sostituito dal DM 133/2024), poi una scheda
+  per zattera, giubbotti e salvagente anulare, boetta fumogena, fuochi a mano e razzi a paracadute, scadenze, EPIRB e riflettore
+  radar, binocolo e pronto soccorso. Ogni scheda ha due riquadri: «Per i quiz» (la risposta dell'elenco ufficiale) e
+  «A bordo oggi» (DM 133/2024).
+- Incendio e falla (15′): triangolo del fuoco, classi di incendio (sui metalli polvere speciale, il CO2 non serve: correzione
+  tecnica concordata, per i quiz vale «polvere su tutte le classi»), estintori (revisione, quanti a bordo), incendio a bordo
+  in 8 punti, falla con tappo di fortuna e pompe di sentina.
+- Sinistri e abbandono (12′): incaglio e collisione, uomo a mare con lo stacco di sicurezza, abbandono con l'ordine di salita in zattera.
+- Radio e soccorso (15′): VHF, portata (DSC, squelch, 1 W), le chiamate MAYDAY, PAN PAN, SÉCURITÉ, gli obblighi del soccorso.
+- Cattivo tempo e responsabilità (13′): prepararsi, le onde (flaps, trim, alla cappa e remora), l'ancora galleggiante, alcol e farmaci.
+- Ultimi 45′: raccolta di 36 quiz ufficiali, ogni slide seguita dalle risposte.
 
-Fari, portate e segnalamento AISM-IALA sono passati nella lezione 03.
-
-Rigenerare: `python3 genera.py` (usa `lezione_base.py` e `template.py`; legge `quiz.json`).
+Rigenerare: `python3 genera.py` (usa `lezione_base.py`, `template.py`, `intermedi.py`; legge `quiz.json`).
