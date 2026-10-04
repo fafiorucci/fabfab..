@@ -82,7 +82,7 @@ def windarr(c0,r,phis,ccw,inward,col_):
     return s
 b+=windarr(L,190,range(0,360,45),True,True,NAVY)+windarr(Hp,190,range(20,360,60),False,False,SOFT)
 lbl=big(X+L[0]-40,Y+L[1]-45,80,'B',BLUE,90)+big(X+Hp[0]-40,Y+Hp[1]-45,80,'A',CORAL,90)
-lbl+=lab(X+60,Y+560,480,'isobare fitte: vento forte',BLUE,24,900)+lab(X+640,Y+560,420,'isobare larghe: vento debole',CORAL,24,900)
+lbl+=lab(X+L[0]-240,Y+560,480,'isobare fitte: vento forte',BLUE,24,900,'center')+lab(X+Hp[0]-210,Y+560,420,'isobare larghe: vento debole',CORAL,24,900,'center')
 txt=term('Isobare','Linee che uniscono i punti con la stessa pressione.')+term('Gradiente barico','La differenza di pressione tra due zone: più le isobare sono vicine, più forte è il vento.')+term('Il giro del vento','Nel nostro emisfero il vento gira in senso antiorario attorno alla bassa (ciclone), entrando verso il centro; in senso orario attorno all\'alta.')+term('Perché soffia','Il vento nasce da differenze di temperatura e di pressione: l\'aria calda, più leggera, sale.')
 sec('pressione', head('Meteorologia · isobare e vento','Alta e bassa pressione')+col(txt), pinned=svgp(X,Y,W,Hh,b,'Carta del tempo: una bassa pressione con isobare fitte e il vento che gira in senso antiorario verso il centro; un\'alta pressione con isobare larghe e il vento in senso orario verso l\'esterno')+lbl,
  notes='Quiz 1.6.1-6 (isobare), -19 (senso antiorario attorno alla bassa nel nostro emisfero), -20 e 1.6.2-53 (gradiente barico, isobare vicine = vento forte), -25 (il vento nasce da differenze di temperatura e pressione), -38 (l\'aria calda è più leggera), -8 (definizione di vento: spostamento quasi orizzontale, con direzione e velocità). Sulle carte italiane B = bassa, A = alta (in inglese L e H).')
@@ -103,7 +103,7 @@ names=[(0,'Tramontana','N'),(45,'Grecale','NE'),(90,'Levante','E'),(135,'Scirocc
 lbl=''
 for a,nm,d in names:
     x,y=pol(cx,cy,a,258 if a%180==0 else 290); lbl+=lab(X+x-110,Y+y-18,220,f'{nm} · {d}',NAVY if a%90==0 else PURPLE,24,900,'center')
-txt=sterm('Il nome dice da dove viene','Lo Scirocco viene da Sud-Est (135°), il Ponente da Ovest (270°). Ostro e Mezzogiorno sono lo stesso vento.')+sterm('I quadranti','I: Tramontana, Grecale, Levante · II: Levante, Scirocco, Mezzogiorno · III: Mezzogiorno, Libeccio, Ponente · IV: Ponente, Maestrale, Tramontana.')+sterm('Venti di traversia','Soffiano dal largo verso la costa: per una costa esposta a Sud-Est sono quelli del II quadrante. Lì non c\'è ridosso.')
+txt=sterm('Il nome dice da dove viene','Lo Scirocco viene da Sud-Est (135°), il Ponente da Ovest (270°). Ostro e Mezzogiorno sono lo stesso vento.')+f'<div style="display:flex; flex-direction:column; gap:6px">{p("I quadranti",27,INK,800,1.25)}<div style="display:flex; gap:12px; align-items:baseline"><p style="width:56px; flex:none; font-family:{H}; font-size:28px; font-weight:700; color:{PURPLE}">I</p>{p("Tramontana, Grecale, Levante",24,BODY,600,1.3)}</div><div style="display:flex; gap:12px; align-items:baseline"><p style="width:56px; flex:none; font-family:{H}; font-size:28px; font-weight:700; color:{PURPLE}">II</p>{p("Levante, Scirocco, Mezzogiorno",24,BODY,600,1.3)}</div><div style="display:flex; gap:12px; align-items:baseline"><p style="width:56px; flex:none; font-family:{H}; font-size:28px; font-weight:700; color:{PURPLE}">III</p>{p("Mezzogiorno, Libeccio, Ponente",24,BODY,600,1.3)}</div><div style="display:flex; gap:12px; align-items:baseline"><p style="width:56px; flex:none; font-family:{H}; font-size:28px; font-weight:700; color:{PURPLE}">IV</p>{p("Ponente, Maestrale, Tramontana",24,BODY,600,1.3)}</div></div>'+sterm('Venti di traversia','Soffiano dal largo verso la costa: per una costa esposta a Sud-Est sono quelli del II quadrante. Lì non c\'è ridosso.')
 sec('venti', head('Meteorologia · il vento','I venti del Mediterraneo'), pinned=svgp(X,Y,W,Hh,b,'Rosa dei venti con i quattro quadranti numerati e le frecce che arrivano da Tramontana, Grecale, Levante, Scirocco, Ostro, Libeccio, Ponente e Maestrale')+lbl+pcol(txt,gap=20),
  notes='Materiale della scuola: il vento. Quiz 1.6.3-1…-4 (venti dei quadranti), -5 (la rosa dei venti indica la direzione di provenienza), -6…-19 (singoli venti e gradi: Scirocco 135°, Ponente 270°, Ostro 180°, Maestrale da NW, Grecale da NE, Libeccio da SW), -15 (Ostro = Mezzogiorno), -20 (i venti intercardinali prendono il nome dalla provenienza). Il vento si indica «da», la corrente «verso» (lezione 4). Venti di traversia: il ridosso si cerca sottovento alla costa.')
 X=700
@@ -204,17 +204,37 @@ sec('sinottica', head('Meteorologia · leggere la carta','La carta sinottica')+f
  notes='Materiale della scuola: carte sinottiche e fronti. Quiz 1.6.2-9 (carte al suolo e in quota), 1.6.1-11 (occluso: sovrapposizione di un fronte freddo e di uno caldo), 1.6.1-18 e 1.6.2-35 (stazionario: nessuna massa avanza, stallo e maltempo), 1.6.2-27 (il fronte è una linea). I quiz 1.6.2-10…-13 chiedono di riconoscere i simboli in figura: sono fuori dalla raccolta perché hanno l\'immagine, ma all\'esame possono uscire.', gap=26)
 
 X=128
-b=f'<rect x="0" y="0" width="1092" height="620" fill="{SKY}"/><rect x="0" y="540" width="1092" height="80" fill="{WATER}" fill-opacity="0.45"/>'
-b+=''.join(f'<path d="M{x} {y} q40 -20 90 -6 q30 8 60 -10" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>' for x,y in ((80,90),(260,70),(440,100)))
-b+=f'<rect x="560" y="140" width="460" height="34" rx="17" fill="#FFFFFF" fill-opacity="0.85"/>'
-b+=cloudp(150,400,1.2)+cloudp(330,420,1.0)
-b+=f'<path d="M700 520 L700 300 Q690 230 760 210 L960 190 Q1000 200 940 230 Q880 250 880 300 L880 520 Z" fill="#6B7F95"/>'+cloudp(790,500,1.6,'#6B7F95')+f'<path d="M740 530 l-14 40 M790 530 l-14 40 M840 530 l-14 40" stroke="{BLUE}" stroke-width="4"/>'
-b+=f'<path d="M820 400 l-24 50 h20 l-20 50" fill="none" stroke="{SUN}" stroke-width="6" stroke-linejoin="round"/>'
-b+=dim(1040,190,1040,520,NAVY)
-lbl=lab(X+60,Y+120,300,'Cirri',NAVY,26,900)+lab(X+600,Y+100,380,'Cirrostrati',NAVY,26,900)+lab(X+120,Y+300,300,'Cumuli',NAVY,26,900)+lab(X+890,Y+300,140,'Cumulo-<br>nembo',NAVY,26,900)
-txt=term('Cirri','Le nubi più alte, bianche, fibrose, isolate: bel tempo se la pressione è stabile o sale. Se si addensano in cirrostrati e la pressione cala, peggiora.')+term('Cumuli','Nubi a sviluppo verticale, con la base piatta: di bel tempo se restano piccole.')+term('Cumulonembi','Nubi temporalesche: rovesci, temporali, grandine. Più sono alte, più il temporale è violento.')
-sec('nubi', head('Meteorologia · il cielo','Le nubi'), pinned=svgp(X,Y,W,Hh,b,'Cielo con cirri in alto, un velo di cirrostrati, cumuli bassi e un cumulonembo scuro con fulmine e pioggia')+lbl+pcol(txt),
- notes='Materiale della scuola: nubi. Quiz 1.6.1-13 e 1.6.2-25 (cirri: bianchi, fibrosi, isolati; le nubi più alte), 1.6.2-4 (cirri che si addensano in cirrostrati, pressione che cala: peggioramento), 1.6.2-28 (cumuli: sviluppo verticale), 1.6.1-14, 1.6.2-26, -31 (cumulonembi, temporali; violenza in funzione dello sviluppo verticale).')
+ky=lambda km: 580-km*42
+b=f'<rect x="0" y="0" width="1092" height="620" fill="{SKY}"/><rect x="0" y="580" width="1092" height="40" fill="{WATER}" fill-opacity="0.45"/>'
+for k0,k1,c_ in ((6,13,'#FFFFFF'),(2,6,'#EAF4F8'),(0,2,'#FFFFFF')): b+=f'<rect x="70" y="{max(ky(k1),20)}" width="600" height="{ky(k0)-max(ky(k1),20)}" fill="{c_}" fill-opacity="0.35"/>'
+b+=line(70,20,70,580,NAVY,3)+''.join(line(62,ky(k),78,ky(k),NAVY,3)+f'<text x="54" y="{ky(k)+7}" text-anchor="end" font-family="Arial" font-size="20" font-weight="700" fill="{NAVY}">{k}</text>' for k in range(0,13,2))
+b+=f'<text x="22" y="14" font-family="Arial" font-size="18" font-weight="900" fill="{NAVY}">km</text>'
+b+=''.join(f'<path d="M70 {ky(k)} H670" stroke="{NAVY}" stroke-width="2" stroke-dasharray="8 8" stroke-opacity="0.45"/>' for k in (2,6))
+def T(x,y,t,c=NAVY): return f'<text x="{x}" y="{y}" text-anchor="middle" font-family="Arial" font-size="21" font-weight="900" fill="{c}">{t}</text>'
+b+=''.join(f'<text x="94" y="{ky(k)}" text-anchor="middle" font-family="Arial" font-size="16" font-weight="900" fill="{SOFT}" transform="rotate(-90 94 {ky(k)})">{t}</text>' for k,t in ((9.5,'ALTE'),(4,'MEDIE'),(1,'BASSE')))
+# alte
+b+=''.join(f'<path d="M{x} {y} q30 -16 70 -5 q24 6 46 -8" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>' for x,y in ((110,ky(9.6)),(170,ky(9.0))))
+b+=''.join(f'<circle cx="{330+i*22+(j%2)*11}" cy="{ky(8.6)+j*14}" r="7" fill="#FFFFFF"/>' for i in range(6) for j in range(3))
+b+=f'<rect x="480" y="{ky(7.4)}" width="170" height="22" rx="11" fill="#FFFFFF" fill-opacity="0.85"/>'
+b+=T(190,ky(8.2),'cirri')+T(390,ky(7.4),'cirrocumuli')+T(565,ky(6.6),'cirrostrati')
+# medie
+b+=''.join(f'<ellipse cx="{130+i*30}" cy="{ky(4.6)+(i%2)*8}" rx="16" ry="10" fill="#F4F7F9"/>' for i in range(6))
+b+=f'<rect x="330" y="{ky(4.4)}" width="320" height="30" rx="15" fill="#B9C6D2"/>'
+b+=T(205,ky(3.6),'altocumuli')+T(490,ky(3.5),'altostrati')
+# basse
+b+=''.join(f'<ellipse cx="{120+i*34}" cy="{ky(1.4)}" rx="22" ry="13" fill="#C7D1DA"/>' for i in range(5))
+b+=f'<rect x="300" y="{ky(0.8)}" width="150" height="18" rx="9" fill="#AEB9C4"/>'
+b+=f'<rect x="480" y="{ky(1.9)}" width="170" height="52" rx="22" fill="#6B7F95"/>'+''.join(f'<path d="M{495+k*22} {ky(1.9)+56} l-8 22" stroke="{BLUE}" stroke-width="3"/>' for k in range(7))
+b+=T(190,ky(0.65),'stratocumuli')+T(375,ky(0.25),'strati')+T(565,ky(2.15)-4,'nembostrati')
+# sviluppo verticale
+b+=cloudp(740,ky(1.3),1.0)+T(740,ky(0.3),'cumulo')
+b+=f'<path d="M850 {ky(1)} L850 {ky(8)} Q850 {ky(11)} 880 {ky(11.6)} L1060 {ky(12.2)} Q1075 {ky(11.6)} 1020 {ky(11)} Q980 {ky(10.4)} 975 {ky(8)} L975 {ky(1)} Z" fill="#6B7F95"/>'+cloudp(912,ky(1.2),1.5,'#6B7F95')
+b+=f'<path d="M920 {ky(6)} l-24 50 h20 l-20 50" fill="none" stroke="{SUN}" stroke-width="6" stroke-linejoin="round"/>'+''.join(f'<path d="M{870+k*26} {ky(0.5)} l-10 24" stroke="{BLUE}" stroke-width="4"/>' for k in range(4))
+b+=T(912,ky(12.6),'cumulonembo')
+lbl=''
+txt=sterm('Alte · oltre 6 km circa','Cirri, cirrocumuli, cirrostrati, fatte di ghiaccio. Cirri isolati e pressione stabile o in salita: bel tempo; cirri che si addensano in cirrostrati e pressione che cala: peggiora.',23)+sterm('Medie · da 2 a 6 km','Altocumuli e altostrati: il velo grigio che spesso annuncia un fronte caldo.',23)+sterm('Basse · sotto i 2 km','Strati, stratocumuli e nembostrati: cielo coperto; dai nembostrati pioggia continua.',23)+sterm('A sviluppo verticale','Cumuli, di bel tempo se restano piccoli; cumulonembi, dalla base bassa fino a 12 km: rovesci, temporali, grandine. Più sono alti, più il temporale è violento.',23)
+sec('nubi', head('Meteorologia · il cielo','Le nubi'), pinned=svgp(X,Y,W,Hh,b,'Le nubi disposte su una scala verticale da 0 a 12 km: alte (cirri, cirrocumuli, cirrostrati), medie (altocumuli, altostrati), basse (stratocumuli, strati, nembostrati), e a sviluppo verticale il cumulo e il cumulonembo che sale fino a 12 km')+lbl+pcol(txt,gap=16),
+ notes='Materiale della scuola: nubi. Quiz 1.6.1-13 e 1.6.2-25 (cirri: bianchi, fibrosi, isolati; le nubi più alte), 1.6.2-4 (cirri che si addensano in cirrostrati, pressione che cala: peggioramento), 1.6.2-28 (cumuli: sviluppo verticale), 1.6.1-14, 1.6.2-26, -31 (cumulonembi, temporali; violenza in funzione dello sviluppo verticale). Le quote delle famiglie di nubi sono indicative (alle nostre latitudini l\'Organizzazione meteorologica mondiale dà: alte 5-13 km, medie 2-7 km, basse fino a 2 km).')
 X=700
 
 b=f'<rect x="0" y="0" width="1092" height="620" fill="#CFE3EC"/><rect x="0" y="420" width="1092" height="200" fill="#2C6E8F"/>'
@@ -240,7 +260,8 @@ b+=dim(c1,200,c2,200,NAVY)+dash(c1,240,c1,215,NAVY,2)+dash(c2,240,c2,215,NAVY,2)
 b+=dim(tr+150,240,tr+150,420,CORAL)+dash(c1+420-60,240,tr+170,240,CORAL,2)+dash(tr-30,420,tr+170,420,CORAL,2)
 b+=''.join(arrow(x,90,x+120,90,GREY,7,22) for x in (80,380,680))+dpath('M60 585 L1020 585',PURPLE,4)+arrow(900,585,1020,585,PURPLE,4,16)
 lbl=lab(X+c1+60,Y+150,420,'lunghezza: da cresta a cresta',NAVY,24,900)+lab(X+tr+180,Y+435,400,'↕ altezza: dalla cresta al cavo','#FFFFFF',24,900,bg=f'linear-gradient(135deg,{CORAL},#FFB36B)')+lab(X+80,Y+120,260,'vento',SOFT,24,900)+lab(X+60,Y+505,660,'⟷ fetch: il tratto di mare libero su cui soffia il vento','#FFFFFF',24,900,bg=f'linear-gradient(135deg,{PURPLE},{BLUE})')
-txt=sterm('Da dove nasce','Il moto ondoso lo fa il vento: più forte, più a lungo, su un fetch più lungo, più grandi le onde. Oltre il fetch minimo l\'onda ha la sua altezza massima.',24)+sterm('Quando frange','Se è troppo ripida (altezza oltre 1/7 della lunghezza) o se il fondale è meno del doppio dell\'altezza. Vento contro corrente: onda ripida.',24)+sterm('Mare vivo, lungo, vecchio','Vivo: il vento soffia sul posto. Lungo: onde arrivate da lontano. Vecchio o morto: resta dopo che il vento è calato.',24)
+_f1=p('l\'onda è troppo ripida: l\'altezza supera 1/7 della lunghezza',22,BODY,500,1.3); _f2=p('la profondità è meno del doppio dell\'altezza. Vento contro corrente: onda ripida.',22,BODY,500,1.3)
+txt=sterm('Da dove nasce','Il moto ondoso lo fa il vento: più forte, più a lungo, su un fetch più lungo, più grandi le onde. Oltre il fetch minimo l\'onda ha la sua altezza massima.',24)+f'<div style="display:flex; flex-direction:column; gap:8px; background:{CORAL_T}; padding:16px 20px; border-radius:22px">{p("Quando frange",26,INK,800,1.25)}<p style="font-family:{H}; font-size:34px; font-weight:700; line-height:1.15; color:{CORAL}">H ÷ L &gt; 1/7</p>{_f1}<p style="font-family:{H}; font-size:34px; font-weight:700; line-height:1.15; color:{CORAL}">fondale &lt; 2 × H</p>{_f2}</div>'+sterm('Mare vivo, lungo, vecchio','Vivo: il vento soffia sul posto. Lungo: onde arrivate da lontano. Vecchio o morto: resta dopo che il vento è calato.',24)
 sec('onde', head('Meteorologia · il mare','Le onde')+col(txt,540,18), pinned=svgp(X,Y,W,Hh,b,'Profilo di un\'onda con la lunghezza da cresta a cresta, l\'altezza dalla cresta al cavo, il vento e il fetch')+lbl,
  notes='Materiale della scuola: mare e onde. Quiz 1.6.1-9 (correnti, onde e maree), 1.6.2-39 (il vento provoca il moto ondoso), -40 (lunghezza), -41 (altezza), -29 (fetch minimo), -42 e -43 (quando frange), 1.6.1-30 (vento contro corrente: onda ripida), 1.6.2-44, -45, -46 (mare vivo, lungo, vecchio o morto). Le onde trasportano energia, non acqua: solo quando frangono l\'acqua viene portata in avanti.')
 
@@ -344,7 +365,7 @@ R_=[['Licenza di navigazione','—','sì: dati dell\'unità e del proprietario; 
    ['Certificato di omologazione e manuale del proprietario','natante CE: dice quante persone porta','—'],
    ['Atto di navigazione temporanea','—','al posto della licenza, per fiere ed eventi'],
    ['Contratto di locazione o noleggio','se l\'unità è a noleggio','in originale o copia conforme']]
-sec('documenti', head('Normativa · a bordo','I documenti di bordo')+table(['Documento','Natante','Imbarcazione e nave'],R_,['28%','26%','46%'],25)+p('In originale; tra porti italiani bastano le copie conformi. Le persone trasportabili di imbarcazioni e navi le fissa l\'organismo tecnico alla visita iniziale.',24,INK,700),
+sec('documenti', head('Normativa · a bordo','I documenti di bordo')+table(['Documento','Natante','Imbarcazione e nave'],R_,['28%','26%','46%'],25)+p('<b>STED</b> = Sportello telematico del diportista: l\'ufficio (Motorizzazione, Capitaneria o agenzia autorizzata) dove si iscrive l\'unità e si chiedono licenza e certificato. <b>ATCN</b> = Archivio telematico centrale delle unità da diporto, il registro nazionale online a cui lo STED è collegato.',24,INK,500)+p('In originale; tra porti italiani bastano le copie conformi. Le persone trasportabili di imbarcazioni e navi le fissa l\'organismo tecnico alla visita iniziale.',24,INK,700),
  notes='Materiale della scuola: documenti. Quiz 1.8.1-99 e -66 (licenza di navigazione), -48 e -100 (certificato di sicurezza), -49, -98, -115 (dichiarazione di potenza: natanti e imbarcazioni con fuoribordo), -31, -32, -33, -95 (assicurazione RC per ogni motore; escluse le unità a remi e a vela senza motore), -47 e -76 (originale o copia conforme tra porti nazionali), -50 (autorizzazione alla navigazione temporanea), -73 (manuale del proprietario), -105 (persone trasportabili del natante CE: certificato di omologazione), 1.3.4-6 (visita iniziale), -46 e -51 (contratti a bordo). Il quiz 1.8.1-22 (licenza RTF) è oscurato.', gap=24)
 
 X=128
@@ -439,8 +460,8 @@ X=700
 
 _sub='Avaria con rischio di perdere carburante o olio: il comandante avvisa senza indugio l\'Autorità marittima più vicina.'
 tl_=f'<div style="display:flex; gap:18px">{tile("450 anni","Quanto può durare in mare un contenitore di plastica.",CORAL,CORAL_T)}{tile("5 kg","Di olio usato (il cambio di un fuoribordo da 115 CV) inquinano 1,5 campi da calcio. Vietato disperderlo.",SEA,SEA_T)}{tile("Subito",_sub,PURPLE,LILAC_T)}{tile("Al rivenditore","Razzi, fuochi e boette scaduti si riconsegnano quando si comprano i nuovi.",BLUE,BLUE_T,52)}</div>'
-sec('ambiente', head('Normativa · l\'ambiente','Proteggere il mare')+tl_+note('Rifiuti e olio si portano a terra, negli appositi contenitori del porto. Nelle aree protette anche le acque nere vanno trattenute a bordo.',SEA,34),
- notes='Materiale della scuola: protezione dell\'ambiente marino. Quiz 1.8.2-58 (plastica: fino a 450 anni), -51 (5 kg di olio: una volta e mezzo un campo da calcio), -44 (sversamento di idrocarburi: informare senza indugio l\'autorità marittima più vicina), -52 (segnali scaduti al rivenditore). La convenzione MARPOL vieta di scaricare in mare plastica e oli; scarichi e acque nere seguono le ordinanze e i regolamenti delle aree protette.', gap=30)
+sec('ambiente', head('Normativa · l\'ambiente','Proteggere il mare')+tl_+box('E oltre le 12 miglia? I rifiuti non si gettano mai',lst(['<b>plastica</b>, anche reti e cime: vietata ovunque, a qualsiasi distanza','<b>vetro, alluminio e lattine, carta, stracci</b>: vietati anche al largo; le vecchie regole li permettevano oltre 12 miglia, dal 2013 non più','<b>avanzi di cibo</b>: nel Mediterraneo, area speciale, solo oltre 12 miglia dalla costa e in navigazione','olio, rifiuti e acque nere si portano a terra, nei contenitori e negli impianti del porto'],24),SEA,SEA_T),
+ notes='Materiale della scuola: protezione dell\'ambiente marino. Quiz 1.8.2-58 (plastica: fino a 450 anni), -51 (5 kg di olio: una volta e mezzo un campo da calcio), -44 (sversamento di idrocarburi: informare senza indugio l\'autorità marittima più vicina), -52 (segnali scaduti al rivenditore). Rifiuti: convenzione MARPOL, allegato V, nel testo in vigore dal 1° gennaio 2013 (risoluzione MEPC.201(62)), che vale anche per le unità da diporto: divieto generale di scarico in mare; eccezione principale gli avanzi di cibo, che nel Mediterraneo (area speciale) si possono scaricare solo oltre 12 miglia dalla terra più vicina e con l\'unità in navigazione. Prima del 2013 vetro, metallo e carta erano ammessi oltre 12 miglia: molti manuali lo riportano ancora, ma non vale più. Nessun quiz della banca chiede questa distanza. Acque nere: ordinanze locali e regolamenti delle aree protette.', gap=30)
 
 b=f'<rect x="0" y="0" width="1092" height="620" fill="{WATER}" fill-opacity="0.2"/><rect x="0" y="560" width="1092" height="60" fill="{LAND}"/>'
 b+=topboat(760,220,170,180,'#FFFFFF',NAVY,4)+line(845,220,960,240,NAVY,3)
@@ -480,7 +501,8 @@ sec('pesca', head('Normativa · il pescatore sportivo','La pesca sportiva')+f'<d
 exec(open('apertura.py').read())
 FIRST={'cap1':'strumenti','cap2':'fronti','cap3':'onde','cap4':'unita','cap5':'documenti','cap6':'autorita','cap7':'amp'}
 def chap(id_,n,title,subs,c,mins,art=None):
-    chapter(id_,n,title,subs,c,f'Circa {mins} minuti, verifica da 2 quiz compresa: andare spediti, il dettaglio è nelle note.',f'circa {mins} minuti · {len(subs)} argomenti',1,art=art)
+    mat='Meteorologia' if n<=3 else 'Normativa'
+    chapter(id_,n,title,subs,c,f'Circa {mins} minuti, verifica da 2 quiz compresa: andare spediti, il dettaglio è nelle note. Capitolo {n} della parte di {mat.lower()}.',f'circa {mins} minuti · {len(subs)} argomenti',1,label=f'{mat} · capitolo',art=art)
     new=slides.pop(); slides.insert([s_[0] for s_ in slides].index(FIRST[id_]),new)
 chap('cap1',1,'Pressione e vento',['Barometro e igrometro','Alta e bassa pressione','I venti del Mediterraneo','La scala Beaufort','Com\'è il vento','Le brezze'],CORAL,14,art=(compass_scene(),'Illustrazione: bussola con la rosa graduata'))
 chap('cap2',2,'Fronti, nubi e nebbia',['I fronti','La carta sinottica','Le nubi','Nebbia e foschia'],SEA,10)
