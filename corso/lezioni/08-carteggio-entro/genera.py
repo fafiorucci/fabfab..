@@ -32,12 +32,12 @@ X,Y,W,Hh=700,290,1092,620
 cover(8,'Quiz ed esercizi di carteggio di navigazione entro le 12 miglia','Dalla carta 5/D ai 5 quesiti: coordinate, distanza, tempo e carburante, fino alla prova d&#39;esame in 20 minuti',
  'Lezione 8, per tutti i percorsi: è l\'ultima lezione della patente entro 12 miglia a motore ed è tutta dedicata alla prova di carteggio entro 12 miglia (DM 323/2021 art. 6; elenco 4.1.1 del DD 131/2022, 50 esercizi sulla carta 5/D). Riprende gli strumenti e i calcoli delle lezioni 3, 4 e 5. Le emergenze sono nella lezione 6; la vela nella lezione 9, solo per chi fa la patente a vela; dalla 10 il carteggio oltre 12 miglia.', title_size=72)
 import os as _os; exec(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),'esame.py')).read())
-blocks=[('0:00','10′','Cap. 1 · La prova e la carta 5/D',NAVY),('0:10','20′','Cap. 2 · Coordinate, distanza, tempo, carburante · 2 verifiche',SEA),('0:30','45′','Cap. 3 · Il metodo, quattro esercizi e la prova simulata',CORAL),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
+blocks=[('0:00','10′','Cap. 1 · La prova e la carta 5/D',NAVY),('0:10','20′','Cap. 2 · Coordinate, distanza, tempo, carburante · 2 verifiche',SEA),('0:30','45′','Cap. 3 · Il metodo, cinque esercizi e la prova simulata',CORAL),('1:15','45′','Raccolta quiz: 36 quiz ufficiali',GREEN)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
 right=esame_box(['navigazione'],8,extra=' La prova di carteggio è a parte: 5 quesiti, almeno 4 giusti.')
 left=card(tag('Dopo questa lezione sai',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>leggere le coordinate di un punto sulla carta 5/D</li><li>misurare una distanza con il compasso</li><li>calcolare ora di arrivo, velocità e carburante</li><li>evitare gli errori che costano un quesito</li><li>risolvere un esercizio ufficiale in 20 minuti</li></ul>',SEA_T,flex=1.4)
 sec('agenda', head('Lezione 08 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
- notes='Tre capitoli in 75 minuti: andare spediti sulla teoria per lasciare tempo agli esercizi; due verifiche da 2 quiz nel capitolo 2 e, negli ultimi 45 minuti, una raccolta di 36 quiz ufficiali di navigazione cartografica (1.7.1, 1.7.2, 1.7.4, 1.7.5, 1.7.7 del DD 131/2022). Esercizi: cinque esercizi ufficiali dell\'elenco 4.1.1, uno per ogni tipo: velocità data (4.1.1-1 e -19), orario di arrivo dato (4.1.1-35), mezz\'ora di moto (4.1.1-6) e la prova simulata a tempo (4.1.1-40). Ogni settore della carta compare almeno una volta.')
+ notes='Tre capitoli in 75 minuti: andare spediti sulla teoria per lasciare tempo agli esercizi; una verifica da 2 quiz in fondo ai capitoli 1 e 3 e due nel capitolo 2 e, negli ultimi 45 minuti, una raccolta di 36 quiz ufficiali di navigazione cartografica (1.7.1, 1.7.2, 1.7.4, 1.7.5, 1.7.7 del DD 131/2022). Esercizi: sei esercizi ufficiali dell\'elenco 4.1.1, uno per ogni tipo: velocità data con 1 ora di moto (4.1.1-1 e -19), orario di arrivo dato (4.1.1-35), mezz\'ora di moto (4.1.1-6), un\'ora e mezza (4.1.1-37) e la prova simulata a tempo con 2 ore (4.1.1-40). Nei 50 esercizi ufficiali la velocità è data in 25 e va trovata in 25; i tempi di moto sono sempre 0,5, 1, 1,5, 2 o 2,5 ore; il carburante è sempre consumo × ore × 1,3. Ogni settore della carta compare almeno una volta.')
 
 
 # ============ CARTEGGIO ENTRO 12 MIGLIA: STRUMENTI ============
@@ -252,23 +252,28 @@ e12_slides('e1','4.1.1 - 1','Capo S. Andrea','Capo d&#39;Enfola','09:00',V=5.5,c
 e12_slides('e2','4.1.1 - 19','Punta del Marchese','Punta della Testa','10:00',V=8.1,cons=15,col=PURPLE,snote='Settore Nord Ovest verticale, da Pianosa all\'Elba. Attenzione al consumo di 15 l/h.')
 e12_slides('e3','4.1.1 - 35','Talamone','Formica Piccola','08:00',t1=1.0,col=CORAL,snote='Settore Sud Est; è dato l\'orario di arrivo: il tempo è 1 ora e si cerca la velocità.')
 e12_slides('e4','4.1.1 - 6','Marciana Marina','Capo d&#39;Enfola','10:00',t1=0.5,col=BLUE,snote='Mezz\'ora di navigazione: V = d ÷ 0,5, cioè la distanza per due; carburante 10 × 0,5 = 5 litri, più il 30%: 6,5 litri, come la risposta ufficiale.')
+e12_slides('e5','4.1.1 - 37','Talamone','Punta Nera','09:00',t1=1.5,col=ORANGE,snote='Settore Sud Est; tempo dato di un\'ora e mezza: t = 1,5 h, non 1,30. V = 6,8 ÷ 1,5 = 4,5 nodi; carburante 10 × 1,5 × 1,3 = 19,5 litri, come la risposta ufficiale. Esercizi con un\'ora e mezza o due ore e mezza sono 7 su 50.')
 e12_slides('sim','4.1.1 - 40','Giglio Porto','Punta Lividonia','10:00',V=4.8,col=GREEN,eb='Prova simulata · 20 minuti · carteggio entro 12 miglia',
  tnote='Prova simulata come all\'esame: cronometro a 20 minuti, carta 5/D, squadrette, compasso e calcolatrice. Si risponde ai 5 quesiti su un foglio; superata con almeno 4 risposte dentro la forchetta. Esercizio 4.1.1-40, settore Sud Est.',
  snote='Più di 2 ore di moto: 9,6 ÷ 4,8 = 2 ore, arrivo alle 12:00; carburante 10 × 2 × 1,3 = 26 litri.')
 
 exec(open('apertura.py').read())
+quiz_slide('v1','Verifica · La carta e la prova',['1.7.2-19','1.7.2-37'],False,'Verifica del capitolo · quiz ufficiali')
+quiz_slide('v1r','Verifica · La carta e la prova · risposte',['1.7.2-19','1.7.2-37'],True)
+quiz_slide('v3','Verifica · Ore e decimali',['1.7.5-54','1.7.5-62'],False,'Verifica del capitolo · quiz ufficiali')
+quiz_slide('v3r','Verifica · Ore e decimali · risposte',['1.7.5-54','1.7.5-62'],True)
 chapter('cap1',1,'La prova e la carta 5/D',['La prova di carteggio','La carta 5/D e i tre settori'],CORAL,
- 'Circa 10 minuti: solo l\'essenziale sulla prova e sulla carta.','circa 10 minuti · 2 argomenti',1,art=(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso'))
+ 'Circa 10 minuti, verifica da 2 quiz compresa: solo l\'essenziale sulla prova e sulla carta.','circa 10 minuti · 2 argomenti',1,art=(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso'))
 chapter('cap2',2,'Coordinate, distanza, tempo e carburante',['Le coordinate di un punto','La distanza','Ora di arrivo o velocità','Il carburante da imbarcare'],SEA,
  'Circa 20 minuti, comprese due verifiche da 2 quiz.','circa 20 minuti · 4 argomenti',1,art=(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata'))
-chapter('cap3',3,'Il metodo e gli esercizi',['Il metodo in cinque passi','Gli errori che costano il quesito','Esercizio 1: velocità data','Esercizio 2: velocità data','Esercizio 3: orario di arrivo','Esercizio 4: mezz\'ora di moto','Prova simulata a tempo'],PURPLE,
- 'Circa 45 minuti: metodo, quattro esercizi ufficiali e la prova simulata. Se il tempo stringe, lasciare per casa uno dei quattro esercizi.','circa 45 minuti · 7 argomenti',1)
+chapter('cap3',3,'Il metodo e gli esercizi',['Il metodo in cinque passi','Gli errori che costano il quesito','Esercizio 1: velocità data','Esercizio 2: velocità data','Esercizio 3: orario di arrivo','Esercizio 4: mezz\'ora di moto','Esercizio 5: un\'ora e mezza','Prova simulata a tempo'],PURPLE,
+ 'Circa 45 minuti: metodo, cinque esercizi ufficiali, la prova simulata e la verifica finale. Se il tempo stringe, lasciare per casa uno degli esercizi 2-5.','circa 45 minuti · 8 argomenti',1)
 QZ=[('q01','Quiz 1 · Le coordinate',['1.7.1-1','1.7.1-15','1.7.1-30']),('q02','Quiz 2 · Meridiani e paralleli',['1.7.1-3','1.7.1-16','1.7.1-32']),
  ('q03','Quiz 3 · Miglio e nodo',['1.7.5-14','1.7.5-42','1.7.5-20']),('q04','Quiz 4 · La carta di Mercatore',['1.7.2-4','1.7.2-20','1.7.2-32']),
  ('q05','Quiz 5 · La scala delle carte',['1.7.2-5','1.7.2-22','1.7.2-35']),('q06','Quiz 6 · Fondali e simboli',['1.7.2-8','1.7.2-29','1.7.2-24']),
- ('q07','Quiz 7 · Spazio percorso',['1.7.5-16','1.7.5-41','1.7.5-47']),('q08','Quiz 8 · Tempo e velocità',['1.7.5-58','1.7.5-63','1.7.5-65']),
+ ('q07','Quiz 7 · Spazio percorso',['1.7.5-16','1.7.5-41','1.7.5-47']),('q08','Quiz 8 · Tempo e velocità',['1.7.5-58','1.7.5-61','1.7.5-66']),
  ('q09','Quiz 9 · Le formule',['1.7.5-60','1.7.5-15','1.7.5-35']),('q10','Quiz 10 · Navigazione stimata',['1.7.5-2','1.7.5-7','1.7.5-17']),
- ('q11','Quiz 11 · Rotta e prora',['1.7.7-2','1.7.7-8','1.7.7-18']),('q12','Quiz 12 · La bussola',['1.7.4-14','1.7.4-27','1.7.4-35'])]
+ ('q11','Quiz 11 · Rotta e prora',['1.7.7-3','1.7.7-8','1.7.7-18']),('q12','Quiz 12 · La bussola',['1.7.4-14','1.7.4-27','1.7.4-35'])]
 raccolta(8,4,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
  [('Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.'),
   ('Minuti in decimi','Trasforma i minuti in ore e decimi prima di applicare S = V × T: 15 minuti sono 0,25 ore.'),
@@ -279,8 +284,8 @@ raccolta(8,4,[t.split(' · ',1)[1] for _,t,_ in QZ],QZ,
 closing(['Coordinate: squadretta sul punto, latitudine sul bordo verticale, longitudine su quello orizzontale','Distanza: compasso e scala delle latitudini, 1′ = 1 miglio','t = d ÷ V, V = d ÷ t: converti i minuti prima di sommarli','Carburante: consumo × ore × 1,3','20 minuti, 4 risposte su 5: coordinate prima, poi distanza, ora e carburante'],
  'Prossima lezione · 09 · Vela (patente a vela) · per il motore entro 12 miglia: l\'esame','A casa: i 50 esercizi dell\'elenco 4.1.1 e le 10 prove entro 12 miglia dell\'appendice D, parte 1.')
 write_deck(OUT,'Lezione 08 · Quiz ed esercizi di carteggio di navigazione entro le 12 miglia',
- ['cover','agenda','cap1','provaentro','carta5d','cap2','coordinate','distanza','quiz1','quiz1r','tempo','carburante','quiz2','quiz2r','cap3','metodo12','errori',
-  'e1_t','e1_s','e2_t','e2_s','e3_t','e3_s','e4_t','e4_s','sim_t','sim_s','capquiz','quiz']+[q+s for q,_,_ in QZ for s in ('','r')]+['chiusura'],
+ ['cover','agenda','cap1','provaentro','carta5d','v1','v1r','cap2','coordinate','distanza','quiz1','quiz1r','tempo','carburante','quiz2','quiz2r','cap3','metodo12','errori',
+  'e1_t','e1_s','e2_t','e2_s','e3_t','e3_s','e4_t','e4_s','e5_t','e5_s','sim_t','sim_s','v3','v3r','capquiz','quiz']+[q+s for q,_,_ in QZ for s in ('','r')]+['chiusura'],
  {"s1":{"description":"Apertura e obiettivi","start":"cover"},"s2":{"description":"La prova e la carta 5/D","start":"cap1"},
   "s3":{"description":"Coordinate, distanza, tempo e velocità, carburante","start":"cap2"},"s4":{"description":"Il metodo, gli errori tipici, quattro esercizi ufficiali e la prova simulata","start":"cap3"},
   "s5":{"description":"Raccolta quiz","start":"capquiz"}})
