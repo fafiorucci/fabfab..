@@ -163,11 +163,11 @@ scheda(7,'Meteorologia e Normativa','cloud',CORAL,[
  ('Fronti','Freddo: pressione che sale di colpo, cumulonembi e temporali. Caldo: cirri, pioggia continua.'),
  ('Documenti','Imbarcazioni: licenza e certificato di sicurezza. Ogni motore: assicurazione RC.'),
  ('Patente','Oltre 6 miglia sempre; entro 6 se il motore supera una soglia. Moto d\'acqua e sci nautico: sempre.'),
- ('Evento straordinario','Incaglio, urto, avaria grave: denuncia all\'Autorità marittima entro 3 giorni dall\'arrivo.'),
- ('Aree marine protette','Zona A: niente navigazione né ancoraggio. Zona B: remi e vela.')],
+ ('Evento straordinario','Incaglio, urto, avaria grave: denuncia all\'Autorità marittima entro 3 giorni dall\'arrivo (24 ore se ci sono feriti).'),
+ ('Mare protetto','AMP zona A: niente navigazione né ancoraggio; B: remi e vela. Sub: stai a 100 m dal segnale.')],
  [('1013 hPa','pressione normale'),('CH 68','Meteomar continuo'),('40,8 CV','30 kW: oltre, serve la patente'),('6 mg','oltre: patente sempre'),
   ('10 / 5','anni di validità, fino a / dopo i 60 anni'),('16 / 18','anni: natante / imbarcazione senza patente'),('3 giorni','per la denuncia di evento straordinario'),('12 m','cavo dello sci nautico, almeno')],
- notes='Scheda della lezione 7. Beaufort da 0 a 12, Douglas da 0 a 9. Nebbia: visibilità sotto 1 km. Visite: categorie A e B prima a 8 anni, C e D a 10, poi ogni 5. Senza patente: 2.755-11.017 euro.')
+ notes='Scheda della lezione 7. Beaufort da 0 a 12, Douglas da 0 a 9. Nebbia: visibilità sotto 1 km. Meteomar: previsione per 12 ore, tendenza per le 12 successive. Visite: categorie A e B prima a 8 anni, C e D a 10, poi ogni 5. Senza patente: 2.755-11.017 euro e sospensione della licenza per 30 giorni. Sci nautico: oltre 200 m dalla batimetrica di 1,60 m, partenza e rientro a 3 nodi. Pesca: 5 kg al giorno e 1 cernia; subacquea dai 16 anni, di giorno, in apnea. Noleggio occasionale: 42 giorni l\'anno.')
 
 # ============ 08 ============
 scheda(8,'Quiz ed esercizi di carteggio entro le 12 miglia','dividers',PURPLE,[
