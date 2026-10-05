@@ -2,7 +2,7 @@
 
 Slide (artifact Slides): https://claude.ai/artifact/Y86JJdezDF7GdAPJPXaR7Q
 
-94 slide. Le 24 prove ufficiali 5.1.4-5.4.4 (carta 5/D) e 5.5.4-5.8.4 (carta 42/D), con traccia e tracciamento.
+96 slide. Le 24 prove ufficiali 5.1.4-5.4.4 (carta 5/D) e 5.5.4-5.8.4 (carta 42/D), con traccia e tracciamento.
 Prima degli esercizi: i nomi dei venti, la regola Rv = Pv + Sc e il suo segno, il traverso misurato dalla prora
 (il punto sta sulla rotta), i conti tra prora, rotta e velocità e la carta 42/D.
 

@@ -2,7 +2,7 @@
 
 Slide (artifact Slides): https://claude.ai/artifact/64DeNcgDYeo8AtFEnDjbqG
 
-104 slide. Le 26 prove ufficiali delle famiglie 5.1.3, 5.2.3, 5.3.3 e 5.4.3 (DD 131/2022), ciascuna con una
+108 slide. Le 26 prove ufficiali delle famiglie 5.1.3, 5.2.3, 5.3.3 e 5.4.3 (DD 131/2022), ciascuna con una
 slide per la traccia (carta senza soluzione) e una per il tracciamento (carta, passaggi, risultato e risposta ufficiale).
 Prima degli esercizi: le conversioni da usare, le cinque tecniche (rilevamento trasportato sullo stesso punto e su
 punti diversi, tre rilevamenti, passaggio al traverso, intercettazione) e la tabella di deviazione.
