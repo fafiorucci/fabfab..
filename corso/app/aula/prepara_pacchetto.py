@@ -60,6 +60,7 @@ open(os.path.join(WWW, 'grafica.js'), 'w', encoding='utf-8').write(
     '/* Generato da prepara_pacchetto.py a partire da corso/app/index.html */\n'
     + grafica + '\n' + el + '\n' + head)
 shutil.copy(os.path.join(QUI, 'docente.html'), os.path.join(WWW, 'docente.html'))
+shutil.copy(os.path.join(APP, 'stemma.webp'), os.path.join(WWW, 'stemma.webp'))
 
 # presentazioni da proiettare dall'area istruttore: gli HTML esportati, con caratteri locali e il proiettore
 HTML = os.path.join(os.path.dirname(APP), 'export', 'html')
