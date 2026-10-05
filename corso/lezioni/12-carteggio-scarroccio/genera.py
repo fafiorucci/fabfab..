@@ -6,7 +6,7 @@ import lezione_base as LB
 import geo, chart, es10, es12, json
 OUT=SP+'/lez12/project'
 GREY='#97A6B4'; LRED='#E23B3B'; ORANGE='#F28C28'
-LB.ICON_T.update({'La lezione di oggi':'lifebuoy','Lo scarroccio':'wind','I venti della rosa':'compass','Il traverso si misura dalla prora':'lighthouse',
+LB.ICON_T.update({'Le famiglie d\'esame':'grid','Gli strumenti di base':'dividers','La lezione di oggi':'lifebuoy','Lo scarroccio':'wind','I venti della rosa':'compass','Il traverso si misura dalla prora':'lighthouse',
  'Dalla rotta alla prora e ritorno':'dividers','La carta 42/D':'map','La traccia':'map','Il tracciamento':'dividers'})
 def pcol(inner,w=532,gap=20,left=1260,top=290): return f'<div style="position:absolute; left:{left}px; top:{top}px; width:{w}px; display:flex; flex-direction:column; gap:{gap}px">{inner}</div>'
 col=lambda inner,w=520,gap=24: f'<div style="display:flex; flex-direction:column; gap:{gap}px; width:{w}px">{inner}</div>'
@@ -14,6 +14,7 @@ def pill(x,y,w,t,c,size=22,tc='#FFFFFF',align='left'):
     h=lab(x,y,w,t,tc,size,900,align,bg=c)
     return h if align=='center' else h.replace(f'width:{w}px;',f'width:max-content; max-width:{w}px;')
 X,Y,W,Hh=700,290,1092,620
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'famiglie.py')).read())
 
 R5=chart.rings(); R42=json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'cart','coast42_rings.json')))
 def chart_html(S, x, y, w, h, solution, alt):
@@ -97,14 +98,20 @@ sec('traverso', head('Carteggio · il punto chiave','Il traverso si misura dalla
  notes='Esercizi 5.1.4-1, -2, -3, -4, -5, 5.2.4-2, -3, 5.3.4-4, -5, 5.4.4-5, 5.7.4-1, 5.8.4-1 (traverso); 5.2.4-1, 5.3.4-2, -3, 5.4.4-1, -2, -4 (rilevamenti polari con scarroccio).')
 
 # ============ DALLA ROTTA ALLA PRORA ============
-C=[('Hai la prora','Rv = Pv + Sc. Esempio 5.1.4-4: Pv 290°, Libeccio da sinistra, Sc +5°: Rv 295°.',CORAL,CORAL_T),
-   ('Hai la rotta','Pv = Rv − Sc. Esempio 5.2.4-2: Rv 140°, Libeccio da dritta, Sc −10°: Pv 150°.',SEA,SEA_T),
-   ('Vuoi arrivare','Traccia la rotta verso la meta, poi Pv = Rv − Sc: la prora va tenuta più al vento. 5.5.4-1: Rv 345° verso Bonifacio, Ponente, Sc +10°: Pv 335°.',PURPLE,LILAC_T),
-   ('La velocità','Ve = Vp ± variazione. 5.4.4-3: Ve = distanza ÷ tempo = 6 kn, Vp = Ve + 1 = 7 kn.',BLUE,BLUE_T)]
+C=[('Rotta vera: è data la Pv','Rv = Pv + Sc. Esempio 5.1.4-4: Pv 290°, Libeccio da sinistra, Sc +5°: Rv 295°.',CORAL,CORAL_T),
+   ('Prora vera: è data la Rv','Pv = Rv − Sc. Esempio 5.2.4-2: Rv 140°, Libeccio da dritta, Sc −10°: Pv 150°.',SEA,SEA_T),
+   ('Prora vera per arrivare','Traccia la rotta verso la meta, poi Pv = Rv − Sc: la prora va tenuta più al vento. 5.5.4-1: Rv 345° verso Bonifacio, Ponente, Sc +10°: Pv 335°.',PURPLE,LILAC_T),
+   ('Velocità','Ve = Vp ± variazione. 5.4.4-3: Ve = distanza ÷ tempo = 6 kn, Vp = Ve + 1 = 7 kn.',BLUE,BLUE_T)]
 tiles=''.join(f'<div style="display:flex; flex-direction:column; gap:16px; background:{bg}; padding:40px; border-radius:32px"><p style="font-family:{H}; font-size:52px; font-weight:700; line-height:1.05; color:{c}">{t}</p>{p(d,30,INK,600,1.4)}</div>' for t,d,c,bg in C)
 sec('conti', head('Carteggio · i conti','Dalla rotta alla prora e ritorno')+f'<div style="display:grid; grid-template-columns:1fr 1fr; gap:28px">{tiles}</div>',
  notes='Il segno di Sc si decide sempre rispetto alla direzione in cui la barca avanza. 5.2.4-5: Rv 309° verso il punto 1 mg a sud dello Sparviero, Ponente da sinistra, Sc +5°: Pv 304°.')
 
+
+basi_slide('basi',[('Scarroccio','Rv = Pv + Sc: vento da sinistra Sc +, da dritta Sc −. Il vento si nomina da dove viene.')])
+famiglie_slide('famiglie',['Scarroccio prora vera','Scarroccio prora vera · coordinate punto','Scarroccio prora vera · coordinate al traverso','Scarroccio prora vera · ora del traverso','Scarroccio rotta vera · coordinate al traverso','Scarroccio rotta vera · ora del traverso','Scarroccio rotta vera · velocità · coordinate punto','Scarroccio velocità'],
+ where={'Scarroccio prora vera':'Dalla rotta alla prora','Scarroccio prora vera · coordinate punto':'Traverso dalla prora','Scarroccio prora vera · coordinate al traverso':'Traverso dalla prora','Scarroccio prora vera · ora del traverso':'Traverso dalla prora',
+        'Scarroccio rotta vera · coordinate al traverso':'Dalla rotta alla prora','Scarroccio rotta vera · ora del traverso':'Dalla rotta alla prora','Scarroccio rotta vera · velocità · coordinate punto':'Dalla rotta alla prora','Scarroccio velocità':'Dalla rotta alla prora'},
+ note_extra=' «Prora vera» nel nome della famiglia: la traccia dà la rotta e va calcolata la prora (Pv = Rv − Sc), da cui si misurano traverso e rilevamenti polari. «Rotta vera»: la traccia dà la prora e va calcolata la rotta da tracciare (Rv = Pv + Sc).')
 
 # ============ CARTA 42/D ============
 M=es10.Sol('5.5.4-1',(41.12,9.25)); M.pts=[]; M.lines=[]; M.carta='42D'
@@ -123,16 +130,17 @@ for f in es12.SOLS:
     S=f(); sid='s'+S.id.replace('.','_').replace('-','_'); st=SETT[S.id[:3]]
     txt=S.ex['testo'].replace('\n',' ')
     fs=26 if len(txt)<520 else (24 if len(txt)<760 else 22)
-    left_col=f'<div style="display:flex; flex-direction:column; gap:20px; width:690px">{p(txt,fs,INK,500,1.45)}<p style="font-size:26px; font-weight:900; color:#FFFFFF; background:{st[2]}; padding:10px 20px; border-radius:18px">Da trovare: {ASK[S.kind]}</p></div>'
+    fam=CAT[S.id]
+    left_col=f'<div style="display:flex; flex-direction:column; gap:20px; width:690px"><p style="font-size:24px; font-weight:900; color:{st[2]}">Famiglia d\'esame · {fam}</p>{p(txt,fs,INK,500,1.45)}<p style="font-size:26px; font-weight:900; color:#FFFFFF; background:{st[2]}; padding:10px 20px; border-radius:18px">Da trovare: {ASK[S.kind]}</p></div>'
     sec(sid+'_t', head(f'Esercizio {S.id} · carta {st[0]} · {st[1]}','La traccia',st[2])+left_col, pinned=chart_html(S,880,290,912,620,False,f'Carta della zona dell\'esercizio {S.id}'),
         notes=f'Traccia ufficiale (Allegato A al DD 131/2022). Risposta ufficiale: {rng(S.ex["risposta_ufficiale"])}.')
     ol='<ol style="font-size:24px; line-height:1.38; color:#34465E; display:flex; flex-direction:column; gap:8px">'+''.join(f'<li>{x}</li>' for x in S.passi)+'</ol>'
     ok=S.check()
     extra='' if ok else f'<p style="font-size:22px; font-weight:600; color:{INK}">{S.note or "Il nostro calcolo esce di poco dalla forchetta: vedi le note."}</p>'
     res=f'<div style="display:flex; flex-direction:column; gap:4px; background:{CORAL_T}; padding:16px 20px; border-radius:20px"><p style="font-size:28px; font-weight:900; color:{CORAL}">{S.res_txt}</p><p style="font-size:22px; font-weight:700; color:{INK}">Ufficiale: {rng(S.ex["risposta_ufficiale"])}</p>{extra}</div>'
-    sec(sid+'_s', head(f'Esercizio {S.id} · soluzione','Il tracciamento',st[2]), pinned=chart_html(S,128,290,1092,620,True,f'Tracciamento dell\'esercizio {S.id}')+pcol(ol+res,532,14),
+    sec(sid+'_s', head(f'{S.id} · {fam}','Il tracciamento',st[2]), pinned=chart_html(S,128,290,1092,620,True,f'Tracciamento dell\'esercizio {S.id}')+pcol(ol+res,532,14),
         notes='Soluzione: '+' '.join(S.passi)+f' Risultato: {S.res_txt}. Ufficiale: {rng(S.ex["risposta_ufficiale"])}.'+('' if ok else ' Scarto rispetto alla forchetta ufficiale dovuto alla posizione del punto cospicuo sulla carta: sulla 5/D si usa il simbolo stampato.'))
-    order_ex+=[sid+'_t',sid+'_s']; exs.setdefault({'5.1':1,'5.2':1,'5.3':2,'5.4':2}.get(S.id[:3],3),[]).append((S.id,sid+'_t'))
+    order_ex+=[sid+'_t',sid+'_s']; exs.setdefault({'5.1':1,'5.2':1,'5.3':2,'5.4':2}.get(S.id[:3],3),[]).append((S.id,sid+'_t',fam))
 
 closing(['Rv = Pv + Sc: vento da sinistra, Sc positivo','Il vento si chiama da dove viene; la corrente per dove va','Traverso e rilevamenti polari si contano dalla prora: Rilv = Pv + ρ','Il punto però sta sulla rotta vera','Per arrivare in un punto: Pv = Rv − Sc, prora più al vento'],
  'Prossima lezione · 13 · Correnti (prima parte)','A casa: rifai sulla carta gli esercizi non svolti in aula.')
@@ -140,13 +148,13 @@ exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'apertura.py')
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'esame.py')).read())
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'schema_cart.py')).read())
 ART=(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso')
-CAPS=[('cap1','Scarroccio, venti e traverso',['I venti della rosa','Lo scarroccio','Il traverso si misura dalla prora','Dalla rotta alla prora e ritorno'],CORAL,20,'venti',(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata')),
- ('cap2','Carta 5/D · settori A e B',[f'Esercizio {e}' for e,_ in exs[1]],SEA,20,exs[1][0][1],ART),
- ('cap3','Carta 5/D · settori C e D',[f'Esercizio {e}' for e,_ in exs[2]],BLUE,20,exs[2][0][1],ART),
- ('cap4','La carta 42/D',['La carta 42/D']+[f'Esercizio {e}' for e,_ in exs[3]],PURPLE,15,'carta42',ART)]
+CAPS=[('cap1','Scarroccio, venti e traverso',['Gli strumenti di base','Le famiglie d\'esame','I venti della rosa','Lo scarroccio','Il traverso si misura dalla prora','Dalla rotta alla prora e ritorno'],CORAL,20,'basi',(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata')),
+ ('cap2','Carta 5/D · settori A e B',[f'{e} · {fm}' for e,_,fm in exs[1]],SEA,20,exs[1][0][1],ART),
+ ('cap3','Carta 5/D · settori C e D',[f'{e} · {fm}' for e,_,fm in exs[2]],BLUE,20,exs[2][0][1],ART),
+ ('cap4','La carta 42/D',['La carta 42/D']+[f'{e} · {fm}' for e,_,fm in exs[3]],PURPLE,15,'carta42',ART)]
 VER=[['1.7.7-2', '1.7.7-4'], ['1.7.4-5', '1.7.4-34'], ['1.7.7-5', '1.7.7-6'], ['1.7.2-1', '1.7.2-3']]
 RACC=[('1.7.7', ['1.7.7-9', '1.7.7-14', '1.7.7-17']), ('1.7.7', ['1.7.7-11', '1.7.7-15', '1.7.7-19']), ('1.7.7', ['1.7.7-13', '1.7.7-16', '1.7.7-20']), ('1.7.4', ['1.7.4-1', '1.7.4-41', '1.7.4-46']), ('1.7.4', ['1.7.4-36', '1.7.4-42', '1.7.4-47']), ('1.7.4', ['1.7.4-37', '1.7.4-43', '1.7.4-48']), ('1.7.4', ['1.7.4-39', '1.7.4-44', '1.7.4-49']), ('1.7.2', ['1.7.2-7', '1.7.2-12', '1.7.2-16']), ('1.7.2', ['1.7.2-9', '1.7.2-13', '1.7.2-17']), ('1.7.2', ['1.7.2-10', '1.7.2-15', '1.7.2-18']), ('1.7.8', ['1.7.8-1', '1.7.8-3', '1.7.8-7']), ('1.7.8', ['1.7.8-2', '1.7.8-5', '1.7.8-8'])]
-order,secs=schema(12,['cover','agenda','venti','scarroccio','traverso','conti']+order_ex[:40]+['carta42']+order_ex[40:]+['chiusura'],CAPS,VER,RACC,
+order,secs=schema(12,['cover','agenda','basi','famiglie','venti','scarroccio','traverso','conti']+order_ex[:40]+['carta42']+order_ex[40:]+['chiusura'],CAPS,VER,RACC,
  [('Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.'),
   ('Prora o rotta?','La prora è dove punta la barca, la rotta è dove va davvero: Rv = Pv + Sc.'),
   ('Disegna','Vento, prora e rotta in uno schizzo con il Nord in alto: il segno dello scarroccio si vede subito.'),

@@ -6,7 +6,7 @@ import lezione_base as LB
 import geo, chart, es10, es11
 OUT=SP+'/lez11/project'
 GREY='#97A6B4'; LRED='#E23B3B'; ORANGE='#F28C28'
-LB.ICON_T.update({'La lezione di oggi':'lifebuoy','Il conto del carburante':'fuel','Il doppio rilevamento 45°-90°':'lighthouse','La velocità dalla carta':'dividers',
+LB.ICON_T.update({'Calcolo carburante e traverso':'fuel','Le famiglie d\'esame':'grid','Gli strumenti di base':'dividers','La lezione di oggi':'lifebuoy','Il conto del carburante':'fuel','Calcolo carburante e RilP 45°/90°':'lighthouse','RilP 45°/90° e velocità':'dividers',
  'Un punto da rilevamento e distanza':'lighthouse','Un esempio completo':'fuel','I punti cospicui di oggi':'map','La traccia':'map','Il tracciamento':'dividers'})
 def pcol(inner,w=532,gap=20,left=1260,top=290): return f'<div style="position:absolute; left:{left}px; top:{top}px; width:{w}px; display:flex; flex-direction:column; gap:{gap}px">{inner}</div>'
 col=lambda inner,w=520,gap=24: f'<div style="display:flex; flex-direction:column; gap:{gap}px; width:{w}px">{inner}</div>'
@@ -14,6 +14,7 @@ def pill(x,y,w,t,c,size=22,tc='#FFFFFF',align='left'):
     h=lab(x,y,w,t,tc,size,900,align,bg=c)
     return h if align=='center' else h.replace(f'width:{w}px;',f'width:max-content; max-width:{w}px;')
 X,Y,W,Hh=700,290,1092,620
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'famiglie.py')).read())
 
 def chart_html(S, x, y, w, h, solution, alt):
     body,labels,glabs,sbl,C=chart.render(S,w,h,solution)
@@ -73,10 +74,10 @@ def tslide(id_,kind,title,txt,notes,left):
     pinned=svgp(x,Y,W,Hh,b,title)+lbl
     if left: sec(id_,head('Carteggio · le tecniche',title),pinned=pinned+pcol(txt),notes=notes)
     else: sec(id_,head('Carteggio · le tecniche',title)+col(txt),pinned=pinned,notes=notes)
-tslide('t4590','base','Il doppio rilevamento 45°-90°',
+tslide('t4590','base','Calcolo carburante e RilP 45°/90°',
  term('Il trucco','Rilevi il faro a 45° dalla prora e poi al traverso (90°): il triangolo ha due angoli di 45°, è isoscele.')+term('La conseguenza','La distanza dal faro al traverso è uguale al cammino fatto tra i due rilevamenti: Vp × t.')+term('Il punto','Al traverso: dal faro, sul rilevamento vero (Pv ± 90°), riporta quella distanza.'),
  'Rilevamento polare ρ: + a dritta, − a sinistra. Rilv al traverso = Pv + ρ. Esempio 5.1.2-2: Pv 070°, Scoglietto a ρ +90° → Rilv 160°; in 20 minuti a 6 kn il cammino è 2 mg, quindi il punto nave è 2 mg dal faro sul 160°.',False)
-tslide('tvel','vel','La velocità dalla carta',
+tslide('tvel','vel','RilP 45°/90° e velocità',
  term('Quando la Vp non c\'è','Conosci il punto di partenza e la rotta: la barca sta su quella linea.')+term('Il traverso','Dal faro traccia la perpendicolare alla rotta: il piede è il punto al traverso. Misura la distanza faro-traverso.')+term('La velocità','Quella distanza è il cammino tra i due rilevamenti: V = distanza ÷ tempo. Poi il conto del carburante.'),
  'Esercizi 5.2.2-5, 5.3.2-3, -4, -5, -6, 5.4.2-2, -3, -4. La velocità ricavata va misurata con cura: 0,1 mg di differenza sulla distanza al traverso cambiano il carburante del 3-4%.',True)
 
@@ -93,6 +94,28 @@ sec('rildist', head('Carteggio · le tecniche','Un punto da rilevamento e distan
  term('Il testo','«Distanza 3,5 miglia sul rilevamento vero 270° del faro»: dalla barca vedi il faro per 270°.')+term('Sulla carta','Dal faro traccia la direzione opposta (270° − 180° = 090°) e prendi la distanza con il compasso sulla scala delle latitudini.')+term('Attenzione','«A est del faro» e «il faro per 270°» sono la stessa cosa. Leggi sempre da chi a chi.')),
  notes='Esercizi 5.3.2-1 (Monte della Fortezza per Rilv 180° a 2,8 mg: il punto è a nord), 5.3.2-7 (Scoglio d\'Africa per Rilv 270° a 3,5 mg: il punto è a est), 5.4.2-1 (torre di Capo d\'Uomo per Rilv nord a 1 mg: il punto è a sud). Richiamo: quiz 1.7.6-16, -21, -26 della lezione 10.')
 
+
+# ============ CARBURANTE E TRAVERSO ============
+def travd():
+    b='<rect x="0" y="0" width="1092" height="620" fill="#E8F4F8"/><path d="M0 120 Q120 180 160 300 Q190 420 120 620 L0 620 Z" fill="#F3E6C4" stroke="#B89A5E" stroke-width="3"/>'
+    F=(150,330); R=(560,60); A=(560,330); B=(980,560)
+    b+=f'<circle cx="{F[0]}" cy="{F[1]}" r="13" fill="{SUN}" stroke="{NAVY}" stroke-width="3"/>'
+    b+=arrow(R[0],R[1],A[0],A[1]-14,GREEN,6,20)+arrow(A[0],A[1],B[0],B[1],SEA,6,20)+dash(F[0],F[1],A[0],A[1],CORAL,4)
+    b+=f'<path d="M{A[0]-26} {A[1]} L{A[0]-26} {A[1]-26} L{A[0]} {A[1]-26}" fill="none" stroke="{CORAL}" stroke-width="3"/>'
+    b+=''.join(f'<circle cx="{q[0]}" cy="{q[1]}" r="9" fill="#FFFFFF" stroke="{INK}" stroke-width="3"/>' for q in (R,B))+f'<circle cx="{A[0]}" cy="{A[1]}" r="15" fill="none" stroke="{CORAL}" stroke-width="5"/>'
+    L=[(R[0]+20,R[1]-10,'partenza · Rv 180°',GREEN),(F[0]-40,F[1]+30,'faro',NAVY),(260,280,'4,9 mg · Rilv = Rv ± 90°',CORAL),(A[0]+26,A[1]-10,'A: al traverso',CORAL),(B[0]-140,B[1]-60,'B',SEA),(700,400,'seconda tratta',SEA)]
+    return b,L
+b,L=travd()
+sec('trav', head('Carteggio · le tecniche','Calcolo carburante e traverso')+col(
+ term('Quando','La traccia dice «si rileva il faro al traverso a 4,9 miglia» (5.1.2-1) o «fino al traverso del faro» (5.4.2-1).')+
+ term('Il punto al traverso','Al traverso il faro è a 90° dalla prora: dal faro traccia la perpendicolare alla rotta. Dove la taglia c\'è il punto; se è data la distanza, la misuri col compasso dal faro.')+
+ term('Il conto','Somma le tratte (partenza → traverso → arrivo), t = miglia ÷ V, litri = t × consumo × 1,3. 5.1.2-1: 3,5 + 8,2 = 11,8 mg a 6 kn, 12 l/h: 30,6 litri.')),
+ pinned=svgp(X,Y,W,Hh,b,'La rotta passa al traverso del faro: il punto A è il piede della perpendicolare dal faro alla rotta')+''.join(pill(X+lx,Y+ly,440,t,c,22) for lx,ly,t,c in L),
+ notes='Famiglia d\'esame «Calcolo carburante e traverso»: 5.1.2-1 (Cerboli, Rv 180°, Capo d\'Ortano al traverso di dritta a 4,9 mg: A è 4,9 mg a est del capo; ufficiale 29-31 litri) e 5.4.2-1 (da Capo d\'Uomo verso Giglio Porto a 20 kn, fino al traverso di Punta Lividonia: 5,0 mg, 21,0 litri; ufficiale 19,5-21,5).')
+
+basi_slide('basi',[('Carburante','Litri = ore × consumo orario, più la riserva del 30% (× 1,3) se la traccia non dice altro.')])
+famiglie_slide('famiglie',['Calcolo carburante','Calcolo carburante e traverso','Calcolo carburante e RilP 45°/90°','Calcolo carburante e RilP 45°/90° e velocità'],
+ where={'Calcolo carburante':'Il conto · Rilevamento e distanza','Calcolo carburante e traverso':'Carburante e traverso','Calcolo carburante e RilP 45°/90°':'RilP 45°/90°','Calcolo carburante e RilP 45°/90° e velocità':'RilP 45°/90° e velocità'})
 
 # ============ MAPPA ============
 M=es10.Sol('5.1.3-1',(42.62,10.55)); M.pts=[]; M.lines=[]
@@ -114,28 +137,29 @@ for f in es11.SOLS:
     txt=S.ex['testo'].replace('\n',' ')
     fs=26 if len(txt)<520 else (24 if len(txt)<760 else 22)
     ask='il carburante necessario, compresa la riserva'
-    left_col=f'<div style="display:flex; flex-direction:column; gap:20px; width:690px">{p(txt,fs,INK,500,1.45)}<p style="font-size:26px; font-weight:900; color:#FFFFFF; background:{st[2]}; padding:10px 20px; border-radius:18px">Da trovare: {ask}</p></div>'
+    fam=CAT[S.id]
+    left_col=f'<div style="display:flex; flex-direction:column; gap:20px; width:690px"><p style="font-size:24px; font-weight:900; color:{st[2]}">Famiglia d\'esame · {fam}</p>{p(txt,fs,INK,500,1.45)}<p style="font-size:26px; font-weight:900; color:#FFFFFF; background:{st[2]}; padding:10px 20px; border-radius:18px">Da trovare: {ask}</p></div>'
     sec(sid+'_t', head(f'Esercizio {S.id} · settore {st[0]} · {st[1]}','La traccia',st[2])+left_col, pinned=chart_html(S,880,290,912,620,False,f'Carta della zona dell\'esercizio {S.id}'),
         notes=f'Traccia ufficiale (Allegato A al DD 131/2022). Risposta ufficiale: {rng(S.ex["risposta_ufficiale"])}.')
     ol='<ol style="font-size:24px; line-height:1.38; color:#34465E; display:flex; flex-direction:column; gap:8px">'+''.join(f'<li>{x}</li>' for x in S.passi)+'</ol>'
     ok=S.check()
     extra='' if ok else f'<p style="font-size:22px; font-weight:600; color:{INK}">Scarto minimo: basta 0,1 mg in più o in meno sulla carta per rientrare.</p>'
     res=f'<div style="display:flex; flex-direction:column; gap:4px; background:{CORAL_T}; padding:16px 20px; border-radius:20px"><p style="font-size:30px; font-weight:900; color:{CORAL}">{S.res_txt}</p><p style="font-size:24px; font-weight:700; color:{INK}">Ufficiale: {rng(S.ex["risposta_ufficiale"])}</p>{extra}</div>'
-    sec(sid+'_s', head(f'Esercizio {S.id} · soluzione','Il tracciamento',st[2]), pinned=chart_html(S,128,290,1092,620,True,f'Tracciamento dell\'esercizio {S.id}')+pcol(ol+res,532,14),
+    sec(sid+'_s', head(f'{S.id} · {fam}','Il tracciamento',st[2]), pinned=chart_html(S,128,290,1092,620,True,f'Tracciamento dell\'esercizio {S.id}')+pcol(ol+res,532,14),
         notes='Soluzione: '+' '.join(S.passi)+f' Risultato: {S.res_txt}. Ufficiale: {rng(S.ex["risposta_ufficiale"])}.'+('' if ok else ' Il nostro calcolo, fatto con le coordinate OpenStreetMap, esce di poco dalla forchetta: la distanza al traverso o la posizione del punto di partenza misurate sulla carta 5/D la riportano dentro.'))
-    order_ex+=[sid+'_t',sid+'_s']; exs.setdefault(st[0],[]).append((S.id,sid+'_t'))
+    order_ex+=[sid+'_t',sid+'_s']; exs.setdefault(st[0],[]).append((S.id,sid+'_t',fam))
 
 closing(['Tempo = miglia ÷ nodi; carburante = tempo × consumo; poi +30%','Doppio rilevamento 45°-90°: distanza al traverso = cammino tra i due rilevamenti','Senza Vp: traverso = piede della perpendicolare, V = distanza ÷ tempo','«Il faro per 270° a 3,5 mg» vuol dire che sei 3,5 mg a est del faro','Somma tutte le tratte richieste, andata e ritorno comprese'],
  'Prossima lezione · 12 · Scarroccio','A casa: rifai sulla carta 5/D gli esercizi non svolti in aula.')
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'apertura.py')).read())
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'esame.py')).read())
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'schema_cart.py')).read())
-def sett(k,t,c,mins): return ('cap'+str('ABCD'.index(k)+2),t,[f'Esercizio {e}' for e,_ in exs[k]],c,mins,exs[k][0][1],(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso'))
-CAPS=[('cap1','Il conto e le tecniche',['Il conto del carburante','Il doppio rilevamento 45°-90°','La velocità dalla carta','Un punto da rilevamento e distanza','I punti cospicui di oggi'],CORAL,20,'conto',(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata')),
+def sett(k,t,c,mins): return ('cap'+str('ABCD'.index(k)+2),t,[f'{e} · {fm}' for e,_,fm in exs[k]],c,mins,exs[k][0][1],(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso'))
+CAPS=[('cap1','Il conto e le tecniche',['Gli strumenti di base','Le famiglie d\'esame','Il conto del carburante','Calcolo carburante e RilP 45°/90°','RilP 45°/90° e velocità','Calcolo carburante e traverso','Un punto da rilevamento e distanza','I punti cospicui di oggi'],CORAL,20,'basi',(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata')),
  sett('A','Settore A · Elba',SEA,15),sett('B','Settore B · Castiglione e Punta Ala',PURPLE,10),sett('C','Settore C · Pianosa e Montecristo',BLUE,15),sett('D','Settore D · Giglio e Argentario',GREEN,15)]
 VER=[['1.2.3-1', '1.2.3-2'], ['1.7.5-3', '1.7.5-4'], ['1.2.3-4', '1.2.3-5'], ['1.7.5-5', '1.7.5-8'], ['1.7.1-2', '1.7.1-6']]
 RACC=[('1.2.3', ['1.2.3-3', '1.2.3-7', '1.2.3-18']), ('1.2.3', ['1.2.3-6', '1.2.3-9', '1.2.3-19']), ('1.7.5', ['1.7.5-9', '1.7.5-22', '1.7.5-32']), ('1.7.5', ['1.7.5-10', '1.7.5-23', '1.7.5-33']), ('1.7.5', ['1.7.5-11', '1.7.5-24', '1.7.5-34']), ('1.7.5', ['1.7.5-12', '1.7.5-25', '1.7.5-36']), ('1.7.5', ['1.7.5-13', '1.7.5-26', '1.7.5-37']), ('1.7.5', ['1.7.5-19', '1.7.5-28', '1.7.5-40']), ('1.7.5', ['1.7.5-21', '1.7.5-29', '1.7.5-50']), ('1.7.1', ['1.7.1-7', '1.7.1-11', '1.7.1-18']), ('1.7.1', ['1.7.1-8', '1.7.1-14', '1.7.1-19']), ('1.7.1', ['1.7.1-10', '1.7.1-17', '1.7.1-21'])]
-order,secs=schema(11,['cover','agenda','conto','t4590','tvel','rildist','mappa']+order_ex+['chiusura'],CAPS,VER,RACC,
+order,secs=schema(11,['cover','agenda','basi','famiglie','conto','t4590','tvel','trav','rildist','mappa']+order_ex+['chiusura'],CAPS,VER,RACC,
  [('Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.'),
   ('Minuti in decimi','Trasforma i minuti in ore prima di moltiplicare: 15 minuti sono 0,25 ore, 35 minuti 0,58.'),
   ('La riserva','Carburante = ore × consumo, più il 30% di riserva se il quiz non dice altro: × 1,3.'),

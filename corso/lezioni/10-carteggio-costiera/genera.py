@@ -6,8 +6,8 @@ import lezione_base as LB
 import geo, chart, es10
 OUT=SP+'/lez10/project'
 GREY='#97A6B4'; LRED='#E23B3B'; ORANGE='#F28C28'
-LB.ICON_T.update({'La lezione di oggi':'lifebuoy','Il kit del carteggio costiero':'dividers','Stesso punto, due rilevamenti':'lighthouse','Due punti, due ore diverse':'lighthouse',
- 'Tre rilevamenti':'lighthouse','Passare al traverso':'compass','Intercettare una barca':'compass','La tabella di deviazione':'grid','I punti cospicui della carta 5/D':'map'})
+LB.ICON_T.update({'La lezione di oggi':'lifebuoy','Il kit del carteggio costiero':'dividers','Trasporto 2 RilB di 1 punto cospicuo':'lighthouse','Trasporto 2 rilevamenti di 2 punti cospicui':'lighthouse',
+ 'Trasporto 3 RilB di 1 punto cospicuo':'lighthouse','Passaggio al traverso':'compass','Intercettazione':'compass','La tabella di deviazione':'grid','RilV, RilB e RilP: prima tutto in vero':'compass','Intercettazione su rotte opposte':'compass','Le famiglie d\'esame':'grid','Gli strumenti di base':'dividers','I punti cospicui della carta 5/D':'map'})
 def pcol(inner,w=532,gap=20,left=1260,top=290): return f'<div style="position:absolute; left:{left}px; top:{top}px; width:{w}px; display:flex; flex-direction:column; gap:{gap}px">{inner}</div>'
 col=lambda inner,w=520,gap=24: f'<div style="display:flex; flex-direction:column; gap:{gap}px; width:{w}px">{inner}</div>'
 def pill(x,y,w,t,c,size=22,tc='#FFFFFF',align='left'):
@@ -15,6 +15,7 @@ def pill(x,y,w,t,c,size=22,tc='#FFFFFF',align='left'):
     return h if align=='center' else h.replace(f'width:{w}px;',f'width:max-content; max-width:{w}px;')
 def pol(cx,cy,b,r): return (cx+r*math.sin(math.radians(b)), cy-r*math.cos(math.radians(b)))
 X,Y,W,Hh=700,290,1092,620
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'famiglie.py')).read())
 
 def chart_html(S, x, y, w, h, solution, alt):
     body,labels,glabs,sbl,C=chart.render(S,w,h,solution)
@@ -35,7 +36,7 @@ def chart_html(S, x, y, w, h, solution, alt):
 # ============ COVER + AGENDA ============
 cover(10,'Carteggio: navigazione costiera','Fare il punto nave con i rilevamenti, passare al traverso e intercettare: i 26 esercizi ufficiali della carta 5/D',
  'Lezione 10, la prima di carteggio. Esercizi ufficiali 5.1.3, 5.2.3, 5.3.3 e 5.4.3 dell\'Allegato A al DD 131/2022 (carta 5/D, settori A-D). All\'esame 4 esercizi indipendenti in 60 minuti, almeno 3 giusti. Le carte di questa lezione sono ridisegnate da dati OpenStreetMap per spiegare il tracciamento: all\'esame si lavora sulla carta 5/D dell\'IIM.')
-blocks=[('0:00','20′','Il kit e le cinque tecniche',CORAL),('0:20','15′','Settore A · Elba (6 esercizi)',SEA),('0:35','10′','Settore B · Punta Ala (5)',PURPLE),('0:45','15′','Settore C · Pianosa (7)',BLUE),('1:00','15′','Settore D · Giglio (8)',GREEN),('1:15','45′','Raccolta quiz (36)',ORANGE)]
+blocks=[('0:00','25′','Basi, famiglie d\'esame e tecniche',CORAL),('0:25','15′','Settore A · Elba (6 esercizi)',SEA),('0:40','10′','Settore B · Punta Ala (5)',PURPLE),('0:50','10′','Settore C · Pianosa (7)',BLUE),('1:00','15′','Settore D · Giglio (8)',GREEN),('1:15','45′','Raccolta quiz (36)',ORANGE)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
 right=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:88px; font-weight:700; line-height:1.05; color:{INK}">3 su 4</p>'+p('esercizi giusti in 60 minuti',26,INK,700)+p('Il risultato va dato entro la forchetta ufficiale: di solito ±0,3′ in latitudine e longitudine.',24))
 left=card(tag('Cosa porti al tavolo',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>carta 5/D integra</li><li>squadrette nautiche e compasso a punte secche</li><li>matita morbida e gomma</li><li>calcolatrice non programmabile</li><li>la tabella di deviazione, se la traccia la cita</li></ul>',SEA_T,flex=1.4)
@@ -114,21 +115,53 @@ def tech_slide(id_,kind,title,txt,notes,left):
     pinned=svgp(x,Y,W,Hh,b,title)+lbl
     if left: sec(id_,head('Carteggio · le tecniche',title),pinned=pinned+pcol(txt),notes=notes)
     else: sec(id_,head('Carteggio · le tecniche',title)+col(txt),pinned=pinned,notes=notes)
-tech_slide('t_stesso','stesso','Stesso punto, due rilevamenti',
+tech_slide('t_stesso','stesso','Trasporto 2 RilB di 1 punto cospicuo',
  term('Quando','Un solo punto cospicuo, rilevato due volte a distanza di tempo, con prora e velocità note.')+term('Come','Traccia i due rilevamenti veri dal faro. Porta il primo avanti del cammino fatto (Pv, V × t) spostandolo parallelo a sé stesso.')+term('Il punto','Il primo trasportato incrocia il secondo: è il punto nave all\'ora del secondo rilevamento.'),
  'È il «rilevamento trasportato» o punto nave con rilevamenti successivi sulla stessa mira: 5.1.3-1, -2, -4, -5, 5.2.3-2, 5.3.3-4, 5.4.3-1, -2, -5. Il trasporto si fa spostando il faro del cammino e tracciando da lì la parallela al primo rilevamento.',False)
-tech_slide('t_diversi','diversi','Due punti, due ore diverse',
+tech_slide('t_diversi','diversi','Trasporto 2 rilevamenti di 2 punti cospicui',
  term('Quando','Due punti cospicui diversi, rilevati in due momenti: non c\'è un incrocio immediato.')+term('Come','Il primo rilevamento si trasporta del cammino fatto fino al secondo, esattamente come prima.')+term('Il punto','L\'incrocio con il rilevamento del secondo punto è il punto nave.'),
  'Esercizi 5.2.3-1, -3, -4, -5, 5.3.3-1, -5, -6, -7, 5.4.3-3, -4. Se i rilevamenti fossero contemporanei (lezione 5) basterebbe incrociarli.',True)
-tech_slide('t_tre','tre','Tre rilevamenti',
+tech_slide('t_tre','tre','Trasporto 3 RilB di 1 punto cospicuo',
  term('Quando','Lo stesso faro rilevato tre volte: 5.1.3-3, di notte, riconoscendo il faro dalla caratteristica.')+term('Come','Trasporta il primo e il secondo rilevamento del cammino fatto fino all\'ora del terzo.')+term('La verifica','Le tre linee devono incontrarsi quasi in un punto: se formano un triangolo grande, c\'è un errore.'),
  'Nel 5.1.3-3 il faro che emette un lampo ogni 5 secondi a sud dell\'Elba è Capo Poro (Fl 5s). Cammini: 7,5 e 4,5 miglia.',False)
-tech_slide('t_traverso','traverso','Passare al traverso',
+tech_slide('t_traverso','traverso','Passaggio al traverso',
  p('Da A vuoi passare a una distanza data da un faro, lasciandolo a dritta o a sinistra. Al traverso il faro è a 90° dalla prora: è il punto più vicino della rotta.',24,BODY,500,1.4)+'<ol style="font-size:24px; line-height:1.38; color:#34465E; display:flex; flex-direction:column; gap:8px"><li>Compasso aperto della distanza, punta sul faro: traccia il <b>cerchio</b>.</li><li>Da A traccia la <b>tangente</b> al cerchio dal lato giusto: faro a dritta, la rotta gli passa a sinistra.</li><li>Leggi la direzione della tangente: è la <b>Pv</b>. Il punto di contatto C è il traverso; il raggio faro-C è perpendicolare alla rotta.</li><li>Prora bussola: Pm = Pv − d, dalla tabella δ, Pb = Pm − δ. Ora al traverso: AC ÷ V.</li></ol>',
  'Esercizi 5.3.3-2 e 5.3.3-3 con Scoglio d\'Africa. Faro a dritta: la rotta lo lascia sulla destra, quindi è ruotata a sinistra rispetto al rilevamento diretto del faro.',True)
-tech_slide('t_intercetta','intercetta','Intercettare una barca',
+tech_slide('t_intercetta','intercetta','Intercettazione',
  term('Quando','Una barca chiede aiuto e si muove: devi scegliere la rotta che la incontra.')+term('Triangolo delle velocità','Da A disegna la sua velocità (1 ora). Dalla punta la parallela ad AB; il compasso aperto della tua velocità, puntato in A, la taglia.')+term('Il punto D','La direzione da A al taglio è la rotta da tenere; dove incrocia la rotta dell\'altra barca c\'è D.'),
  'Esercizi 5.1.3-6, 5.4.3-6, -7, -8. Il metodo mantiene costante il rilevamento dell\'altra barca: se il rilevamento non cambia e la distanza cala, ci si incontra.',False)
+
+# ============ RILEVAMENTI VERI, BUSSOLA, POLARI ============
+R3=[('RilV','Rilevamento vero','Si traccia così com\'è dal punto cospicuo verso il mare.','5.2.3-5: fanali di Castiglione Rilv 041°, Serbatoio di Marina di Grosseto Rilv 080°.',SEA,SEA_T),
+    ('RilB','Rilevamento bussola','Rilv = Rilb + d + δ. La δ è quella della prora, con la declinazione aggiornata all\'anno.','5.1.3-1: Rilb 075°, d +1°, δ 0° → Rilv 076°; Rilb 125° → Rilv 126°.',CORAL,CORAL_T),
+    ('RilP','Rilevamento polare','Rilv = Pv + ρ: ρ positivo a dritta, negativo a sinistra. Prima trova la Pv.','5.3.3-6: Pb 065°, d +1°, δ +4° → Pv 070°; ρ −118° → Rilv 312°; ρ −098° → Rilv 332°.',PURPLE,LILAC_T)]
+cards=''.join(f'<div style="flex:1; display:flex; flex-direction:column; gap:14px; background:{bg}; padding:32px; border-radius:28px"><p style="font-family:{H}; font-size:64px; font-weight:700; line-height:1; color:{c}">{a}</p>{p(b,28,INK,800)}{p(t,26,INK,600,1.4)}<p style="font-size:24px; line-height:1.4; font-weight:700; color:{c}">Esempio · {e}</p></div>' for a,b,t,e,c,bg in R3)
+sec('rilev', head('Carteggio · le tecniche','RilV, RilB e RilP: prima tutto in vero')+f'<div style="display:flex; gap:24px">{cards}</div>'+p('Nel trasporto conta solo il rilevamento vero: RilB e RilP si convertono subito, poi si procede come con i RilV. Così le famiglie «Trasporto 2 RilB», «2 RilV» e «2 RilP» si risolvono tutte con la stessa costruzione.',26,BODY,600,1.4),
+ notes='Famiglie d\'esame: Trasporto 2 RilV di 2 punti cospicui (5.2.3-5, 5.3.3-5, 5.4.3-4); Trasporto 2 RilB (di 1 punto: 10 esercizi; di 2 punti: 8); Trasporto 2 RilP di 1 punto cospicuo (5.3.3-4, Pv dalla rotta A-B) e di 2 punti (5.3.3-6). Ricordare il segno di ρ: a sinistra negativo; con il grafometro semicircolare ρ va da 0° a 180° per lato.')
+
+# ============ INTERCETTAZIONE SU ROTTE OPPOSTE ============
+def opposte_svg():
+    A=(150,520); B=(900,100); C=(150+(900-150)*4/5.5,520-(520-100)*4/5.5)
+    b='<rect x="0" y="0" width="1092" height="620" fill="#E8F4F8"/>'+dash(A[0],A[1],B[0],B[1],GREY,2)
+    b+=arrow(A[0],A[1],A[0]+(C[0]-A[0])*0.92,A[1]+(C[1]-A[1])*0.92,GREEN,7,22)+arrow(B[0],B[1],B[0]+(C[0]-B[0])*0.8,B[1]+(C[1]-B[1])*0.8,ORANGE,7,22)
+    b+=f'<circle cx="{A[0]}" cy="{A[1]}" r="9" fill="#FFFFFF" stroke="{INK}" stroke-width="3"/><circle cx="{B[0]}" cy="{B[1]}" r="9" fill="#FFFFFF" stroke="{INK}" stroke-width="3"/><circle cx="{C[0]:.0f}" cy="{C[1]:.0f}" r="16" fill="none" stroke="{CORAL}" stroke-width="5"/>'
+    L=[(A[0]-40,A[1]+24,'A · Daphne 041° · 4 kn',GREEN),(B[0]-330,B[1]-56,'B · Sophia 221° · 1,5 kn',ORANGE),(C[0]+30,C[1]+14,'C: incontro',CORAL),(330,300,'AB = 11,3 mg',GREY)]
+    return b,L
+b,L=opposte_svg()
+sec('opposte', head('Carteggio · le tecniche','Intercettazione su rotte opposte')+col(
+ term('Quando','Le due barche sono sulla stessa linea e vanno una contro l\'altra: la rotta di A punta su B e quella di B su A (5.4.3-7: 041° e 221°).')+
+ term('Il conto','Si avvicinano alla somma delle velocità: t = AB ÷ (V1 + V2). Il punto C è sulla linea, a V1 × t da A.')+
+ term('5.4.3-7','AB 11,3 mg; 4 + 1,5 = 5,5 kn; t = 2,05 h = 2h03m; AC = 8,2 mg su 041°: C 42°29,2′N 011°05,3′E.')),
+ pinned=svgp(X,Y,W,Hh,b,'Due barche sulla stessa linea con rotte opposte: si incontrano nel punto C')+''.join(pill(X+lx,Y+ly,420,t,c,22) for lx,ly,t,c in L),
+ notes='Caso particolare dell\'intercettazione: il triangolo delle velocità si appiattisce su una linea. Controllare prima che la rotta di A coincida con la direzione A-B misurata sulla carta; se non coincide si usa il triangolo della slide precedente. Ufficiale 5.4.3-7: 42°28,8′-29,4′N, 011°04,9′-05,5′E.')
+
+# ============ FAMIGLIE D'ESAME E BASI ============
+basi_slide('basi')
+famiglie_slide('famiglie',['Trasporto 2 RilB di 1 punto cospicuo','Trasporto 2 RilP di 1 punto cospicuo','Trasporto 3 RilB di 1 punto cospicuo','Trasporto 2 RilV di 2 punti cospicui','Trasporto 2 RilB di 2 punti cospicui','Trasporto 2 RilP di 2 punti cospicui','Passaggio al traverso','Intercettazione','Intercettazione su rotte opposte'],
+ where={'Trasporto 2 RilB di 1 punto cospicuo':'Trasporto 2 RilB di 1 punto','Trasporto 2 RilP di 1 punto cospicuo':'RilV, RilB e RilP','Trasporto 3 RilB di 1 punto cospicuo':'Trasporto 3 RilB',
+        'Trasporto 2 RilV di 2 punti cospicui':'Trasporto di 2 punti','Trasporto 2 RilB di 2 punti cospicui':'Trasporto di 2 punti','Trasporto 2 RilP di 2 punti cospicui':'RilV, RilB e RilP',
+        'Passaggio al traverso':'Passaggio al traverso','Intercettazione':'Intercettazione','Intercettazione su rotte opposte':'Rotte opposte'},
+ note_extra=' Sulla carta 42/D (lezione 15) ci sono altri 10 esercizi di navigazione costiera, tra cui il passaggio al traverso con 3 RilB simultanei di 3 punti cospicui (5.6.3-1). Totale 36, come nei manuali.')
 
 # ============ TABELLA DI DEVIAZIONE ============
 rows=[(pm,geo.DEV[pm]) for pm in range(120,205,5)]
@@ -162,27 +195,30 @@ for f in es10.SOLS:
     st=SETT[S.id[:3]]
     txt=S.ex['testo'].replace('\n',' ').replace('PER LA RISOLUZIONE DEL QUESITO E\' NECESSARIO UTILIZZARE LA TABELLA DELLE DEVIAZIONI ALLEGATA','(Serve la tabella di deviazione.)')
     fs=26 if len(txt)<520 else (24 if len(txt)<760 else 22)
-    ask=txt.split('Determinare')[-1].strip().rstrip('.') if 'Determinare' in txt else 'il risultato'
-    left_col=f'<div style="display:flex; flex-direction:column; gap:20px; width:690px">{p(txt,fs,INK,500,1.45)}<p style="font-size:26px; font-weight:900; color:#FFFFFF; background:{st[2]}; padding:10px 20px; border-radius:18px">Da trovare: {ask}</p></div>'
+    import re as _re
+    _m=_re.split(r'[Dd]eterminare',txt); ask=_m[-1].strip().rstrip('.') if len(_m)>1 else 'il risultato'
+    fam=CAT[S.id]
+    left_col=f'<div style="display:flex; flex-direction:column; gap:20px; width:690px"><p style="font-size:24px; font-weight:900; color:{st[2]}">Famiglia d\'esame · {fam}</p>{p(txt,fs,INK,500,1.45)}<p style="font-size:26px; font-weight:900; color:#FFFFFF; background:{st[2]}; padding:10px 20px; border-radius:18px">Da trovare: {ask}</p></div>'
     sec(sid+'_t', head(f'Esercizio {S.id} · settore {st[0]} · {st[1]}','La traccia',st[2])+left_col, pinned=chart_html(S,880,290,912,620,False,f'Carta della zona dell\'esercizio {S.id} con i punti cospicui'),
         notes=f'Traccia ufficiale (Allegato A al DD 131/2022). Risposta ufficiale: {rng(S.ex["risposta_ufficiale"])}. Lasciare 8-10 minuti per il tracciamento, poi passare alla soluzione.')
+    if fam=='Intercettazione su rotte opposte': S.passi=['Rotte opposte sulla stessa linea: la rotta 041° di A punta su B, quella 221° di B su A.','AB = 11,3 mg; si avvicinano a 4 + 1,5 = 5,5 kn: t = 11,3 ÷ 5,5 = 2,05 h = 2h03m.','C è su 041° a 4 × 2,05 = 8,2 mg da A (Sophia percorre 3,1 mg).']
     ol='<ol style="font-size:24px; line-height:1.38; color:#34465E; display:flex; flex-direction:column; gap:8px">'+''.join(f'<li>{x}</li>' for x in S.passi)+'</ol>'
     res=f'<div style="display:flex; flex-direction:column; gap:4px; background:{CORAL_T}; padding:16px 20px; border-radius:20px"><p style="font-size:26px; font-weight:900; color:{CORAL}">{S.res_txt}</p><p style="font-size:22px; font-weight:700; color:{INK}">Ufficiale: {rng(S.ex["risposta_ufficiale"])}</p></div>'
-    sec(sid+'_s', head(f'Esercizio {S.id} · soluzione','Il tracciamento',st[2]), pinned=chart_html(S,128,290,1092,620,True,f'Tracciamento dell\'esercizio {S.id}')+pcol(ol+res,532,16),
+    sec(sid+'_s', head(f'{S.id} · {fam}','Il tracciamento',st[2]), pinned=chart_html(S,128,290,1092,620,True,f'Tracciamento dell\'esercizio {S.id}')+pcol(ol+res,532,16),
         notes='Soluzione: '+' '.join(S.passi)+f' Risultato: {S.res_txt}. Ufficiale: {rng(S.ex["risposta_ufficiale"])}. Calcolo verificato con le coordinate OpenStreetMap dei punti cospicui; sulla carta 5/D il tracciamento a matita dà lo stesso risultato entro la forchetta.')
-    order_ex+=[sid+'_t',sid+'_s']; exs.setdefault(st[0],[]).append((S.id,sid+'_t'))
+    order_ex+=[sid+'_t',sid+'_s']; exs.setdefault(st[0],[]).append((S.id,sid+'_t',fam))
 
 closing(['Prima di tracciare converti tutto in vero: V = d + δ, e aggiorna la declinazione','Rilevamento trasportato: sposta il faro del cammino e ritraccia il primo rilevamento','Tre rilevamenti: devono incontrarsi quasi in un punto','Traverso: cerchio e tangente dal lato giusto; poi Pm, tabella, Pb','Intercettazione: sua velocità da A, parallela ad AB, arco della tua velocità'],
  'Prossima lezione · 11 · Carburante e autonomia','A casa: rifai sulla carta 5/D gli esercizi non svolti in aula.')
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'apertura.py')).read())
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'esame.py')).read())
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'schema_cart.py')).read())
-def sett(k,t,c,mins): return ('cap'+str('ABCD'.index(k)+2),t,[f'Esercizio {e}' for e,_ in exs[k]],c,mins,exs[k][0][1],(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso'))
-CAPS=[('cap1','Il kit e le cinque tecniche',['Il kit del carteggio costiero','Stesso punto, due rilevamenti','Due punti, due ore diverse','Tre rilevamenti','Passare al traverso','Intercettare una barca','La tabella di deviazione','I punti cospicui della carta 5/D'],CORAL,20,'kit',(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata')),
- sett('A','Settore A · Elba',SEA,15),sett('B','Settore B · Castiglione e Punta Ala',PURPLE,10),sett('C','Settore C · Pianosa',BLUE,15),sett('D','Settore D · Giglio e Argentario',GREEN,15)]
+def sett(k,t,c,mins): return ('cap'+str('ABCD'.index(k)+2),t,[f'{e} · {fm}' for e,_,fm in exs[k]],c,mins,exs[k][0][1],(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso'))
+CAPS=[('cap1','Basi, famiglie e tecniche',['Gli strumenti di base','Il kit del carteggio costiero','Le famiglie d\'esame','RilV, RilB e RilP','Trasporto 2 RilB di 1 punto cospicuo','Trasporto 2 rilevamenti di 2 punti cospicui','Trasporto 3 RilB di 1 punto cospicuo','Passaggio al traverso','Intercettazione','Intercettazione su rotte opposte','La tabella di deviazione','I punti cospicui della carta 5/D'],CORAL,25,'basi',(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata')),
+ sett('A','Settore A · Elba',SEA,15),sett('B','Settore B · Castiglione e Punta Ala',PURPLE,10),sett('C','Settore C · Pianosa',BLUE,10),sett('D','Settore D · Giglio e Argentario',GREEN,15)]
 VER=[['1.7.4-2', '1.7.4-4'], ['1.7.6-4', '1.7.6-5'], ['1.7.6-10', '1.7.6-11'], ['1.7.4-8', '1.7.4-15'], ['1.7.6-15', '1.7.6-16']]
 RACC=[('1.7.6', ['1.7.6-12', '1.7.6-22', '1.7.6-32']), ('1.7.6', ['1.7.6-13', '1.7.6-24', '1.7.6-33']), ('1.7.6', ['1.7.6-18', '1.7.6-26', '1.7.6-35']), ('1.7.6', ['1.7.6-19', '1.7.6-28', '1.7.6-39']), ('1.7.6', ['1.7.6-21', '1.7.6-31', '1.7.6-41']), ('1.7.4', ['1.7.4-3', '1.7.4-22', '1.7.4-29']), ('1.7.4', ['1.7.4-10', '1.7.4-23', '1.7.4-30']), ('1.7.4', ['1.7.4-16', '1.7.4-24', '1.7.4-31']), ('1.7.4', ['1.7.4-18', '1.7.4-25', '1.7.4-32']), ('1.7.4', ['1.7.4-19', '1.7.4-28', '1.7.4-33']), ('1.7.3', ['1.7.3-2', '1.7.3-6', '1.7.3-10']), ('1.7.3', ['1.7.3-3', '1.7.3-7', '1.7.3-11'])]
-order,secs=schema(10,['cover','agenda','kit','t_stesso','t_diversi','t_tre','t_traverso','t_intercetta','deviazione','mappa']+order_ex+['chiusura'],CAPS,VER,RACC,
+order,secs=schema(10,['cover','agenda','basi','kit','famiglie','rilev','t_stesso','t_diversi','t_tre','t_traverso','t_intercetta','opposte','deviazione','mappa']+order_ex+['chiusura'],CAPS,VER,RACC,
  [('Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.'),
   ('Disegna','Rilevamento, punto cospicuo, prora: uno schizzo con il Nord in alto risolve quasi tutti i quiz di navigazione costiera.'),
   ('Rilevamento al contrario','Se sei a Sud-Est del faro, lo rilevi per Nord-Ovest: aggiungi o togli 180°.'),
