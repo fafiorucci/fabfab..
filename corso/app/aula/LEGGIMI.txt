@@ -71,6 +71,11 @@ Indirizzo sul tuo computer:  http://localhost:8000/docente
   account", con il loro codice).
   "Nuovo codice personale" se l'ha dimenticato, "Azzera progressi" per
   farlo ripartire da capo (nome e codice restano), "Elimina allievo".
+- Presentazioni (pulsante in alto): presentazione della scuola, "Rotta verso
+  la patente", schede riassuntive e appendici A-M, da proiettare. Si aprono in
+  una nuova scheda: un clic per lo schermo intero, poi frecce, telecomando del
+  presentatore o clic a destra/sinistra; Esc per uscire. Si aprono solo dal
+  computer dove gira il server, non dai telefoni degli allievi.
 - "Scarica il riepilogo (CSV)": un file che si apre con Excel.
 
 

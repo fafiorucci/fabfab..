@@ -170,6 +170,10 @@ class Gestore(SimpleHTTPRequestHandler):
             raise ValueError('formato non valido')
         return dati
 
+    def da_questo_pc(self):
+        ip = self.client_address[0]
+        return ip in ('127.0.0.1', '::1', '::ffff:127.0.0.1') or ip == ip_della_rete()
+
     def docente_ok(self):
         pin = self.headers.get('X-Pin', '')
         return hmac.compare_digest(pin.encode(), config['pin'].encode())
@@ -199,6 +203,17 @@ class Gestore(SimpleHTTPRequestHandler):
             return self.errore(404, 'Non trovato.')
         if p.startswith('/dati') or p.endswith('.py'):
             return self.errore(404, 'Non trovato.')
+        if p.startswith('/presentazioni/') and not self.da_questo_pc():
+            # le presentazioni sono materiale dell'istruttore: si aprono solo dal computer dell'aula
+            corpo = ('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width">'
+                     '<p style="font:18px sans-serif;padding:24px">Le presentazioni si aprono solo dal computer '
+                     'dell\'istruttore.</p>').encode()
+            self.send_response(403)
+            self.send_header('Content-Type', 'text/html; charset=utf-8')
+            self.send_header('Content-Length', str(len(corpo)))
+            self.end_headers()
+            self.wfile.write(corpo)
+            return
         return super().do_GET()
 
     # ---------- POST ----------

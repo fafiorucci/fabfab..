@@ -10,6 +10,7 @@
 - lo zip va in corso/export/app/.
 """
 import argparse
+import json
 import os
 import re
 import shutil
@@ -59,6 +60,36 @@ open(os.path.join(WWW, 'grafica.js'), 'w', encoding='utf-8').write(
     '/* Generato da prepara_pacchetto.py a partire da corso/app/index.html */\n'
     + grafica + '\n' + el + '\n' + head)
 shutil.copy(os.path.join(QUI, 'docente.html'), os.path.join(WWW, 'docente.html'))
+
+# presentazioni da proiettare dall'area istruttore: gli HTML esportati, con caratteri locali e il proiettore
+HTML = os.path.join(os.path.dirname(APP), 'export', 'html')
+PRES = os.path.join(WWW, 'presentazioni')
+shutil.rmtree(PRES, ignore_errors=True)
+os.makedirs(PRES)
+proiettore = open(os.path.join(QUI, 'proiettore.js'), encoding='utf-8').read()
+elenco = []
+def gruppo(nome):
+    if nome.startswith('Patente nautica'): return ('La scuola', 'Presentazione della scuola', 'scuola')
+    if nome.startswith('Rotta verso'): return ('Il corso', 'Rotta verso la patente · il corso in sintesi', 'rotta')
+    if nome.startswith('Addendum'): return ('Ripasso', 'Schede riassuntive', 'schede')
+    m = re.match(r'Appendice ([A-Z]) - (.*)', nome)
+    if m: return ('Appendici', f'Appendice {m.group(1)} · {m.group(2)}', 'appendice-' + m.group(1).lower())
+    return None
+for f in sorted(os.listdir(HTML)):
+    g = gruppo(f[:-5]) if f.endswith('.html') else None
+    if not g:
+        continue
+    h = open(os.path.join(HTML, f), encoding='utf-8').read()
+    h = re.sub(r'<link rel="stylesheet" href="https://fonts\.googleapis\.com[^>]*>', '', h)
+    h = h.replace('</head>', '<link rel="stylesheet" href="../fonts/fonts.css"></head>', 1)
+    h = h.replace('</body>', '<script>' + proiettore + '</script></body>', 1)
+    assert 'fonts.googleapis' not in h
+    open(os.path.join(PRES, g[2] + '.html'), 'w', encoding='utf-8').write(h)
+    elenco.append({'gruppo': g[0], 'titolo': g[1], 'file': 'presentazioni/' + g[2] + '.html',
+                   'slide': h.count('<div class="w"')})
+ordine = ['La scuola', 'Il corso', 'Ripasso', 'Appendici']
+elenco.sort(key=lambda e: (ordine.index(e['gruppo']), e['titolo']))
+json.dump(elenco, open(os.path.join(PRES, 'elenco.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 
 # zip per l'istruttore
 os.makedirs(EXPORT, exist_ok=True)

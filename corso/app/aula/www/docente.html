@@ -8,6 +8,11 @@
 <link rel="stylesheet" href="stile.css">
 <style>
 /* Area istruttore: stesse schede e colori dell'app degli allievi */
+.pres{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px}
+.pcard{display:flex; flex-direction:column; gap:8px; text-decoration:none; color:var(--ink); background:var(--card); border-radius:18px; padding:16px 18px; box-shadow:var(--shadow); border-left:8px solid var(--hue); transition:transform .15s}
+.pcard:hover{transform:translateY(-2px)}
+.pcard b{font-family:var(--display); font-size:19px; font-weight:600; line-height:1.2}
+.pcard span{font-size:13px; font-weight:800; color:var(--soft)}
 .tiles{display:grid; grid-template-columns:repeat(4,1fr); gap:14px}
 .qrbox{display:grid; grid-template-columns:auto 1fr; gap:20px; align-items:center}
 .qr{background:#fff; border-radius:16px; padding:10px; width:172px; height:172px; display:grid; place-items:center}
@@ -39,7 +44,8 @@ input[type=password]:focus,input[type=search]:focus{outline:none; border-color:v
   <span class="spacer"></span>
   <nav class="nav" id="nav" hidden>
     <button class="navb" id="nav-classe" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21 H21 M6 17 V12 M11 17 V6 M16 17 V9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><span>Classe</span></button>
-    <button class="navb" id="nav-qr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4 H10 V10 H4 Z M14 4 H20 V10 H14 Z M4 14 H10 V20 H4 Z M14 14 H16 M18 14 H20 V16 M14 18 V20 H16 M18 18 H20 V20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg><span>Proietta</span></button>
+    <button class="navb" id="nav-qr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4 H10 V10 H4 Z M14 4 H20 V10 H14 Z M4 14 H10 V20 H4 Z M14 14 H16 M18 14 H20 V16 M14 18 V20 H16 M18 18 H20 V20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg><span>QR aula</span></button>
+    <button class="navb" id="nav-pres"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4 H21 M4 4 V15 H20 V4 M12 15 V19 M8 21 L12 19 L16 21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Presentazioni</span></button>
   </nav>
 </div><svg class="waves" viewBox="0 0 960 14" preserveAspectRatio="none" aria-hidden="true"><path id="wv-h" fill="#12A4B5" fill-opacity=".45"/></svg></header>
 
@@ -52,7 +58,7 @@ input[type=password]:focus,input[type=search]:focus{outline:none; border-color:v
 (function(){
 const $app=document.getElementById('app');
 const PIN_KEY='corso-aula-pin';
-let C=null, A=[], indirizzi=[], aperto=null, timer=null;
+let C=null, A=[], indirizzi=[], aperto=null, timer=null, vista='classe', P=null;
 
 document.getElementById('logo-h').append(logo(true));
 document.getElementById('logo-f').append(logo(false));
@@ -112,6 +118,7 @@ async function carica(primo){
   catch(e){ clearInterval(timer); timer=null; pin.set(null); return vPin(e.status===403?'PIN errato.':'Server non raggiungibile.'); }
   document.getElementById('nav').hidden=false;
   if(!timer) timer=setInterval(()=>carica(false),20000);
+  if(vista==='pres') return primo?vPresentazioni():undefined;
   if(aperto){ const a=A.find(x=>x.id===aperto); if(a) return vAllievo(a,!primo); aperto=null; }
   vClasse(!primo);
 }
@@ -119,7 +126,7 @@ async function carica(primo){
 /* ---------- la classe ---------- */
 let filtro='';
 function vClasse(silenzioso){
-  aperto=null;
+  aperto=null; vista='classe';
   const y=window.scrollY;
   const oggi=new Date().toDateString();
   const attivi=A.filter(a=>a.ultimo && new Date(a.ultimo).toDateString()===oggi).length;
@@ -180,7 +187,7 @@ function vClasse(silenzioso){
 
 /* ---------- un allievo ---------- */
 function vAllievo(a,silenzioso){
-  aperto=a.id;
+  aperto=a.id; vista='classe';
   const y=window.scrollY;
   const err=Object.entries(a.stato.risposte).filter(([q,r])=>!r.ok&&C.quiz[q]);
   const azioni=el('div',{class:'stack'});
@@ -221,7 +228,7 @@ function vAllievo(a,silenzioso){
 /* ---------- proiezione e riepilogo ---------- */
 function proietta(){
   const u=indirizzi[0]; if(!u) return;
-  const chiudi=()=>{o.remove(); document.removeEventListener('keydown',esc); navCur('classe');};
+  const chiudi=()=>{o.remove(); document.removeEventListener('keydown',esc); navCur(vista);};
   const esc=e=>{if(e.key==='Escape')chiudi();};
   const o=el('div',{class:'proj',role:'dialog','aria-label':'Indirizzo per gli allievi',onclick:chiudi},
     el('div',{class:'stack',style:'align-items:center; gap:18px'},el('p',{class:'note'},'Salite a bordo!'),el('div',{class:'qr'},qrSvg(u)),el('span',{class:'addr'},u),
@@ -237,8 +244,25 @@ function esporta(){
   const a=el('a',{href:URL.createObjectURL(new Blob([csv],{type:'text/csv'})),download:'classe-'+new Date().toISOString().slice(0,10)+'.csv'});
   document.body.append(a); a.click(); a.remove();
 }
-function navCur(k){ document.getElementById('nav-classe').toggleAttribute('aria-current',k==='classe'); document.getElementById('nav-qr').toggleAttribute('aria-current',k==='qr'); }
+function navCur(k){ for(const [id,v] of [['nav-classe','classe'],['nav-qr','qr'],['nav-pres','pres']]) document.getElementById(id).toggleAttribute('aria-current',k===v); }
+
+/* ---------- presentazioni da proiettare ---------- */
+async function vPresentazioni(){
+  vista='pres'; aperto=null; navCur('pres'); window.scrollTo({top:0});
+  if(!P){ try{ const r=await fetch('presentazioni/elenco.json'); if(!r.ok) throw r; P=await r.json(); }catch(e){ P=null; } }
+  const gruppi=P?[...new Set(P.map(x=>x.gruppo))]:[];
+  const tinta={'La scuola':'var(--coral)','Il corso':'var(--sea)','Ripasso':'var(--purple)','Appendici':'var(--blue)'};
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
+    head('Da proiettare','Presentazioni','var(--blue)','book',true),
+    el('p',{class:'muted',style:'font-weight:700'},'Si aprono in una nuova scheda: un clic per lo schermo intero, poi avanti e indietro con le frecce, con il telecomando del presentatore o con un clic a destra e a sinistra. F per lo schermo intero, Esc per uscire.'),
+    ...(P?gruppi.map(g=>el('div',{class:'stack',style:'gap:12px'},
+        el('span',{class:'pill',style:'--hue:'+(tinta[g]||'var(--sea)')},g),
+        el('div',{class:'pres'},...P.filter(x=>x.gruppo===g).map(x=>
+          el('a',{class:'pcard',href:x.file,target:'_blank',rel:'noopener',style:'--hue:'+(tinta[g]||'var(--sea)')},el('b',{},x.titolo),el('span',{},x.slide+' slide · apri e proietta →')))))):
+      [el('p',{class:'notice'},'Le presentazioni si aprono solo dal computer dell’istruttore, quello dove gira il server.')])));
+}
 document.getElementById('nav-classe').addEventListener('click',()=>{aperto=null; vClasse(); window.scrollTo({top:0});});
+document.getElementById('nav-pres').addEventListener('click',vPresentazioni);
 document.getElementById('nav-qr').addEventListener('click',proietta);
 
 (async function start(){

@@ -1,0 +1,98 @@
+[
+ {
+  "gruppo": "La scuola",
+  "titolo": "Presentazione della scuola",
+  "file": "presentazioni/scuola.html",
+  "slide": 29
+ },
+ {
+  "gruppo": "Il corso",
+  "titolo": "Rotta verso la patente · il corso in sintesi",
+  "file": "presentazioni/rotta.html",
+  "slide": 8
+ },
+ {
+  "gruppo": "Ripasso",
+  "titolo": "Schede riassuntive",
+  "file": "presentazioni/schede.html",
+  "slide": 35
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice A · I tre problemi della corrente",
+  "file": "presentazioni/appendice-a.html",
+  "slide": 13
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice B · I nomi della barca a vela",
+  "file": "presentazioni/appendice-b.html",
+  "slide": 26
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice C · I nodi marinari",
+  "file": "presentazioni/appendice-c.html",
+  "slide": 20
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice D · Prove d'esame simulate",
+  "file": "presentazioni/appendice-d.html",
+  "slide": 197
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice E · La prova pratica",
+  "file": "presentazioni/appendice-e.html",
+  "slide": 25
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice F · Schede IALA",
+  "file": "presentazioni/appendice-f.html",
+  "slide": 31
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice G · La normativa in tabelle",
+  "file": "presentazioni/appendice-g.html",
+  "slide": 30
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice H · La radio VHF",
+  "file": "presentazioni/appendice-h.html",
+  "slide": 26
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice I · Navigare sottocosta",
+  "file": "presentazioni/appendice-i.html",
+  "slide": 22
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice J · I bollettini meteo",
+  "file": "presentazioni/appendice-j.html",
+  "slide": 21
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice K · Il soccorso in mare",
+  "file": "presentazioni/appendice-k.html",
+  "slide": 23
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice L · L'ancoraggio",
+  "file": "presentazioni/appendice-l.html",
+  "slide": 22
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice M · La portanza",
+  "file": "presentazioni/appendice-m.html",
+  "slide": 33
+ }
+]
