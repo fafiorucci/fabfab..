@@ -2,10 +2,14 @@
 
 Slide (artifact Slides): https://claude.ai/artifact/64DeNcgDYeo8AtFEnDjbqG
 
-65 slide. Le 26 prove ufficiali delle famiglie 5.1.3, 5.2.3, 5.3.3 e 5.4.3 (DD 131/2022), ciascuna con una
+104 slide. Le 26 prove ufficiali delle famiglie 5.1.3, 5.2.3, 5.3.3 e 5.4.3 (DD 131/2022), ciascuna con una
 slide per la traccia (carta senza soluzione) e una per il tracciamento (carta, passaggi, risultato e risposta ufficiale).
 Prima degli esercizi: le conversioni da usare, le cinque tecniche (rilevamento trasportato sullo stesso punto e su
-punti diversi, tre rilevamenti, passaggio al traverso, intercettazione), la tabella di deviazione e un quiz.
+punti diversi, tre rilevamenti, passaggio al traverso, intercettazione) e la tabella di deviazione.
+
+Struttura: 5 capitoli in 75 minuti, ognuno aperto da una slide di apertura e chiuso da una verifica
+da 2 quiz ufficiali con la slide delle risposte; negli ultimi 45 minuti la raccolta di 36 quiz ufficiali (1.7.6, 1.7.4 e 1.7.3)
+in 12 slide da 3, ognuna seguita dalle risposte (`apertura.py`, `esame.py`, `schema_cart.py`).
 
 - `cart/es10.py`: soluzioni calcolate e confrontate con le risposte ufficiali (`python3 cart/es10.py`).
   23 risultati su 26 cadono dentro la forchetta ufficiale; 5.1.3-6, 5.3.3-6 e 5.4.3-3 la mancano di circa 0,1′

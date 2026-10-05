@@ -6,9 +6,11 @@
   «Fabrizio Fiorucci · Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa»
   (in copertina senza il nome). Vale per lezioni, appendici, schede, indice e presentazione della scuola.
 - Lavorare sul branch `claude/corso-patente-nautica-indice-biov9q`: commit e push, niente PR.
-- Lezioni 01-08: teoria in 75 minuti divisa in capitoli, ognuno aperto da una slide di apertura (`chapter()`);
+- Lezioni 01-15: teoria in 75 minuti divisa in capitoli, ognuno aperto da una slide di apertura (`chapter()`);
   dopo ogni paragrafo una verifica da 2 quiz ufficiali (DD 131/2022) con la sua slide delle risposte
   (helper `intermedi.py` nella cartella della lezione).
+  Nelle lezioni di carteggio 10-15 i capitoli sono le tecniche e i gruppi di esercizi, con la verifica in fondo
+  a ogni capitolo (helper `schema_cart.py`).
 - Ogni lezione chiude con gli ultimi 45 minuti di raccolta quiz ufficiali (12 slide da 3 quiz) sugli argomenti
   della lezione, ogni slide di quiz seguita dalla slide delle risposte, senza ripetere i quiz delle verifiche.
 

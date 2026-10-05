@@ -85,17 +85,18 @@ def render(S, W, H, solution=True, keep=None):
     global _CID; _CID+=1; cid=f'cc{_CID}'
     body=f'<defs><clipPath id="{cid}"><rect x="0" y="0" width="{W}" height="{H}" rx="36"/></clipPath></defs><g clip-path="url(#{cid})"><rect x="0" y="0" width="{W}" height="{H}" fill="{SEA_BG}"/>'
     g,glabs,st=C.grid(); body+=g+C.coast()
-    labels=[]
+    labels=[]; C.segs=[]; C.dots=[]
     if solution:
         for a,b,kind,lab in S.lines:
             c,w,dash,arr=ST[kind]; (x1,y1),(x2,y2)=C.pll(a),C.pll(b)
             da=f' stroke-dasharray="{dash}"' if dash else ''
             body+=f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" stroke="{c}" stroke-width="{w}"{da} stroke-linecap="round"/>'
             if arr: body+=arrowhead(x1,y1,x2,y2,c,16 if w>=4 else 12)
+            C.segs.append((x1,y1,x2,y2))
             if lab: labels.append(((x1+x2)/2,(y1+y2)/2,lab,LABC.get(kind,NAVY),'line',(x1,y1,x2,y2)))
     for ll,lab,kind in S.pts:
         if kind=='none' or (not solution and kind=='fix'): continue
-        x,y=C.pll(ll)
+        x,y=C.pll(ll); C.dots.append((x,y,16 if kind=='fix' else 12))
         if kind=='lm': body+=f'<circle cx="{x:.1f}" cy="{y:.1f}" r="11" fill="{SUN}" stroke="{NAVY}" stroke-width="3"/><circle cx="{x:.1f}" cy="{y:.1f}" r="3.5" fill="{NAVY}"/>'
         elif kind=='fix': body+=f'<circle cx="{x:.1f}" cy="{y:.1f}" r="15" fill="none" stroke="{CORAL}" stroke-width="5"/><circle cx="{x:.1f}" cy="{y:.1f}" r="5" fill="{CORAL}"/>'
         elif solution or (lab.startswith(('A','B')) and '′' not in lab): body+=f'<circle cx="{x:.1f}" cy="{y:.1f}" r="7" fill="#FFFFFF" stroke="{INK}" stroke-width="3"/>'
@@ -104,13 +105,30 @@ def render(S, W, H, solution=True, keep=None):
     sb,sbl=C.scalebar(); body+=sb+'</g>'
     return body,labels,glabs,sbl,C
 
-def place_labels(labels, W, H, size=22):
-    """posiziona le etichette evitando sovrapposizioni; ritorna [(x,y,w,testo,colore,pill)]"""
-    boxes=[]; out=[]
-    def ok(b):
-        if b[0]<6 or b[1]<6 or b[0]+b[2]>W-6 or b[1]+b[3]>H-6: return False
-        return all(b[0]+b[2]<o[0] or o[0]+o[2]<b[0] or b[1]+b[3]<o[1] or o[1]+o[3]<b[1] for o in boxes)
-    # prima i punti (fix, lm, ship) poi le linee
+def _seg_hits_box(s,b,m=5):
+    x1,y1,x2,y2=s; bx,by,bw,bh=b[0]-m,b[1]-m,b[2]+2*m,b[3]+2*m
+    def inside(x,y): return bx<=x<=bx+bw and by<=y<=by+bh
+    if inside(x1,y1) or inside(x2,y2): return True
+    def cross(p1,p2,p3,p4):
+        d=lambda a,b,c:(c[0]-a[0])*(b[1]-a[1])-(c[1]-a[1])*(b[0]-a[0])
+        d1,d2,d3,d4=d(p3,p4,p1),d(p3,p4,p2),d(p1,p2,p3),d(p1,p2,p4)
+        return ((d1>0)!=(d2>0)) and ((d3>0)!=(d4>0))
+    c=[(bx,by),(bx+bw,by),(bx+bw,by+bh),(bx,by+bh)]
+    return any(cross((x1,y1),(x2,y2),c[i],c[(i+1)%4]) for i in range(4))
+def place_labels(labels, W, H, size=22, avoid=(), segs=(), dots=()):
+    """posiziona le etichette evitando le altre etichette, i riquadri in avoid, le rette (segs) e i punti (dots);
+    ritorna [(x,y,w,testo,colore,pill)]"""
+    boxes=list(avoid); out=[]
+    def cost(b):
+        if b[0]<6 or b[1]<6 or b[0]+b[2]>W-6 or b[1]+b[3]>H-6: return 1000
+        c=0
+        for o in boxes:
+            if not (b[0]+b[2]<o[0] or o[0]+o[2]<b[0] or b[1]+b[3]<o[1] or o[1]+o[3]<b[1]): c+=100
+        for s in segs:
+            if _seg_hits_box(s,b): c+=10
+        for (px,py,r) in dots:
+            if b[0]-r<px<b[0]+b[2]+r and b[1]-r<py<b[1]+b[3]+r: c+=30
+        return c
     order=sorted(labels,key=lambda l:{'fix':0,'fixb':0,'lm':1,'ship':2,'line':3}[l[4]])
     for x,y,t,c,kind,seg in order:
         w=int(0.56*size*len(t))+24; h=size*1.3+6
@@ -118,14 +136,20 @@ def place_labels(labels, W, H, size=22):
             x1,y1,x2,y2=seg; cands=[]
             for f in (0.5,0.35,0.65,0.25,0.75,0.15,0.85):
                 px,py=x1+(x2-x1)*f,y1+(y2-y1)*f
-                cands+= [(px-w/2,py-h-8),(px-w/2,py+8),(px+10,py-h/2),(px-w-10,py-h/2)]
+                for d in (10,26,46,70):
+                    cands+=[(px-w/2,py-h-d),(px-w/2,py+d),(px+d,py-h/2),(px-w-d,py-h/2),(px+d,py-h-d),(px-w-d,py+d),(px+d,py+d),(px-w-d,py-h-d)]
         else:
-            r=20 if kind in ('fix','fixb') else 16
-            cands=[(x+r,y-h-4),(x+r,y+4),(x-w-r,y-h-4),(x-w-r,y+4),(x-w/2,y-h-r),(x-w/2,y+r),(x+r,y-h/2),(x-w-r,y-h/2)]
-            if kind=='fixb': cands=[(x-w-r,y+6),(x-w/2,y+r+4),(x+r,y+6)]+cands
-        for cx,cy in cands:
-            b=(cx,cy,w,h)
-            if ok(b): boxes.append(b); out.append((cx,cy,w,t,c,kind)); break
-        else:
-            cx,cy=cands[0]; cx=min(max(cx,8),W-w-8); cy=min(max(cy,8),H-h-8); boxes.append((cx,cy,w,h)); out.append((cx,cy,w,t,c,kind))
+            cands=[]
+            for r in ((20,34,54) if kind in ('fix','fixb') else (16,30,50)):
+                cc=[(x+r,y-h-4),(x+r,y+4),(x-w-r,y-h-4),(x-w-r,y+4),(x-w/2,y-h-r),(x-w/2,y+r),(x+r,y-h/2),(x-w-r,y-h/2)]
+                if kind=='fixb': cc=[(x-w-r,y+6),(x-w/2,y+r+4),(x+r,y+6)]+cc
+                cands+=cc
+        best=None
+        for i,(cx,cy) in enumerate(cands):
+            b=(cx,cy,w,h); k=cost(b)+i*0.01
+            if best is None or k<best[0]: best=(k,b)
+            if k<1: break
+        b=best[1]
+        if best[0]>=1000: cx=min(max(b[0],8),W-w-8); cy=min(max(b[1],8),H-h-8); b=(cx,cy,w,h)
+        boxes.append(b); out.append((b[0],b[1],w,t,c,kind))
     return out

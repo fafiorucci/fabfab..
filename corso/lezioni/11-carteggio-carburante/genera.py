@@ -25,19 +25,19 @@ def chart_html(S, x, y, w, h, solution, alt):
     for kind,v,t in glabs:
         if kind=='lon' and 60<v<w-230 and v-lastx>150: html+=lab(x+v+6,y+h-34,140,t,'#5E6E82',20,800); lastx=v
     sx,sy,L,t=sbl; html+=lab(x+sx,y+sy,max(L,120),t,'#16324F',20,900)
-    for lx,ly,lw,t,c,kind in chart.place_labels(labels,w,h,22):
+    for lx,ly,lw,t,c,kind in chart.place_labels(labels,w,h,22,[(sx-12,sy-8,max(L,120)+30,h-sy+8)]+[(4,v-32,150,32) for k_,v,_ in glabs if k_=='lat']+[(v,h-36,150,36) for k_,v,_ in glabs if k_=='lon'],C.segs,C.dots):
         html+=f'<p style="position:absolute; left:{x+lx:.0f}px; top:{y+ly:.0f}px; width:max-content; max-width:{lw+20:.0f}px; font-size:22px; line-height:1.3; font-weight:900; color:#FFFFFF; text-align:left; background:{c}; padding:2px 10px; border-radius:10px; white-space:nowrap">{t}</p>'
     return svg+html
 
 # ============ COVER + AGENDA ============
 cover(11,'Carteggio: carburante e autonomia','Quanta nafta serve? Distanze sulla carta, velocità dal doppio rilevamento e il 30% di riserva: i 23 esercizi ufficiali della carta 5/D',
  'Lezione 11. Esercizi ufficiali 5.1.2, 5.2.2, 5.3.2 e 5.4.2 dell\'Allegato A al DD 131/2022 (carta 5/D). Tutti chiedono il carburante con la riserva: il 30% salvo diversa indicazione (quiz 1.2.3-1). Carte ridisegnate da OpenStreetMap per spiegare il tracciamento; all\'esame si lavora sulla carta 5/D.')
-blocks=[('0:00','25′','Il conto, il 45°-90° e la velocità dalla carta',CORAL),('0:25','25′','Settore A · Elba (5 esercizi)',SEA),('0:50','20′','Settore B · Castiglione (5)',PURPLE),('1:10','25′','Settore C · Pianosa e Montecristo (7)',BLUE),('1:35','25′','Settore D · Giglio e Argentario (6)',GREEN)]
+blocks=[('0:00','20′','Il conto, il 45°-90° e la velocità dalla carta',CORAL),('0:20','15′','Settore A · Elba (5 esercizi)',SEA),('0:35','10′','Settore B · Castiglione (5)',PURPLE),('0:45','15′','Settore C · Pianosa (7)',BLUE),('1:00','15′','Settore D · Giglio (6)',GREEN),('1:15','45′','Raccolta quiz (36)',ORANGE)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
 right=card(tag("La formula")+f'<p style="font-family:{H}; font-size:64px; font-weight:700; line-height:1.1; color:{INK}">d ÷ V × c × 1,3</p>'+p('miglia diviso nodi, per litri all\'ora, più il 30% di riserva',26,INK,700))
 left=card(tag('Leggi bene la traccia',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>da dove parte il conto: dalla partenza o dal punto nave?</li><li>fin dove arriva: destinazione, traverso, ritorno?</li><li>la velocità è data o va ricavata?</li><li>la riserva è del 30% o di un altro valore?</li></ul>',SEA_T,flex=1.4)
 sec('agenda', head('Lezione 11 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
- notes='Come nella lezione 10: per ogni esercizio una slide con la traccia e una con il tracciamento. Quasi tutti combinano un punto nave con il doppio rilevamento polare 45°-90° e il calcolo del carburante.')
+ notes='Cinque capitoli in 75 minuti, ognuno chiuso da una verifica da 2 quiz ufficiali; negli ultimi 45 minuti la raccolta di 36 quiz su autonomia, navigazione stimata e coordinate (1.2.3, 1.7.5, 1.7.1). Come nella lezione 10: per ogni esercizio una slide con la traccia e una con il tracciamento. Quasi tutti combinano un punto nave con il doppio rilevamento polare 45°-90° e il calcolo del carburante.')
 
 # ============ IL CONTO ============
 K=[('t = d ÷ V','Il tempo in ore: miglia diviso nodi. 16,2 mg a 6 kn = 2,7 ore.',CORAL,CORAL_T),
@@ -93,8 +93,6 @@ sec('rildist', head('Carteggio · le tecniche','Un punto da rilevamento e distan
  term('Il testo','«Distanza 3,5 miglia sul rilevamento vero 270° del faro»: dalla barca vedi il faro per 270°.')+term('Sulla carta','Dal faro traccia la direzione opposta (270° − 180° = 090°) e prendi la distanza con il compasso sulla scala delle latitudini.')+term('Attenzione','«A est del faro» e «il faro per 270°» sono la stessa cosa. Leggi sempre da chi a chi.')),
  notes='Esercizi 5.3.2-1 (Monte della Fortezza per Rilv 180° a 2,8 mg: il punto è a nord), 5.3.2-7 (Scoglio d\'Africa per Rilv 270° a 3,5 mg: il punto è a est), 5.4.2-1 (torre di Capo d\'Uomo per Rilv nord a 1 mg: il punto è a sud). Richiamo: quiz 1.7.6-16, -21, -26 della lezione 10.')
 
-quiz_slide('quiz1','Quiz · Carburante e autonomia',['1.2.3-1','1.2.2-2','1.2.3-3'],False)
-quiz_slide('quiz1r','Quiz · Le risposte',['1.2.3-1','1.2.2-2','1.2.3-3'],True)
 
 # ============ MAPPA ============
 M=es10.Sol('5.1.3-1',(42.62,10.55)); M.pts=[]; M.lines=[]
@@ -109,7 +107,7 @@ sec('mappa', head('Carteggio · la carta','I punti cospicui di oggi'), pinned=ch
 
 # ============ ESERCIZI ============
 SETT={'5.1':('A','Elba',SEA),'5.2':('B','Castiglione e Punta Ala',PURPLE),'5.3':('C','Pianosa e Montecristo',BLUE),'5.4':('D','Giglio e Argentario',GREEN)}
-order_ex=[]
+order_ex=[]; exs={}
 def rng(r): return r.replace('\n',' ').replace('Carburante ','').replace('÷',' ÷ ')
 for f in es11.SOLS:
     S=f(); sid='f'+S.id.replace('.','_').replace('-','_'); st=SETT[S.id[:3]]
@@ -125,11 +123,23 @@ for f in es11.SOLS:
     res=f'<div style="display:flex; flex-direction:column; gap:4px; background:{CORAL_T}; padding:16px 20px; border-radius:20px"><p style="font-size:30px; font-weight:900; color:{CORAL}">{S.res_txt}</p><p style="font-size:24px; font-weight:700; color:{INK}">Ufficiale: {rng(S.ex["risposta_ufficiale"])}</p>{extra}</div>'
     sec(sid+'_s', head(f'Esercizio {S.id} · soluzione','Il tracciamento',st[2]), pinned=chart_html(S,128,290,1092,620,True,f'Tracciamento dell\'esercizio {S.id}')+pcol(ol+res,532,14),
         notes='Soluzione: '+' '.join(S.passi)+f' Risultato: {S.res_txt}. Ufficiale: {rng(S.ex["risposta_ufficiale"])}.'+('' if ok else ' Il nostro calcolo, fatto con le coordinate OpenStreetMap, esce di poco dalla forchetta: la distanza al traverso o la posizione del punto di partenza misurate sulla carta 5/D la riportano dentro.'))
-    order_ex+=[sid+'_t',sid+'_s']
+    order_ex+=[sid+'_t',sid+'_s']; exs.setdefault(st[0],[]).append((S.id,sid+'_t'))
 
 closing(['Tempo = miglia ÷ nodi; carburante = tempo × consumo; poi +30%','Doppio rilevamento 45°-90°: distanza al traverso = cammino tra i due rilevamenti','Senza Vp: traverso = piede della perpendicolare, V = distanza ÷ tempo','«Il faro per 270° a 3,5 mg» vuol dire che sei 3,5 mg a est del faro','Somma tutte le tratte richieste, andata e ritorno comprese'],
  'Prossima lezione · 12 · Scarroccio','A casa: rifai sulla carta 5/D gli esercizi non svolti in aula.')
-write_deck(OUT,'Lezione 11 · Carteggio: carburante e autonomia',
- ['cover','agenda','conto','t4590','tvel','rildist','quiz1','quiz1r','mappa']+order_ex+['chiusura'],
- {"s1":{"description":"Apertura, il conto e le tecniche","start":"cover"},"s2":{"description":"Settore A · Elba","start":"f5_1_2_1_t"},"s3":{"description":"Settore B · Castiglione e Punta Ala","start":"f5_2_2_1_t"},
-  "s4":{"description":"Settore C · Pianosa e Montecristo","start":"f5_3_2_1_t"},"s5":{"description":"Settore D · Giglio e Argentario","start":"f5_4_2_1_t"}})
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'apertura.py')).read())
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'esame.py')).read())
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'schema_cart.py')).read())
+def sett(k,t,c,mins): return ('cap'+str('ABCD'.index(k)+2),t,[f'Esercizio {e}' for e,_ in exs[k]],c,mins,exs[k][0][1],(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso'))
+CAPS=[('cap1','Il conto e le tecniche',['Il conto del carburante','Il doppio rilevamento 45°-90°','La velocità dalla carta','Un punto da rilevamento e distanza','I punti cospicui di oggi'],CORAL,20,'conto',(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata')),
+ sett('A','Settore A · Elba',SEA,15),sett('B','Settore B · Castiglione e Punta Ala',PURPLE,10),sett('C','Settore C · Pianosa e Montecristo',BLUE,15),sett('D','Settore D · Giglio e Argentario',GREEN,15)]
+VER=[['1.2.3-1', '1.2.3-2'], ['1.7.5-3', '1.7.5-4'], ['1.2.3-4', '1.2.3-5'], ['1.7.5-5', '1.7.5-8'], ['1.7.1-2', '1.7.1-6']]
+RACC=[('1.2.3', ['1.2.3-3', '1.2.3-7', '1.2.3-18']), ('1.2.3', ['1.2.3-6', '1.2.3-9', '1.2.3-19']), ('1.7.5', ['1.7.5-9', '1.7.5-22', '1.7.5-32']), ('1.7.5', ['1.7.5-10', '1.7.5-23', '1.7.5-33']), ('1.7.5', ['1.7.5-11', '1.7.5-24', '1.7.5-34']), ('1.7.5', ['1.7.5-12', '1.7.5-25', '1.7.5-36']), ('1.7.5', ['1.7.5-13', '1.7.5-26', '1.7.5-37']), ('1.7.5', ['1.7.5-19', '1.7.5-28', '1.7.5-40']), ('1.7.5', ['1.7.5-21', '1.7.5-29', '1.7.5-50']), ('1.7.1', ['1.7.1-7', '1.7.1-11', '1.7.1-18']), ('1.7.1', ['1.7.1-8', '1.7.1-14', '1.7.1-19']), ('1.7.1', ['1.7.1-10', '1.7.1-17', '1.7.1-21'])]
+order,secs=schema(11,['cover','agenda','conto','t4590','tvel','rildist','mappa']+order_ex+['chiusura'],CAPS,VER,RACC,
+ [('Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.'),
+  ('Minuti in decimi','Trasforma i minuti in ore prima di moltiplicare: 15 minuti sono 0,25 ore, 35 minuti 0,58.'),
+  ('La riserva','Carburante = ore × consumo, più il 30% di riserva se il quiz non dice altro: × 1,3.'),
+  ('Un grado, 60 miglia','Un primo di latitudine è un miglio: un grado sono 60 miglia.')],
+ ['Quiz 1-2 · autonomia e carburante (6)','Quiz 3-9 · spazio, tempo e velocità (21)','Quiz 10-12 · coordinate geografiche (9)'],
+ 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. I quiz di calcolo si risolvono alla lavagna con S = V × T. Se il tempo stringe, lasciare per casa le slide 11 e 12.',esame=('navigazione','motori'))
+write_deck(OUT,'Lezione 11 · Carteggio: carburante e autonomia',order,secs)

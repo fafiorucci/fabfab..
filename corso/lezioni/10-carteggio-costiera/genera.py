@@ -28,19 +28,19 @@ def chart_html(S, x, y, w, h, solution, alt):
         if kind=='lon' and 60<v<w-230 and v-lastx>150:
             html+=lab(x+v+6,y+h-34,140,t,'#5E6E82',20,800); lastx=v
     sx,sy,L,t=sbl; html+=lab(x+sx,y+sy,max(L,120),t,'#16324F',20,900)
-    for lx,ly,lw,t,c,kind in chart.place_labels(labels,w,h,22):
+    for lx,ly,lw,t,c,kind in chart.place_labels(labels,w,h,22,[(sx-12,sy-8,max(L,120)+30,h-sy+8)]+[(4,v-32,150,32) for k_,v,_ in glabs if k_=='lat']+[(v,h-36,150,36) for k_,v,_ in glabs if k_=='lon'],C.segs,C.dots):
         html+=f'<p style="position:absolute; left:{x+lx:.0f}px; top:{y+ly:.0f}px; width:max-content; max-width:{lw+20:.0f}px; font-size:22px; line-height:1.3; font-weight:900; color:#FFFFFF; text-align:left; background:{c}; padding:2px 10px; border-radius:10px; white-space:nowrap">{t}</p>'
     return svg+html
 
 # ============ COVER + AGENDA ============
 cover(10,'Carteggio: navigazione costiera','Fare il punto nave con i rilevamenti, passare al traverso e intercettare: i 26 esercizi ufficiali della carta 5/D',
  'Lezione 10, la prima di carteggio. Esercizi ufficiali 5.1.3, 5.2.3, 5.3.3 e 5.4.3 dell\'Allegato A al DD 131/2022 (carta 5/D, settori A-D). All\'esame 4 esercizi indipendenti in 60 minuti, almeno 3 giusti. Le carte di questa lezione sono ridisegnate da dati OpenStreetMap per spiegare il tracciamento: all\'esame si lavora sulla carta 5/D dell\'IIM.')
-blocks=[('0:00','25′','Il kit e le cinque tecniche',CORAL),('0:25','25′','Settore A · Elba (6 esercizi)',SEA),('0:50','20′','Settore B · Castiglione e Punta Ala (5)',PURPLE),('1:10','25′','Settore C · Pianosa (7)',BLUE),('1:35','25′','Settore D · Giglio e Argentario (8)',GREEN)]
+blocks=[('0:00','20′','Il kit e le cinque tecniche',CORAL),('0:20','15′','Settore A · Elba (6 esercizi)',SEA),('0:35','10′','Settore B · Punta Ala (5)',PURPLE),('0:45','15′','Settore C · Pianosa (7)',BLUE),('1:00','15′','Settore D · Giglio (8)',GREEN),('1:15','45′','Raccolta quiz (36)',ORANGE)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
 right=card(tag("All'esame")+f'<p style="font-family:{H}; font-size:88px; font-weight:700; line-height:1.05; color:{INK}">3 su 4</p>'+p('esercizi giusti in 60 minuti',26,INK,700)+p('Il risultato va dato entro la forchetta ufficiale: di solito ±0,3′ in latitudine e longitudine.',24))
 left=card(tag('Cosa porti al tavolo',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>carta 5/D integra</li><li>squadrette nautiche e compasso a punte secche</li><li>matita morbida e gomma</li><li>calcolatrice non programmabile</li><li>la tabella di deviazione, se la traccia la cita</li></ul>',SEA_T,flex=1.4)
 sec('agenda', head('Lezione 10 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
- notes='In aula si svolgono alla lavagna un esercizio per tecnica e gli altri si danno come lavoro a coppie; le slide della soluzione servono per la correzione e per il ripasso a casa. Per ogni esercizio: una slide con la traccia (e la carta senza soluzione) e una con il tracciamento.')
+ notes='Cinque capitoli in 75 minuti, ognuno chiuso da una verifica da 2 quiz ufficiali; negli ultimi 45 minuti la raccolta di 36 quiz di navigazione costiera, bussola e navigazione elettronica (1.7.6, 1.7.4, 1.7.3). In aula si svolgono alla lavagna un esercizio per tecnica e gli altri si danno come lavoro a coppie; le slide della soluzione servono per la correzione e per il ripasso a casa. Per ogni esercizio: una slide con la traccia (e la carta senza soluzione) e una con il tracciamento.')
 
 # ============ KIT ============
 K=[('V = d + δ','Variazione: declinazione più deviazione, con il segno (Est +, Ovest −).',CORAL,CORAL_T),
@@ -60,12 +60,12 @@ def tech_svg(kind):
     b+=f'<path d="M760 0 Q850 60 900 150 Q960 220 1092 240 L1092 0 Z" fill="#F3E6C4" stroke="#B89A5E" stroke-width="3"/>'
     b+=f'<circle cx="{Lx}" cy="{Ly}" r="13" fill="{SUN}" stroke="{NAVY}" stroke-width="3"/>'
     if kind=='stesso':
-        P1=(250,520); run=(230,-150); P2=(P1[0]+run[0],P1[1]+run[1]); Q=(Lx+run[0],Ly+run[1])
-        b+=line(P1[0]-40,P1[1]+22,Lx,Ly,NAVY,3)+line(P2[0]-60,P2[1]+70,Lx,Ly,CORAL,4)
-        b+=dash(Lx,Ly,Q[0],Q[1],GREY,2)+arrow(Lx,Ly,Q[0],Q[1],GREY,2,12)
-        dx,dy=Lx-P1[0],Ly-P1[1]; b+=f'<line x1="{Q[0]-dx*1.15:.0f}" y1="{Q[1]-dy*1.15:.0f}" x2="{Q[0]+dx*0.1:.0f}" y2="{Q[1]+dy*0.1:.0f}" stroke="{PURPLE}" stroke-width="4" stroke-dasharray="14 9"/>'
-        b+=arrow(P1[0],P1[1],P2[0],P2[1],GREEN,6,20)+f'<circle cx="{P2[0]}" cy="{P2[1]}" r="16" fill="none" stroke="{CORAL}" stroke-width="5"/>'+f'<circle cx="{P1[0]}" cy="{P1[1]}" r="8" fill="#FFFFFF" stroke="{INK}" stroke-width="3"/>'
-        L=[(P1[0]-120,P1[1]+10,'ore 1',INK),(Lx-260,Ly-50,'faro',NAVY),(330,470,'cammino: Pv, V × t',GREEN),(Q[0]-420,Q[1]+120,'primo rilevamento trasportato',PURPLE),(P2[0]+26,P2[1]-40,'punto nave, ore 2',CORAL)]
+        P1=(380,560); run=(240,0); P2=(P1[0]+run[0],P1[1]+run[1]); Q=(Lx+run[0],Ly+run[1])
+        b+=line(P1[0]-50,P1[1]+50,Lx,Ly,NAVY,3)+line(P2[0]+22,P2[1]+48,Lx,Ly,CORAL,4)
+        b+=arrow(Lx,Ly,Q[0],Q[1],GREY,3,14)
+        dx,dy=Lx-P1[0],Ly-P1[1]; b+=f'<line x1="{Q[0]-dx*1.12:.0f}" y1="{Q[1]-dy*1.12:.0f}" x2="{Q[0]+dx*0.04:.0f}" y2="{Q[1]+dy*0.04:.0f}" stroke="{PURPLE}" stroke-width="4" stroke-dasharray="14 9"/>'
+        b+=arrow(P1[0],P1[1],P2[0],P2[1],GREEN,7,22)+f'<circle cx="{P2[0]}" cy="{P2[1]}" r="16" fill="none" stroke="{CORAL}" stroke-width="5"/>'+f'<circle cx="{P1[0]}" cy="{P1[1]}" r="8" fill="#FFFFFF" stroke="{INK}" stroke-width="3"/>'
+        L=[(P1[0]-130,P1[1]-20,'ore 1',INK),(Lx-140,Ly-60,'faro',NAVY),(P1[0]+20,P1[1]+18,'cammino: Pv, V × t',GREEN),(Lx+20,Ly+40,'il faro spostato del cammino',GREY),(Q[0]-330,Q[1]+190,'1° rilevamento trasportato',PURPLE),(P1[0]-240,P1[1]-160,'1° rilevamento',NAVY),(P2[0]-40,P2[1]-170,'2° rilevamento',CORAL),(P2[0]+30,P2[1]-50,'punto nave, ore 2',CORAL)]
     elif kind=='diversi':
         L2=(980,380); b+=f'<path d="M1092 300 Q1000 330 960 400 Q940 480 1092 520 Z" fill="#F3E6C4" stroke="#B89A5E" stroke-width="3"/><circle cx="{L2[0]}" cy="{L2[1]}" r="13" fill="{SUN}" stroke="{NAVY}" stroke-width="3"/>'
         P1=(250,520); run=(280,-120); P2=(P1[0]+run[0],P1[1]+run[1]); Q=(Lx+run[0],Ly+run[1])
@@ -74,19 +74,24 @@ def tech_svg(kind):
         b+=dash(Lx,Ly,Q[0],Q[1],GREY,2)+arrow(P1[0],P1[1],P2[0],P2[1],GREEN,6,20)+f'<circle cx="{P2[0]}" cy="{P2[1]}" r="16" fill="none" stroke="{CORAL}" stroke-width="5"/><circle cx="{P1[0]}" cy="{P1[1]}" r="8" fill="#FFFFFF" stroke="{INK}" stroke-width="3"/>'
         L=[(P1[0]-120,P1[1]+10,'ore 1',INK),(Lx+26,Ly+14,'punto 1',NAVY),(L2[0]-160,L2[1]+30,'punto 2',CORAL),(330,500,'cammino',GREEN),(Q[0]-470,Q[1]+60,'rilevamento 1 trasportato',PURPLE),(P2[0]-40,P2[1]-70,'punto nave',CORAL)]
     elif kind=='tre':
-        P=[(160,540),(380,400),(620,250)]
-        for i,(q,c) in enumerate(zip(P,(NAVY,PURPLE,CORAL))):
-            b+=line(q[0]-50*(i+1)*0.4,q[1]+30,Lx,Ly,c,3 if i<2 else 4)
-        b+=arrow(P[0][0],P[0][1],P[2][0],P[2][1],GREEN,6,20)+''.join(f'<circle cx="{q[0]}" cy="{q[1]}" r="8" fill="#FFFFFF" stroke="{INK}" stroke-width="3"/>' for q in P[:2])+f'<circle cx="{P[2][0]}" cy="{P[2][1]}" r="16" fill="none" stroke="{CORAL}" stroke-width="5"/>'
-        L=[(P[0][0]-60,P[0][1]+20,'ore 1',INK),(P[1][0]-120,P[1][1]+10,'ore 2',INK),(P[2][0]-190,P[2][1]-60,'ore 3: punto nave',CORAL),(Lx-240,Ly-50,'faro',NAVY)]
+        P=[(260,570),(500,570),(740,570)]
+        for q,c in zip(P,(NAVY,PURPLE,CORAL)): b+=line(q[0],q[1],Lx,Ly,c,3 if c!=CORAL else 4)
+        for q,c in zip(P[:2],(NAVY,PURPLE)):
+            dx,dy=Lx-q[0],Ly-q[1]; b+=f'<line x1="{P[2][0]-dx*0.15:.0f}" y1="{P[2][1]-dy*0.15:.0f}" x2="{P[2][0]+dx*0.75:.0f}" y2="{P[2][1]+dy*0.75:.0f}" stroke="{c}" stroke-width="3" stroke-dasharray="12 8"/>'
+        b+=arrow(P[0][0]-120,P[0][1],P[2][0]+150,P[2][1],GREEN,6,20)+''.join(f'<circle cx="{q[0]}" cy="{q[1]}" r="8" fill="#FFFFFF" stroke="{INK}" stroke-width="3"/>' for q in P[:2])+f'<circle cx="{P[2][0]}" cy="{P[2][1]}" r="16" fill="none" stroke="{CORAL}" stroke-width="5"/>'
+        L=[(P[0][0]-40,P[0][1]-60,'ore 1',NAVY),(P[1][0]-40,P[1][1]-60,'ore 2',PURPLE),(P[2][0]+30,P[2][1]-60,'ore 3: punto nave',CORAL),(Lx-140,Ly-60,'faro',NAVY),(P[2][0]+70,P[2][1]-230,'1° e 2° trasportati (tratteggio)',PURPLE),(80,P[0][1]-30,'rotta',GREEN)]
     elif kind=='traverso':
         L0=(700,330); R=150; A=(150,80)
         b=f'<rect x="0" y="0" width="1092" height="620" fill="#E8F4F8"/><circle cx="{L0[0]}" cy="{L0[1]}" r="{R}" fill="none" stroke="{PURPLE}" stroke-width="3" stroke-dasharray="10 8"/><circle cx="{L0[0]}" cy="{L0[1]}" r="18" fill="#F3E6C4" stroke="#B89A5E" stroke-width="3"/><circle cx="{L0[0]}" cy="{L0[1]}" r="9" fill="{SUN}" stroke="{NAVY}" stroke-width="3"/>'
-        dx,dy=L0[0]-A[0],L0[1]-A[1]; d=math.hypot(dx,dy); a=math.asin(R/d); th=math.atan2(dy,dx)+a
-        T=(L0[0]+R*math.sin(th),L0[1]-R*math.cos(th))
-        e=(A[0]+math.cos(th)*820,A[1]+math.sin(th)*820)
+        dx,dy=L0[0]-A[0],L0[1]-A[1]; d=math.hypot(dx,dy); a=math.asin(R/d)
+        for th in (math.atan2(dy,dx)-a,math.atan2(dy,dx)+a):
+            if (-math.sin(th))*dx+math.cos(th)*dy>0: break   # faro a dritta della rotta
+        tl_=math.sqrt(d*d-R*R); T=(A[0]+math.cos(th)*tl_,A[1]+math.sin(th)*tl_)
+        e=(A[0]+math.cos(th)*(tl_+260),A[1]+math.sin(th)*(tl_+260))
         b+=arrow(A[0],A[1],e[0],e[1],GREEN,6,22)+line(L0[0],L0[1],T[0],T[1],CORAL,4)+f'<circle cx="{A[0]}" cy="{A[1]}" r="9" fill="#FFFFFF" stroke="{INK}" stroke-width="3"/><circle cx="{T[0]:.0f}" cy="{T[1]:.0f}" r="12" fill="none" stroke="{CORAL}" stroke-width="5"/>'
-        L=[(A[0]-60,A[1]-60,'A',INK),(T[0]+24,T[1]-20,'C: al traverso',CORAL),(L0[0]+40,L0[1]+R+14,'cerchio del raggio dato',PURPLE),(L0[0]+30,L0[1]-30,'faro a dritta',NAVY)]
+        ux,uy=math.cos(th),math.sin(th); nx,ny=(L0[0]-T[0])/R,(L0[1]-T[1])/R; q=22
+        b+=f'<path d="M{T[0]+ux*q:.0f} {T[1]+uy*q:.0f} L{T[0]+ux*q+nx*q:.0f} {T[1]+uy*q+ny*q:.0f} L{T[0]+nx*q:.0f} {T[1]+ny*q:.0f}" fill="none" stroke="{CORAL}" stroke-width="3"/>'
+        L=[(A[0]-60,A[1]-60,'A',INK),(T[0]-30,T[1]-80,'C: al traverso, faro a 90°',CORAL),(L0[0]+40,L0[1]+R+14,'cerchio: raggio = distanza al traverso',PURPLE),(L0[0]-90,L0[1]+34,'faro a dritta',NAVY),((L0[0]+T[0])/2+20,(L0[1]+T[1])/2,'raggio',CORAL),(A[0]+90,A[1]+70,'tangente da A = Pv',GREEN)]
     else:  # intercetta
         A=(180,480); B=(820,160); cb=225; vb=150; va=300
         ub=(math.sin(math.radians(cb)),-math.cos(math.radians(cb)))
@@ -101,7 +106,7 @@ def tech_svg(kind):
         b+=dash(A[0],A[1],B[0],B[1],GREY,2)+arrow(B[0],B[1],Dp[0],Dp[1],ORANGE,4,16)+arrow(A[0],A[1],T[0],T[1],ORANGE,5,16)+dash(T[0],T[1],V[0]+ab[0]*60,V[1]+ab[1]*60,PURPLE,3)
         b+=arrow(A[0],A[1],Dp[0],Dp[1],GREEN,6,22)+f'<circle cx="{A[0]}" cy="{A[1]}" r="9" fill="#FFFFFF" stroke="{INK}" stroke-width="3"/><circle cx="{B[0]}" cy="{B[1]}" r="9" fill="#FFFFFF" stroke="{INK}" stroke-width="3"/><circle cx="{Dp[0]:.0f}" cy="{Dp[1]:.0f}" r="16" fill="none" stroke="{CORAL}" stroke-width="5"/>'
         b+=f'<path d="M{A[0]+va*math.cos(math.atan2(dv[1],dv[0])-0.25):.0f} {A[1]+va*math.sin(math.atan2(dv[1],dv[0])-0.25):.0f} A{va} {va} 0 0 1 {A[0]+va*math.cos(math.atan2(dv[1],dv[0])+0.25):.0f} {A[1]+va*math.sin(math.atan2(dv[1],dv[0])+0.25):.0f}" fill="none" stroke="{GREEN}" stroke-width="3" stroke-dasharray="6 6"/>'
-        L=[(A[0]-60,A[1]+14,'A',INK),(B[0]+16,B[1]-40,'B',INK),(T[0]-250,T[1]+4,'sua velocità',ORANGE),(Dp[0]+24,Dp[1]-12,'D: incontro',CORAL),(V[0]+30,V[1]-60,'parallela ad AB',PURPLE),(A[0]+140,A[1]-40,'rotta di intercettazione',GREEN)]
+        L=[(A[0]-60,A[1]+14,'A',INK),(B[0]+16,B[1]-40,'B',INK),(T[0]+22,T[1]-16,'sua velocità (1 ora)',ORANGE),(Dp[0]+20,Dp[1]+22,'D: incontro',CORAL),(300,500,'parallela ad AB',PURPLE),(40,356,'rotta di intercettazione',GREEN)]
     return b,L
 def tech_slide(id_,kind,title,txt,notes,left):
     b,L=tech_svg(kind); x=128 if left else 700
@@ -119,7 +124,7 @@ tech_slide('t_tre','tre','Tre rilevamenti',
  term('Quando','Lo stesso faro rilevato tre volte: 5.1.3-3, di notte, riconoscendo il faro dalla caratteristica.')+term('Come','Trasporta il primo e il secondo rilevamento del cammino fatto fino all\'ora del terzo.')+term('La verifica','Le tre linee devono incontrarsi quasi in un punto: se formano un triangolo grande, c\'è un errore.'),
  'Nel 5.1.3-3 il faro che emette un lampo ogni 5 secondi a sud dell\'Elba è Capo Poro (Fl 5s). Cammini: 7,5 e 4,5 miglia.',False)
 tech_slide('t_traverso','traverso','Passare al traverso',
- term('Quando','Vuoi passare a una certa distanza da un faro, lasciandolo a dritta o a sinistra.')+term('Come','Cerchio del raggio dato attorno al faro e tangente da A dal lato giusto: è la Pv. Il punto di tangenza C è il traverso.')+term('La prora bussola','Pm = Pv − d; con la Pm entra nella tabella e trovi δ; Pb = Pm − δ.'),
+ p('Da A vuoi passare a una distanza data da un faro, lasciandolo a dritta o a sinistra. Al traverso il faro è a 90° dalla prora: è il punto più vicino della rotta.',24,BODY,500,1.4)+'<ol style="font-size:24px; line-height:1.38; color:#34465E; display:flex; flex-direction:column; gap:8px"><li>Compasso aperto della distanza, punta sul faro: traccia il <b>cerchio</b>.</li><li>Da A traccia la <b>tangente</b> al cerchio dal lato giusto: faro a dritta, la rotta gli passa a sinistra.</li><li>Leggi la direzione della tangente: è la <b>Pv</b>. Il punto di contatto C è il traverso; il raggio faro-C è perpendicolare alla rotta.</li><li>Prora bussola: Pm = Pv − d, dalla tabella δ, Pb = Pm − δ. Ora al traverso: AC ÷ V.</li></ol>',
  'Esercizi 5.3.3-2 e 5.3.3-3 con Scoglio d\'Africa. Faro a dritta: la rotta lo lascia sulla destra, quindi è ruotata a sinistra rispetto al rilevamento diretto del faro.',True)
 tech_slide('t_intercetta','intercetta','Intercettare una barca',
  term('Quando','Una barca chiede aiuto e si muove: devi scegliere la rotta che la incontra.')+term('Triangolo delle velocità','Da A disegna la sua velocità (1 ora). Dalla punta la parallela ad AB; il compasso aperto della tua velocità, puntato in A, la taglia.')+term('Il punto D','La direzione da A al taglio è la rotta da tenere; dove incrocia la rotta dell\'altra barca c\'è D.'),
@@ -131,12 +136,10 @@ half=(len(rows)+1)//2
 def cell(v,b=False): return f'<td style="font-weight:{800 if b else 500}">{v}</td>'
 trs=''.join('<tr>'+cell(f'{a[0]:03d}°',True)+cell(f'{a[1]:+d}°'.replace('+0','0'))+cell(f'{geo.norm(a[0]-a[1]):03d}°')+(cell(f'{c[0]:03d}°',True)+cell(f'{c[1]:+d}°')+cell(f'{geo.norm(c[0]-c[1]):03d}°') if c else '<td></td><td></td><td></td>')+'</tr>' for a,c in zip(rows[:half],rows[half:]+[None]))
 tab=f'<table style="font-size:26px; color:{INK}; width:760px"><tr><th style="width:16%">Pm</th><th style="width:16%">δ</th><th style="width:18%">Pb</th><th style="width:16%">Pm</th><th style="width:16%">δ</th><th style="width:18%">Pb</th></tr>{trs}</table>'
-side=card(tag('Come si usa')+p('Si entra con la <b>prora magnetica</b> Pm = Pv − d e si legge δ; poi Pb = Pm − δ.',26,INK)+p('Tra due righe si interpola: Pm 182° sta tra +3° e +4°, si prende +3°.',24)+note('5.3.3-2: Pv 184°, d 2°E → Pm 182° → δ +3° → Pb 179°',CORAL,32),None,32,14)
+side=card(tag('Come si usa')+p('Si entra con la <b>prora magnetica</b> Pm = Pv − d e si legge δ; poi Pb = Pm − δ.',26,INK)+p('<b>Non serve interpolare.</b> Prendi la riga più vicina: Pm 182° → riga 180°, δ +3°. Tra due righe la deviazione cambia al massimo di 1°, e la forchetta ufficiale della prora bussola è di ±3°.',24)+note('5.3.3-2: Pv 184°, d 2°E → Pm 182° → δ +3° → Pb 179°',CORAL,32),None,32,14)
 sec('deviazione', head('Carteggio · DD 131/2022','La tabella di deviazione')+f'<div style="display:flex; gap:32px; align-items:start">{tab}{side}</div>',
- notes='Estratto (Pm da 120° a 200°) della tabella di deviazione allegata agli esercizi ufficiali, la stessa per le carte 5/D e 42/D. Tabella completa nel sito del corso e nell\'allegato del decreto. Serve quando la traccia dice «è necessario utilizzare la tabella delle deviazioni allegata».')
+ notes='Estratto (Pm da 120° a 200°) della tabella di deviazione allegata agli esercizi ufficiali, la stessa per le carte 5/D e 42/D. Tabella completa nel sito del corso e nell\'allegato del decreto. Serve quando la traccia dice «è necessario utilizzare la tabella delle deviazioni allegata». Interpolazione: in tutta la tabella due righe consecutive differiscono al massimo di 1°, e le risposte ufficiali che la usano (5.3.3-2: Pb 176°-182°; 5.3.3-3: 133°-139°) hanno una forchetta di ±3°: la riga più vicina basta sempre. Interpolare non è un errore, ma non serve.')
 
-quiz_slide('quiz1','Quiz · Navigazione costiera',['1.7.6-31','1.7.6-47','1.7.6-12'],False)
-quiz_slide('quiz1r','Quiz · Le risposte',['1.7.6-31','1.7.6-47','1.7.6-12'],True)
 
 # ============ MAPPA GENERALE ============
 class Dummy: pass
@@ -152,7 +155,7 @@ sec('mappa', head('Carteggio · la carta','I punti cospicui della carta 5/D'), p
 
 # ============ ESERCIZI ============
 SETT={'5.1':('A','Elba',SEA),'5.2':('B','Castiglione e Punta Ala',PURPLE),'5.3':('C','Pianosa',BLUE),'5.4':('D','Giglio e Argentario',GREEN)}
-order_ex=[]
+order_ex=[]; exs={}
 def rng(r): return r.replace('\n',' ').replace('Lat.','Lat ').replace('Long.','Long ').replace('÷',' ÷ ')
 for f in es10.SOLS:
     S=f(); sid='e'+S.id.replace('.','_').replace('-','_')
@@ -167,11 +170,23 @@ for f in es10.SOLS:
     res=f'<div style="display:flex; flex-direction:column; gap:4px; background:{CORAL_T}; padding:16px 20px; border-radius:20px"><p style="font-size:26px; font-weight:900; color:{CORAL}">{S.res_txt}</p><p style="font-size:22px; font-weight:700; color:{INK}">Ufficiale: {rng(S.ex["risposta_ufficiale"])}</p></div>'
     sec(sid+'_s', head(f'Esercizio {S.id} · soluzione','Il tracciamento',st[2]), pinned=chart_html(S,128,290,1092,620,True,f'Tracciamento dell\'esercizio {S.id}')+pcol(ol+res,532,16),
         notes='Soluzione: '+' '.join(S.passi)+f' Risultato: {S.res_txt}. Ufficiale: {rng(S.ex["risposta_ufficiale"])}. Calcolo verificato con le coordinate OpenStreetMap dei punti cospicui; sulla carta 5/D il tracciamento a matita dà lo stesso risultato entro la forchetta.')
-    order_ex+=[sid+'_t',sid+'_s']
+    order_ex+=[sid+'_t',sid+'_s']; exs.setdefault(st[0],[]).append((S.id,sid+'_t'))
 
 closing(['Prima di tracciare converti tutto in vero: V = d + δ, e aggiorna la declinazione','Rilevamento trasportato: sposta il faro del cammino e ritraccia il primo rilevamento','Tre rilevamenti: devono incontrarsi quasi in un punto','Traverso: cerchio e tangente dal lato giusto; poi Pm, tabella, Pb','Intercettazione: sua velocità da A, parallela ad AB, arco della tua velocità'],
  'Prossima lezione · 11 · Carburante e autonomia','A casa: rifai sulla carta 5/D gli esercizi non svolti in aula.')
-write_deck(OUT,'Lezione 10 · Carteggio: navigazione costiera',
- ['cover','agenda','kit','t_stesso','t_diversi','t_tre','t_traverso','t_intercetta','deviazione','quiz1','quiz1r','mappa']+order_ex+['chiusura'],
- {"s1":{"description":"Apertura, kit e tecniche","start":"cover"},"s2":{"description":"Settore A · Elba","start":"e5_1_3_1_t"},"s3":{"description":"Settore B · Castiglione e Punta Ala","start":"e5_2_3_1_t"},
-  "s4":{"description":"Settore C · Pianosa","start":"e5_3_3_1_t"},"s5":{"description":"Settore D · Giglio e Argentario","start":"e5_4_3_1_t"}})
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'apertura.py')).read())
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'esame.py')).read())
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'schema_cart.py')).read())
+def sett(k,t,c,mins): return ('cap'+str('ABCD'.index(k)+2),t,[f'Esercizio {e}' for e,_ in exs[k]],c,mins,exs[k][0][1],(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso'))
+CAPS=[('cap1','Il kit e le cinque tecniche',['Il kit del carteggio costiero','Stesso punto, due rilevamenti','Due punti, due ore diverse','Tre rilevamenti','Passare al traverso','Intercettare una barca','La tabella di deviazione','I punti cospicui della carta 5/D'],CORAL,20,'kit',(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata')),
+ sett('A','Settore A · Elba',SEA,15),sett('B','Settore B · Castiglione e Punta Ala',PURPLE,10),sett('C','Settore C · Pianosa',BLUE,15),sett('D','Settore D · Giglio e Argentario',GREEN,15)]
+VER=[['1.7.4-2', '1.7.4-4'], ['1.7.6-4', '1.7.6-5'], ['1.7.6-10', '1.7.6-11'], ['1.7.4-8', '1.7.4-15'], ['1.7.6-15', '1.7.6-16']]
+RACC=[('1.7.6', ['1.7.6-12', '1.7.6-22', '1.7.6-32']), ('1.7.6', ['1.7.6-13', '1.7.6-24', '1.7.6-33']), ('1.7.6', ['1.7.6-18', '1.7.6-26', '1.7.6-35']), ('1.7.6', ['1.7.6-19', '1.7.6-28', '1.7.6-39']), ('1.7.6', ['1.7.6-21', '1.7.6-31', '1.7.6-41']), ('1.7.4', ['1.7.4-3', '1.7.4-22', '1.7.4-29']), ('1.7.4', ['1.7.4-10', '1.7.4-23', '1.7.4-30']), ('1.7.4', ['1.7.4-16', '1.7.4-24', '1.7.4-31']), ('1.7.4', ['1.7.4-18', '1.7.4-25', '1.7.4-32']), ('1.7.4', ['1.7.4-19', '1.7.4-28', '1.7.4-33']), ('1.7.3', ['1.7.3-2', '1.7.3-6', '1.7.3-10']), ('1.7.3', ['1.7.3-3', '1.7.3-7', '1.7.3-11'])]
+order,secs=schema(10,['cover','agenda','kit','t_stesso','t_diversi','t_tre','t_traverso','t_intercetta','deviazione','mappa']+order_ex+['chiusura'],CAPS,VER,RACC,
+ [('Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.'),
+  ('Disegna','Rilevamento, punto cospicuo, prora: uno schizzo con il Nord in alto risolve quasi tutti i quiz di navigazione costiera.'),
+  ('Rilevamento al contrario','Se sei a Sud-Est del faro, lo rilevi per Nord-Ovest: aggiungi o togli 180°.'),
+  ('Vero, magnetico, bussola','Declinazione e deviazione: Est positive, Ovest negative. V = d + δ.')],
+ ['Quiz 1-5 · navigazione costiera (15)','Quiz 6-10 · bussola, declinazione e deviazione (15)','Quiz 11-12 · navigazione elettronica (6)'],
+ 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. I quiz sui rilevamenti si risolvono con uno schizzo alla lavagna. Se il tempo stringe, lasciare per casa le slide 11 e 12.')
+write_deck(OUT,'Lezione 10 · Carteggio: navigazione costiera',order,secs)

@@ -27,19 +27,19 @@ def chart_html(S, x, y, w, h, solution, alt):
     for kind,v,t in glabs:
         if kind=='lon' and 60<v<w-230 and v-lastx>150: html+=lab(x+v+6,y+h-34,140,t,'#5E6E82',20,800); lastx=v
     sx,sy,L,t=sbl; html+=lab(x+sx,y+sy,max(L,120),t,'#16324F',20,900)
-    for lx,ly,lw,t,c,kind in chart.place_labels(labels,w,h,22):
+    for lx,ly,lw,t,c,kind in chart.place_labels(labels,w,h,22,[(sx-12,sy-8,max(L,120)+30,h-sy+8)]+[(4,v-32,150,32) for k_,v,_ in glabs if k_=='lat']+[(v,h-36,150,36) for k_,v,_ in glabs if k_=='lon'],C.segs,C.dots):
         html+=f'<p style="position:absolute; left:{x+lx:.0f}px; top:{y+ly:.0f}px; width:max-content; max-width:{lw+20:.0f}px; font-size:22px; line-height:1.3; font-weight:900; color:#FFFFFF; text-align:left; background:{c}; padding:2px 10px; border-radius:10px; white-space:nowrap">{t}</p>'
     return svg+html
 
 # ============ COVER + AGENDA ============
 cover(12,'Carteggio: lo scarroccio','Quando il vento ti spinge di lato: prora e rotta non coincidono più. I 24 esercizi ufficiali delle carte 5/D e 42/D',
  'Lezione 12. Esercizi ufficiali 5.1.4-5.4.4 (carta 5/D, 20 esercizi) e 5.5.4-5.8.4 (carta 42/D, 4 esercizi) dell\'Allegato A al DD 131/2022. Richiamo della lezione 4 (lo scarroccio e i nomi dei venti). Carte ridisegnate da OpenStreetMap; all\'esame si lavora sulle carte dell\'IIM.')
-blocks=[('0:00','25′','Scarroccio, venti, traverso dalla prora',CORAL),('0:25','25′','5/D settori A e B (10 esercizi)',SEA),('0:50','25′','5/D settori C e D (10)',BLUE),('1:15','25′','Carta 42/D: Bocche e Gallura (4)',PURPLE),('1:40','20′','Ripasso e dubbi',GREEN)]
+blocks=[('0:00','20′','Scarroccio, venti, traverso dalla prora',CORAL),('0:20','20′','5/D settori A e B (10 esercizi)',SEA),('0:40','20′','5/D settori C e D (10)',BLUE),('1:00','15′','Carta 42/D (4)',PURPLE),('1:15','45′','Raccolta quiz (36)',GREEN)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
 right=card(tag("La regola")+f'<p style="font-family:{H}; font-size:72px; font-weight:700; line-height:1.1; color:{INK}">Rv = Pv + Sc</p>'+p('Sc positivo se il vento arriva da sinistra e spinge a dritta; negativo se arriva da dritta',26,INK,700))
 left=card(tag('Tre domande, sempre',SEA)+'<ul style="font-size:26px; line-height:1.4; color:#34465E; display:flex; flex-direction:column; gap:10px"><li>da che lato arriva il vento? (segno di Sc)</li><li>la traccia dà la prora o la rotta?</li><li>il rilevamento polare si conta dalla prora</li></ul>',SEA_T,flex=1.4)
 sec('agenda', head('Lezione 12 · 2 ore','La lezione di oggi')+f'<div style="display:flex; gap:14px">{tl}</div><div style="display:flex; gap:24px">{left}{right}</div>',
- notes='Come nelle lezioni 10 e 11: per ogni esercizio una slide con la traccia e una con il tracciamento. Il punto chiave di oggi: la barca si muove sulla rotta, ma i rilevamenti polari e il traverso sono riferiti alla prora.')
+ notes='Quattro capitoli in 75 minuti, ognuno chiuso da una verifica da 2 quiz ufficiali; negli ultimi 45 minuti la raccolta di 36 quiz su prora e rotta, bussola, carte nautiche e pubblicazioni (1.7.7, 1.7.4, 1.7.2, 1.7.8). Come nelle lezioni 10 e 11: per ogni esercizio una slide con la traccia e una con il tracciamento. Il punto chiave di oggi: la barca si muove sulla rotta, ma i rilevamenti polari e il traverso sono riferiti alla prora.')
 
 # ============ VENTI ============
 V=[('Tramontana','N · 000°'),('Grecale','NE · 045°'),('Levante','E · 090°'),('Scirocco','SE · 135°'),('Ostro','S · 180°'),('Libeccio','SW · 225°'),('Ponente','W · 270°'),('Maestrale','NW · 315°')]
@@ -105,8 +105,6 @@ tiles=''.join(f'<div style="display:flex; flex-direction:column; gap:16px; backg
 sec('conti', head('Carteggio · i conti','Dalla rotta alla prora e ritorno')+f'<div style="display:grid; grid-template-columns:1fr 1fr; gap:28px">{tiles}</div>',
  notes='Il segno di Sc si decide sempre rispetto alla direzione in cui la barca avanza. 5.2.4-5: Rv 309° verso il punto 1 mg a sud dello Sparviero, Ponente da sinistra, Sc +5°: Pv 304°.')
 
-quiz_slide('quiz1','Quiz · Lo scarroccio',['1.7.7-19','1.7.7-21','1.7.7-26'],False)
-quiz_slide('quiz1r','Quiz · Le risposte',['1.7.7-19','1.7.7-21','1.7.7-26'],True)
 
 # ============ CARTA 42/D ============
 M=es10.Sol('5.5.4-1',(41.12,9.25)); M.pts=[]; M.lines=[]; M.carta='42D'
@@ -118,7 +116,7 @@ sec('carta42', head('Carteggio · la seconda carta','La carta 42/D'), pinned=cha
 # ============ ESERCIZI ============
 SETT={'5.1':('5/D · A','Elba',SEA),'5.2':('5/D · B','Castiglione e Punta Ala',PURPLE),'5.3':('5/D · C','Pianosa e Montecristo',BLUE),'5.4':('5/D · D','Giglio e Argentario',GREEN),
       '5.5':('42/D · A','Bonifacio',CORAL),'5.6':('42/D · B','La Maddalena e Monaci',CORAL),'5.7':('42/D · C','Golfo dell\'Asinara',CORAL),'5.8':('42/D · D','Golfo di Olbia',CORAL)}
-order_ex=[]
+order_ex=[]; exs={}
 def rng(r): return r.replace('\n',' ').replace('Ora traverso ','').replace('Ora del rilevamento: ','').replace('Lat.','Lat ').replace('Long.','Long ').replace('÷',' ÷ ')
 ASK={'ora':'l\'ora del traverso','pv':'la prora vera da tenere','vp':'la velocità propria da impostare','pos':'le coordinate del punto nave'}
 for f in es12.SOLS:
@@ -134,11 +132,25 @@ for f in es12.SOLS:
     res=f'<div style="display:flex; flex-direction:column; gap:4px; background:{CORAL_T}; padding:16px 20px; border-radius:20px"><p style="font-size:28px; font-weight:900; color:{CORAL}">{S.res_txt}</p><p style="font-size:22px; font-weight:700; color:{INK}">Ufficiale: {rng(S.ex["risposta_ufficiale"])}</p>{extra}</div>'
     sec(sid+'_s', head(f'Esercizio {S.id} · soluzione','Il tracciamento',st[2]), pinned=chart_html(S,128,290,1092,620,True,f'Tracciamento dell\'esercizio {S.id}')+pcol(ol+res,532,14),
         notes='Soluzione: '+' '.join(S.passi)+f' Risultato: {S.res_txt}. Ufficiale: {rng(S.ex["risposta_ufficiale"])}.'+('' if ok else ' Scarto rispetto alla forchetta ufficiale dovuto alla posizione del punto cospicuo sulla carta: sulla 5/D si usa il simbolo stampato.'))
-    order_ex+=[sid+'_t',sid+'_s']
+    order_ex+=[sid+'_t',sid+'_s']; exs.setdefault({'5.1':1,'5.2':1,'5.3':2,'5.4':2}.get(S.id[:3],3),[]).append((S.id,sid+'_t'))
 
 closing(['Rv = Pv + Sc: vento da sinistra, Sc positivo','Il vento si chiama da dove viene; la corrente per dove va','Traverso e rilevamenti polari si contano dalla prora: Rilv = Pv + ρ','Il punto però sta sulla rotta vera','Per arrivare in un punto: Pv = Rv − Sc, prora più al vento'],
  'Prossima lezione · 13 · Correnti (prima parte)','A casa: rifai sulla carta gli esercizi non svolti in aula.')
-write_deck(OUT,'Lezione 12 · Carteggio: lo scarroccio',
- ['cover','agenda','venti','scarroccio','traverso','conti','quiz1','quiz1r']+order_ex[:40]+['carta42']+order_ex[40:]+['chiusura'],
- {"s1":{"description":"Apertura, venti e regole dello scarroccio","start":"cover"},"s2":{"description":"Carta 5/D, settori A e B","start":"s5_1_4_1_t"},"s3":{"description":"Carta 5/D, settori C e D","start":"s5_3_4_1_t"},
-  "s4":{"description":"Carta 42/D","start":"carta42"}})
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'apertura.py')).read())
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'esame.py')).read())
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'schema_cart.py')).read())
+ART=(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso')
+CAPS=[('cap1','Scarroccio, venti e traverso',['I venti della rosa','Lo scarroccio','Il traverso si misura dalla prora','Dalla rotta alla prora e ritorno'],CORAL,20,'venti',(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata')),
+ ('cap2','Carta 5/D · settori A e B',[f'Esercizio {e}' for e,_ in exs[1]],SEA,20,exs[1][0][1],ART),
+ ('cap3','Carta 5/D · settori C e D',[f'Esercizio {e}' for e,_ in exs[2]],BLUE,20,exs[2][0][1],ART),
+ ('cap4','La carta 42/D',['La carta 42/D']+[f'Esercizio {e}' for e,_ in exs[3]],PURPLE,15,'carta42',ART)]
+VER=[['1.7.7-2', '1.7.7-4'], ['1.7.4-5', '1.7.4-34'], ['1.7.7-5', '1.7.7-6'], ['1.7.2-1', '1.7.2-3']]
+RACC=[('1.7.7', ['1.7.7-9', '1.7.7-14', '1.7.7-17']), ('1.7.7', ['1.7.7-11', '1.7.7-15', '1.7.7-19']), ('1.7.7', ['1.7.7-13', '1.7.7-16', '1.7.7-20']), ('1.7.4', ['1.7.4-1', '1.7.4-41', '1.7.4-46']), ('1.7.4', ['1.7.4-36', '1.7.4-42', '1.7.4-47']), ('1.7.4', ['1.7.4-37', '1.7.4-43', '1.7.4-48']), ('1.7.4', ['1.7.4-39', '1.7.4-44', '1.7.4-49']), ('1.7.2', ['1.7.2-7', '1.7.2-12', '1.7.2-16']), ('1.7.2', ['1.7.2-9', '1.7.2-13', '1.7.2-17']), ('1.7.2', ['1.7.2-10', '1.7.2-15', '1.7.2-18']), ('1.7.8', ['1.7.8-1', '1.7.8-3', '1.7.8-7']), ('1.7.8', ['1.7.8-2', '1.7.8-5', '1.7.8-8'])]
+order,secs=schema(12,['cover','agenda','venti','scarroccio','traverso','conti']+order_ex[:40]+['carta42']+order_ex[40:]+['chiusura'],CAPS,VER,RACC,
+ [('Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.'),
+  ('Prora o rotta?','La prora è dove punta la barca, la rotta è dove va davvero: Rv = Pv + Sc.'),
+  ('Disegna','Vento, prora e rotta in uno schizzo con il Nord in alto: il segno dello scarroccio si vede subito.'),
+  ('Vero, magnetico, bussola','Declinazione e deviazione: Est positive, Ovest negative.')],
+ ['Quiz 1-3 · prora, rotta e scarroccio (9)','Quiz 4-7 · bussola e rosa dei venti (12)','Quiz 8-12 · carte e pubblicazioni nautiche (15)'],
+ 'Ultimi 45 minuti della lezione. 12 slide da 3 quiz, ciascuna seguita dalle risposte: circa 3 minuti e mezzo per slide. Se il tempo stringe, lasciare per casa le slide 11 e 12.')
+write_deck(OUT,'Lezione 12 · Carteggio: lo scarroccio',order,secs)

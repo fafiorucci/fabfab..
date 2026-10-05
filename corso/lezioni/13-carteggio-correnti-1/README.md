@@ -2,9 +2,13 @@
 
 Slide (artifact Slides): https://claude.ai/artifact/VmVgzwDkQx6w3Ckv8CKAsF
 
-50 slide. Le 21 prove ufficiali 5.1.1, 5.2.1 e 5.3.1 (carta 5/D), con traccia e tracciamento.
+86 slide. Le 21 prove ufficiali 5.1.1, 5.2.1 e 5.3.1 (carta 5/D), con traccia e tracciamento.
 Prima degli esercizi: il triangolo delle velocità (Pv·Vp + Dc·Vc = Rv·Ve), dallo stimato all'osservato
-per trovare la corrente, i quattro casi degli esercizi e un quiz sulla deriva (1.7.7-24, -25, -27).
+per trovare la corrente, i quattro casi degli esercizi.
+
+Struttura: 4 capitoli in 75 minuti, ognuno aperto da una slide di apertura e chiuso da una verifica
+da 2 quiz ufficiali con la slide delle risposte; negli ultimi 45 minuti la raccolta di 36 quiz ufficiali (1.7.7, 1.7.5, 1.7.6 e 1.7.1)
+in 12 slide da 3, ognuna seguita dalle risposte (`apertura.py`, `esame.py`, `schema_cart.py`).
 
 - `cart/escorr.py`: soluzioni delle lezioni 13, 14 e 15 e controllo con le risposte ufficiali
   (`python3 cart/escorr.py`): lezione 13 20 su 21 dentro la forchetta.

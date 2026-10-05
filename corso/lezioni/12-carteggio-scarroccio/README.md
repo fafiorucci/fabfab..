@@ -2,9 +2,13 @@
 
 Slide (artifact Slides): https://claude.ai/artifact/Y86JJdezDF7GdAPJPXaR7Q
 
-58 slide. Le 24 prove ufficiali 5.1.4-5.4.4 (carta 5/D) e 5.5.4-5.8.4 (carta 42/D), con traccia e tracciamento.
+94 slide. Le 24 prove ufficiali 5.1.4-5.4.4 (carta 5/D) e 5.5.4-5.8.4 (carta 42/D), con traccia e tracciamento.
 Prima degli esercizi: i nomi dei venti, la regola Rv = Pv + Sc e il suo segno, il traverso misurato dalla prora
-(il punto sta sulla rotta), i conti tra prora, rotta e velocità, un quiz e la carta 42/D.
+(il punto sta sulla rotta), i conti tra prora, rotta e velocità e la carta 42/D.
+
+Struttura: 4 capitoli in 75 minuti, ognuno aperto da una slide di apertura e chiuso da una verifica
+da 2 quiz ufficiali con la slide delle risposte; negli ultimi 45 minuti la raccolta di 36 quiz ufficiali (1.7.7, 1.7.4, 1.7.2 e 1.7.8)
+in 12 slide da 3, ognuna seguita dalle risposte (`apertura.py`, `esame.py`, `schema_cart.py`).
 
 - `cart/es12.py`: soluzioni e controllo con le risposte ufficiali (`python3 cart/es12.py`): 22 su 24 dentro la forchetta.
   5.3.4-1 dipende dal limite della zona 2 di Montecristo stampato sulla carta (qui un cerchio approssimato, scarto 0,1′);

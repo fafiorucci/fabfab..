@@ -73,6 +73,8 @@ In grassetto nella tabella sopra; con questi inserimenti tutto l'Allegato A è c
 | 14 | [Correnti II, 5/D settore D](carteggio/lezione-14.md) | 5.4.1 | 18 |
 | 15 | [Carta 42/D: costiera e correnti](carteggio/lezione-15.md) | 5.5.1-5.8.1, 5.5.3-5.8.3 | 23 |
 
+Struttura delle lezioni 10-15: 75 minuti in capitoli (tecniche e gruppi di esercizi), ognuno aperto da una slide di apertura e chiuso da una verifica da 2 quiz ufficiali; negli ultimi 45 minuti la raccolta di 36 quiz ufficiali di navigazione cartografica (1.7) e, nella 11, di autonomia (1.2.3).
+
 Numerazione: `5.S.A-n` — S = carta e settore (5.1-5.4 = 5/D A-D, 5.5-5.8 = 42/D A-D), A = argomento (1 correnti, 2 carburante, 3 navigazione costiera, 4 scarroccio).
 
 Fonte dei testi: Allegato A al DD 131/2022 (atto ufficiale, art. 5 L. 633/1941), trascrizione verificata di [ilbeca/rotta-giusta](https://github.com/ilbeca/rotta-giusta).

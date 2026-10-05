@@ -74,7 +74,7 @@ def profile(x0,wl,L,hull=BOAT,uw=CORAL,st=NAVY,sw=3,fly=False,deck2=False,sil=Fa
 def water(w,y0,y1,op=0.16):
     return f'<rect x="0" y="{y0}" width="{w}" height="{y1-y0}" fill="{WATER}" fill-opacity="{op}"/>'+line(0,y0,w,y0,SEA,3)
 # ---- quiz ----
-def quiz_slide(id_, title, ps, reveal):
+def quiz_slide(id_, title, ps, reveal, e=None):
     cards=''
     for i,pp in enumerate(ps):
         x=Q[pp]; assert not x.get('osc'), pp; opts=''
@@ -87,16 +87,16 @@ def quiz_slide(id_, title, ps, reveal):
                 opts+=f'<p style="font-size:24px; line-height:1.35; color:{c}; padding:10px 12px">{"abc"[j]}) {o}</p>'
         foot = f'<p style="font-size:24px; font-weight:800; color:{SEA}">Risposta esatta: {"abc"[x["x"]]}</p>' if reveal else ''
         cards+=card(f'<p style="font-size:24px; font-weight:800; color:{CORAL}">Domanda {i+1} · quiz {pp}</p><p style="font-size:26px; line-height:1.35; font-weight:800; color:{INK}">{x["d"].strip()}</p><div style="display:flex; flex-direction:column; gap:6px">{opts}</div>{foot}', None if not reveal else '#FFFFFF', 28, 14)
-    e = 'Verifica · risposte esatte' if reveal else 'Verifica · quiz ufficiali DD 131/2022'
+    e = 'Verifica · risposte esatte' if reveal else (e or 'Verifica · quiz ufficiali DD 131/2022')
     notes = ('Risposte: ' + '; '.join(f'{pp} → {"abc"[Q[pp]["x"]]}) {Q[pp]["r"][Q[pp]["x"]].strip()}' for pp in ps)) if reveal else 'Leggere le domande, lasciare un minuto per rispondere, poi passare alla slide con le risposte esatte.'
     sec(id_, head(e, title, SEA if reveal else CORAL)+f'<div style="display:flex; gap:24px; align-items:stretch">{cards}</div>', notes=notes)
-def cover(lesson_no, title, subtitle, notes):
+def cover(lesson_no, title, subtitle, notes, title_size=104):
     slides.append(('cover', f'''<section id="cover" data-transition="fade" style="background:{NAVY}; color:#FFFFFF; font-family:{B}; padding:128px; display:flex; flex-direction:column; justify-content:space-between">
 {backdrop(True,0)}
 {lockup(True,112)}
 <div style="display:flex; flex-direction:column; gap:20px; width:840px">
 <p style="font-family:{HAND}; font-size:48px; font-weight:700; line-height:1.1; color:{DACC}">Lezione {lesson_no:02d} · 2 ore</p>
-<h1 style="font-family:{H}; font-size:104px; font-weight:700; line-height:1.05; color:#FFFFFF">{title}</h1>{squiggle(DACC,330)}
+<h1 style="font-family:{H}; font-size:{title_size}px; font-weight:700; line-height:1.05; color:#FFFFFF">{title}</h1>{squiggle(DACC,330)}
 <p style="font-size:34px; line-height:1.4; color:{DSOFT}">{subtitle}</p>
 </div>
 <p style="font-size:24px; font-weight:600; color:{DSOFT}">Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa</p>

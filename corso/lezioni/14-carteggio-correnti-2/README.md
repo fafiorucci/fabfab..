@@ -2,9 +2,13 @@
 
 Slide (artifact Slides): https://claude.ai/artifact/8By1QqWNDmsZMKSeoRdtpS
 
-44 slide. Le 18 prove ufficiali 5.4.1 (carta 5/D, Giglio e Argentario), con traccia e tracciamento.
+80 slide. Le 18 prove ufficiali 5.4.1 (carta 5/D, Giglio e Argentario), con traccia e tracciamento.
 Prima degli esercizi: ripasso del triangolo delle velocità, i quattro casi, tempi e velocità
-(t = d ÷ Ve, Vp da tenere, corrente tra due punti noti) e un quiz (1.7.7-29, -15, -11).
+(t = d ÷ Ve, Vp da tenere, corrente tra due punti noti).
+
+Struttura: 4 capitoli in 75 minuti, ognuno aperto da una slide di apertura e chiuso da una verifica
+da 2 quiz ufficiali con la slide delle risposte; negli ultimi 45 minuti la raccolta di 36 quiz ufficiali (1.7.7, 1.7.5, 1.7.6 e 1.7.2)
+in 12 slide da 3, ognuna seguita dalle risposte (`apertura.py`, `esame.py`, `schema_cart.py`).
 
 - `cart/escorr.py`: 18 su 18 dentro la forchetta ufficiale.
 - 5.4.1-4: la batimetrica dei 200 m non è nei nostri dati; la distanza di A dal faro è ricavata
