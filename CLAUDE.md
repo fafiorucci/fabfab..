@@ -26,7 +26,11 @@ o si crea un deck nuovo, dopo averlo pubblicato va rifatto l'export in `corso/ex
 3. Se il titolo è cambiato o il deck è nuovo, cancellare i file col vecchio nome e aggiornare l'elenco
    in `corso/export/README.md`, con i link di download diretto nella forma
    `[PPTX](pptx/<nome URL-encoded>.pptx?raw=true)` (idem PDF e HTML).
-4. Controllare a campione il PDF (pymupdf), poi commit e push insieme alle altre modifiche.
+4. Rifare la versione protetta in `corso/export/pdf-protetti/` (filigrana, stampa e copia bloccate):
+   `python3 corso/export/strumenti/proteggi.py pdf/<nome>.pdf pdf-protetti/<nome>.pdf <password>`
+   oppure `PDF_OWNER_PW=… corso/export/strumenti/proteggi_tutti.sh`. La password del proprietario non è nel
+   repository: chiederla a Fabrizio; se non la dà, segnalare che i PDF protetti non sono aggiornati.
+5. Controllare a campione il PDF (pymupdf), poi commit e push insieme alle altre modifiche.
 
 Requisiti dello script: Playwright + Chromium in `/opt/pw-browsers`, `python-pptx`, `Pillow`.
 Il browser usa il proxy di `HTTPS_PROXY` per caricare i Google Fonts.
