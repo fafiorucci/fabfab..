@@ -65,9 +65,11 @@ def leggi_json(percorso, vuoto):
 
 os.makedirs(BACKUP, exist_ok=True)
 config = leggi_json(CONFIG, {})
-if not config.get('pin'):
-    config['pin'] = f'{secrets.randbelow(10**6):06d}'
+if not config.get('pin') or 'indirizzo' not in config:
+    if not config.get('pin'):
+        config['pin'] = f'{secrets.randbelow(10**6):06d}'
     config.setdefault('scuola', 'Corso patente nautica')
+    config.setdefault('indirizzo', '')
     scrivi_json(CONFIG, config)
 archivio = leggi_json(ARCHIVIO, {'allievi': {}})
 if not archivio.get('allievi') and os.listdir(BACKUP):
@@ -277,22 +279,31 @@ class Gestore(SimpleHTTPRequestHandler):
         return self.errore(404, 'Non trovato.')
 
 
+def ip_della_rete():
+    """L'indirizzo della scheda che porta al router (quella del wifi o del cavo in uso).
+
+    Si chiede al sistema quale scheda userebbe per uscire verso internet: nessun dato viene
+    spedito. Le schede virtuali (VirtualBox, VPN, Hyper-V, WSL…) non hanno quella strada e
+    restano fuori. Se in dati/config.json c'è "indirizzo", vale quello.
+    """
+    fisso = re.sub(r'^https?://', '', str(config.get('indirizzo') or '').strip()).split(':')[0].strip('/')
+    if fisso:
+        return fisso
+    for destinazione in ('8.8.8.8', '1.1.1.1', '192.168.255.255'):
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+                s.connect((destinazione, 80))
+                ip = s.getsockname()[0]
+            if ip and not ip.startswith(('127.', '0.', '169.254.')):
+                return ip
+        except OSError:
+            continue
+    return None
+
+
 def indirizzi(porta):
-    ips = set()
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(('10.255.255.255', 1))
-        ips.add(s.getsockname()[0])
-        s.close()
-    except OSError:
-        pass
-    try:
-        for info in socket.getaddrinfo(socket.gethostname(), None, socket.AF_INET):
-            ips.add(info[4][0])
-    except OSError:
-        pass
-    ips = sorted(ip for ip in ips if not ip.startswith('127.'))
-    return [f'http://{ip}:{porta}' for ip in ips]
+    ip = ip_della_rete()
+    return [f'http://{ip}:{porta}'] if ip else []
 
 
 def main():
@@ -315,6 +326,8 @@ def main():
     print('  Allievi (stesso wifi), aprite:')
     for r in righe or [f'http://<indirizzo di questo PC>:{porta}']:
         print('     ' + r)
+    print('  (Se i telefoni non si collegano, scrivi l\'indirizzo giusto in dati/config.json,')
+    print('   alla voce "indirizzo", per esempio "192.168.1.29", e riavvia.)')
     print()
     print(f'  Istruttore:  http://localhost:{porta}/docente')
     print(f'  PIN istruttore:  {config["pin"]}   (si cambia in dati/config.json)')

@@ -78,6 +78,9 @@ SE QUALCOSA NON VA
   · controlla che telefono e computer siano sullo STESSO wifi;
   · rifai il passo del firewall: Start → scrivi "Consenti app tramite Windows
     Firewall" → "Modifica impostazioni" → trova "python" → spunta "Privata";
+  · se il QR mostra un indirizzo sbagliato (capita con più schede di rete):
+    apri dati\config.json col Blocco note, scrivi l'indirizzo giusto dopo
+    "indirizzo" (per esempio "indirizzo": "192.168.1.29") e riavvia il server;
   · alcuni wifi "ospiti" non lasciano parlare tra loro i dispositivi
     ("isolamento client"): chiedi a chi gestisce il router di disattivarlo,
     oppure usa l'hotspot di un telefono o un router tuo.
