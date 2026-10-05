@@ -2,7 +2,7 @@
 
 Slide (artifact Slides): https://claude.ai/artifact/8By1QqWNDmsZMKSeoRdtpS
 
-83 slide. Le 18 prove ufficiali 5.4.1 (carta 5/D, Giglio e Argentario), con traccia e tracciamento.
+80 slide. Le 18 prove ufficiali 5.4.1 (carta 5/D, Giglio e Argentario), con traccia e tracciamento.
 Prima degli esercizi: ripasso del triangolo delle velocità, i quattro casi, tempi e velocità
 (t = d ÷ Ve, Vp da tenere, corrente tra due punti noti).
 

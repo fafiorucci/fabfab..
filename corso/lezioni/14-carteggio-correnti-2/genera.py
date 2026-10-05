@@ -8,7 +8,7 @@ import geo, chart, es10, escorr, json
 LES=int(sys.argv[1]) if len(sys.argv)>1 else 14
 OUT=SP+f'/lez{LES}/project'
 GREY='#97A6B4'
-LB.ICON_T.update({'Le famiglie d\'esame':'grid','Gli strumenti di base':'dividers','I quattro problemi della corrente':'current','3° problema: arrivare a un\'ora data':'current','Passaggio al traverso + 3 RilB simultanei':'lighthouse','4° problema: dallo stimato all\'osservato':'dividers','La lezione di oggi':'lifebuoy','La corrente':'wind','Dallo stimato all\'osservato':'dividers','Il triangolo delle velocità':'current',
+LB.ICON_T.update({'Ripasso: triangolo e quattro problemi':'current','Le famiglie d\'esame':'grid','Gli strumenti di base':'dividers','I quattro problemi della corrente':'current','3° problema: arrivare a un\'ora data':'current','Passaggio al traverso + 3 RilB simultanei':'lighthouse','4° problema: dallo stimato all\'osservato':'dividers','La lezione di oggi':'lifebuoy','La corrente':'wind','Dallo stimato all\'osservato':'dividers','Il triangolo delle velocità':'current',
  'Quattro casi, quattro costruzioni':'dividers','Tempi e velocità':'compass','La carta 42/D':'map','Rilevamenti alla bussola':'compass','La traccia':'map','Il tracciamento':'dividers'})
 def pcol(inner,w=532,gap=20,left=1260,top=290): return f'<div style="position:absolute; left:{left}px; top:{top}px; width:{w}px; display:flex; flex-direction:column; gap:{gap}px">{inner}</div>'
 col=lambda inner,w=520,gap=24: f'<div style="display:flex; flex-direction:column; gap:{gap}px; width:{w}px">{inner}</div>'
@@ -93,7 +93,7 @@ sec('agenda', head(f'Lezione {LES} · 2 ore','La lezione di oggi')+f'<div style=
  notes='Quattro capitoli in 75 minuti, ognuno chiuso da una verifica da 2 quiz ufficiali; negli ultimi 45 minuti la raccolta di 36 quiz ufficiali di navigazione. Come nelle lezioni 10-12: per ogni esercizio una slide con la traccia e una con il tracciamento, con il nostro risultato e la forchetta ufficiale.')
 
 intro=['cover','agenda']
-if LES in (13,14):
+if LES==13:
     sec('corrente', head('Carteggio · la corrente','Il triangolo delle velocità'), pinned=svgp(128,Y,W,Hh,tb,'Triangolo delle velocità: il vettore del motore più il vettore della corrente dà il moto sul fondo')+tri_labels(128,Y)+pcol(
      term('Il motore','Spinge la barca nell\'acqua lungo la prora vera Pv, alla velocità propulsiva Vp.')+term('La corrente','Sposta tutta l\'acqua, e la barca con lei, verso Dc alla velocità Vc.')+term('Sul fondo','La somma dei due vettori è la rotta vera Rv con la velocità effettiva Ve: è lì che la barca va davvero.')),
      notes='Quiz 1.7.7-24, -25, -27 (deriva e corrente). In carteggio si disegna un\'ora di moto: un vettore lungo Vp miglia per la prora, uno lungo Vc miglia per la corrente. La terza lato è Rv e Ve.')
@@ -105,7 +105,7 @@ if LES==13:
      pinned=svgp(X,Y,W,Hh,sb,'Il punto stimato calcolato con prora e velocità e il punto osservato: il segmento che li unisce è la corrente')+lbl,
      notes='Esempio 5.1.1-2: stimato e osservato a Capo d\'Enfola; Dc 225°. Attenzione al verso: dallo stimato verso l\'osservato, non il contrario.')
     intro.append('stimato')
-if True:
+if LES==13:
     T=[('1° problema','Noti Pv, Vp, Dc e Vc → Rv e Ve. Da A la prora per Vp, dalla punta la corrente per Vc: da A alla punta leggi Rv e Ve.',CORAL,CORAL_T),
        ('2° problema','Noti Rv (la rotta per B), Vp, Dc e Vc → Pv e Ve. Da A la corrente; dalla punta il compasso di Vp taglia la rotta: quella direzione è la Pv. Tempo = AB ÷ Ve.',SEA,SEA_T),
        ('3° problema','Noti Rv e Ve (arrivo a un\'ora data: Ve = AB ÷ t), Dc e Vc → Pv e Vp. Da A la corrente; dalla sua punta al punto della Ve sulla rotta: Pv e Vp.',PURPLE,LILAC_T),
@@ -125,6 +125,19 @@ if True:
      pinned=svgp(X,Y,W,Hh,b,'Terzo problema della corrente: dal vertice della corrente al punto della velocità effettiva sulla rotta si leggono prora vera e velocità propulsiva')+lbl,
      notes='3° problema della corrente: 5.1.1-1, 5.2.1-3, 5.3.1-5, 5.3.1-6, 5.4.1-1, 5.4.1-13, 5.4.1-14, 5.8.1-1. Con la Pb (5.2.1-3): Pb = Pv − d − δ. Nel 4° + 3° (5.1.1-5, 5.4.1-9, 5.5.1-2) la corrente si ricava prima dallo stimato e dall\'osservato.')
     intro.append('terzo')
+else:
+    R=[('Il triangolo','un\'ora di moto','Vettore della prora (Pv, lungo Vp) più vettore della corrente (Dc, lungo Vc): il terzo lato è la rotta Rv, lungo Ve.'),
+       ('1° problema','Pv, Vp, Dc, Vc → Rv, Ve','Somma dei vettori da A: da A alla punta leggi Rv e Ve.'),
+       ('2° problema','Rv, Vp, Dc, Vc → Pv, Ve','Da A la corrente; dalla punta il compasso di Vp taglia la rotta: Pv. Tempo = distanza ÷ Ve.'),
+       ('3° problema','Rv, Ve (ora data), Dc, Vc → Pv, Vp','Ve = distanza ÷ tempo sulla rotta; dalla punta della corrente al punto della Ve: Pv e Vp.'),
+       ('4° problema','stimato e osservato → Dc, Vc','Dallo stimato all\'osservato: direzione Dc, lunghezza ÷ tempo = Vc.'),
+       ('4° + 2° e 4° + 3°','combinati','Prima la corrente (4°), poi la nuova rotta (2°) o l\'arrivo all\'ora voluta (3°).')]
+    cols=[NAVY,CORAL,SEA,PURPLE,BLUE,GREEN]
+    rows=''.join(f'<tr><td style="font-family:{H}; font-size:34px; font-weight:700; color:{c}; padding:8px 12px">{a}</td><td style="font-weight:800; color:{INK}; padding:8px 12px">{b}</td><td style="padding:8px 12px">{d}</td></tr>' for (a,b,d),c in zip(R,cols))
+    tab=f'<table style="font-size:26px; line-height:1.35; color:#34465E; width:1664px"><tr><th style="width:22%; text-align:left">Problema</th><th style="width:28%; text-align:left">Noti → da trovare</th><th style="width:50%; text-align:left">Costruzione (un\'ora di moto)</th></tr>{rows}</table>'
+    sec('ripasso', head('Carteggio · ripasso dalla lezione 13','Ripasso: triangolo e quattro problemi')+tab,
+     notes='Ripasso in 3-4 minuti di quanto spiegato nella lezione 13 (slide del triangolo delle velocità, dei quattro problemi e del 3° problema). Numerazione dei manuali: 1° 9 esercizi, 2° 13, 3° 8, 4° 18, combinati 4.', gap=28)
+    intro.append('ripasso')
 if LES==15:
     F=[(160,140),(560,60),(980,170)]; A=(560,330); L0=(150,560); Bx=(560,560)
     b=SEA_BG+''.join(seg(f,P(math.degrees(math.atan2(A[0]-f[0],-(A[1]-f[1]))),f,math.hypot(A[0]-f[0],A[1]-f[1])+60),c,3) for f,c in zip(F,(NAVY,PURPLE,SEA)))
@@ -180,9 +193,10 @@ FAMS={13:['1° problema della corrente','2° problema della corrente','3° probl
 WH={'1° problema della corrente':'Quattro problemi','2° problema della corrente':'Quattro problemi','3° problema della corrente':'3° problema','4° problema della corrente':'4° problema' if LES==13 else 'Quattro problemi',
     '4° + 2° problema della corrente':'Quattro problemi','4° + 3° problema della corrente':'Quattro problemi · 3° problema','Passaggio al traverso + 3 RilB simultanei di 3 punti cospicui':'3 RilB simultanei',
     'Trasporto 2 RilB di 1 punto cospicuo':'Lezione 10','Trasporto 2 RilB di 2 punti cospicui':'Lezione 10','Intercettazione':'Lezione 10'}
-basi_slide('basi',[('Corrente','Si nomina per dove va (Dc). In carteggio si disegna un\'ora: vettori lunghi Vp, Vc, Ve miglia.')])
-famiglie_slide('famiglie',FAMS,where=WH,note_extra=' Nella lezione 15 le famiglie sono contate solo per gli esercizi della carta 42/D: i numeri della colonna «Es.» sono quelli di tutto il corso.' if LES==15 else '')
-intro[2:2]=['basi','famiglie']
+if LES!=13: WH.update({k:'Ripasso' for k in WH if 'problema' in k})
+famiglie_slide('famiglie',FAMS,where=WH,fs=21 if LES==15 else 23,promemoria=['corrente: si nomina per dove va (Dc)'],note_extra=' Nella lezione 15 le famiglie sono contate solo per gli esercizi della carta 42/D: i numeri della colonna «Es.» sono quelli di tutto il corso.' if LES==15 else '')
+intro[2:2]=['famiglie']
+if LES==15: intro=['cover','agenda','famiglie','carta42','bussola42','tresim','ripasso']
 
 # ============ ESERCIZI ============
 SETT={'5.1':('5/D · A','Elba',SEA),'5.2':('5/D · B','Castiglione e Punta Ala',PURPLE),'5.3':('5/D · C','Pianosa e Montecristo',BLUE),'5.4':('5/D · D','Giglio e Argentario',GREEN),
@@ -230,15 +244,15 @@ ART=(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un
 CMP=(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata')
 def exch(cid,t,k,c,mins,pre=(),start=None): return (cid,t,list(pre)+[f'{e} · {fm}' for e,_,fm in exs[k]],c,mins,start or exs[k][0][1],ART)
 if LES==13:
-    CAPS=[('cap1','La corrente',['Gli strumenti di base','Le famiglie d\'esame','Il triangolo delle velocità','4° problema: stimato e osservato','I quattro problemi della corrente','3° problema: arrivare a un\'ora data'],CORAL,20,'basi',CMP),
+    CAPS=[('cap1','La corrente',['Le famiglie d\'esame','Il triangolo delle velocità','4° problema: stimato e osservato','I quattro problemi della corrente','3° problema: arrivare a un\'ora data'],CORAL,20,'famiglie',CMP),
           exch('cap2','Settore A · Elba',1,SEA,15),exch('cap3','Settore B · Punta Ala',2,PURPLE,15),exch('cap4','Settore C · Pianosa e Montecristo',3,BLUE,25)]
     plan=['Quiz 1-3 · prora, rotta, scarroccio e deriva (9)','Quiz 4-7 · tempo, spazio e velocità (12)','Quiz 8-12 · navigazione costiera e coordinate (15)']
 elif LES==14:
-    CAPS=[('cap1','Ripasso: triangolo e tempi',['Gli strumenti di base','Le famiglie d\'esame','Il triangolo delle velocità','I quattro problemi della corrente','3° problema: arrivare a un\'ora data','Tempi e velocità'],CORAL,15,'basi',CMP),
+    CAPS=[('cap1','Ripasso: triangolo e tempi',['Le famiglie d\'esame','Ripasso: triangolo e quattro problemi','Tempi e velocità'],CORAL,15,'famiglie',CMP),
           exch('cap2','Esercizi 5.4.1-1…6',1,SEA,20),exch('cap3','Esercizi 5.4.1-7…12',2,PURPLE,20),exch('cap4','Esercizi 5.4.1-13…18',3,BLUE,20)]
     plan=['Quiz 1-3 · prora, rotta, scarroccio e deriva (9)','Quiz 4-6 · tempo, spazio e velocità (9)','Quiz 7-12 · navigazione costiera e carte (18)']
 else:
-    CAPS=[('cap1','La carta 42/D e le famiglie d\'esame',['Gli strumenti di base','Le famiglie d\'esame','La carta 42/D','Rilevamenti alla bussola','I quattro problemi della corrente','3° problema: arrivare a un\'ora data','Passaggio al traverso + 3 RilB simultanei'],CORAL,15,'basi',CMP),
+    CAPS=[('cap1','La carta 42/D e le famiglie d\'esame',['Le famiglie d\'esame','La carta 42/D','Rilevamenti alla bussola','Passaggio al traverso + 3 RilB simultanei','Ripasso: triangolo e quattro problemi'],CORAL,15,'famiglie',CMP),
           exch('cap2','Navigazione costiera sulla 42/D',1,SEA,25),exch('cap3','Correnti: Bonifacio e Maddalena',2,PURPLE,20),exch('cap4','Correnti: Asinara e Olbia',3,BLUE,15)]
     plan=['Quiz 1-6 · carte nautiche e coordinate (18)','Quiz 7-10 · navigazione costiera e bussola (12)','Quiz 11-12 · navigazione elettronica (6)']
 VER={13: [['1.7.7-7', '1.7.7-21'], ['1.7.5-6', '1.7.5-38'], ['1.7.7-24', '1.7.7-25'], ['1.7.5-45', '1.7.5-51']], 14: [['1.7.7-6', '1.7.7-8'], ['1.7.5-3', '1.7.5-46'], ['1.7.7-11', '1.7.7-12'], ['1.7.6-6', '1.7.6-30']], 15: [['1.7.2-47', '1.7.2-48'], ['1.7.6-5', '1.7.6-37'], ['1.7.7-7', '1.7.7-14'], ['1.7.4-6', '1.7.4-40']]}[LES]

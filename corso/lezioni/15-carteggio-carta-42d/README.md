@@ -2,7 +2,7 @@
 
 Slide (artifact Slides): https://claude.ai/artifact/CHpFbvwVBv2BLp8fvbYpPx
 
-94 slide. Le 23 prove ufficiali della carta 42/D non ancora svolte: navigazione costiera 5.5.3-5.8.3
+92 slide. Le 23 prove ufficiali della carta 42/D non ancora svolte: navigazione costiera 5.5.3-5.8.3
 (10 esercizi) e correnti 5.5.1-5.8.1 (13 esercizi), con traccia e tracciamento.
 Prima degli esercizi: la carta 42/D con i fari usati, il ripasso dei rilevamenti bussola
 (Rilv = Rilb + δ + d); in chiusura il congedo dal corso.

@@ -2,7 +2,7 @@
 
 Slide (artifact Slides): https://claude.ai/artifact/1dsfk73ddAt2WCCwMDhFnJ
 
-98 slide. Le 23 prove ufficiali delle famiglie 5.1.2, 5.2.2, 5.3.2 e 5.4.2 (DD 131/2022), ciascuna con una slide
+97 slide. Le 23 prove ufficiali delle famiglie 5.1.2, 5.2.2, 5.3.2 e 5.4.2 (DD 131/2022), ciascuna con una slide
 per la traccia e una per il tracciamento. Prima degli esercizi: il conto del carburante (tempo, consumo, riserva del 30%),
 il doppio rilevamento 45°-90°, la velocità ricavata dalla carta, il punto da rilevamento e distanza e la mappa.
 

@@ -69,7 +69,7 @@ FAM={
  '4° + 3° problema della corrente':'Prima la corrente (4°), poi Pv e Vp per arrivare all\'ora voluta (3°).',
 }
 assert set(FAM)==set(_C)
-def famiglie_slide(sid, fams, title='Le famiglie d\'esame', note_extra='', where=None, fs=23):
+def famiglie_slide(sid, fams, title='Le famiglie d\'esame', note_extra='', where=None, fs=23, promemoria=None):
     """Tabella: famiglia del libro, esercizi ufficiali, come si risolve, e dove (slide)."""
     where=where or {}
     rows=''
@@ -80,8 +80,16 @@ def famiglie_slide(sid, fams, title='Le famiglie d\'esame', note_extra='', where
     tab=(f'<table style="font-size:{fs}px; line-height:1.3; color:#34465E; width:1664px">'
          f'<tr><th style="width:30%; text-align:left">Famiglia (come nei manuali)</th><th style="width:4%">Es.</th><th style="width:50%; text-align:left">Come si risolve</th><th style="width:16%; text-align:left">Dove</th></tr>{rows}</table>')
     notes='Famiglie e numero di esercizi ufficiali: '+'; '.join(f'{k}: {", ".join(_C[k])}' for k in fams)+'.'+note_extra
-    sec(sid, head('Carteggio · gli esercizi d\'esame',title)+tab, notes=notes, gap=24)
+    strip=''
+    if promemoria is not None:
+        items=PROMEMORIA+list(promemoria)
+        strip=(f'<div style="display:flex; flex-direction:column; gap:6px; background:{SUN_T}; padding:14px 22px; border-radius:20px">'
+               f'<p style="font-size:20px; font-weight:900; letter-spacing:1px; text-transform:uppercase; color:{ORANGE}">Promemoria · gli strumenti di base (lezione 10)</p>'
+               f'<p style="font-size:21px; line-height:1.35; font-weight:600; color:{INK}">{" · ".join(items)}</p></div>')
+        notes+=' Promemoria degli strumenti di base, spiegati per intero nella lezione 10 (slide «Gli strumenti di base») e nelle lezioni 4 e 8.'
+    sec(sid, head('Carteggio · gli esercizi d\'esame',title)+tab+strip, notes=notes, gap=20)
 
+PROMEMORIA=['Coordinate con la squadretta','1° = 60′, 0,3 h = 18 min','miglia sulla scala delle latitudini','T = M ÷ V','declinazione aggiornata all\'anno','Pv = Pb + d + δ','Rilv = Rilb + d + δ','Rilv = Pv + ρ']
 BASI=[('Coordinate','Lettura e riporto: squadretta sul punto, latitudine sul bordo verticale, longitudine su quello orizzontale. Lezione 8.'),
       ('Calcoli sessagesimali','1° = 60′; i decimi di primo restano decimi (42°49′,7). Ore: 0,3 h = 18 min, 25 min = 0,42 h. Lezione 4.'),
       ('Rotte','Lettura e tracciamento con le squadrette dalla rosa più vicina; si legge il valore vero. Lezione 4.'),

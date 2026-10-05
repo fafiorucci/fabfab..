@@ -2,7 +2,7 @@
 
 Slide (artifact Slides): https://claude.ai/artifact/VmVgzwDkQx6w3Ckv8CKAsF
 
-89 slide. Le 21 prove ufficiali 5.1.1, 5.2.1 e 5.3.1 (carta 5/D), con traccia e tracciamento.
+88 slide. Le 21 prove ufficiali 5.1.1, 5.2.1 e 5.3.1 (carta 5/D), con traccia e tracciamento.
 Prima degli esercizi: il triangolo delle velocità (Pv·Vp + Dc·Vc = Rv·Ve), dallo stimato all'osservato
 per trovare la corrente, i quattro casi degli esercizi.
 

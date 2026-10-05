@@ -107,11 +107,10 @@ sec('conti', head('Carteggio · i conti','Dalla rotta alla prora e ritorno')+f'<
  notes='Il segno di Sc si decide sempre rispetto alla direzione in cui la barca avanza. 5.2.4-5: Rv 309° verso il punto 1 mg a sud dello Sparviero, Ponente da sinistra, Sc +5°: Pv 304°.')
 
 
-basi_slide('basi',[('Scarroccio','Rv = Pv + Sc: vento da sinistra Sc +, da dritta Sc −. Il vento si nomina da dove viene.')])
 famiglie_slide('famiglie',['Scarroccio prora vera','Scarroccio prora vera · coordinate punto','Scarroccio prora vera · coordinate al traverso','Scarroccio prora vera · ora del traverso','Scarroccio rotta vera · coordinate al traverso','Scarroccio rotta vera · ora del traverso','Scarroccio rotta vera · velocità · coordinate punto','Scarroccio velocità'],
  where={'Scarroccio prora vera':'Dalla rotta alla prora','Scarroccio prora vera · coordinate punto':'Traverso dalla prora','Scarroccio prora vera · coordinate al traverso':'Traverso dalla prora','Scarroccio prora vera · ora del traverso':'Traverso dalla prora',
         'Scarroccio rotta vera · coordinate al traverso':'Dalla rotta alla prora','Scarroccio rotta vera · ora del traverso':'Dalla rotta alla prora','Scarroccio rotta vera · velocità · coordinate punto':'Dalla rotta alla prora','Scarroccio velocità':'Dalla rotta alla prora'},
- note_extra=' «Prora vera» nel nome della famiglia: la traccia dà la rotta e va calcolata la prora (Pv = Rv − Sc), da cui si misurano traverso e rilevamenti polari. «Rotta vera»: la traccia dà la prora e va calcolata la rotta da tracciare (Rv = Pv + Sc).')
+ promemoria=['Rv = Pv + Sc (vento da sinistra +)'], note_extra=' «Prora vera» nel nome della famiglia: la traccia dà la rotta e va calcolata la prora (Pv = Rv − Sc), da cui si misurano traverso e rilevamenti polari. «Rotta vera»: la traccia dà la prora e va calcolata la rotta da tracciare (Rv = Pv + Sc).')
 
 # ============ CARTA 42/D ============
 M=es10.Sol('5.5.4-1',(41.12,9.25)); M.pts=[]; M.lines=[]; M.carta='42D'
@@ -148,13 +147,13 @@ exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'apertura.py')
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'esame.py')).read())
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'schema_cart.py')).read())
 ART=(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso')
-CAPS=[('cap1','Scarroccio, venti e traverso',['Gli strumenti di base','Le famiglie d\'esame','I venti della rosa','Lo scarroccio','Il traverso si misura dalla prora','Dalla rotta alla prora e ritorno'],CORAL,20,'basi',(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata')),
+CAPS=[('cap1','Scarroccio, venti e traverso',['Le famiglie d\'esame','I venti della rosa','Lo scarroccio','Il traverso si misura dalla prora','Dalla rotta alla prora e ritorno'],CORAL,20,'famiglie',(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata')),
  ('cap2','Carta 5/D · settori A e B',[f'{e} · {fm}' for e,_,fm in exs[1]],SEA,20,exs[1][0][1],ART),
  ('cap3','Carta 5/D · settori C e D',[f'{e} · {fm}' for e,_,fm in exs[2]],BLUE,20,exs[2][0][1],ART),
  ('cap4','La carta 42/D',['La carta 42/D']+[f'{e} · {fm}' for e,_,fm in exs[3]],PURPLE,15,'carta42',ART)]
 VER=[['1.7.7-2', '1.7.7-4'], ['1.7.4-5', '1.7.4-34'], ['1.7.7-5', '1.7.7-6'], ['1.7.2-1', '1.7.2-3']]
 RACC=[('1.7.7', ['1.7.7-9', '1.7.7-14', '1.7.7-17']), ('1.7.7', ['1.7.7-11', '1.7.7-15', '1.7.7-19']), ('1.7.7', ['1.7.7-13', '1.7.7-16', '1.7.7-20']), ('1.7.4', ['1.7.4-1', '1.7.4-41', '1.7.4-46']), ('1.7.4', ['1.7.4-36', '1.7.4-42', '1.7.4-47']), ('1.7.4', ['1.7.4-37', '1.7.4-43', '1.7.4-48']), ('1.7.4', ['1.7.4-39', '1.7.4-44', '1.7.4-49']), ('1.7.2', ['1.7.2-7', '1.7.2-12', '1.7.2-16']), ('1.7.2', ['1.7.2-9', '1.7.2-13', '1.7.2-17']), ('1.7.2', ['1.7.2-10', '1.7.2-15', '1.7.2-18']), ('1.7.8', ['1.7.8-1', '1.7.8-3', '1.7.8-7']), ('1.7.8', ['1.7.8-2', '1.7.8-5', '1.7.8-8'])]
-order,secs=schema(12,['cover','agenda','basi','famiglie','venti','scarroccio','traverso','conti']+order_ex[:40]+['carta42']+order_ex[40:]+['chiusura'],CAPS,VER,RACC,
+order,secs=schema(12,['cover','agenda','famiglie','venti','scarroccio','traverso','conti']+order_ex[:40]+['carta42']+order_ex[40:]+['chiusura'],CAPS,VER,RACC,
  [('Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.'),
   ('Prora o rotta?','La prora è dove punta la barca, la rotta è dove va davvero: Rv = Pv + Sc.'),
   ('Disegna','Vento, prora e rotta in uno schizzo con il Nord in alto: il segno dello scarroccio si vede subito.'),

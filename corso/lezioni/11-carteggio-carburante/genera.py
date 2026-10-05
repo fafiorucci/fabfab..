@@ -113,9 +113,8 @@ sec('trav', head('Carteggio · le tecniche','Calcolo carburante e traverso')+col
  pinned=svgp(X,Y,W,Hh,b,'La rotta passa al traverso del faro: il punto A è il piede della perpendicolare dal faro alla rotta')+''.join(pill(X+lx,Y+ly,440,t,c,22) for lx,ly,t,c in L),
  notes='Famiglia d\'esame «Calcolo carburante e traverso»: 5.1.2-1 (Cerboli, Rv 180°, Capo d\'Ortano al traverso di dritta a 4,9 mg: A è 4,9 mg a est del capo; ufficiale 29-31 litri) e 5.4.2-1 (da Capo d\'Uomo verso Giglio Porto a 20 kn, fino al traverso di Punta Lividonia: 5,0 mg, 21,0 litri; ufficiale 19,5-21,5).')
 
-basi_slide('basi',[('Carburante','Litri = ore × consumo orario, più la riserva del 30% (× 1,3) se la traccia non dice altro.')])
 famiglie_slide('famiglie',['Calcolo carburante','Calcolo carburante e traverso','Calcolo carburante e RilP 45°/90°','Calcolo carburante e RilP 45°/90° e velocità'],
- where={'Calcolo carburante':'Il conto · Rilevamento e distanza','Calcolo carburante e traverso':'Carburante e traverso','Calcolo carburante e RilP 45°/90°':'RilP 45°/90°','Calcolo carburante e RilP 45°/90° e velocità':'RilP 45°/90° e velocità'})
+ where={'Calcolo carburante':'Il conto · Rilevamento e distanza','Calcolo carburante e traverso':'Carburante e traverso','Calcolo carburante e RilP 45°/90°':'RilP 45°/90°','Calcolo carburante e RilP 45°/90° e velocità':'RilP 45°/90° e velocità'},promemoria=['litri = ore × consumo × 1,3'])
 
 # ============ MAPPA ============
 M=es10.Sol('5.1.3-1',(42.62,10.55)); M.pts=[]; M.lines=[]
@@ -155,11 +154,11 @@ exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'apertura.py')
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'esame.py')).read())
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'schema_cart.py')).read())
 def sett(k,t,c,mins): return ('cap'+str('ABCD'.index(k)+2),t,[f'{e} · {fm}' for e,_,fm in exs[k]],c,mins,exs[k][0][1],(chart_scene(),'Illustrazione: carta nautica con rotta e rosa dei venti e un faro acceso'))
-CAPS=[('cap1','Il conto e le tecniche',['Gli strumenti di base','Le famiglie d\'esame','Il conto del carburante','Calcolo carburante e RilP 45°/90°','RilP 45°/90° e velocità','Calcolo carburante e traverso','Un punto da rilevamento e distanza','I punti cospicui di oggi'],CORAL,20,'basi',(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata')),
+CAPS=[('cap1','Il conto e le tecniche',['Le famiglie d\'esame','Il conto del carburante','Calcolo carburante e RilP 45°/90°','RilP 45°/90° e velocità','Calcolo carburante e traverso','Un punto da rilevamento e distanza','I punti cospicui di oggi'],CORAL,20,'famiglie',(compass_scene(),'Illustrazione: bussola con la rosa graduata e una rotta tratteggiata')),
  sett('A','Settore A · Elba',SEA,15),sett('B','Settore B · Castiglione e Punta Ala',PURPLE,10),sett('C','Settore C · Pianosa e Montecristo',BLUE,15),sett('D','Settore D · Giglio e Argentario',GREEN,15)]
 VER=[['1.2.3-1', '1.2.3-2'], ['1.7.5-3', '1.7.5-4'], ['1.2.3-4', '1.2.3-5'], ['1.7.5-5', '1.7.5-8'], ['1.7.1-2', '1.7.1-6']]
 RACC=[('1.2.3', ['1.2.3-3', '1.2.3-7', '1.2.3-18']), ('1.2.3', ['1.2.3-6', '1.2.3-9', '1.2.3-19']), ('1.7.5', ['1.7.5-9', '1.7.5-22', '1.7.5-32']), ('1.7.5', ['1.7.5-10', '1.7.5-23', '1.7.5-33']), ('1.7.5', ['1.7.5-11', '1.7.5-24', '1.7.5-34']), ('1.7.5', ['1.7.5-12', '1.7.5-25', '1.7.5-36']), ('1.7.5', ['1.7.5-13', '1.7.5-26', '1.7.5-37']), ('1.7.5', ['1.7.5-19', '1.7.5-28', '1.7.5-40']), ('1.7.5', ['1.7.5-21', '1.7.5-29', '1.7.5-50']), ('1.7.1', ['1.7.1-7', '1.7.1-11', '1.7.1-18']), ('1.7.1', ['1.7.1-8', '1.7.1-14', '1.7.1-19']), ('1.7.1', ['1.7.1-10', '1.7.1-17', '1.7.1-21'])]
-order,secs=schema(11,['cover','agenda','basi','famiglie','conto','t4590','tvel','trav','rildist','mappa']+order_ex+['chiusura'],CAPS,VER,RACC,
+order,secs=schema(11,['cover','agenda','famiglie','conto','t4590','tvel','trav','rildist','mappa']+order_ex+['chiusura'],CAPS,VER,RACC,
  [('Leggi tutte e tre','Prima di scegliere leggi le tre risposte fino in fondo: spesso due si somigliano e cambia una parola.'),
   ('Minuti in decimi','Trasforma i minuti in ore prima di moltiplicare: 15 minuti sono 0,25 ore, 35 minuti 0,58.'),
   ('La riserva','Carburante = ore × consumo, più il 30% di riserva se il quiz non dice altro: × 1,3.'),
