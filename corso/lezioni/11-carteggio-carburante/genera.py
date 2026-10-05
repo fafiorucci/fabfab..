@@ -31,7 +31,7 @@ def chart_html(S, x, y, w, h, solution, alt):
     return svg+html
 
 # ============ COVER + AGENDA ============
-cover(11,'Carteggio: carburante e autonomia','Quanta nafta serve? Distanze sulla carta, velocità dal doppio rilevamento e il 30% di riserva: i 23 esercizi ufficiali della carta 5/D',
+cover(11,'Carteggio: carburante e autonomia','Quanto carburante serve? Distanze sulla carta, velocità dal doppio rilevamento e il 30% di riserva: i 23 esercizi ufficiali della carta 5/D',
  'Lezione 11. Esercizi ufficiali 5.1.2, 5.2.2, 5.3.2 e 5.4.2 dell\'Allegato A al DD 131/2022 (carta 5/D). Tutti chiedono il carburante con la riserva: il 30% salvo diversa indicazione (quiz 1.2.3-1). Carte ridisegnate da OpenStreetMap per spiegare il tracciamento; all\'esame si lavora sulla carta 5/D.')
 blocks=[('0:00','20′','Il conto, il 45°-90° e la velocità dalla carta',CORAL),('0:20','15′','Settore A · Elba (5 esercizi)',SEA),('0:35','10′','Settore B · Castiglione (5)',PURPLE),('0:45','15′','Settore C · Pianosa (7)',BLUE),('1:00','15′','Settore D · Giglio (6)',GREEN),('1:15','45′','Raccolta quiz (36)',ORANGE)]
 tl=''.join(f'<div style="flex:{int(d[:-1])}; display:flex; flex-direction:column; gap:10px; border-top:10px solid {c}; padding:16px 12px 0px 0px"><p style="font-size:24px; font-weight:800; color:{c}">{t} · {d}</p><p style="font-size:24px; line-height:1.3; font-weight:700; color:{INK}">{x}</p></div>' for t,d,x,c in blocks)
