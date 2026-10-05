@@ -6,6 +6,19 @@ OUT=SP+'/app'
 Q={q['p']:q for q in json.load(open(SP+'/rotta-giusta/site/dati/quiz.json')) if q.get('p')}
 LEZ=[('L01','Lezione 01','Teoria dello scafo','/home/user/fabfab../corso/export/pdf/Lezione 01 - Teoria dello scafo.pdf'),
      ('L02','Lezione 02','Motori, elica e timone','/home/user/fabfab../corso/export/pdf/Lezione 02 - Motori, elica e timone.pdf')]
+# Filigrana come nei PDF protetti (corso/export/strumenti/proteggi.py): diagonale leggera + avviso in basso
+FILIGRANA='Fabrizio Fiorucci · vietata la duplicazione'
+AVVISO='La proprietà intellettuale di questo documento è di Fabrizio Fiorucci, ne sono proibite la divulgazione e la duplicazione'
+def filigrana(page):
+    font=pymupdf.Font('helv'); W,H=page.rect.width,page.rect.height
+    size=W/40; tw=font.text_length(FILIGRANA,fontsize=size); ang=math.degrees(math.atan2(H,W))
+    p0=pymupdf.Point(W/2,H/2); sh=page.new_shape()
+    sh.insert_text(pymupdf.Point(W/2-tw/2,H/2+size/3),FILIGRANA,fontsize=size,fontname='helv',
+                   color=(0.5,0.55,0.6),fill_opacity=0.07,morph=(p0,pymupdf.Matrix(-ang)))
+    sh.commit(overlay=True)
+    fs=W/120
+    page.insert_text((W-font.text_length(AVVISO,fontsize=fs)-W*0.02,H-H*0.015),AVVISO,
+                     fontsize=fs,fontname='helv',color=(0.37,0.43,0.51),fill_opacity=0.8)
 STOP=set('della delle dello degli nella nelle sono essere viene vengono quale quali come cosa ogni anche solo dove quando sulla sulle questo questa questi tutte tutti molto dalla dalle alla alle allo agli unità ecc oppure mentre perché però hanno avere'.split())
 def toks(t):
     return [w[:6] for w in re.findall(r"[a-zàèéìòù]{4,}", t.lower()) if w not in STOP]
@@ -39,6 +52,7 @@ for code,num,titolo,pdf in LEZ:
     zoom=1280/d[0].rect.width
     for c in caps:
         for i in c['pagine']:
+            filigrana(d[i])
             pix=d[i].get_pixmap(matrix=pymupdf.Matrix(zoom,zoom))
             im=Image.open(io.BytesIO(pix.tobytes('png'))).convert('RGB')
             im.save(f'{OUT}/slides/{code}-{i+1:03d}.jpg','JPEG',quality=74,optimize=True,progressive=True)

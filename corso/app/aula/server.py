@@ -259,6 +259,20 @@ class Gestore(SimpleHTTPRequestHandler):
                 salva()
             return self.rispondi(200, {'ok': True})
 
+        if p == '/api/cancella':
+            # l'allievo cancella il proprio account: serve anche il codice, così non lo fa chi trova il telefono aperto
+            with lock:
+                aid, a = per_token(self.headers.get('X-Token'))
+                if not a:
+                    return self.errore(401, 'Accesso scaduto: rientra con nome e codice.')
+                if not hmac.compare_digest(impronta(str(dati.get('codice', '')).strip(), a['sale']), a['codice']):
+                    time.sleep(0.6)
+                    return self.errore(403, 'Codice personale errato.')
+                del archivio['allievi'][aid]
+                salva()
+                print(f'{datetime.now():%H:%M:%S}  account cancellato dall\'allievo: {a["nome"]}')
+            return self.rispondi(200, {'ok': True})
+
         if p.startswith('/api/docente/'):
             if not self.docente_ok():
                 return self.errore(403, 'PIN errato.')

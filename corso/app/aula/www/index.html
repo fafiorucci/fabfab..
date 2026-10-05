@@ -104,6 +104,14 @@ p{margin:0}
 .viewer{background:var(--navy); border-radius:22px; overflow:hidden; box-shadow:var(--shadow)}
 .viewer img{display:block; width:100%; aspect-ratio:16/9; object-fit:contain}
 .viewer{position:relative; touch-action:pan-y}
+.viewer .fsbtn{position:absolute; right:10px; bottom:10px; width:40px; height:40px; border-radius:12px; border:0; background:rgba(11,24,38,.72); color:#fff; display:grid; place-items:center; cursor:pointer}
+.fsbtn svg,.fs .fsx svg{width:22px; height:22px}
+/* schermo intero: solo la slide, si sfoglia toccando i lati o scorrendo */
+.fs{position:fixed; inset:0; z-index:50; background:#0B1826; display:flex; align-items:center; justify-content:center; touch-action:pan-y; user-select:none; -webkit-user-select:none}
+.fs img{width:100%; height:100%; object-fit:contain; display:block}
+.fs .fsx{position:absolute; top:max(10px,env(safe-area-inset-top)); right:max(10px,env(safe-area-inset-right)); width:44px; height:44px; border-radius:50%; border:0; background:rgba(255,255,255,.16); color:#fff; display:grid; place-items:center; cursor:pointer}
+.fs .fsc{position:absolute; top:max(14px,env(safe-area-inset-top)); left:max(14px,env(safe-area-inset-left)); font-family:var(--display); font-weight:700; color:#fff; background:rgba(228,87,46,.9); border-radius:20px; padding:1px 12px; font-size:14px; font-variant-numeric:tabular-nums; pointer-events:none}
+.fs .fsh{position:absolute; top:50%; transform:translateY(-50%); width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.12); color:#fff; display:grid; place-items:center; font-size:20px; pointer-events:none}
 /* telefono in orizzontale: lo schermo è basso, la slide si adatta all'altezza e la barra non resta fissa */
 @media (orientation:landscape) and (max-height:520px){
   header.bar{position:relative}
@@ -145,7 +153,8 @@ input[type=text]:focus{outline:none; border-color:var(--sea)}
 .check{display:flex; gap:10px; align-items:flex-start; font-size:14px}
 .check input{margin-top:3px; width:20px; height:20px; accent-color:var(--sea); flex:none}
 footer.foot{max-width:960px; margin:0 auto; padding:8px 16px 28px; display:flex; gap:10px; align-items:center; color:var(--soft); font-size:13px; font-weight:700}
-footer.foot svg{width:28px; height:28px; flex:none}
+footer.foot svg{width:28px; height:28px; flex:none; align-self:flex-start}
+footer.foot .legal{display:block; margin-top:4px; font-size:11.5px; font-weight:600; line-height:1.45; opacity:.85}
 @media (max-width:640px){
   .hero .in{grid-template-columns:1fr} .hero .art{max-width:200px}
   .stats{gap:8px} .stat{padding:12px} .stat b{font-size:24px} .stat span{font-size:12px}
@@ -179,7 +188,7 @@ footer.foot svg{width:28px; height:28px; flex:none}
     <h1>Preparo le lezioni 1 e 2…</h1>
   </div>
 </main>
-<footer class="foot"><span id="logo-f"></span><span>Fabrizio Fiorucci · Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa</span></footer>
+<footer class="foot"><span id="logo-f"></span><span>Fabrizio Fiorucci · Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa<small class="legal">© Fabrizio Fiorucci, tutti i diritti riservati. La proprietà intellettuale di slide, testi e immagini del corso è di Fabrizio Fiorucci: ne sono proibite la divulgazione e la duplicazione, anche parziale, senza autorizzazione scritta. Il materiale è a uso personale degli allievi.</small></span></footer>
 
 <script>
 (function(){
@@ -298,7 +307,7 @@ function stato(L){
 }
 const errati=()=>Object.entries(S.risposte).filter(([q,a])=>!a.ok && C.quiz[q]).map(([q])=>q);
 function bar(v){return el('div',{class:'bar-p',role:'progressbar','aria-valuenow':v,'aria-valuemin':0,'aria-valuemax':100},el('i',{style:'width:'+v+'%'}));}
-function go(fn,...a){window.scrollTo({top:0}); fn(...a); navCur(fn);}
+function go(fn,...a){ if(typeof chiudiFs==='function') chiudiFs(); cur=null; window.scrollTo({top:0}); fn(...a); navCur(fn);}
 function navCur(fn){
   document.getElementById('nav-home').toggleAttribute('aria-current',false);
   document.getElementById('nav-prog').toggleAttribute('aria-current',false);
@@ -354,7 +363,7 @@ function vRegistrazione(){
     head(mode==='aula'?'In aula':'Primo accesso',mode==='aula'?'Entra nel corso':'Registrati','var(--sea)','lifebuoy',false),
     el('label',{class:'fld',for:'f-nome'},'Il tuo nome',nome),
     mode==='aula'?el('label',{class:'fld',for:'f-cod'},'Il tuo codice personale',cod,el('span',{class:'muted',style:'font-weight:600; font-size:14px'},'La prima volta lo scegli tu; poi, con lo stesso nome e codice, ritrovi i progressi anche su un altro telefono o tablet.')):null,
-    el('label',{class:'check',for:'f-cons'},cons,el('span',{},'Acconsento al salvataggio del mio nome e dei miei progressi (slide viste, quiz risposti) per seguire il corso. Posso chiederne la cancellazione in ogni momento.')),
+    el('label',{class:'check',for:'f-cons'},cons,el('span',{},'Acconsento al salvataggio del mio nome e dei miei progressi (slide viste, quiz risposti) per seguire il corso. Posso cancellarli in ogni momento dalla pagina Progressi. So che slide, testi e immagini sono proprietà intellettuale di Fabrizio Fiorucci e mi impegno a non divulgarli né duplicarli.')),
     msg,
     el('button',{class:'btn sea',type:'submit',style:'align-self:flex-start'},'Inizia il corso'));
   $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
@@ -424,8 +433,8 @@ function vRaccolta(L,ci){
 /* ---------- visore slide ---------- */
 const basso=matchMedia('(orientation:landscape) and (max-height:520px)');
 // slide + pulsanti; sul telefono si sfoglia anche toccando i lati o scorrendo col dito
-function slideBox(im,nav,prima,dopo){
-  const v=el('div',{class:'viewer'},im);
+function slideBox(im,nav,prima,dopo,fs){
+  const v=el('div',{class:'viewer'},im,fs?el('button',{class:'fsbtn',type:'button','aria-label':'Schermo intero',onclick:e=>{e.stopPropagation(); apriFs(false);}},svgEl(ICON_FS,'','0 0 24 24')):null);
   let x0=null;
   v.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
   v.addEventListener('touchend',e=>{ if(x0==null)return; const dx=e.changedTouches[0].clientX-x0; x0=null;
@@ -434,8 +443,45 @@ function slideBox(im,nav,prima,dopo){
     if(f>.7&&dopo)dopo(); else if(f<.3&&prima)prima(); });
   return el('div',{class:'stack slidebox',style:'gap:14px'},v,nav);
 }
-function fitSlide(){ if(!basso.matches) return; const b=document.querySelector('.slidebox'); if(b) requestAnimationFrame(()=>b.scrollIntoView({block:'start'})); }
-basso.addEventListener('change',fitSlide);
+const ICON_FS='<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>';
+const ICON_X='<path d="M6 6L18 18M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>';
+let cur=null, fsEl=null, fsAuto=false;   // cur = slide mostrata: {src, alt, label, prima, dopo, fine}
+function apriFs(auto){
+  if(!cur) return;
+  fsAuto=auto;
+  if(!fsEl){
+    fsEl=el('div',{class:'fs',role:'dialog','aria-label':'Slide a schermo intero'});
+    let x0=null;
+    fsEl.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
+    fsEl.addEventListener('touchend',e=>{ if(x0==null)return; const dx=e.changedTouches[0].clientX-x0; x0=null;
+      if(Math.abs(dx)>50){ fsVai(dx<0?1:-1); } },{passive:true});
+    fsEl.addEventListener('click',e=>{ if(e.target.closest('.fsx'))return; const f=e.clientX/innerWidth; if(f>.6)fsVai(1); else if(f<.4)fsVai(-1); });
+    document.body.append(fsEl);
+    const d=document.documentElement, rq=d.requestFullscreen||d.webkitRequestFullscreen;
+    if(rq){ try{ const r=rq.call(d); if(r&&r.catch) r.catch(()=>{}); }catch(e){} }
+    try{ screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{}); }catch(e){}
+  }
+  fsRender();
+}
+function fsVai(d){ if(d>0){ if(cur.dopo) cur.dopo(); else chiudiFs(); } else if(cur.prima) cur.prima(); }
+function fsRender(){
+  if(!fsEl||!cur) return;
+  fsEl.replaceChildren(el('img',{src:cur.src,alt:cur.alt}),
+    cur.prima?el('span',{class:'fsh',style:'left:10px','aria-hidden':'true'},'‹'):null,
+    el('span',{class:'fsh',style:'right:10px','aria-hidden':'true'},cur.dopo?'›':'✓'),
+    el('span',{class:'fsc'},cur.label),
+    el('button',{class:'fsx',type:'button','aria-label':'Esci dallo schermo intero',onclick:()=>chiudiFs()},svgEl(ICON_X,'','0 0 24 24')));
+}
+function chiudiFs(){
+  if(!fsEl) return;
+  fsEl.remove(); fsEl=null; fsAuto=false;
+  const ex=document.exitFullscreen||document.webkitExitFullscreen;
+  if((document.fullscreenElement||document.webkitFullscreenElement)&&ex){ try{ const r=ex.call(document); if(r&&r.catch) r.catch(()=>{}); }catch(e){} }
+  try{ screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock(); }catch(e){}
+}
+document.addEventListener('keydown',e=>{ if(fsEl&&e.key==='Escape') chiudiFs(); });
+// telefono girato in orizzontale su una slide: si apre da solo lo schermo intero; tornando in verticale si chiude
+basso.addEventListener('change',()=>{ if(basso.matches&&cur&&document.querySelector('.slidebox')) apriFs(true); else if(!basso.matches&&fsAuto) chiudiFs(); });
 function vSlide(L,ci,k){
   const c=lez(L).capitoli[ci], p=c.pagine[k];
   seenAdd(L,p);
@@ -450,8 +496,10 @@ function vSlide(L,ci,k){
     el('div',{class:'row',style:'justify-content:space-between'},el('button',{class:'link',onclick:()=>go(vLezione,L)},'← '+lez(L).num),el('span',{class:'counter'},(k+1)+' / '+c.pagine.length)),
     el('h2',{style:'color:'+HUES[ci%5]},c.titolo),
     slideBox(el('img',{src:img(L,p),alt:'Slide '+p+' della '+lez(L).num.toLowerCase()+': '+c.titolo}),el('div',{class:'vnav'},prev,next),
-      k>0?()=>vSlide(L,ci,k-1):null, !last?()=>vSlide(L,ci,k+1):null)));
-  fitSlide();
+      k>0?()=>vSlide(L,ci,k-1):null, !last?()=>vSlide(L,ci,k+1):null, true)));
+  cur={src:img(L,p), alt:'Slide '+p+' della '+lez(L).num.toLowerCase(), label:(k+1)+' / '+c.pagine.length,
+       prima:k>0?()=>vSlide(L,ci,k-1):null, dopo:!last?()=>vSlide(L,ci,k+1):null};
+  if(fsEl) fsRender(); else if(basso.matches) apriFs(true);
   document.onkeydown=e=>{ if(!document.querySelector('.viewer'))return; if(e.key==='ArrowRight'&&!last)vSlide(L,ci,k+1); if(e.key==='ArrowLeft'&&k>0)vSlide(L,ci,k-1); };
 }
 function vRivedi(qid,set,state){
@@ -523,7 +571,34 @@ function vStorico(){
     resetCard(),
     mode==='aula'?el('div',{class:'card reset',style:'--hue:var(--sea)'},el('p',{class:'muted',style:'font-weight:700'},'Telefono o tablet in prestito? Esci quando hai finito: i progressi restano salvati in aula.'),
       el('button',{class:'btn ghost',onclick:()=>{store.flush(); tok.set(null); S=blank(); renderWho(); go(vRegistrazione);}},'Esci da questo dispositivo')):null,
+    head('Privacy','Cancella il mio account','var(--coral)','flag',false),
+    cancellaCard(),
     localNote()));
+}
+function cancellaCard(){
+  const box=el('div',{class:'card reset',style:'--hue:var(--coral)'});
+  const first=()=>[el('p',{class:'muted',style:'font-weight:700'},mode==='aula'?'Cancelli nome, codice e tutti i progressi dal computer dell’aula.':'Cancelli nome e tutti i progressi salvati.'),
+    el('button',{class:'btn ghost',onclick:ask},'Cancella il mio account')];
+  const ask=()=>{
+    const cod=el('input',{type:'text',id:'f-del',inputmode:'numeric',autocomplete:'off',maxlength:'6',placeholder:'4 cifre',style:'max-width:160px'});
+    const msg=el('p',{class:'errmsg',role:'alert'});
+    box.replaceChildren(el('div',{class:'stack',style:'gap:12px; width:100%'},
+      el('p',{style:'font-weight:800'},'Sicuro? Il tuo nome e tutti i progressi spariscono per sempre: non si torna indietro.'),
+      mode==='aula'?el('label',{class:'fld',for:'f-del'},'Per conferma scrivi il tuo codice personale',cod):null, msg,
+      el('div',{class:'row',style:'gap:8px'},el('button',{class:'btn ghost',onclick:()=>box.replaceChildren(...first())},'Annulla'),
+        el('button',{class:'btn coral',onclick:async()=>{
+          try{
+            clearTimeout(store.t); store.t=null;
+            if(mode==='aula'){ await api('cancella',{codice:cod.value.trim()}); tok.set(null); }
+            else if(mode==='cloud'){ await db.doc('data/users/'+uid+'/profile').delete(); }
+            try{ localStorage.removeItem(KEY); }catch(e){}
+          }catch(e){ msg.textContent=e.status?e.message:'Non riesco a cancellare adesso: riprova tra poco.'; return; }
+          S=blank(); renderWho(); go(vRegistrazione);
+          $app.prepend(el('p',{class:'notice net'},'Account cancellato: nome e progressi sono stati eliminati.'));
+        }},'Sì, cancella tutto'))));
+    if(mode==='aula') cod.focus();
+  };
+  box.append(...first()); return box;
 }
 function resetCard(){
   const box=el('div',{class:'card reset',style:'--hue:var(--blue)'});
