@@ -117,7 +117,7 @@ sec('agenda', head('Lezione 09 · 2 ore · solo vela','La lezione di oggi')+f'<d
 s,P_=yacht(180,505,720)
 b=f'<rect x="0" y="0" width="1092" height="620" fill="{SKY}"/>'+s+f'<rect x="0" y="505" width="1092" height="115" fill="{WATER}" fill-opacity="0.45"/>'+line(0,505,1092,505,SEA,3)
 b+=f'<circle cx="{P_["mx"]:.0f}" cy="{P_["by"]:.0f}" r="9" fill="{CORAL}"/><rect x="{P_["mx"]+0.035*720-8:.0f}" y="{P_["dm"]-6:.0f}" width="16" height="10" fill="{CORAL}"/>'
-lbl=pill(X+P_['mx']+18,Y+14,110,'albero',NAVY)+pill(X+160,Y+170,150,'paterazzo',NAVY)+pill(X+690,Y+180,120,'strallo',NAVY)
+lbl=pill(X+P_['mx']+18,Y+14,110,'albero',NAVY)+pill(X+250,Y+160,150,'paterazzo',NAVY)+pill(X+690,Y+180,120,'strallo',NAVY)
 lbl+=pill(X+P_['mx']+30,Y+P_['cro'][1]-18,120,'crocette',NAVY,22)+pill(X+P_['mx']+24,Y+372,100,'sartie',NAVY,22)+pill(X+P_['mx']+40,Y+P_['dm']-50,90,'landa',CORAL,22)
 lbl+=pill(X+330,Y+300,100,'randa',SOFT)+pill(X+620,Y+310,100,'genoa',SOFT)+pill(X+250,Y+P_['by']+8,90,'boma',PURPLE,22)+pill(X+P_['mx']-150,Y+P_['by']-46,100,'trozza',CORAL,22)
 lbl+=pill(X+660,Y+462,90,'scafo',SEA)+pill(X+650,Y+568,220,'bulbo zavorrato',SEA,22)+pill(X+80,Y+560,110,'timone',SEA,22)
@@ -137,7 +137,9 @@ b+=f'<rect x="{be-50:.0f}" y="{dky-6:.0f}" width="100" height="10" rx="5" fill="
 b+=line(P_['mtack'][0],P_['mtack'][1]-10,P_['mtack'][0]-4,P_['mtack'][1]+20,GREEN,5)
 b+=line(P_['mclew'][0],P_['mclew'][1],P_['mclew'][0]+30,P_['mclew'][1]+2,BLUE,6)
 gc=(mx-0.06*L_,dm-0.025*L_); b+=line(gc[0],gc[1],mx-0.2*L_,P_['dk']+0.02*L_,SUN,4)
-lbl=pill(X+mx+20,Y+20,100,'drizze',CORAL,22)+pill(X+mx-110,Y+by-50,90,'vang',PURPLE,22)+pill(X+40,Y+by+22,250,'scotta e paranco',SUN,22,INK)
+pr_=f'<rect x="30" y="30" width="210" height="200" rx="18" fill="#FFFFFF" stroke="#C9D3DD" stroke-width="3"/>'+line(110,44,110,58,NAVY,4)+f'<circle cx="110" cy="74" r="18" fill="#FFFFFF" stroke="{NAVY}" stroke-width="4"/><circle cx="110" cy="176" r="18" fill="#FFFFFF" stroke="{NAVY}" stroke-width="4"/>'+''.join(line(x,74,x,176,SUN,4) for x in (96,104,116,124))+line(110,194,110,212,NAVY,4)+line(124,176,170,214,SUN,4)+arrow(170,214,196,196,CORAL,4,12)
+b+=pr_
+lbl=lab(X+40,Y+236,200,'paranco 4:1: tiri 1/4',NAVY,20,900,'center')+pill(X+mx+20,Y+20,100,'drizze',CORAL,22)+pill(X+mx-110,Y+by-50,90,'vang',PURPLE,22)+pill(X+40,Y+by+22,250,'scotta e paranco',SUN,22,INK)
 lbl+=pill(X+100,Y+dky+16,220,'carrello (trasto)',NAVY,22)+pill(X+mx+20,Y+by-24,150,'cunningham',GREEN,22)+pill(X+P_['mclew'][0]-70,Y+P_['mclew'][1]-56,140,'tesabase',BLUE,22)
 lbl+=pill(X+340,Y+P_['dk']+34,200,'scotta del genoa',SUN,22,INK)
 txt=sterm('Manovre correnti','Servono a manovrare le vele: drizze per issarle, scotte per regolarle, vang, cunningham e tesabase per la forma. Stralli e sartie non lo sono.')+sterm('Vang e cunningham','Il vang trattiene il boma, regola la flessione dell\'albero e la superficie portante della randa; non dipende dal paterazzo. Il cunningham è un paranco verticale che tesa la parte prodiera bassa della randa.')+sterm('Paranco e carrello','Il paranco di scotta demoltiplica lo sforzo: con 4 tratti di cima tiri un quarto della forza. Il carrello (trasto) sposta il punto di scotta; le scotte si danno volta sul paranco, non sul carrello.')
@@ -433,7 +435,7 @@ X=700
 
 # ============ RIPASSO VELA ============
 RV=[('Andature','Bolina 45°, traverso 90°, lasco 135°, poppa 180°. Controvento: angolo morto.',CORAL,CORAL_T),
-    ('Apparente','Sempre più a prua del reale; di bolina più forte, in poppa più debole.',SEA,SEA_T),
+    ('Vento apparente','Sempre più a prua del reale; di bolina più forte, in poppa più debole.',SEA,SEA_T),
     ('Mure','Il lato da cui entra il vento. Mure a dritta: precedenza.',PURPLE,LILAC_T),
     ('Stesse mure','Chi è sopravento si scosta da chi è sottovento.',BLUE,BLUE_T),
     ('CV e CD','CV a proravia del CD: poggiera. A poppavia: orziera.',GREEN,GREEN_T),
