@@ -103,6 +103,15 @@ p{margin:0}
 .cap .dot{width:40px; height:40px; border-radius:50%; background:var(--hue); color:#fff; display:grid; place-items:center; font-family:var(--display); font-weight:700; font-size:18px}
 .viewer{background:var(--navy); border-radius:22px; overflow:hidden; box-shadow:var(--shadow)}
 .viewer img{display:block; width:100%; aspect-ratio:16/9; object-fit:contain}
+.viewer{position:relative; touch-action:pan-y}
+/* telefono in orizzontale: lo schermo è basso, la slide si adatta all'altezza e la barra non resta fissa */
+@media (orientation:landscape) and (max-height:520px){
+  header.bar{position:relative}
+  .slidebox{gap:6px!important}
+  .viewer{display:flex; justify-content:center; border-radius:12px; align-self:center; max-width:100%}
+  .viewer img{width:auto; max-width:100%; height:calc(100dvh - 62px)}
+  .slidebox .vnav .btn{padding:6px 14px; font-size:14px}
+}
 .vnav{display:flex; align-items:center; gap:12px; justify-content:space-between; flex-wrap:wrap}
 .counter{font-family:var(--display); font-weight:700; color:#fff; background:var(--coral); border-radius:20px; padding:2px 12px; font-variant-numeric:tabular-nums}
 .q{display:flex; flex-direction:column; gap:10px; border-left-color:var(--coral)}
@@ -410,6 +419,20 @@ function vRaccolta(L,ci){
 }
 
 /* ---------- visore slide ---------- */
+const basso=matchMedia('(orientation:landscape) and (max-height:520px)');
+// slide + pulsanti; sul telefono si sfoglia anche toccando i lati o scorrendo col dito
+function slideBox(im,nav,prima,dopo){
+  const v=el('div',{class:'viewer'},im);
+  let x0=null;
+  v.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
+  v.addEventListener('touchend',e=>{ if(x0==null)return; const dx=e.changedTouches[0].clientX-x0; x0=null;
+    if(Math.abs(dx)>50){ if(dx<0&&dopo)dopo(); if(dx>0&&prima)prima(); } },{passive:true});
+  v.addEventListener('click',e=>{ const r=v.getBoundingClientRect(), f=(e.clientX-r.left)/r.width;
+    if(f>.7&&dopo)dopo(); else if(f<.3&&prima)prima(); });
+  return el('div',{class:'stack slidebox',style:'gap:14px'},v,nav);
+}
+function fitSlide(){ if(!basso.matches) return; const b=document.querySelector('.slidebox'); if(b) requestAnimationFrame(()=>b.scrollIntoView({block:'start'})); }
+basso.addEventListener('change',fitSlide);
 function vSlide(L,ci,k){
   const c=lez(L).capitoli[ci], p=c.pagine[k];
   seenAdd(L,p);
@@ -423,8 +446,9 @@ function vSlide(L,ci,k){
   $app.replaceChildren(el('div',{class:'stack',style:'gap:14px'},
     el('div',{class:'row',style:'justify-content:space-between'},el('button',{class:'link',onclick:()=>go(vLezione,L)},'← '+lez(L).num),el('span',{class:'counter'},(k+1)+' / '+c.pagine.length)),
     el('h2',{style:'color:'+HUES[ci%5]},c.titolo),
-    el('div',{class:'viewer'},el('img',{src:img(L,p),alt:'Slide '+p+' della '+lez(L).num.toLowerCase()+': '+c.titolo})),
-    el('div',{class:'vnav'},prev,next)));
+    slideBox(el('img',{src:img(L,p),alt:'Slide '+p+' della '+lez(L).num.toLowerCase()+': '+c.titolo}),el('div',{class:'vnav'},prev,next),
+      k>0?()=>vSlide(L,ci,k-1):null, !last?()=>vSlide(L,ci,k+1):null)));
+  fitSlide();
   document.onkeydown=e=>{ if(!document.querySelector('.viewer'))return; if(e.key==='ArrowRight'&&!last)vSlide(L,ci,k+1); if(e.key==='ArrowLeft'&&k>0)vSlide(L,ci,k-1); };
 }
 function vRivedi(qid,set,state){
@@ -438,7 +462,7 @@ function vRivedi(qid,set,state){
     el('div',{class:'row',style:'justify-content:space-between'},el('button',{class:'link',onclick:back},'← Torna al quiz'),el('span',{class:'counter'},l.num+' · slide '+p)),
     el('span',{class:'pill',style:'--hue:var(--purple)'},'Rivedi l’argomento · quiz '+qid),
     el('h2',{style:'color:var(--purple)'},l.capitoli[ci].titolo),
-    el('div',{class:'viewer'},el('img',{src:img(L,p),alt:'Slide '+p+' che spiega l’argomento del quiz '+qid})),
+    slideBox(el('img',{src:img(L,p),alt:'Slide '+p+' che spiega l’argomento del quiz '+qid}),null,null,null),
     el('div',{class:'card stack',style:'--hue:var(--purple); gap:8px'},el('p',{class:'muted',style:'font-weight:800'},'La domanda'),el('p',{style:'font-weight:800; font-size:17px'},C.quiz[qid].d),
       el('p',{class:'muted'},'Letta la slide, rifai la domanda: diventa giusta quando rispondi bene.')),
     el('div',{class:'vnav'},el('button',{class:'btn ghost',onclick:()=>go(vSlide,L,ci,k)},'Continua a studiare da qui'),el('button',{class:'btn coral',onclick:()=>go(vQuiz,retry)},'Riprova la domanda'))));
