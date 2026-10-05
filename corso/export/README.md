@@ -53,6 +53,10 @@ In alternativa, su GitHub clicca sul nome del file e poi sul pulsante **Download
 - Patente nautica Vela-Motore entro le 12 miglia e senza limiti dalla costa - Fabrizio Fiorucci · [PDF](pdf/Patente%20nautica%20Vela-Motore%20entro%20le%2012%20miglia%20e%20senza%20limiti%20dalla%20costa%20-%20Fabrizio%20Fiorucci.pdf?raw=true) · [PDF protetto](pdf-protetti/Patente%20nautica%20Vela-Motore%20entro%20le%2012%20miglia%20e%20senza%20limiti%20dalla%20costa%20-%20Fabrizio%20Fiorucci.pdf?raw=true) · [PPTX](pptx/Patente%20nautica%20Vela-Motore%20entro%20le%2012%20miglia%20e%20senza%20limiti%20dalla%20costa%20-%20Fabrizio%20Fiorucci.pptx?raw=true) · [HTML](html/Patente%20nautica%20Vela-Motore%20entro%20le%2012%20miglia%20e%20senza%20limiti%20dalla%20costa%20-%20Fabrizio%20Fiorucci.html?raw=true)
 - Rotta verso la patente - Il corso in sintesi · [PDF](pdf/Rotta%20verso%20la%20patente%20-%20Il%20corso%20in%20sintesi.pdf?raw=true) · [PDF protetto](pdf-protetti/Rotta%20verso%20la%20patente%20-%20Il%20corso%20in%20sintesi.pdf?raw=true) · [PPTX](pptx/Rotta%20verso%20la%20patente%20-%20Il%20corso%20in%20sintesi.pptx?raw=true) · [HTML](html/Rotta%20verso%20la%20patente%20-%20Il%20corso%20in%20sintesi.html?raw=true)
 
+## App per l'aula
+
+- [Corso patente nautica - app aula (ZIP)](app/Corso%20patente%20nautica%20-%20app%20aula.zip?raw=true): l'app delle lezioni 1 e 2 da usare sul wifi della scuola, con l'area istruttore. Si estrae e si avvia con un doppio clic; istruzioni nel file LEGGIMI.txt dentro lo zip. Si rigenera con `python3 corso/app/aula/prepara_pacchetto.py --python <python-3.12.x-embed-amd64.zip>`.
+
 ## Rigenerare l'export
 
 Quando un deck cambia, si riscarica dall'artifact e si lancia

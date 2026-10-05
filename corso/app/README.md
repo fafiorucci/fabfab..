@@ -8,11 +8,11 @@ Pubblicata come artifact: https://claude.ai/artifact/PoYsNRcs6eKTS3DW7WdLv4
 Progressi per allievo nel `db` dell'artifact, in `data/users/<id>/profile` (privato per ogni allievo); senza `db` restano sul dispositivo.
 Progetto completo: documento «Progetto: corso di patente nautica in app e in libro».
 
-## Uso in aula sul wifi della scuola
+## Versione per l'aula (`aula/`)
 
-1. Copiare sul PC del docente la cartella con `index.html`, `corso.json` e `slides/` (generati da `app_build.py`).
-2. Avviarla dal PC: `python3 -m http.server 8000` dentro la cartella (su Windows `py -m http.server 8000`) e consentire l'accesso nel firewall per la rete privata.
-3. Gli allievi, sullo stesso wifi, aprono `http://<IP del PC>:8000` (l'IP si legge con `ipconfig` / `ip a`).
+Pacchetto per il PC dell'istruttore: gli allievi sul wifi della scuola aprono l'app e i progressi restano sul PC.
 
-In questa modalità non c'è l'archivio dell'artifact: i progressi restano nel browser di ogni allievo.
-Serve l'isolamento client disattivato sul wifi (spesso attivo sulle reti «ospiti»). Senza internet i caratteri ripiegano su quelli di sistema.
+- `aula/server.py`: server con la sola libreria standard di Python. Registra gli allievi (nome + codice personale di 4-6 cifre), salva i progressi in `dati/allievi.json`, con un backup al giorno, e serve l'area istruttore `/docente`, protetta da PIN.
+- `aula/docente.html`: area istruttore, con QR da proiettare, andamento di ogni allievo, quiz più sbagliati, nuovo codice, eliminazione ed export CSV.
+- `aula/prepara_pacchetto.py`: rigenera `aula/www/` da `index.html` (caratteri in locale) e lo zip in `corso/export/app/`. Con `--python` include Python portatile per Windows, così non serve installarlo.
+- L'app riconosce da sola dove gira: server dell'aula (`api/info`), artifact (archivio `db`) oppure solo il dispositivo.
