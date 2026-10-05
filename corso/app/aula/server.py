@@ -187,7 +187,7 @@ class Gestore(SimpleHTTPRequestHandler):
                 _, a = per_token(self.headers.get('X-Token'))
                 if not a:
                     return self.errore(401, 'Accesso scaduto: rientra con nome e codice.')
-                return self.rispondi(200, {'nome': a['nome'], 'stato': a['stato']})
+                return self.rispondi(200, {'nome': a['nome'], 'stato': a['stato'], 'giro': a.get('giro', 0)})
         if p == '/api/docente/allievi':
             if not self.docente_ok():
                 return self.errore(403, 'PIN errato.')
@@ -240,13 +240,17 @@ class Gestore(SimpleHTTPRequestHandler):
                     archivio['allievi'][aid] = a
                     salva()
                     print(f'{datetime.now():%H:%M:%S}  nuovo allievo: {nome}')
-                return self.rispondi(200, {'token': a['token'], 'nome': a['nome'], 'stato': a['stato']})
+                return self.rispondi(200, {'token': a['token'], 'nome': a['nome'], 'stato': a['stato'], 'giro': a.get('giro', 0)})
 
         if p == '/api/progresso':
             with lock:
                 _, a = per_token(self.headers.get('X-Token'))
                 if not a:
                     return self.errore(401, 'Accesso scaduto: rientra con nome e codice.')
+                # «giro» cambia quando l'istruttore azzera: un telefono rimasto aperto non rimette i vecchi dati
+                if str(dati.get('giro', 0)) != str(a.get('giro', 0)):
+                    return self.rispondi(409, {'errore': 'Progressi azzerati dall\'istruttore.',
+                                               'stato': a['stato'], 'giro': a.get('giro', 0)})
                 try:
                     a['stato'] = stato_pulito(dati)
                 except (ValueError, TypeError):
@@ -270,6 +274,11 @@ class Gestore(SimpleHTTPRequestHandler):
                     tentativi.pop(a['chiave'], None)
                     salva()
                     return self.rispondi(200, {'codice': nuovo})
+                if p == '/api/docente/azzera':
+                    a['stato'] = {'visti': {}, 'risposte': {}}
+                    a['giro'] = a.get('giro', 0) + 1
+                    salva()
+                    return self.rispondi(200, {'ok': True})
                 if p == '/api/docente/elimina':
                     del archivio['allievi'][str(dati['id'])]
                     salva()

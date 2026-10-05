@@ -67,7 +67,8 @@ Indirizzo sul tuo computer:  http://localhost:8000/docente
 - I quiz più sbagliati: le domande che la classe sbaglia di più, con la slide
   che le spiega. Utili per riprenderle in aula.
 - Clic su un allievo: i suoi errori (cosa ha risposto e cosa era giusto),
-  "Nuovo codice personale" se l'ha dimenticato, "Elimina allievo".
+  "Nuovo codice personale" se l'ha dimenticato, "Azzera progressi" per
+  farlo ripartire da capo (nome e codice restano), "Elimina allievo".
 - "Scarica il riepilogo (CSV)": un file che si apre con Excel.
 
 

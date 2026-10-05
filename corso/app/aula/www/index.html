@@ -224,9 +224,10 @@ const tok={get(){try{return localStorage.getItem(TOKEN_KEY)}catch(e){return null
 async function api(path,body,keepalive){
   const r=await fetch('api/'+path,{method:body===undefined?'GET':'POST',keepalive:!!keepalive,headers:{'Content-Type':'application/json','X-Token':tok.get()||''},body:body===undefined?undefined:JSON.stringify(body)});
   const j=await r.json().catch(()=>({}));
-  if(!r.ok) throw Object.assign(new Error(j.errore||('errore '+r.status)),{status:r.status});
+  if(!r.ok) throw Object.assign(new Error(j.errore||('errore '+r.status)),{status:r.status,dati:j});
   return j;
 }
+let giro=0; // cambia quando l'istruttore azzera i progressi di questo allievo
 const store={
   async load(){
     try{
@@ -234,7 +235,7 @@ const store={
       if(info.aula){
         mode='aula'; aula=info;
         if(tok.get()){
-          try{ const j=await api('progresso'); return Object.assign(blank(),j.stato,{nome:j.nome,consenso:true}); }
+          try{ const j=await api('progresso'); giro=j.giro||0; return Object.assign(blank(),j.stato,{nome:j.nome,consenso:true}); }
           catch(e){ if(e.status===401) tok.set(null); else throw e; }
         }
         return blank();
@@ -260,8 +261,10 @@ const store={
     this.t=setTimeout(async()=>{
       const body=JSON.parse(JSON.stringify(S));
       if(mode==='aula'){
-        try{ await api('progresso',{visti:body.visti,risposte:body.risposte}); offline=false; }
-        catch(e){ if(e.status===401){ tok.set(null); S=blank(); renderWho(); go(vRegistrazione); return; } offline=true; console.warn('server dell’aula non raggiungibile',e); }
+        try{ await api('progresso',{visti:body.visti,risposte:body.risposte,giro}); offline=false; }
+        catch(e){
+          if(e.status===409){ giro=e.dati.giro||0; S=Object.assign(blank(),e.dati.stato,{nome:S.nome,consenso:true}); offline=false; go(vHome); return; }
+          if(e.status===401){ tok.set(null); S=blank(); renderWho(); go(vRegistrazione); return; } offline=true; console.warn('server dell’aula non raggiungibile',e); }
         renderNet(); return;
       }
       if(mode==='cloud'){
@@ -271,7 +274,7 @@ const store={
       try{ localStorage.setItem(KEY,JSON.stringify(body)); }catch(e){}
     },400);
   },
-  flush(){ if(this.t && mode==='aula'){ clearTimeout(this.t); this.t=null; api('progresso',{visti:S.visti,risposte:S.risposte},true).catch(()=>{}); return; }
+  flush(){ if(this.t && mode==='aula'){ clearTimeout(this.t); this.t=null; api('progresso',{visti:S.visti,risposte:S.risposte,giro},true).catch(()=>{}); return; }
     if(this.t){ clearTimeout(this.t); this.t=null; try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} if(mode==='cloud'){ db.doc('data/users/'+uid+'/profile').set(JSON.parse(JSON.stringify(S))).catch(()=>{}); } } }
 };
 addEventListener('pagehide',()=>store.flush());
@@ -343,7 +346,7 @@ function vRegistrazione(){
       if(!cons.checked){cons.focus();return;}
       if(mode==='aula'){
         try{ const j=await api('accedi',{nome:nome.value.trim(),codice:cod.value.trim()}); tok.set(j.token);
-          S=Object.assign(blank(),j.stato,{nome:j.nome,consenso:true}); }
+          giro=j.giro||0; S=Object.assign(blank(),j.stato,{nome:j.nome,consenso:true}); }
         catch(err){ msg.textContent=err.status?err.message:'Non raggiungo il computer dell’aula: controlla di essere sul wifi della scuola.'; return; }
         renderWho(); go(vHome); return;
       }

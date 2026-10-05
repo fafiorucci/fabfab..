@@ -165,7 +165,7 @@ function vClasse(silenzioso){
     el('div',{class:'row',style:'justify-content:space-between'},head('Allievi','A che punto sono','var(--purple)','book',false),cerca),
     el('div',{class:'card tbl cls',style:'--hue:var(--purple)'},el('table',{},
       el('thead',{},el('tr',{},el('th',{},'Allievo'),el('th',{},'Ultimo accesso'),...C.lezioni.map(l=>el('th',{},l.num)),el('th',{class:'num'},'Recuperati'),el('th',{class:'num'},'Da ripassare'))),corpo)),
-    el('p',{class:'muted'},'Clicca un allievo per vedere i quiz sbagliati e, se ha dimenticato il codice, dargliene uno nuovo. La pagina si aggiorna da sola ogni 20 secondi.'),
+    el('p',{class:'muted'},'Clicca un allievo per vedere i quiz sbagliati, dargli un codice nuovo se l’ha dimenticato o azzerare i suoi progressi. La pagina si aggiorna da sola ogni 20 secondi.'),
     head('Da riprendere in aula','I quiz più sbagliati','var(--coral)','flag',false),
     peggiori.length?el('div',{class:'card',style:'--hue:var(--coral)'},...peggiori.map(([q,c])=>{const Q=C.quiz[q];
       return el('div',{class:'err'},
@@ -189,6 +189,10 @@ function vAllievo(a,silenzioso){
           el('p',{style:'font-weight:800'},'Nuovo codice per '+a.nome+':'),el('span',{class:'codice'},j.codice),
           el('p',{class:'muted'},'Comunicalo all’allievo: entra con lo stesso nome e questo codice. Sugli altri dispositivi dovrà rientrare.'),
           el('button',{class:'btn ghost',style:'align-self:flex-start',onclick:base},'Fatto'));}catch(e){alert(e.message);}}},'Nuovo codice personale'),
+      el('button',{class:'btn ghost',onclick:()=>azioni.replaceChildren(
+          el('p',{style:'font-weight:800'},'Azzeri slide studiate, risposte e storico dei quiz di '+a.nome+'? Nome e codice restano. Non si torna indietro.'),
+          el('div',{class:'row'},el('button',{class:'btn ghost',onclick:base},'Annulla'),
+            el('button',{class:'btn coral',onclick:async()=>{try{await api('docente/azzera',{id:a.id}); carica(true);}catch(e){alert(e.message);}}},'Sì, azzera')))},'Azzera progressi'),
       el('button',{class:'btn ghost',onclick:()=>azioni.replaceChildren(
           el('p',{style:'font-weight:800'},'Elimini '+a.nome+' e tutti i suoi progressi? Non si torna indietro.'),
           el('div',{class:'row'},el('button',{class:'btn ghost',onclick:base},'Annulla'),
