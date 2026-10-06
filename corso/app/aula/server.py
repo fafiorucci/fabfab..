@@ -34,6 +34,7 @@ CONFIG = os.path.join(DATI, 'config.json')
 BACKUP = os.path.join(DATI, 'backup')
 PORTE = range(8000, 8011)
 MAX_CORPO = 1_000_000
+VERSIONE = '0.1.0'   # come l'app (corso/app/index.html): 0.x in prova, 1.0.0 al lancio
 
 lock = threading.Lock()
 tentativi = {}  # chiave nome -> [errori, istante del blocco]
@@ -234,7 +235,8 @@ class Gestore(SimpleHTTPRequestHandler):
             self.path = '/docente.html'
             return super().do_GET()
         if p == '/api/info':
-            return self.rispondi(200, {'aula': True, 'scuola': config.get('scuola', ''), 'attive': config['lezioni_attive']})
+            return self.rispondi(200, {'aula': True, 'scuola': config.get('scuola', ''), 'attive': config['lezioni_attive'],
+                                       'versione': VERSIONE})
         if p == '/api/progresso':
             with lock:
                 _, a = per_token(self.headers.get('X-Token'))
@@ -447,7 +449,7 @@ def main():
     porta = server.server_port
     righe = indirizzi(porta)
     print()
-    print('  CORSO PATENTE NAUTICA · server dell\'aula')
+    print(f'  CORSO PATENTE NAUTICA · server dell\'aula · versione {VERSIONE}')
     print('  ' + '-' * 46)
     print('  Allievi (stesso wifi), aprite:')
     for r in righe or [f'http://<indirizzo di questo PC>:{porta}']:

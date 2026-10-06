@@ -43,6 +43,24 @@ header.bar .waves{display:block; width:100%; height:14px}
 .reset{display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between}
 .who{display:flex; align-items:center; gap:8px; font-weight:800; font-size:14px; color:var(--navy-soft)}
 .who img{width:30px; height:30px; border-radius:50%; border:2px solid var(--dacc)}
+/* aiuto: pannello laterale, si apre solo quando serve */
+.aiuto-ov{position:fixed; inset:0; z-index:40; background:rgba(11,24,38,.45)}
+.aiuto{position:fixed; top:0; right:0; bottom:0; z-index:41; width:min(440px,100vw); background:var(--paper); color:var(--ink); box-shadow:-10px 0 30px rgba(0,0,0,.25); display:flex; flex-direction:column}
+.aiuto .ah{background:var(--navy); color:#fff; padding:16px 18px; display:flex; align-items:center; gap:12px}
+.aiuto .ah h2{color:#fff; font-size:21px; flex:1}
+.aiuto .ax{width:40px; height:40px; border-radius:50%; border:0; background:rgba(255,255,255,.14); color:#fff; display:grid; place-items:center; cursor:pointer; flex:none}
+.aiuto .ax svg{width:20px; height:20px}
+.aiuto .ab{overflow:auto; padding:18px; display:flex; flex-direction:column; gap:16px}
+.aiuto .qui{background:var(--card); border-radius:18px; padding:16px; border-left:8px solid var(--sea); box-shadow:var(--shadow)}
+.aiuto .qui ul{margin:8px 0 0; padding-left:20px} .aiuto .qui li{margin:4px 0}
+.aiuto details{background:var(--card); border-radius:14px; padding:12px 14px; border:2px solid var(--line)}
+.aiuto summary{cursor:pointer; font-weight:800}
+.aiuto details p,.aiuto details li{color:var(--body); font-size:15px; margin:8px 0 0}
+.aiuto details ul{padding-left:20px; margin:0}
+.aiuto .info{font-size:13px; color:var(--soft); font-weight:700}
+.suggerimento{position:fixed; z-index:30; right:12px; top:76px; max-width:240px; background:var(--dacc); color:#16324F; font-weight:800; font-size:14px; border-radius:14px; padding:10px 34px 10px 12px; box-shadow:var(--shadow)}
+.suggerimento::before{content:""; position:absolute; top:-8px; right:var(--fr,60px); border:8px solid transparent; border-top:0; border-bottom-color:var(--dacc)}
+.suggerimento button{position:absolute; top:4px; right:6px; border:0; background:none; font:inherit; font-size:18px; color:#16324F; cursor:pointer}
 .whob{display:flex; align-items:center; gap:8px; background:none; border:0; color:inherit; font:inherit; cursor:pointer; padding:2px; border-radius:999px}
 .whob:focus-visible{outline:3px solid var(--dacc); outline-offset:2px}
 .av{width:34px; height:34px; border-radius:50%; display:grid; place-items:center; color:#fff; font-family:var(--display); font-size:15px; border:2px solid var(--dacc); flex:none}
@@ -188,6 +206,9 @@ footer.foot .legal{display:block; margin-top:4px; font-size:11.5px; font-weight:
 }
 @media (max-width:520px){
   .navb span{display:none} .navb{padding:7px 9px} .brand b{font-size:15px}
+}
+@media (max-width:420px){
+  .brand > span:last-child{display:none} header.bar .in{gap:6px} .nav{gap:4px}
   .tbl{padding:12px 8px} .tbl table{font-size:13px} .tbl th,.tbl td{padding:8px 4px; white-space:nowrap} .tbl th{letter-spacing:0; font-size:11px} .tbl .lt{display:none} .tbl .sh{display:inline}
 }
 @media (prefers-reduced-motion: no-preference){.opt,.btn{transition:background .15s, border-color .15s, transform .15s} .btn:active{transform:scale(.97)}}

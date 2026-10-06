@@ -25,3 +25,9 @@ Pacchetto per il PC dell'istruttore: gli allievi sul wifi della scuola aprono l'
 ## Profilo dell'allievo
 
 Si apre toccando il proprio nome o avatar in alto: nome e cognome, colore dell'avatar, cambio del codice (in aula), patente (entro 12 miglia o senza limiti; motore, vela o entrambe), data d'esame, email e telefono, tema, testo più grande, obiettivo settimanale, scarica o cancella i propri dati. La patente segna come facoltative la lezione 9 (solo motore) e le lezioni 10-15 (entro le 12 miglia); la home mostra il conto alla rovescia e l'obiettivo della settimana (dal diario di studio: quiz e slide per giorno). L'istruttore vede patente, esame e contatti nella tabella della classe.
+
+## Versione, aiuto e demo
+
+- Versione corrente e regole di numerazione: `VERSIONI.md`.
+- Aiuto: pulsante «?» in alto, nell'app e nell'area istruttore; mostra cosa si fa nella pagina aperta e le domande frequenti. La prima volta compare un suggerimento sotto il pulsante.
+- Demo: `demo/prepara_demo.py` costruisce in `$SP/demo` una versione dimostrativa (lezione 1 fino al capitolo 1, scheda della lezione 1, numeri d'oro, appendici C ed E, area istruttore con allievi inventati da `demo/demo-dati.js`). Pubblicata come artifact separato.

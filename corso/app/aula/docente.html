@@ -47,11 +47,12 @@ input[type=password]:focus,input[type=search]:focus{outline:none; border-color:v
     <button class="navb" id="nav-qr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4 H10 V10 H4 Z M14 4 H20 V10 H14 Z M4 14 H10 V20 H4 Z M14 14 H16 M18 14 H20 V16 M14 18 V20 H16 M18 18 H20 V20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg><span>QR aula</span></button>
     <button class="navb" id="nav-pres"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4 H21 M4 4 V15 H20 V4 M12 15 V19 M8 21 L12 19 L16 21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Presentazioni</span></button>
     <button class="navb" id="nav-lez"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11 V7 a7 7 0 0 1 14 0 M4 11 H20 V21 H4 Z M12 15 V17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Lezioni</span></button>
+    <button class="navb" id="nav-aiuto" aria-label="Aiuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M9.3 9.4a2.8 2.8 0 1 1 3.9 2.6c-.8.4-1.2.9-1.2 1.8v.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17.4" r="1.3" fill="currentColor"/></svg><span>Aiuto</span></button>
   </nav>
 </div><svg class="waves" viewBox="0 0 960 14" preserveAspectRatio="none" aria-hidden="true"><path id="wv-h" fill="#12A4B5" fill-opacity=".45"/></svg></header>
 
 <main class="wrap" id="app"></main>
-<footer class="foot"><span id="logo-f"></span><span>Fabrizio Fiorucci · Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa<small class="legal">La proprietà intellettuale di questo materiale è di Fabrizio Fiorucci, ne sono proibite la divulgazione e la duplicazione.</small></span></footer>
+<footer class="foot"><span id="logo-f"></span><span>Fabrizio Fiorucci · Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa<small class="legal">La proprietà intellettuale di questo materiale è di Fabrizio Fiorucci, ne sono proibite la divulgazione e la duplicazione.</small><small class="legal" id="versione"></small></span></footer>
 
 <script src="vendor/qrcode.js"></script>
 <script src="grafica.js"></script>
@@ -301,6 +302,36 @@ async function vPresentazioni(){
 }
 document.getElementById('nav-classe').addEventListener('click',()=>{aperto=null; vClasse(); window.scrollTo({top:0});});
 document.getElementById('nav-pres').addEventListener('click',vPresentazioni);
+document.getElementById('nav-aiuto').addEventListener('click',apriAiuto);
+fetch('api/info').then(r=>r.json()).then(i=>{ document.getElementById('versione').textContent='Area istruttore · versione '+(i.versione||''); }).catch(()=>{});
+
+/* ---------- aiuto per l'istruttore ---------- */
+const AIUTO={
+  classe:['La classe',['Il QR e l’indirizzo per far collegare gli allievi; «Proietta per la classe» li mostra in grande.','I quattro riquadri: allievi registrati, attivi oggi, slide studiate in media, risposte giuste.','La tabella: patente, esame, ultimo accesso e andamento nelle lezioni aperte. Si ordina per nome, data d’esame o ultimo accesso; clicca un allievo per il dettaglio.','«I quiz più sbagliati»: le domande da riprendere in aula, con la slide che le spiega.','«Scarica il riepilogo (CSV)» si apre con Excel.']],
+  allievo:['Un allievo',['In alto patente, data d’esame, email e telefono (se li ha messi nel profilo).','La tabella per lezione e i quiz sbagliati, con cosa ha risposto e cosa era giusto.','«Nuovo codice personale» se l’ha dimenticato; «Azzera progressi» lo fa ripartire (il profilo resta); «Elimina allievo» cancella tutto.']],
+  pres:['Presentazioni',['Si aprono in una nuova scheda: un clic per lo schermo intero.','Avanti e indietro con le frecce, il telecomando del presentatore o un clic a destra/sinistra; Esc per uscire.','Si aprono solo da questo computer, non dai telefoni degli allievi.']],
+  lez:['Lezioni aperte',['«Apri agli allievi» quando hai fatto la lezione in aula: la vedono entro mezzo minuto, con la sua scheda riassuntiva e le appendici collegate.','«Chiudi» la blocca di nuovo; i progressi restano.']],
+};
+const GUIDA=[
+  ['Avviare e spegnere il server',['Avvio: doppio clic su «Avvia (Windows).bat». Spegnimento: Ctrl+C nella finestra nera, oppure chiudila. Le risposte sono salvate subito.']],
+  ['I telefoni non si collegano',['Telefoni e computer devono essere sullo stesso wifi.','Se il QR mostra un indirizzo sbagliato, scrivi quello giusto in dati\\config.json alla voce "indirizzo" e riavvia.','Consenti Python nel firewall per le reti private. Alcuni wifi per ospiti isolano i dispositivi: serve un router o un hotspot.']],
+  ['Il PIN e i dati',['Il PIN è nella finestra nera all’avvio e si cambia in dati\\config.json.','Allievi e progressi sono in dati\\allievi.json, con una copia al giorno in dati\\backup. Per spostare tutto su un altro computer copia l’intera cartella.']],
+];
+function apriAiuto(){
+  if(document.querySelector('.aiuto')) return;
+  const qui=AIUTO[aperto?'allievo':vista]||AIUTO.classe, prima=document.activeElement;
+  const chiudi=()=>{ ov.remove(); pan.remove(); document.removeEventListener('keydown',esc); if(prima&&prima.focus) prima.focus(); };
+  const esc=e=>{ if(e.key==='Escape') chiudi(); };
+  const ov=el('div',{class:'aiuto-ov',onclick:chiudi});
+  const pan=el('div',{class:'aiuto',role:'dialog','aria-modal':'true','aria-label':'Aiuto'},
+    el('div',{class:'ah'},el('h2',{},'Aiuto · area istruttore'),el('button',{class:'ax','aria-label':'Chiudi l’aiuto',onclick:chiudi},'×')),
+    el('div',{class:'ab'},
+      el('div',{class:'qui'},el('span',{class:'pill',style:'--hue:var(--sea)'},'In questa pagina'),el('h3',{style:'margin-top:8px'},qui[0]),el('ul',{},...qui[1].map(t=>el('li',{},t)))),
+      el('h3',{},'Domande frequenti'),
+      ...GUIDA.map(([t,r])=>el('details',{},el('summary',{},t),el('ul',{},...r.map(x=>el('li',{},x))))),
+      el('p',{class:'info'},'La guida completa è nel file LEGGIMI.txt, nella cartella del server.')));
+  document.body.append(ov,pan); document.addEventListener('keydown',esc); pan.querySelector('.ax').focus();
+}
 document.getElementById('nav-lez').addEventListener('click',()=>{ window.scrollTo({top:0}); vLezioni(); });
 document.getElementById('nav-qr').addEventListener('click',proietta);
 

@@ -36,3 +36,10 @@ o si crea un deck nuovo, dopo averlo pubblicato va rifatto l'export in `corso/ex
 
 Requisiti dello script: Playwright + Chromium in `/opt/pw-browsers`, `python-pptx`, `Pillow`.
 Il browser usa il proxy di `HTTPS_PROXY` per caricare i Google Fonts.
+
+## App del corso
+
+- Sorgenti in `corso/app/` (vedi `corso/app/README.md`). Ogni modifica all'app pubblicata aumenta la versione
+  (`VERSIONE`/`RILASCIO` in `corso/app/index.html` e `VERSIONE` in `corso/app/aula/server.py`) e aggiunge una voce in
+  `corso/app/VERSIONI.md`; poi si rifanno il pacchetto per l'aula (`aula/prepara_pacchetto.py`) e, se tocca la demo,
+  `demo/prepara_demo.py`, e si ripubblicano gli artifact (app: PoYsNRcs6eKTS3DW7WdLv4, demo: TS7HycJgEtA3ugZTLMdsZm).

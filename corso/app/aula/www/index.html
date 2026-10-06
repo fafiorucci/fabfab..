@@ -50,6 +50,24 @@ header.bar .waves{display:block; width:100%; height:14px}
 .reset{display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between}
 .who{display:flex; align-items:center; gap:8px; font-weight:800; font-size:14px; color:var(--navy-soft)}
 .who img{width:30px; height:30px; border-radius:50%; border:2px solid var(--dacc)}
+/* aiuto: pannello laterale, si apre solo quando serve */
+.aiuto-ov{position:fixed; inset:0; z-index:40; background:rgba(11,24,38,.45)}
+.aiuto{position:fixed; top:0; right:0; bottom:0; z-index:41; width:min(440px,100vw); background:var(--paper); color:var(--ink); box-shadow:-10px 0 30px rgba(0,0,0,.25); display:flex; flex-direction:column}
+.aiuto .ah{background:var(--navy); color:#fff; padding:16px 18px; display:flex; align-items:center; gap:12px}
+.aiuto .ah h2{color:#fff; font-size:21px; flex:1}
+.aiuto .ax{width:40px; height:40px; border-radius:50%; border:0; background:rgba(255,255,255,.14); color:#fff; display:grid; place-items:center; cursor:pointer; flex:none}
+.aiuto .ax svg{width:20px; height:20px}
+.aiuto .ab{overflow:auto; padding:18px; display:flex; flex-direction:column; gap:16px}
+.aiuto .qui{background:var(--card); border-radius:18px; padding:16px; border-left:8px solid var(--sea); box-shadow:var(--shadow)}
+.aiuto .qui ul{margin:8px 0 0; padding-left:20px} .aiuto .qui li{margin:4px 0}
+.aiuto details{background:var(--card); border-radius:14px; padding:12px 14px; border:2px solid var(--line)}
+.aiuto summary{cursor:pointer; font-weight:800}
+.aiuto details p,.aiuto details li{color:var(--body); font-size:15px; margin:8px 0 0}
+.aiuto details ul{padding-left:20px; margin:0}
+.aiuto .info{font-size:13px; color:var(--soft); font-weight:700}
+.suggerimento{position:fixed; z-index:30; right:12px; top:76px; max-width:240px; background:var(--dacc); color:#16324F; font-weight:800; font-size:14px; border-radius:14px; padding:10px 34px 10px 12px; box-shadow:var(--shadow)}
+.suggerimento::before{content:""; position:absolute; top:-8px; right:var(--fr,60px); border:8px solid transparent; border-top:0; border-bottom-color:var(--dacc)}
+.suggerimento button{position:absolute; top:4px; right:6px; border:0; background:none; font:inherit; font-size:18px; color:#16324F; cursor:pointer}
 .whob{display:flex; align-items:center; gap:8px; background:none; border:0; color:inherit; font:inherit; cursor:pointer; padding:2px; border-radius:999px}
 .whob:focus-visible{outline:3px solid var(--dacc); outline-offset:2px}
 .av{width:34px; height:34px; border-radius:50%; display:grid; place-items:center; color:#fff; font-family:var(--display); font-size:15px; border:2px solid var(--dacc); flex:none}
@@ -195,6 +213,9 @@ footer.foot .legal{display:block; margin-top:4px; font-size:11.5px; font-weight:
 }
 @media (max-width:520px){
   .navb span{display:none} .navb{padding:7px 9px} .brand b{font-size:15px}
+}
+@media (max-width:420px){
+  .brand > span:last-child{display:none} header.bar .in{gap:6px} .nav{gap:4px}
   .tbl{padding:12px 8px} .tbl table{font-size:13px} .tbl th,.tbl td{padding:8px 4px; white-space:nowrap} .tbl th{letter-spacing:0; font-size:11px} .tbl .lt{display:none} .tbl .sh{display:inline}
 }
 @media (prefers-reduced-motion: no-preference){.opt,.btn{transition:background .15s, border-color .15s, transform .15s} .btn:active{transform:scale(.97)}}
@@ -212,6 +233,7 @@ footer.foot .legal{display:block; margin-top:4px; font-size:11.5px; font-weight:
     <button class="navb" id="nav-prog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21 H21 M6 17 V12 M11 17 V6 M16 17 V9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><span>Progressi</span></button>
     <button class="navb" id="nav-mat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6 Q8 3.5 3 4.5 V19 Q8 18 12 20.5 Q16 18 21 19 V4.5 Q16 3.5 12 6 Z M12 6 V20.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg><span>Materiali</span></button>
   </nav>
+  <button class="navb" id="nav-aiuto" aria-label="Aiuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M9.3 9.4a2.8 2.8 0 1 1 3.9 2.6c-.8.4-1.2.9-1.2 1.8v.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17.4" r="1.3" fill="currentColor"/></svg><span>Aiuto</span></button>
   <span class="who" id="who"></span>
 </div><svg class="waves" viewBox="0 0 960 14" preserveAspectRatio="none" aria-hidden="true"><path id="wv-h" fill="#12A4B5" fill-opacity=".45"/></svg></header>
 
@@ -221,13 +243,15 @@ footer.foot .legal{display:block; margin-top:4px; font-size:11.5px; font-weight:
     <h1>Preparo le lezioni 1 e 2…</h1>
   </div>
 </main>
-<footer class="foot"><span id="logo-f"></span><span>Fabrizio Fiorucci · Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa<small class="legal">La proprietà intellettuale di questo materiale è di Fabrizio Fiorucci, ne sono proibite la divulgazione e la duplicazione.</small></span></footer>
+<footer class="foot"><span id="logo-f"></span><span>Fabrizio Fiorucci · Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa<small class="legal">La proprietà intellettuale di questo materiale è di Fabrizio Fiorucci, ne sono proibite la divulgazione e la duplicazione.</small><small class="legal" id="versione"></small></span></footer>
 
 <script>
 (function(){
 const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
+// versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
+const VERSIONE='0.1.0', RILASCIO='6 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
@@ -284,6 +308,7 @@ const store={
       }
     }catch(e){ if(mode==='aula'){ offline=true; return blank(); } }
     try{
+      if(C&&C.demo) throw 0;   // demo: niente archivio online, i progressi restano sul dispositivo
       const user=await claude.use('user');
       if(user){ me=await user.me(); uid=me.id; }
       db=await claude.use('db');
@@ -337,7 +362,17 @@ let ATT=null;
 const attiva=id=>ATT?ATT.has(id):!!(lez(id)&&lez(id).attiva);
 const aperte=()=>C.lezioni.filter(l=>attiva(l.id));
 const appendice=id=>C.appendici.find(a=>a.id===id);
-const appAperta=a=>a.lezioni.some(attiva);
+const appAperta=a=>a.aperta!==undefined?a.aperta:a.lezioni.some(attiva);
+// versione dimostrativa (corso.json con «demo»): solo contenuti di esempio, progressi su questo dispositivo
+const DEMO_CHIUSO='Nella versione completa';
+function bannerDemo(){
+  if(!C||!C.demo) return null;
+  return el('div',{class:'card stack',style:'--hue:var(--sun); gap:10px'},
+    el('span',{class:'pill',style:'--hue:var(--sun); color:#16324F'},'Versione dimostrativa'),
+    el('p',{style:'font-weight:700'},'Stai provando l’app del corso con alcuni contenuti di esempio: la prima parte della lezione 1, la sua scheda riassuntiva, i numeri d’oro e due appendici. Le altre lezioni sono nella versione completa. I progressi restano su questo dispositivo.'),
+    el('div',{class:'row'},el('a',{class:'btn ghost',href:'docente.html'},'Guarda l’area istruttore di esempio →'),
+      S&&S.nome?el('button',{class:'btn ghost',onclick:()=>{ try{ localStorage.removeItem(KEY); }catch(e){} location.reload(); }},'Ricomincia la demo'):null));
+}
 const prima=a=>lez(a.lezioni.find(attiva)||a.lezioni[0]);
 // la slide da rivedere: quella della lezione, oppure i numeri d'oro se la lezione è ancora chiusa
 const rivedi=q=>{const r=C.quiz[q].rivedi; return r[0]==='SR'||attiva(r[0])?r:['SR',C.schede.generali[C.schede.generali.length-1]];};
@@ -444,8 +479,8 @@ function vRegistrazione(){
     msg,
     el('button',{class:'btn sea',type:'submit',style:'align-self:flex-start'},'Inizia il corso'));
   $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
-    hero('Patente nautica · entro 12 miglia e senza limiti','Il corso in tasca: lezioni, quiz ufficiali e i tuoi progressi','Studi le slide, fai le verifiche con i quiz del DD 131/2022 e, quando sbagli, torni alla slide che spiega l’argomento. In questo prototipo trovi le lezioni 1 e 2.'),
-    form, localNote()));
+    hero('Patente nautica · entro 12 miglia e senza limiti','Il corso in tasca: lezioni, quiz ufficiali e i tuoi progressi','Studi le slide, fai le verifiche con i quiz del DD 131/2022 e, quando sbagli, torni alla slide che spiega l’argomento. '+(C&&C.demo?'In questa demo trovi alcuni contenuti di esempio.':'Le lezioni si aprono man mano che le fate in aula.')),
+    bannerDemo(), form, C&&C.demo?null:localNote()));
 }
 
 /* ---------- home ---------- */
@@ -459,6 +494,7 @@ function vHome(){
   const err=errati();
   $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
     hero('Bentornato a bordo','Ciao '+(p.nome||S.nome.split(' ')[0])+', si riparte da qui',sottotitolo),
+    bannerDemo(),
     (!p.ambito||!p.tipo||!p.esame)?el('div',{class:'card row',style:'--hue:var(--sun); justify-content:space-between'},
       el('div',{class:'stack',style:'gap:4px'},el('h3',{},'Completa il tuo profilo'),el('p',{class:'muted'},'Dicci che patente prendi e quando hai l’esame: l’app ti mostra le lezioni che ti servono e il conto alla rovescia.')),
       el('button',{class:'btn',onclick:()=>go(vProfilo)},'Vai al profilo')):null,
@@ -478,7 +514,7 @@ function vHome(){
       if(!attiva(l.id)) return el('div',{class:'card lez locked'},
         el('div',{class:'num'},svgEl(`<path d="${blob(52,52,47,1+i,.07,8)}" fill="var(--line)"/>`,'','0 0 104 104'),el('b',{style:'color:var(--soft)'},String(i+1))),
         el('div',{class:'stack',style:'gap:6px; min-width:0'},el('span',{class:'muted',style:'font-weight:800; font-size:13px'},l.num),el('h3',{class:'muted'},l.titolo),
-          el('div',{class:'row',style:'gap:6px'},el('span',{class:'chip'},'🔒 Si apre quando la facciamo in aula'),facoltativa(l.id)?el('span',{class:'chip todo'},'Facoltativa per la tua patente'):null)));
+          el('div',{class:'row',style:'gap:6px'},el('span',{class:'chip'},'🔒 '+(C.demo?DEMO_CHIUSO:'Si apre quando la facciamo in aula')),facoltativa(l.id)?el('span',{class:'chip todo'},'Facoltativa per la tua patente'):null)));
       const s=stato(l.id), v=pct(s.viste,s.pagine), fac=facoltativa(l.id);
       return el('div',{class:'card lez'+(fac?' fac':''),style:'--hue:'+(fac?'var(--soft)':hue)},
         el('div',{class:'num'},svgEl(`<path d="${blob(52,52,47,1+i,.07,8)}" fill="${hue}"/>`,'','0 0 104 104'),el('b',{},String(i+1))),
@@ -498,6 +534,7 @@ function vLezione(L){
     el('button',{class:'link',onclick:()=>go(vHome)},'← Tutte le lezioni'),
     head(l.num+' · 2 ore',l.titolo,hue,lidx(L)===0?'hull':'propeller',true),
     extra(l),
+    l.nota_demo?el('p',{class:'notice'},l.nota_demo):null,
     el('div',{class:'card',style:'--hue:'+hue},...l.capitoli.map((c,ci)=>{
       const v=c.pagine.filter(p=>sv.has(p)).length, chue=HUES[ci%5];
       const qs=c.quiz.flatMap(s=>s.ids), fatti=qs.filter(ans), ok=fatti.filter(q=>ans(q).ok).length;
@@ -609,6 +646,7 @@ function vSlide(L,ci,k){
   document.onkeydown=e=>{ if(!document.querySelector('.viewer'))return; if(e.key==='ArrowRight'&&!last)vSlide(L,ci,k+1); if(e.key==='ArrowLeft'&&k>0)vSlide(L,ci,k-1); };
 }
 function vRivedi(qid,set,state){
+  curView=vRivedi;
   const [L,p]=rivedi(qid), sr=L==='SR', l=sr?null:lez(L);
   const ci=sr?-1:l.capitoli.findIndex(c=>c.pagine.includes(p)), k=sr?0:l.capitoli[ci].pagine.indexOf(p);
   if(!sr) seenAdd(L,p);
@@ -683,10 +721,10 @@ function vScheda(L,k){
 function vMateriali(){
   const scheda=l=>attiva(l.id)?
     el('button',{class:'xcard',style:'--hue:var(--purple)',onclick:()=>go(vScheda,l.id,0)},el('span',{class:'xi'},l.num.slice(-2)),el('span',{},el('b',{},l.titolo),el('small',{},'Scheda · '+l.scheda.length+(l.scheda.length===1?' pagina':' pagine')))):
-    el('button',{class:'xcard',disabled:true},el('span',{class:'xi'},l.num.slice(-2)),el('span',{},el('b',{},l.titolo),el('small',{},'🔒 Con la '+l.num)));
+    el('button',{class:'xcard',disabled:true},el('span',{class:'xi'},l.num.slice(-2)),el('span',{},el('b',{},l.titolo),el('small',{},'🔒 '+(C.demo?DEMO_CHIUSO:'Con la '+l.num))));
   const app=a=>appAperta(a)?
-    el('button',{class:'xcard',style:'--hue:var(--blue)',onclick:()=>apriAppendice(a)},el('span',{class:'xi'},a.id),el('span',{},el('b',{},a.titolo),el('small',{},a.slide+' slide · approfondimento della '+prima(a).num))):
-    el('button',{class:'xcard',disabled:true},el('span',{class:'xi'},a.id),el('span',{},el('b',{},a.titolo),el('small',{},'🔒 Si apre con la '+prima(a).num)));
+    el('button',{class:'xcard',style:'--hue:var(--blue)',onclick:()=>apriAppendice(a)},el('span',{class:'xi'},a.id),el('span',{},el('b',{},a.titolo),el('small',{},a.slide+' slide · '+(C.demo?'esempio di appendice':'approfondimento della '+prima(a).num)))):
+    el('button',{class:'xcard',disabled:true},el('span',{class:'xi'},a.id),el('span',{},el('b',{},a.titolo),el('small',{},'🔒 '+(C.demo?DEMO_CHIUSO:'Si apre con la '+prima(a).num))));
   $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
     head('Materiali','Schede e appendici','var(--purple)','book',true),
     el('p',{class:'muted',style:'font-weight:700'},'Le schede riassuntive raccolgono, lezione per lezione, le regole e i numeri da ricordare: rileggile il giorno dopo. Le appendici sono approfondimenti facoltativi. Si aprono man mano che le lezioni vengono fatte in aula.'),
@@ -830,12 +868,68 @@ document.getElementById('home-btn').addEventListener('click',()=>{ if(S&&S.nome)
 document.getElementById('nav-home').addEventListener('click',()=>{ if(S&&S.nome) go(vHome); });
 document.getElementById('nav-prog').addEventListener('click',()=>{ if(S&&S.nome) go(vStorico); });
 document.getElementById('nav-mat').addEventListener('click',()=>{ if(S&&S.nome) go(vMateriali); });
+document.getElementById('nav-aiuto').addEventListener('click',()=>apriAiuto());
+document.getElementById('versione').textContent='App versione '+VERSIONE+' · '+RILASCIO+(C&&C.demo?' · demo':'');
+
+/* ---------- aiuto ---------- */
+// cosa si può fare nella schermata aperta: compare in cima al pannello
+const AIUTO_QUI={
+  vRegistrazione:['Entrare nel corso',['Scrivi nome e cognome.','In aula scegli anche un codice personale di 4 cifre: con lo stesso nome e codice ritrovi i progressi su un altro telefono o tablet.','Spunta il consenso e premi «Inizia il corso».']],
+  vHome:['La home',['In alto il benvenuto e, se hai messo la data d’esame nel profilo, il conto alla rovescia.','I tre riquadri: slide studiate, quiz risposti, risposte giuste.','«Ripassa gli errori» ripropone i quiz sbagliati.','Le lezioni col lucchetto si aprono quando le fate in aula. «Facoltativa per la tua patente»: non serve per la patente che hai scelto, ma puoi studiarla.']],
+  vLezione:['La lezione',['In cima: la scheda riassuntiva e le appendici per approfondire.','Ogni capitolo ha «Studia» (le slide) e «Verifica» (2 quiz ufficiali).','L’ultimo capitolo raccoglie i quiz degli ultimi 45 minuti, a gruppi di 3.']],
+  vSlide:['Le slide',['Vai avanti e indietro con i pulsanti, toccando i lati della slide o scorrendo col dito.','⛶ in basso a destra mette la slide a schermo intero; col telefono in orizzontale si apre da solo.','Le slide viste contano nei progressi.']],
+  vRaccolta:['Raccolta quiz',['I quiz degli ultimi 45 minuti, a gruppi di 3.','Giallo: da fare. Verde: tutti giusti. Rosso: qualcuno da ripassare.','«Rifai» ripropone il gruppo.']],
+  vQuiz:['I quiz',['Tocca una risposta per ogni domanda, poi «Controlla le risposte».','Se sbagli, «Rivedi l’argomento» apre la slide che lo spiega.','«Riprova gli errori» ripropone solo le domande sbagliate: un errore diventa giusto quando rispondi bene.']],
+  vRivedi:['Rivedi l’argomento',['È la slide che spiega la domanda sbagliata: leggila e premi «Riprova la domanda».','«Continua a studiare da qui» apre il capitolo da questa slide.']],
+  vScheda:['Scheda riassuntiva',['Regole e numeri da ricordare della lezione: rileggila il giorno dopo.','Si sfoglia come le slide, anche a schermo intero.']],
+  vMateriali:['Materiali',['Le schede riassuntive di tutte le lezioni, i numeri d’oro e la loro verifica.','Le appendici: approfondimenti facoltativi, si aprono con la lezione a cui sono collegate.','Dentro un’appendice si sfoglia col dito; «← Corso» per tornare.']],
+  vStorico:['I tuoi progressi',['Per ogni lezione: slide viste, quiz risposti, giusti, recuperati (sbagliati e poi rifatti giusti), da ripassare.','Sotto, i quiz sbagliati con «Rivedi» e «Riprova».','«Ricomincia da capo» azzera i progressi, non il profilo.']],
+  vProfilo:['Il tuo profilo',['Patente e data d’esame servono a segnare le lezioni facoltative e al conto alla rovescia.','Email e telefono sono facoltativi.','Tema, testo più grande e obiettivo della settimana cambiano l’app solo per te.','Ricordati di premere «Salva il profilo».']],
+};
+const AIUTO_GUIDA=[
+  ['Come funziona il corso',['Le lezioni si aprono una alla volta, man mano che le fate in aula.','Ogni lezione: slide divise in capitoli, una verifica con 2 quiz ufficiali per capitolo, 36 quiz di raccolta alla fine, la scheda riassuntiva.','I quiz sono quelli ufficiali d’esame (DD 131/2022).']],
+  ['Ho sbagliato un quiz: come diventa giusto?',['Apri «Rivedi l’argomento», leggi la slide e rifai la domanda. Quando rispondi bene, nei progressi conta tra i «recuperati».']],
+  ['Le slide sul telefono sono piccole',['Gira il telefono in orizzontale: la slide va a schermo intero. Oppure tocca ⛶ sulla slide.']],
+  ['Ho cambiato telefono',['In aula: entra con lo stesso nome e lo stesso codice personale e ritrovi tutto.','Se hai dimenticato il codice, chiedi all’istruttore un codice nuovo.','Telefono in prestito? A fine lezione: Progressi → «Esci da questo dispositivo».']],
+  ['Una lezione ha il lucchetto',['Si apre quando la fate in aula: l’istruttore la sblocca e la vedi entro mezzo minuto.']],
+  ['Dove sono i miei dati?',['In aula sul computer dell’istruttore, fuori aula nel tuo account o su questo dispositivo.','Dal profilo puoi scaricarli o cancellare l’account.']],
+];
+function apriAiuto(){
+  chiudiSuggerimento();
+  if(document.querySelector('.aiuto')) return;
+  const nome=curView&&curView.name, qui=AIUTO_QUI[nome]||(S&&S.nome?AIUTO_QUI.vHome:AIUTO_QUI.vRegistrazione);
+  const prima=document.activeElement;
+  const chiudi=()=>{ ov.remove(); pan.remove(); document.removeEventListener('keydown',esc); if(prima&&prima.focus) prima.focus(); };
+  const esc=e=>{ if(e.key==='Escape') chiudi(); };
+  const ov=el('div',{class:'aiuto-ov',onclick:chiudi});
+  const pan=el('div',{class:'aiuto',role:'dialog','aria-modal':'true','aria-label':'Aiuto'},
+    el('div',{class:'ah'},svgEl(ICONS.lifebuoy,'','0 0 100 100'),el('h2',{},'Aiuto'),el('button',{class:'ax','aria-label':'Chiudi l’aiuto',onclick:chiudi},svgEl(ICON_X,'','0 0 24 24'))),
+    el('div',{class:'ab'},
+      el('div',{class:'qui'},el('span',{class:'pill',style:'--hue:var(--sea)'},'In questa pagina'),el('h3',{style:'margin-top:8px'},qui[0]),el('ul',{},...qui[1].map(t=>el('li',{},t)))),
+      el('h3',{},'Guida e domande frequenti'),
+      ...AIUTO_GUIDA.map(([t,r])=>el('details',{},el('summary',{},t),r.length>1?el('ul',{},...r.map(x=>el('li',{},x))):el('p',{},r[0]))),
+      el('p',{class:'info'},'Corso Patente Nautica · app versione '+VERSIONE+' del '+RILASCIO+(C&&C.demo?' · versione dimostrativa':'')+'. Per problemi con l’app rivolgiti al tuo istruttore.')));
+  pan.querySelector('.ah svg').style.cssText='width:30px;height:30px';
+  document.body.append(ov,pan); document.addEventListener('keydown',esc);
+  pan.querySelector('.ax').focus();
+}
+// la prima volta, un piccolo suggerimento sotto il pulsante ? (poi non compare più su questo dispositivo)
+function chiudiSuggerimento(){ const s=document.querySelector('.suggerimento'); if(s){ s.remove(); try{localStorage.setItem('corso-aiuto-visto','1');}catch(e){} } }
+function suggerimento(){
+  let visto=false; try{ visto=!!localStorage.getItem('corso-aiuto-visto'); }catch(e){}
+  if(visto||document.querySelector('.suggerimento')) return;
+  const b=document.getElementById('nav-aiuto').getBoundingClientRect();
+  const t=el('div',{class:'suggerimento',role:'status',style:'top:'+(b.bottom+10)+'px; --fr:'+Math.max(14,innerWidth-b.right+b.width/2-20-12)+'px'},
+    'Serve una mano? Qui trovi l’aiuto per ogni pagina.',el('button',{'aria-label':'Chiudi',onclick:chiudiSuggerimento},'×'));
+  document.body.append(t); setTimeout(chiudiSuggerimento,9000);
+}
 (async function start(){
-  try{ C=await (await fetch('corso.json')).json(); }
+  try{ C=await (await fetch('corso.json')).json(); document.getElementById('versione').textContent='App versione '+VERSIONE+' · '+RILASCIO+(C.demo?' · demo':''); }
   catch(e){ $app.replaceChildren(el('div',{class:'stack'},el('h1',{},'Non riesco a caricare il corso'),el('p',{class:'muted'},'Ricarica la pagina; se il problema resta, avvisa l’istruttore.'))); return; }
   S=blank(); vRegistrazione();
   S=conProfilo(await store.load()); applicaPreferenze(); renderWho();
   if(S.nome) go(vHome); else vRegistrazione();
+  setTimeout(suggerimento,1200);
 })();
 })();
 </script>
