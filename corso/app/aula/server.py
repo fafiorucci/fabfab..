@@ -71,6 +71,31 @@ if not config.get('pin') or 'indirizzo' not in config:
     config.setdefault('scuola', 'Corso patente nautica')
     config.setdefault('indirizzo', '')
     scrivi_json(CONFIG, config)
+# Lezioni aperte agli allievi: all'inizio quelle segnate «attiva» in corso.json, poi le decide l'istruttore
+CORSO = leggi_json(os.path.join(WWW, 'corso.json'), {'lezioni': [], 'appendici': [], 'schede': {}})
+if 'lezioni_attive' not in config:
+    config['lezioni_attive'] = [l['id'] for l in CORSO['lezioni'] if l.get('attiva')]
+    scrivi_json(CONFIG, config)
+SCHEDA_DI = {p: l['id'] for l in CORSO['lezioni'] for p in l.get('scheda', [])}          # pagina SR → lezione
+APPENDICE = {a['file'].rsplit('/', 1)[-1]: a['lezioni'] for a in CORSO['appendici']}     # file → lezioni
+
+
+def contenuto_aperto(p):
+    """Slide e appendici delle lezioni ancora chiuse non si scaricano (salvo dal PC dell'istruttore)."""
+    attive = set(config['lezioni_attive'])
+    m = re.match(r'/slides/(L\d+)-\d+\.jpg$', p)
+    if m:
+        return m.group(1) in attive
+    m = re.match(r'/slides/SR-(\d+)\.jpg$', p)
+    if m:
+        lez = SCHEDA_DI.get(int(m.group(1)))
+        return lez is None or lez in attive
+    m = re.match(r'/appendici/([a-z]\.html)$', p)
+    if m:
+        return any(l in attive for l in APPENDICE.get(m.group(1), []))
+    return True
+
+
 archivio = leggi_json(ARCHIVIO, {'allievi': {}})
 if not archivio.get('allievi') and os.listdir(BACKUP):
     ultimo = sorted(os.listdir(BACKUP))[-1]
@@ -185,7 +210,7 @@ class Gestore(SimpleHTTPRequestHandler):
             self.path = '/docente.html'
             return super().do_GET()
         if p == '/api/info':
-            return self.rispondi(200, {'aula': True, 'scuola': config.get('scuola', '')})
+            return self.rispondi(200, {'aula': True, 'scuola': config.get('scuola', ''), 'attive': config['lezioni_attive']})
         if p == '/api/progresso':
             with lock:
                 _, a = per_token(self.headers.get('X-Token'))
@@ -198,11 +223,14 @@ class Gestore(SimpleHTTPRequestHandler):
             with lock:
                 elenco = [{'id': aid, 'nome': a['nome'], 'creato': a['creato'], 'ultimo': a['ultimo'], 'stato': a['stato']}
                           for aid, a in archivio['allievi'].items()]
-            return self.rispondi(200, {'allievi': elenco, 'indirizzi': indirizzi(self.server.server_port)})
+            return self.rispondi(200, {'allievi': elenco, 'indirizzi': indirizzi(self.server.server_port),
+                                       'attive': config['lezioni_attive']})
         if p.startswith('/api/'):
             return self.errore(404, 'Non trovato.')
         if p.startswith('/dati') or p.endswith('.py'):
             return self.errore(404, 'Non trovato.')
+        if not contenuto_aperto(p) and not self.da_questo_pc():
+            return self.errore(403, 'Questa lezione non è ancora aperta.')
         if p.startswith('/presentazioni/') and not self.da_questo_pc():
             # le presentazioni sono materiale dell'istruttore: si aprono solo dal computer dell'aula
             corpo = ('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width">'
@@ -291,6 +319,18 @@ class Gestore(SimpleHTTPRequestHandler):
         if p.startswith('/api/docente/'):
             if not self.docente_ok():
                 return self.errore(403, 'PIN errato.')
+            if p == '/api/docente/lezione':
+                # apre o chiude una lezione per gli allievi (con le sue schede e appendici)
+                lid = str(dati.get('id', ''))
+                if lid not in {l['id'] for l in CORSO['lezioni']}:
+                    return self.errore(404, 'Lezione non trovata.')
+                with lock:
+                    attive = set(config['lezioni_attive'])
+                    attive.add(lid) if dati.get('attiva') else attive.discard(lid)
+                    config['lezioni_attive'] = [l['id'] for l in CORSO['lezioni'] if l['id'] in attive]
+                    scrivi_json(CONFIG, config)
+                print(f'{datetime.now():%H:%M:%S}  {lid} ' + ('aperta' if dati.get('attiva') else 'chiusa') + ' agli allievi')
+                return self.rispondi(200, {'attive': config['lezioni_attive']})
             with lock:
                 a = archivio['allievi'].get(str(dati.get('id', '')))
                 if not a:

@@ -71,6 +71,10 @@ Indirizzo sul tuo computer:  http://localhost:8000/docente
   account", con il loro codice).
   "Nuovo codice personale" se l'ha dimenticato, "Azzera progressi" per
   farlo ripartire da capo (nome e codice restano), "Elimina allievo".
+- Lezioni (pulsante in alto): le 15 lezioni del corso. All'inizio sono aperte
+  agli allievi solo la 1 e la 2; quando fai una lezione in aula premi "Apri agli
+  allievi" e la vedono entro mezzo minuto, con la sua scheda riassuntiva e le
+  appendici collegate. "Chiudi" la nasconde di nuovo (i progressi restano).
 - Presentazioni (pulsante in alto): presentazione della scuola, "Rotta verso
   la patente", schede riassuntive e appendici A-M, da proiettare. Si aprono in
   una nuova scheda: un clic per lo schermo intero, poi frecce, telecomando del

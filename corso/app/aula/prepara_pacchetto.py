@@ -35,7 +35,9 @@ if args.app:
     shutil.copy(os.path.join(args.app, 'corso.json'), os.path.join(WWW, 'corso.json'))
     shutil.rmtree(os.path.join(WWW, 'slides'), ignore_errors=True)
     shutil.copytree(os.path.join(args.app, 'slides'), os.path.join(WWW, 'slides'))
-for richiesto in ('corso.json', 'slides', 'fonts/fonts.css', 'vendor/qrcode.js'):
+    shutil.rmtree(os.path.join(WWW, 'appendici'), ignore_errors=True)
+    shutil.copytree(os.path.join(args.app, 'appendici'), os.path.join(WWW, 'appendici'))
+for richiesto in ('corso.json', 'slides', 'appendici', 'fonts/fonts.css', 'vendor/qrcode.js'):
     if not os.path.exists(os.path.join(WWW, richiesto)):
         raise SystemExit(f'manca www/{richiesto}')
 
@@ -61,6 +63,15 @@ open(os.path.join(WWW, 'grafica.js'), 'w', encoding='utf-8').write(
     + grafica + '\n' + el + '\n' + head)
 shutil.copy(os.path.join(QUI, 'docente.html'), os.path.join(WWW, 'docente.html'))
 shutil.copy(os.path.join(APP, 'stemma.webp'), os.path.join(WWW, 'stemma.webp'))
+
+# appendici per gli allievi: caratteri locali, così funzionano anche senza internet
+for f in os.listdir(os.path.join(WWW, 'appendici')):
+    pa = os.path.join(WWW, 'appendici', f)
+    h = open(pa, encoding='utf-8').read()
+    if 'fonts.googleapis' in h:
+        h = re.sub(r'<link rel="stylesheet" href="https://fonts\.googleapis\.com[^>]*>', '', h)
+        h = h.replace('</head>', '<link rel="stylesheet" href="../fonts/fonts.css"></head>', 1)
+        open(pa, 'w', encoding='utf-8').write(h)
 
 # presentazioni da proiettare dall'area istruttore: gli HTML esportati, con caratteri locali e il proiettore
 HTML = os.path.join(os.path.dirname(APP), 'export', 'html')

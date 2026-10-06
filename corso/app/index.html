@@ -141,6 +141,14 @@ th,td{text-align:left; padding:10px; border-bottom:1px solid var(--line)}
 th{font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--soft)}
 td.num,th.num{text-align:right; font-variant-numeric:tabular-nums}
 .tbl{overflow-x:auto}
+/* scheda riassuntiva e appendici: in cima alla lezione e nei Materiali */
+.xrow{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px}
+.xcard{display:flex; gap:12px; align-items:center; text-align:left; font:inherit; color:var(--ink); background:var(--card); border:2px solid var(--hue); border-radius:18px; padding:12px 14px; cursor:pointer; box-shadow:var(--shadow)}
+.xcard:hover{transform:translateY(-1px)}
+.xcard .xi{flex:none; width:46px; height:46px; border-radius:14px; background:var(--hue); color:#fff; display:grid; place-items:center; font-family:var(--display); font-size:22px}
+.xcard .xi svg{width:30px; height:30px}
+.xcard b{display:block; font-weight:800; line-height:1.25} .xcard small{display:block; color:var(--soft); font-weight:700; font-size:13px; line-height:1.35}
+.xcard[disabled]{cursor:default; border-style:dashed; border-color:var(--line); box-shadow:none; background:transparent; transform:none} .xcard[disabled] .xi{background:var(--line); color:var(--soft)} .xcard[disabled] b{color:var(--soft)}
 .errmsg{color:var(--coral); font-weight:800; margin:0}
 .errmsg:empty{display:none}
 .notice.net{background:var(--sea-t)}
@@ -161,6 +169,9 @@ footer.foot .legal{display:block; margin-top:4px; font-size:11.5px; font-weight:
   .head .badge{width:52px; height:52px} .brand i{display:none}
   header.bar .in{gap:8px} .brand{gap:8px} .brand svg{width:38px; height:38px} .brand b{font-size:16px}
   .navb{padding:6px 9px; font-size:13px} .who span{display:none}
+}
+@media (max-width:520px){
+  .navb span{display:none} .navb{padding:7px 9px} .brand b{font-size:15px}
   .tbl{padding:12px 8px} .tbl table{font-size:13px} .tbl th,.tbl td{padding:8px 4px; white-space:nowrap} .tbl th{letter-spacing:0; font-size:11px} .tbl .lt{display:none} .tbl .sh{display:inline}
 }
 @media (prefers-reduced-motion: no-preference){.opt,.btn{transition:background .15s, border-color .15s, transform .15s} .btn:active{transform:scale(.97)}}
@@ -176,6 +187,7 @@ footer.foot .legal{display:block; margin-top:4px; font-size:11.5px; font-weight:
   <nav class="nav" id="nav" hidden>
     <button class="navb" id="nav-home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 L12 3 L21 11 M5 9.5 V21 H10 V15 H14 V21 H19 V9.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Home</span></button>
     <button class="navb" id="nav-prog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21 H21 M6 17 V12 M11 17 V6 M16 17 V9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><span>Progressi</span></button>
+    <button class="navb" id="nav-mat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6 Q8 3.5 3 4.5 V19 Q8 18 12 20.5 Q16 18 21 19 V4.5 Q16 3.5 12 6 Z M12 6 V20.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg><span>Materiali</span></button>
   </nav>
   <span class="who" id="who"></span>
 </div><svg class="waves" viewBox="0 0 960 14" preserveAspectRatio="none" aria-hidden="true"><path id="wv-h" fill="#12A4B5" fill-opacity=".45"/></svg></header>
@@ -240,7 +252,7 @@ const store={
     try{
       const info=await api('info');
       if(info.aula){
-        mode='aula'; aula=info;
+        mode='aula'; aula=info; if(info.attive) ATT=new Set(info.attive);
         if(tok.get()){
           try{ const j=await api('progresso'); giro=j.giro||0; return Object.assign(blank(),j.stato,{nome:j.nome,consenso:true}); }
           catch(e){ if(e.status===401) tok.set(null); else throw e; }
@@ -286,11 +298,26 @@ const store={
 };
 addEventListener('pagehide',()=>store.flush());
 setInterval(()=>{ if(mode==='aula' && offline && S && S.nome) store.save(); },15000);
+// in aula: quando l'istruttore apre una lezione, la home e i materiali si aggiornano da soli
+setInterval(async()=>{
+  if(mode!=='aula'||!S||!S.nome) return;
+  try{ const i=await api('info'); const n=new Set(i.attive||[]);
+    if([...n].sort().join()!==[...(ATT||[])].sort().join()){ ATT=n; if(curView===vHome||curView===vMateriali) curView(); } }catch(e){}
+},30000);
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') store.flush(); });
 
 /* ---------- utilità ---------- */
 const el=(tag,attrs={},...kids)=>{const n=document.createElement(tag);for(const[k,v] of Object.entries(attrs)){if(k==='class')n.className=v;else if(k==='style')n.setAttribute('style',v);else if(k.startsWith('on'))n.addEventListener(k.slice(2),v);else if(v!==false&&v!=null)n.setAttribute(k,v===true?'':v);}for(const k of kids.flat()){if(k==null||k===false)continue;n.append(k.nodeType?k:document.createTextNode(String(k)));}return n;};
 const lez=id=>C.lezioni.find(l=>l.id===id);
+// lezioni aperte agli allievi: in aula le decide l'istruttore, online il campo «attiva» di corso.json
+let ATT=null;
+const attiva=id=>ATT?ATT.has(id):!!(lez(id)&&lez(id).attiva);
+const aperte=()=>C.lezioni.filter(l=>attiva(l.id));
+const appendice=id=>C.appendici.find(a=>a.id===id);
+const appAperta=a=>a.lezioni.some(attiva);
+const prima=a=>lez(a.lezioni.find(attiva)||a.lezioni[0]);
+// la slide da rivedere: quella della lezione, oppure i numeri d'oro se la lezione è ancora chiusa
+const rivedi=q=>{const r=C.quiz[q].rivedi; return r[0]==='SR'||attiva(r[0])?r:['SR',C.schede.generali[C.schede.generali.length-1]];};
 const lidx=id=>C.lezioni.findIndex(l=>l.id===id);
 const img=(L,p)=>'slides/'+L+'-'+String(p).padStart(3,'0')+'.jpg';
 const allPages=L=>lez(L).capitoli.flatMap(c=>c.pagine);
@@ -304,13 +331,17 @@ function stato(L){
   return {pagine:pages.length, viste:pages.filter(p=>sv.has(p)).length, quiz:qs.length, fatti:fatti.length, giusti:giusti.length, errati:fatti.length-giusti.length, recuperati:recuperati.length};
 }
 const errati=()=>Object.entries(S.risposte).filter(([q,a])=>!a.ok && C.quiz[q]).map(([q])=>q);
+const etichetta=r=>r[0]==='SR'?'I numeri d’oro':lez(r[0]).num+', slide '+r[1];
 function bar(v){return el('div',{class:'bar-p',role:'progressbar','aria-valuenow':v,'aria-valuemin':0,'aria-valuemax':100},el('i',{style:'width:'+v+'%'}));}
-function go(fn,...a){ if(typeof chiudiFs==='function') chiudiFs(); cur=null; window.scrollTo({top:0}); fn(...a); navCur(fn);}
+let curView=null;
+function go(fn,...a){ if(typeof chiudiFs==='function') chiudiFs(); cur=null; curView=fn; window.scrollTo({top:0}); fn(...a); navCur(fn);}
 function navCur(fn){
   document.getElementById('nav-home').toggleAttribute('aria-current',false);
   document.getElementById('nav-prog').toggleAttribute('aria-current',false);
+  document.getElementById('nav-mat').toggleAttribute('aria-current',false);
   if(fn===vHome) document.getElementById('nav-home').setAttribute('aria-current','page');
   if(fn===vStorico) document.getElementById('nav-prog').setAttribute('aria-current','page');
+  if(fn===vMateriali||fn===vScheda) document.getElementById('nav-mat').setAttribute('aria-current','page');
 }
 function head(pill,title,hue,icon,big){
   return el('div',{class:'head',style:'--hue:'+hue},badge(icon,hue),
@@ -370,7 +401,7 @@ function vRegistrazione(){
 
 /* ---------- home ---------- */
 function vHome(){
-  const tot=C.lezioni.map(l=>stato(l.id));
+  const tot=aperte().map(l=>stato(l.id));
   const sum=k=>tot.reduce((a,s)=>a+s[k],0);
   const err=errati();
   $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
@@ -383,7 +414,12 @@ function vHome(){
       el('div',{class:'stack',style:'gap:4px'},el('h3',{},err.length+(err.length===1?' quiz da ripassare':' quiz da ripassare')),el('p',{class:'muted'},'Un errore diventa giusto quando rifai la domanda e rispondi bene.')),
       el('button',{class:'btn coral',onclick:()=>go(vQuiz,{titolo:'Ripasso degli errori',ids:err.slice(0,10),ritorno:['home']})},'Ripassa gli errori')):null,
     head('Il percorso','Le lezioni','var(--sea)','book',false),
-    ...C.lezioni.map((l,i)=>{const s=stato(l.id), v=pct(s.viste,s.pagine), hue=HUES[i%5];
+    ...C.lezioni.map((l,i)=>{const hue=HUES[i%5];
+      if(!attiva(l.id)) return el('div',{class:'card lez locked'},
+        el('div',{class:'num'},svgEl(`<path d="${blob(52,52,47,1+i,.07,8)}" fill="var(--line)"/>`,'','0 0 104 104'),el('b',{style:'color:var(--soft)'},String(i+1))),
+        el('div',{class:'stack',style:'gap:6px; min-width:0'},el('span',{class:'muted',style:'font-weight:800; font-size:13px'},l.num),el('h3',{class:'muted'},l.titolo),
+          el('span',{class:'chip',style:'align-self:flex-start'},'🔒 Si apre quando la facciamo in aula')));
+      const s=stato(l.id), v=pct(s.viste,s.pagine);
       return el('div',{class:'card lez',style:'--hue:'+hue},
         el('div',{class:'num'},svgEl(`<path d="${blob(52,52,47,1+i,.07,8)}" fill="${hue}"/>`,'','0 0 104 104'),el('b',{},String(i+1))),
         el('div',{class:'stack',style:'gap:8px; min-width:0'},
@@ -391,7 +427,6 @@ function vHome(){
           bar(v),
           el('div',{class:'row',style:'gap:8px'},el('span',{class:'chip'},v+'% slide'),el('span',{class:'chip '+(s.giusti?'ok':'')},s.giusti+' giusti'),s.errati?el('span',{class:'chip ko'},s.errati+' da ripassare'):null,s.recuperati?el('span',{class:'chip rev'},s.recuperati+' recuperati'):null)),
         el('div',{class:'go'},el('button',{class:'btn',onclick:()=>go(vLezione,l.id)},s.viste?'Continua':'Inizia')));}),
-    ...[3,4,5].map(n=>el('div',{class:'card lez locked'},el('div',{class:'num'},svgEl(`<path d="${blob(52,52,47,n,.07,8)}" fill="var(--line)"/>`,'','0 0 104 104'),el('b',{style:'color:var(--soft)'},String(n))),el('div',{},el('h3',{class:'muted'},'Lezione '+String(n).padStart(2,'0')),el('p',{class:'muted'},'Disponibile nella versione completa')))),
     el('button',{class:'link',onclick:()=>go(vStorico)},'I tuoi progressi e lo storico dei quiz'),
     localNote()));
 }
@@ -402,6 +437,7 @@ function vLezione(L){
   $app.replaceChildren(el('div',{class:'stack',style:'gap:20px'},
     el('button',{class:'link',onclick:()=>go(vHome)},'← Tutte le lezioni'),
     head(l.num+' · 2 ore',l.titolo,hue,lidx(L)===0?'hull':'propeller',true),
+    extra(l),
     el('div',{class:'card',style:'--hue:'+hue},...l.capitoli.map((c,ci)=>{
       const v=c.pagine.filter(p=>sv.has(p)).length, chue=HUES[ci%5];
       const qs=c.quiz.flatMap(s=>s.ids), fatti=qs.filter(ans), ok=fatti.filter(q=>ans(q).ok).length;
@@ -415,6 +451,18 @@ function vLezione(L){
         el('div',{class:'row acts',style:'gap:8px; justify-content:flex-end'},...acts));
     }))));
 }
+// in cima alla lezione: la scheda riassuntiva e le appendici per approfondire
+function extra(l){
+  const voci=[];
+  if(l.scheda.length) voci.push(el('button',{class:'xcard',style:'--hue:var(--purple)',onclick:()=>go(vScheda,l.id,0)},
+    el('span',{class:'xi'},svgEl(ICONS.quiz,'','0 0 100 100')),el('span',{},el('b',{},'Scheda riassuntiva'),el('small',{},'Regole e numeri da ricordare · '+l.scheda.length+(l.scheda.length===1?' pagina':' pagine')))));
+  for(const id of l.appendici){ const a=appendice(id); if(!a) continue;
+    voci.push(el('button',{class:'xcard',style:'--hue:var(--blue)',onclick:()=>apriAppendice(a)},
+      el('span',{class:'xi'},el('b',{},a.id)),el('span',{},el('b',{},'Approfondisci · Appendice '+a.id),el('small',{},a.titolo+' · '+a.slide+' slide')))); }
+  return voci.length?el('div',{class:'xrow'},...voci):null;
+}
+function apriAppendice(a){ store.flush(); location.href=a.file; }
+
 function vRaccolta(L,ci){
   const c=lez(L).capitoli[ci];
   $app.replaceChildren(el('div',{class:'stack',style:'gap:20px'},
@@ -488,6 +536,7 @@ function vSlide(L,ci,k){
   if(!last) next=el('button',{class:'btn',onclick:()=>vSlide(L,ci,k+1)},'Avanti →');
   else if(c.quiz.length>3) next=el('button',{class:'btn sea',onclick:()=>go(vRaccolta,L,ci)},'Vai ai quiz →');
   else if(c.quiz.length) next=el('button',{class:'btn sea',onclick:()=>go(vQuiz,{titolo:'Verifica · '+c.titolo.replace(/^Capitolo \d+ · /,''),ids:c.quiz.flatMap(s=>s.ids),ritorno:['lezione',L]})},'Fai la verifica →');
+  else if(lez(L).scheda.length&&ci===lez(L).capitoli.length-1) next=el('button',{class:'btn sea',onclick:()=>go(vScheda,L,0)},'Scheda riassuntiva →');
   else next=el('button',{class:'btn sea',onclick:()=>go(vLezione,L)},'Fine capitolo');
   $app.replaceChildren(el('div',{class:'stack',style:'gap:14px'},
     el('div',{class:'row',style:'justify-content:space-between'},el('button',{class:'link',onclick:()=>go(vLezione,L)},'← '+lez(L).num),el('span',{class:'counter'},(k+1)+' / '+c.pagine.length)),
@@ -500,26 +549,26 @@ function vSlide(L,ci,k){
   document.onkeydown=e=>{ if(!document.querySelector('.viewer'))return; if(e.key==='ArrowRight'&&!last)vSlide(L,ci,k+1); if(e.key==='ArrowLeft'&&k>0)vSlide(L,ci,k-1); };
 }
 function vRivedi(qid,set,state){
-  const [L,p]=C.quiz[qid].rivedi; const l=lez(L);
-  const ci=l.capitoli.findIndex(c=>c.pagine.includes(p)), k=l.capitoli[ci].pagine.indexOf(p);
-  seenAdd(L,p);
+  const [L,p]=rivedi(qid), sr=L==='SR', l=sr?null:lez(L);
+  const ci=sr?-1:l.capitoli.findIndex(c=>c.pagine.includes(p)), k=sr?0:l.capitoli[ci].pagine.indexOf(p);
+  if(!sr) seenAdd(L,p);
   if(S.risposte[qid]){S.risposte[qid].rivisto=true; store.save();}
   const back=()=>go(vQuiz,set,state);
   const retry={titolo:'Riprova la domanda',ids:[qid],ritorno:set.ritorno};
   $app.replaceChildren(el('div',{class:'stack',style:'gap:14px'},
-    el('div',{class:'row',style:'justify-content:space-between'},el('button',{class:'link',onclick:back},'← Torna al quiz'),el('span',{class:'counter'},l.num+' · slide '+p)),
+    el('div',{class:'row',style:'justify-content:space-between'},el('button',{class:'link',onclick:back},'← Torna al quiz'),el('span',{class:'counter'},sr?'Schede riassuntive':l.num+' · slide '+p)),
     el('span',{class:'pill',style:'--hue:var(--purple)'},'Rivedi l’argomento · quiz '+qid),
-    el('h2',{style:'color:var(--purple)'},l.capitoli[ci].titolo),
+    el('h2',{style:'color:var(--purple)'},sr?'I numeri d’oro del corso':l.capitoli[ci].titolo),
     slideBox(el('img',{src:img(L,p),alt:'Slide '+p+' che spiega l’argomento del quiz '+qid}),null,null,null),
     el('div',{class:'card stack',style:'--hue:var(--purple); gap:8px'},el('p',{class:'muted',style:'font-weight:800'},'La domanda'),el('p',{style:'font-weight:800; font-size:17px'},C.quiz[qid].d),
       el('p',{class:'muted'},'Letta la slide, rifai la domanda: diventa giusta quando rispondi bene.')),
-    el('div',{class:'vnav'},el('button',{class:'btn ghost',onclick:()=>go(vSlide,L,ci,k)},'Continua a studiare da qui'),el('button',{class:'btn coral',onclick:()=>go(vQuiz,retry)},'Riprova la domanda'))));
+    el('div',{class:'vnav'},sr?null:el('button',{class:'btn ghost',onclick:()=>go(vSlide,L,ci,k)},'Continua a studiare da qui'),el('button',{class:'btn coral',onclick:()=>go(vQuiz,retry)},'Riprova la domanda'))));
 }
 
 /* ---------- quiz a caselle ---------- */
 function vQuiz(set,state){
   state=state||{scelte:{},controllato:false};
-  const back=()=>{const r=set.ritorno; if(r[0]==='lezione')go(vLezione,r[1]); else if(r[0]==='raccolta')go(vRaccolta,r[1],r[2]); else go(vHome);};
+  const back=()=>{const r=set.ritorno; if(r[0]==='lezione')go(vLezione,r[1]); else if(r[0]==='raccolta')go(vRaccolta,r[1],r[2]); else if(r[0]==='materiali')go(vMateriali); else go(vHome);};
   const pronti=set.ids.every(q=>state.scelte[q]!=null);
   const items=set.ids.map((qid,n)=>{const q=C.quiz[qid], scelta=state.scelte[qid];
     const opts=q.r.map((r,j)=>{
@@ -529,7 +578,7 @@ function vQuiz(set,state){
     let fb=null;
     if(state.controllato){ const ok=scelta===q.x, a=S.risposte[qid], recuperata=!ok&&a&&a.ok;
       fb=ok?el('div',{class:'fb ok'},'Giusto.'):recuperata?el('div',{class:'fb ok'},'Recuperata: l’hai poi rifatta giusta (tentativo '+a.tentativi+').'):el('div',{class:'fb ko'},el('span',{},'Sbagliato: la risposta esatta è la '+'abc'[q.x]+').'),
-        el('button',{class:'link',onclick:()=>{window.scrollTo({top:0}); vRivedi(qid,set,state);}},'Rivedi l’argomento → '+lez(q.rivedi[0]).num+', slide '+q.rivedi[1]));}
+        el('button',{class:'link',onclick:()=>{window.scrollTo({top:0}); vRivedi(qid,set,state);}},'Rivedi l’argomento → '+etichetta(rivedi(qid))));}
     return el('div',{class:'card q'},el('p',{class:'qid'},'Domanda '+(n+1)+' · quiz '+qid),el('p',{class:'txt'},q.d),...opts,fb);});
   // un errore rifatto giusto in seguito conta come recuperato anche rivedendo il vecchio tentativo
   const sbagliate=set.ids.filter(q=>state.scelte[q]!==C.quiz[q].x && !(state.controllato && S.risposte[q] && S.risposte[q].ok));
@@ -550,9 +599,50 @@ function vQuiz(set,state){
         pronti?null:el('span',{class:'muted'},'Scegli una risposta per ogni domanda'))));
 }
 
+/* ---------- schede riassuntive ---------- */
+// L = lezione, oppure 'oro' per «Come usare le schede» e «I numeri d'oro del corso»
+function vScheda(L,k){
+  const oro=L==='oro', pp=oro?C.schede.generali:lez(L).scheda, p=pp[k], last=k===pp.length-1;
+  const titolo=oro?'Schede riassuntive · i numeri d’oro':'Scheda riassuntiva · '+lez(L).num;
+  const fuori=()=>oro?go(vMateriali):go(vLezione,L);
+  const prev=el('button',{class:'btn ghost',disabled:k===0,onclick:()=>vScheda(L,k-1)},'← Indietro');
+  const next=!last?el('button',{class:'btn',onclick:()=>vScheda(L,k+1)},'Avanti →'):
+    oro?el('button',{class:'btn sea',onclick:()=>go(vQuiz,{titolo:'Verifica dei numeri d’oro',ids:C.schede.numeri_oro,ritorno:['materiali']})},'Verifica dei numeri →'):
+    el('button',{class:'btn sea',onclick:fuori},'Fine scheda');
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:14px'},
+    el('div',{class:'row',style:'justify-content:space-between'},el('button',{class:'link',onclick:fuori},oro?'← Materiali':'← '+lez(L).num),el('span',{class:'counter'},(k+1)+' / '+pp.length)),
+    el('span',{class:'pill',style:'--hue:var(--purple)'},'Da rileggere il giorno dopo la lezione'),
+    el('h2',{style:'color:var(--purple)'},oro?'I numeri d’oro del corso':lez(L).titolo),
+    slideBox(el('img',{src:img('SR',p),alt:titolo+', pagina '+(k+1)}),el('div',{class:'vnav'},prev,next),
+      k>0?()=>vScheda(L,k-1):null, !last?()=>vScheda(L,k+1):null, true)));
+  cur={src:img('SR',p), alt:titolo, label:(k+1)+' / '+pp.length, prima:k>0?()=>vScheda(L,k-1):null, dopo:!last?()=>vScheda(L,k+1):null};
+  if(fsEl) fsRender(); else if(basso.matches) apriFs(true);
+}
+
+/* ---------- materiali: schede riassuntive e appendici ---------- */
+function vMateriali(){
+  const scheda=l=>attiva(l.id)?
+    el('button',{class:'xcard',style:'--hue:var(--purple)',onclick:()=>go(vScheda,l.id,0)},el('span',{class:'xi'},l.num.slice(-2)),el('span',{},el('b',{},l.titolo),el('small',{},'Scheda · '+l.scheda.length+(l.scheda.length===1?' pagina':' pagine')))):
+    el('button',{class:'xcard',disabled:true},el('span',{class:'xi'},l.num.slice(-2)),el('span',{},el('b',{},l.titolo),el('small',{},'🔒 Con la '+l.num)));
+  const app=a=>appAperta(a)?
+    el('button',{class:'xcard',style:'--hue:var(--blue)',onclick:()=>apriAppendice(a)},el('span',{class:'xi'},a.id),el('span',{},el('b',{},a.titolo),el('small',{},a.slide+' slide · approfondimento della '+prima(a).num))):
+    el('button',{class:'xcard',disabled:true},el('span',{class:'xi'},a.id),el('span',{},el('b',{},a.titolo),el('small',{},'🔒 Si apre con la '+prima(a).num)));
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
+    head('Materiali','Schede e appendici','var(--purple)','book',true),
+    el('p',{class:'muted',style:'font-weight:700'},'Le schede riassuntive raccolgono, lezione per lezione, le regole e i numeri da ricordare: rileggile il giorno dopo. Le appendici sono approfondimenti facoltativi. Si aprono man mano che le lezioni vengono fatte in aula.'),
+    head('Ripasso','Schede riassuntive','var(--purple)','quiz',false),
+    el('div',{class:'xrow'},
+      el('button',{class:'xcard',style:'--hue:var(--sun)',onclick:()=>go(vScheda,'oro',0)},el('span',{class:'xi'},'★'),el('span',{},el('b',{},'I numeri d’oro del corso'),el('small',{},'Come usare le schede e i numeri che tornano nei quiz'))),
+      el('button',{class:'xcard',style:'--hue:var(--coral)',onclick:()=>go(vQuiz,{titolo:'Verifica dei numeri d’oro',ids:C.schede.numeri_oro,ritorno:['materiali']})},el('span',{class:'xi'},svgEl(ICONS.quiz,'','0 0 100 100')),el('span',{},el('b',{},'Verifica dei numeri d’oro'),el('small',{},C.schede.numeri_oro.length+' quiz ufficiali')))),
+    el('div',{class:'xrow'},...C.lezioni.filter(l=>l.scheda.length).map(scheda)),
+    head('Approfondire','Appendici','var(--blue)','book',false),
+    el('div',{class:'xrow'},...C.appendici.map(app)),
+    localNote()));
+}
+
 /* ---------- storico ---------- */
 function vStorico(){
-  const rows=C.lezioni.map(l=>{const s=stato(l.id); return el('tr',{},el('td',{},el('span',{class:'lt'},l.num+' · '+l.titolo),el('span',{class:'sh'},l.num.replace('Lezione ','L'))),el('td',{class:'num'},s.viste+' / '+s.pagine),el('td',{class:'num'},s.fatti+' / '+s.quiz),el('td',{class:'num'},s.giusti),el('td',{class:'num'},s.recuperati),el('td',{class:'num'},s.errati));});
+  const rows=aperte().map(l=>{const s=stato(l.id); return el('tr',{},el('td',{},el('span',{class:'lt'},l.num+' · '+l.titolo),el('span',{class:'sh'},l.num.replace('Lezione ','L'))),el('td',{class:'num'},s.viste+' / '+s.pagine),el('td',{class:'num'},s.fatti+' / '+s.quiz),el('td',{class:'num'},s.giusti),el('td',{class:'num'},s.recuperati),el('td',{class:'num'},s.errati));});
   const err=errati();
   $app.replaceChildren(el('div',{class:'stack',style:'gap:20px'},
     el('button',{class:'link',onclick:()=>go(vHome)},'← Home'),
@@ -612,6 +702,7 @@ function resetCard(){
 document.getElementById('home-btn').addEventListener('click',()=>{ if(S&&S.nome) go(vHome); });
 document.getElementById('nav-home').addEventListener('click',()=>{ if(S&&S.nome) go(vHome); });
 document.getElementById('nav-prog').addEventListener('click',()=>{ if(S&&S.nome) go(vStorico); });
+document.getElementById('nav-mat').addEventListener('click',()=>{ if(S&&S.nome) go(vMateriali); });
 (async function start(){
   try{ C=await (await fetch('corso.json')).json(); }
   catch(e){ $app.replaceChildren(el('div',{class:'stack'},el('h1',{},'Non riesco a caricare il corso'),el('p',{class:'muted'},'Ricarica la pagina; se il problema resta, avvisa l’istruttore.'))); return; }

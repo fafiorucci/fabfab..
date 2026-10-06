@@ -1207,8 +1207,11 @@ Tenendo conto che la nostra velocità è pari a 5.7 nodi,  sapendo che il consum
 <script>function fit(){document.querySelectorAll('.w').forEach(w=>{w.firstChild.style.transform='scale('+(w.clientWidth/1920)+')'})}addEventListener('resize',fit);fit();</script><script>/* Proiettore per le presentazioni esportate in HTML (corso/export/html).
    Una slide alla volta, adattata allo schermo. Avanti: → ↓ PagGiù Spazio Invio o clic a destra;
    indietro: ← ↑ PagSu o clic a sinistra; Inizio/Fine; F = schermo intero. Il telecomando del
-   presentatore manda PagSu/PagGiù e funziona. Aggiunto da prepara_pacchetto.py. */
+   presentatore manda PagSu/PagGiù e funziona. Aggiunto da prepara_pacchetto.py.
+   Con window.VISORE = "allievo" (appendici nell'app, da app_build.py): niente avvio a schermo intero,
+   «Torna al corso», si sfoglia anche scorrendo col dito, filigrana leggera sopra le slide. */
 (function(){
+  const allievo = window.VISORE === 'allievo';
   const css = `
   body.pres{margin:0;background:#0B1826;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center;cursor:default}
   body.pres header, body.pres .nt{display:none}
@@ -1218,10 +1221,13 @@ Tenendo conto che la nostra velocità è pari a 5.7 nodi,  sapendo che il consum
         background:rgba(11,24,38,.86);color:#fff;border-radius:999px;padding:6px 8px;font:800 15px 'Nunito Sans',Arial,sans-serif;
         box-shadow:0 6px 20px rgba(0,0,0,.35);transition:opacity .3s;z-index:9}
   .pbar.off{opacity:0;pointer-events:none}
-  .pbar button,.pbar a{font:inherit;color:#fff;background:transparent;border:0;border-radius:999px;padding:6px 12px;cursor:pointer;text-decoration:none}
+  .pbar button,.pbar a{white-space:nowrap;font:inherit;color:#fff;background:transparent;border:0;border-radius:999px;padding:6px 12px;cursor:pointer;text-decoration:none}
   .pbar button:hover,.pbar a:hover{background:rgba(255,255,255,.14)}
   .pbar .n{font-variant-numeric:tabular-nums;min-width:74px;text-align:center}
   .pstart{position:fixed;inset:0;display:grid;place-items:center;background:rgba(11,24,38,.55);z-index:10;cursor:pointer}
+  .pmark{position:fixed;inset:0;pointer-events:none;z-index:8;display:grid;place-items:center;overflow:hidden}
+  .pmark span{transform:rotate(-29deg);font:700 min(4.2vw,7.4vh) 'Nunito Sans',Arial,sans-serif;color:rgba(80,90,105,.10);white-space:nowrap}
+  .pnote{position:fixed;left:12px;right:12px;top:6px;text-align:center;font:600 10px 'Nunito Sans',Arial,sans-serif;color:rgba(201,214,227,.75);pointer-events:none;z-index:8}
   .pstart div{background:#FFC145;color:#16324F;font:700 26px 'Fredoka','Trebuchet MS',sans-serif;padding:18px 30px;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.4)}`;
   document.head.append(Object.assign(document.createElement('style'), {textContent: css}));
   document.body.classList.add('pres');
@@ -1232,11 +1238,22 @@ Tenendo conto che la nostra velocità è pari a 5.7 nodi,  sapendo che il consum
 
   const bar = document.createElement('div');
   bar.className = 'pbar';
-  bar.innerHTML = '<a href="/docente" title="Torna all’area istruttore">← Elenco</a>'
+  bar.innerHTML = (allievo ? '<a href="../" title="Torna al corso">← Corso</a>' : '<a href="/docente" title="Torna all’area istruttore">← Elenco</a>')
     + '<button data-d="-1" title="Indietro (←)">‹</button><span class="n"></span>'
     + '<button data-d="1" title="Avanti (→)">›</button>'
-    + '<button data-fs title="Schermo intero (F)">⛶ Schermo intero</button>';
+    + '<button data-fs title="Schermo intero (F)">⛶' + (allievo ? '' : ' Schermo intero') + '</button>';
   document.body.append(bar);
+  if (allievo) {
+    // torna alla pagina dell'app da cui si è arrivati, senza ricaricarla
+    bar.querySelector('a').addEventListener('click', e => {
+      try { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { e.preventDefault(); history.back(); } } catch (x) {}
+    });
+    const mark = document.createElement('div'); mark.className = 'pmark';
+    mark.innerHTML = '<span>Fabrizio Fiorucci · vietata la duplicazione</span>';
+    const nota = document.createElement('div'); nota.className = 'pnote';
+    nota.textContent = 'La proprietà intellettuale di questo materiale è di Fabrizio Fiorucci, ne sono proibite la divulgazione e la duplicazione.';
+    document.body.append(mark, nota);
+  }
   const num = bar.querySelector('.n');
 
   function fit(){ const w = slides[i]; w.firstChild.style.transform = 'scale(' + (w.clientWidth / 1920) + ')'; }
@@ -1254,12 +1271,12 @@ Tenendo conto che la nostra velocità è pari a 5.7 nodi,  sapendo che il consum
     try { const r = inFs() ? ex.call(document) : rq.call(d); if (r && r.catch) r.catch(() => {}); } catch (e) {}
   }
 
-  // all'apertura: un clic per passare a schermo intero (il browser lo consente solo dopo un gesto)
+  // all'apertura (solo in aula): un clic per passare a schermo intero (il browser lo consente solo dopo un gesto)
   const start = document.createElement('div');
   start.className = 'pstart';
   start.innerHTML = '<div>▶ Clic per proiettare a schermo intero</div>';
   start.addEventListener('click', e => { e.stopPropagation(); start.remove(); fullscreen(); wake(); });
-  document.body.append(start);
+  if (!allievo) document.body.append(start);
 
   // la barra sparisce quando il mouse sta fermo, così sullo schermo resta solo la slide
   let t = null;
@@ -1273,8 +1290,16 @@ Tenendo conto che la nostra velocità è pari a 5.7 nodi,  sapendo che il consum
   });
   addEventListener('click', e => {
     if (e.target.closest('.pbar,.pstart')) return;
-    show(e.clientX > innerWidth / 3 ? i + 1 : i - 1); wake();
+    const f = e.clientX / innerWidth;
+    if (allievo && f > 1 / 3 && f < 2 / 3) { wake(); return; }   // al centro: mostra solo i comandi
+    show(f > 1 / 3 ? i + 1 : i - 1); wake();
   });
+  let x0 = null;
+  addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, {passive: true});
+  addEventListener('touchend', e => {
+    if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 50) { show(dx < 0 ? i + 1 : i - 1); wake(); }
+  }, {passive: true});
   addEventListener('keydown', e => {
     const k = e.key;
     if (start.isConnected) { start.remove(); fullscreen(); wake(); }
