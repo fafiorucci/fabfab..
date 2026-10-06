@@ -41,7 +41,8 @@
     if (!/^api\//.test(u)) return orig(url, opt);
     await pronto;
     const b = opt.body ? JSON.parse(opt.body) : {};
-    const app = location.href.replace(/docente\.html.*$/, '');
+    // indirizzo d'aula di esempio: il QR non porta da nessuna parte e l'indirizzo non si mostra
+    const app = 'http://192.168.1.20:8000';
     switch (u) {
       case 'api/info': return json({ aula: true, versione: '0.1.0 · demo', attive: ATT });
       case 'api/docente/allievi': return json({ allievi, indirizzi: [app], attive: ATT });
@@ -58,8 +59,33 @@
     return json({ errore: 'Non disponibile nella demo.' }, 404);
   };
 
+  // presentazioni: niente nuove schede, le slide di esempio si sfogliano dentro la pagina
+  addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('a.pcard');
+    if (!a) return;
+    e.preventDefault();
+    const ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:60;background:#0B1826;display:flex;flex-direction:column';
+    const top = document.createElement('div');
+    top.style.cssText = 'display:flex;align-items:center;gap:12px;padding:10px 16px;color:#fff;font:800 15px "Nunito Sans",Arial,sans-serif';
+    top.innerHTML = '<span style="flex:1">Esempio di presentazione · frecce o clic a destra/sinistra per sfogliare</span>';
+    const x = document.createElement('button');
+    x.textContent = '✕ Chiudi'; x.style.cssText = 'font:inherit;color:#16324F;background:#FFC145;border:0;border-radius:999px;padding:8px 16px;cursor:pointer';
+    const fr = document.createElement('iframe');
+    fr.src = a.getAttribute('href'); fr.title = 'Esempio di presentazione';
+    fr.style.cssText = 'flex:1;border:0;width:100%';
+    const chiudi = () => { ov.remove(); removeEventListener('keydown', esc); };
+    const esc = ev => { if (ev.key === 'Escape') chiudi(); };
+    x.onclick = chiudi; addEventListener('keydown', esc);
+    top.append(x); ov.append(top, fr); document.body.append(ov);
+    fr.addEventListener('load', () => { try { fr.contentWindow.focus(); } catch (er) {} });
+  }, true);
+
   // avviso in cima alla pagina
   addEventListener('DOMContentLoaded', () => {
+    const st = document.createElement('style');
+    st.textContent = '.addr{display:none!important}';   // nessun indirizzo da aprire nella demo
+    document.head.append(st);
     const d = document.createElement('div');
     d.style.cssText = 'background:#FFC145;color:#16324F;font:800 14px "Nunito Sans",Arial,sans-serif;padding:10px 16px;text-align:center';
     d.innerHTML = 'Area istruttore di esempio: allievi e risultati sono inventati, le modifiche non vengono salvate. <a href="./" style="color:#16324F">← Torna all’app</a>';

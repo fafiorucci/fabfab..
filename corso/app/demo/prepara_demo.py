@@ -71,11 +71,16 @@ d = open(os.path.join(AULA, 'docente.html'), encoding='utf-8').read()
 d = d.replace('<link rel="stylesheet" href="fonts/fonts.css">', FONT, 1)
 d = d.replace('<title>Area istruttore</title>', '<title>Area istruttore demo</title>', 1)
 d = d.replace('<script src="vendor/qrcode.js"></script>', '<script src="vendor/qrcode.js"></script>\n<script src="demo-dati.js"></script>', 1)
+d = d.replace("'Gli allievi, sul wifi della scuola, inquadrano il QR o aprono:'", "'Gli allievi, sul wifi della scuola, inquadrano il QR con il telefono.'", 1)
 assert 'demo-dati.js' in d and 'fonts/fonts.css' not in d
 open(OUT + '/docente.html', 'w', encoding='utf-8').write(d)
 
 # presentazioni di esempio, con il proiettore
-proiettore = open(os.path.join(AULA, 'proiettore.js'), encoding='utf-8').read().replace('href="/docente"', 'href="../docente.html"')
+# nella demo le presentazioni si sfogliano dentro la pagina: niente link «← Elenco» né avvio a schermo intero
+proiettore = open(os.path.join(AULA, 'proiettore.js'), encoding='utf-8').read()
+proiettore = proiettore.replace("(allievo ? '<a href=\"../\" title=\"Torna al corso\">← Corso</a>' : '<a href=\"/docente\" title=\"Torna all’area istruttore\">← Elenco</a>')", "''")
+proiettore = proiettore.replace("if (!allievo) document.body.append(start);", "")
+assert '/docente' not in proiettore and 'document.body.append(start)' not in proiettore
 elenco = []
 for nome, gruppo, titolo, file in (('Rotta verso la patente - Il corso in sintesi', 'Il corso', 'Rotta verso la patente · il corso in sintesi', 'rotta'),
                                    ('Appendice C - I nodi marinari', 'Appendici', 'Appendice C · I nodi marinari', 'appendice-c')):
