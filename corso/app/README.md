@@ -31,3 +31,8 @@ Si apre toccando il proprio nome o avatar in alto: nome e cognome, colore dell'a
 - Versione corrente e regole di numerazione: `VERSIONI.md`.
 - Aiuto: pulsante «?» in alto, nell'app e nell'area istruttore; mostra cosa si fa nella pagina aperta e le domande frequenti. La prima volta compare un suggerimento sotto il pulsante.
 - Demo: `demo/prepara_demo.py` costruisce in `$SP/demo` una versione dimostrativa (lezione 1 fino al capitolo 1, scheda della lezione 1, numeri d'oro, appendici C ed E, area istruttore con allievi inventati da `demo/demo-dati.js`). Pubblicata come artifact separato.
+
+## Studio a casa (prova)
+
+- `casa/prepara_casa.py` costruisce in `$SP/casa` l'app da casa: stesse funzioni, installabile («Aggiungi a schermata Home»), funziona senza rete grazie a `sw.js`. Per la prova contiene solo le 8 slide di «Rotta verso la patente» e i 6 quiz dei numeri d'oro. Si pubblica su un repository pubblico separato con GitHub Pages.
+- Nell'app dell'aula, «Porta a casa» apre l'app da casa con i progressi; a casa, «Invia all'aula» (sul wifi della scuola) apre l'app dell'aula, che unisce i dati e li salva sul server. L'indirizzo dell'app da casa è in `server.py` (`CASA`) e si può cambiare in `dati/config.json` alla voce `"casa"`.

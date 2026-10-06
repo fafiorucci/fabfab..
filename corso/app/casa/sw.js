@@ -1,0 +1,21 @@
+/* App da casa: tiene in memoria app, slide e quiz, così si apre e funziona anche senza rete.
+   Generato da prepara_casa.py (versione e elenco dei file). */
+const CACHE = 'corso-casa-__VERSIONE__';
+const FILE = __FILE__;
+
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILE)).then(() => self.skipWaiting()));
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys()
+    .then(k => Promise.all(k.filter(x => x.startsWith('corso-casa-') && x !== CACHE).map(x => caches.delete(x))))
+    .then(() => self.clients.claim()));
+});
+// prima la copia conservata; se manca, la rete (e si conserva: per esempio i caratteri di Google)
+self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
+  e.respondWith(caches.match(e.request, {ignoreSearch: true}).then(c => c || fetch(e.request).then(r => {
+    if (r && (r.ok || r.type === 'opaque')) { const copia = r.clone(); caches.open(CACHE).then(k => k.put(e.request, copia)); }
+    return r;
+  }).catch(() => e.request.mode === 'navigate' ? caches.match('./') : undefined)));
+});

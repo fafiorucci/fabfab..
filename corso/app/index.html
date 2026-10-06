@@ -251,7 +251,7 @@ const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
 // versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
-const VERSIONE='0.3.0', RILASCIO='6 ottobre 2026';
+const VERSIONE='0.4.0', RILASCIO='6 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
@@ -333,7 +333,7 @@ const store={
       if(mode==='aula'||c){ mode='aula'; offline=true; if(c&&c.att) ATT=new Set(c.att); giro=c?c.giro||0:giro;
         return c?conProfilo(Object.assign(blank(),c.S)):blank(); } }
     try{
-      if(C&&C.demo) throw 0;   // demo: niente archivio online, i progressi restano sul dispositivo
+      if(C&&(C.demo||C.casa)) throw 0;   // demo e app da casa: niente archivio online, i progressi restano sul dispositivo
       const user=await claude.use('user');
       if(user){ me=await user.me(); uid=me.id; }
       db=await claude.use('db');
@@ -495,6 +495,7 @@ function vRegistrazione(){
         try{ const j=await api('accedi',{nome:nome.value.trim(),codice:cod.value.trim()}); tok.set(j.token);
           giro=j.giro||0; S=conProfilo(Object.assign(blank(),j.stato,{nome:j.nome,consenso:true})); applicaPreferenze(); }
         catch(err){ msg.textContent=err.status?err.message:'Non raggiungo il computer dell’aula: controlla di essere sul wifi della scuola.'; return; }
+        try{ const att=sessionStorage.getItem('corso-da-casa'); if(att){ riceviDati(await spacchetta(att),'casa'); sessionStorage.removeItem('corso-da-casa'); } }catch(e){}
         renderWho(); go(vHome); return;
       }
       S.nome=nome.value.trim(); S.consenso=true; S.creato=new Date().toISOString(); conProfilo(S); store.save(); renderWho(); go(vHome);}},
@@ -535,6 +536,8 @@ function vHome(){
     err.length?el('div',{class:'card row',style:'--hue:var(--coral); justify-content:space-between'},
       el('div',{class:'stack',style:'gap:4px'},el('h3',{},err.length+(err.length===1?' quiz da ripassare':' quiz da ripassare')),el('p',{class:'muted'},'Un errore diventa giusto quando rifai la domanda e rispondi bene.')),
       el('button',{class:'btn coral',onclick:()=>go(vQuiz,{titolo:'Ripasso degli errori',ids:err.slice(0,10),ritorno:['home']})},'Ripassa gli errori')):null,
+    (()=>{ const a=avvisoCasa; avvisoCasa=null; return a?el('p',{class:'notice net',role:'status'},a):null; })(),
+    pannelloCasa(),
     head('Il percorso','Le lezioni','var(--sea)','book',false),
     ...C.lezioni.map((l,i)=>{const hue=HUES[i%5];
       if(!attiva(l.id)) return el('div',{class:'card lez locked'},
@@ -545,7 +548,7 @@ function vHome(){
       return el('div',{class:'card lez'+(fac?' fac':''),style:'--hue:'+(fac?'var(--soft)':hue)},
         el('div',{class:'num'},svgEl(`<path d="${blob(52,52,47,1+i,.07,8)}" fill="${hue}"/>`,'','0 0 104 104'),el('b',{},String(i+1))),
         el('div',{class:'stack',style:'gap:8px; min-width:0'},
-          el('div',{},el('span',{class:'pill',style:'--hue:'+hue},l.num+' · 2 ore'),el('h3',{style:'margin-top:6px'},l.titolo)),
+          el('div',{},el('span',{class:'pill',style:'--hue:'+hue},(C.casa?l.num:l.num+' · 2 ore')),el('h3',{style:'margin-top:6px'},l.titolo)),
           bar(v),
           el('div',{class:'row',style:'gap:8px'},el('span',{class:'chip'},v+'% slide'),el('span',{class:'chip '+(s.giusti?'ok':'')},s.giusti+' giusti'),s.errati?el('button',{class:'chip ko chipbtn',title:'Ripassa i quiz sbagliati della lezione',onclick:()=>go(vQuiz,{titolo:'Ripasso · '+l.num,ids:allQuiz(l.id).filter(q=>ans(q)&&!ans(q).ok),ritorno:['home']})},s.errati+' da ripassare →'):null,s.recuperati?el('span',{class:'chip rev'},s.recuperati+' recuperati'):null,fac?el('span',{class:'chip todo'},'Facoltativa per la tua patente'):null)),
         el('div',{class:'go'},el('button',{class:fac?'btn ghost':'btn',onclick:()=>go(vLezione,l.id)},s.viste?'Continua':'Inizia')));}),
@@ -558,7 +561,7 @@ function vLezione(L){
   const l=lez(L), sv=seen(L), hue=HUES[lidx(L)%5];
   $app.replaceChildren(el('div',{class:'stack',style:'gap:20px'},
     el('button',{class:'link',onclick:()=>go(vHome)},'← Tutte le lezioni'),
-    head(l.num+' · 2 ore',l.titolo,hue,lidx(L)===0?'hull':'propeller',true),
+    head((C.casa?l.num:l.num+' · 2 ore'),l.titolo,hue,lidx(L)===0?'hull':'propeller',true),
     extra(l),
     l.nota_demo?el('p',{class:'notice'},l.nota_demo):null,
     el('div',{class:'card',style:'--hue:'+hue},...l.capitoli.map((c,ci)=>{
@@ -836,6 +839,59 @@ function vProfilo(){
 }
 
 /* ---------- storico ---------- */
+/* ---------- studio a casa: passaggio dei dati tra app dell'aula e app da casa ----------
+   L'app da casa (https, installabile, offline) e quella dell'aula (http sul PC dell'istruttore) non possono
+   parlarsi direttamente: i progressi viaggiano nel link che apre l'altra app (#da-aula=… / #da-casa=…). */
+let avvisoCasa=null;
+const AULA_KEY='corso-casa-aula';
+async function impacchetta(o){
+  const testo=JSON.stringify(o), b=new TextEncoder().encode(testo);
+  const b64=x=>btoa(String.fromCharCode(...new Uint8Array(x))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  if(window.CompressionStream){ try{ const z=await new Response(new Blob([b]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer(); return 'z.'+b64(z); }catch(e){} }
+  return 'j.'+b64(b);
+}
+async function spacchetta(t){
+  const [k,d]=[t.slice(0,2),t.slice(2)], bin=Uint8Array.from(atob(d.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0));
+  const dati=k==='z.'?await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer():bin;
+  return JSON.parse(new TextDecoder().decode(dati));
+}
+const daHash=chiave=>{ const m=location.hash.match(new RegExp('[#&]'+chiave+'=([^&]+)')); return m?m[1]:null; };
+const pulisciHash=()=>history.replaceState(null,'',location.pathname+location.search);
+const progressi=()=>({visti:S.visti,risposte:S.risposte,profilo:S.profilo,diario:S.diario});
+// quante cose nuove porta l'altra app
+function novita(prima,dopo){ let q=0,sl=0;
+  for(const [k,r] of Object.entries(dopo.risposte||{})){ const v=prima.risposte[k]; if(!v||String(r.ts)>String(v.ts)) q++; }
+  for(const [L,pp] of Object.entries(dopo.visti||{})) sl+=pp.filter(x=>!(prima.visti[L]||[]).includes(x)).length;
+  return {q,sl}; }
+function riceviDati(pacco,da){
+  const n=novita(S,pacco.S), nome=S.nome;
+  S=conProfilo(Object.assign(unisci(S,pacco.S),{nome:nome||pacco.nome,consenso:true}));
+  store.save(); renderWho();
+  avvisoCasa=(da==='casa'?'Arrivati da casa: ':'Arrivati dall’aula: ')+n.q+(n.q===1?' quiz':' quiz')+' e '+n.sl+(n.sl===1?' slide':' slide')+'.';
+}
+// in aula: «Porta a casa» apre l'app da casa con i progressi
+async function portaACasa(){ store.flush();
+  const t=await impacchetta({v:1,nome:S.nome,aula:location.origin,S:progressi()});
+  location.href=aula.casa.replace(/#.*$/,'')+'#da-aula='+t; }
+// a casa: «Invia all'aula» apre l'app dell'aula, che unisce e salva sul server
+async function inviaAllAula(){ const a=leggiAula(); if(!a) return;
+  const t=await impacchetta({v:1,nome:S.nome,S:progressi()});
+  location.href=a+'/#da-casa='+t; }
+const leggiAula=()=>{ try{ return localStorage.getItem(AULA_KEY); }catch(e){ return null; } };
+function pannelloCasa(){
+  if(C.casa){ const a=leggiAula();
+    return el('div',{class:'card stack',style:'--hue:var(--sea); gap:10px'},
+      el('span',{class:'pill',style:'--hue:var(--sea)'},'Studio a casa'),
+      el('p',{style:'font-weight:700'},'Puoi studiare e fare i quiz anche senza rete: tutto resta su questo telefono. In aula, collegato al wifi della scuola, tocca «Invia all’aula» e l’istruttore vede quello che hai fatto.'),
+      a?el('button',{class:'btn sea',style:'align-self:flex-start',onclick:inviaAllAula},'Invia all’aula'):
+        el('p',{class:'muted'},'Per collegarla all’aula, la prima volta apri questa app dal pulsante «Porta a casa» dell’app dell’aula.'));
+  }
+  if(mode==='aula'&&aula&&aula.casa) return el('div',{class:'card row',style:'--hue:var(--sea); justify-content:space-between'},
+    el('div',{class:'stack',style:'gap:4px'},el('h3',{},'Studia anche a casa'),el('p',{class:'muted'},'Porta i tuoi progressi sul telefono: a casa funziona anche senza rete. Al ritorno in aula li invii all’istruttore.')),
+    el('button',{class:'btn sea',onclick:portaACasa},'Porta a casa'));
+  return null;
+}
+
 function vStorico(){
   const rows=aperte().map(l=>{const s=stato(l.id); return el('tr',{},el('td',{},el('span',{class:'lt'},l.num+' · '+l.titolo),el('span',{class:'sh'},l.num.replace('Lezione ','L'))),el('td',{class:'num'},s.viste+' / '+s.pagine),el('td',{class:'num'},s.fatti+' / '+s.quiz),el('td',{class:'num'},s.giusti),el('td',{class:'num'},s.recuperati),el('td',{class:'num'},s.errati));});
   const err=errati();
@@ -958,6 +1014,15 @@ function suggerimento(){
   catch(e){ $app.replaceChildren(el('div',{class:'stack'},el('h1',{},'Non riesco a caricare il corso'),el('p',{class:'muted'},'Ricarica la pagina; se il problema resta, avvisa l’istruttore.'))); return; }
   S=blank(); vRegistrazione();
   S=conProfilo(await store.load()); applicaPreferenze(); renderWho();
+  if(C.casa) document.getElementById('nav-mat').style.display='none';   // l'app da casa di prova non ha schede né appendici
+  // dati arrivati dall'altra app: a casa da «Porta a casa», in aula da «Invia all'aula»
+  try{
+    const daAula=daHash('da-aula'), daCasa=daHash('da-casa');
+    if(daAula&&C.casa){ const pk=await spacchetta(daAula); try{ localStorage.setItem(AULA_KEY,pk.aula); }catch(e){} riceviDati(pk,'aula'); pulisciHash(); }
+    if(daCasa){ try{ sessionStorage.setItem('corso-da-casa',daCasa); }catch(e){} pulisciHash(); }
+    const att=(()=>{ try{ return sessionStorage.getItem('corso-da-casa'); }catch(e){ return null; } })();
+    if(att&&mode==='aula'&&S.nome){ riceviDati(await spacchetta(att),'casa'); sessionStorage.removeItem('corso-da-casa'); }
+  }catch(e){ console.warn('dati dall’altra app non letti',e); }
   if(S.nome) go(vHome); else vRegistrazione();
   setTimeout(suggerimento,1200);
 })();

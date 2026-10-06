@@ -7,6 +7,9 @@ Numerazione `MAGGIORE.MINORE.CORREZIONE`:
 Il numero è in `corso/app/index.html` (`VERSIONE`, `RILASCIO`) e in `corso/app/aula/server.py` (`VERSIONE`): si cambiano insieme.
 Si vede in fondo all'app, nell'aiuto, nell'area istruttore e nella finestra del server.
 
+## 0.4.0 · 6 ottobre 2026
+- Prova dello studio a casa: app «da casa» installabile e offline (`casa/prepara_casa.py`, sito https separato), con «Porta a casa» nell'app dell'aula e «Invia all'aula» nell'app da casa. I progressi viaggiano nel link e si uniscono a quelli del server. Per la prova contiene solo «Rotta verso la patente» e i quiz dei numeri d'oro.
+
 ## 0.3.0 · 6 ottobre 2026
 - Area istruttore: le presentazioni si aprono nella stessa pagina e «← Elenco» ci riporta senza chiedere il PIN; tra le presentazioni ci sono anche le 15 lezioni; logo e titolo riportano alla classe; versione in basso a destra.
 - App in aula: se il server non risponde si continua a lavorare; quiz e slide restano sul telefono e si inviano da soli al ritorno della connessione (unione con i dati del server).

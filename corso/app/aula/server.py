@@ -34,7 +34,9 @@ CONFIG = os.path.join(DATI, 'config.json')
 BACKUP = os.path.join(DATI, 'backup')
 PORTE = range(8000, 8011)
 MAX_CORPO = 1_000_000
-VERSIONE = '0.3.0'   # come l'app (corso/app/index.html): 0.x in prova, 1.0.0 al lancio
+# app «da casa» (https, installabile, funziona offline): si cambia in dati/config.json alla voce "casa"
+CASA = 'https://fafiorucci.github.io/corso-nautico-prova/'
+VERSIONE = '0.4.0'   # come l'app (corso/app/index.html): 0.x in prova, 1.0.0 al lancio
 
 lock = threading.Lock()
 tentativi = {}  # chiave nome -> [errori, istante del blocco]
@@ -236,7 +238,7 @@ class Gestore(SimpleHTTPRequestHandler):
             return super().do_GET()
         if p == '/api/info':
             return self.rispondi(200, {'aula': True, 'scuola': config.get('scuola', ''), 'attive': config['lezioni_attive'],
-                                       'versione': VERSIONE})
+                                       'versione': VERSIONE, 'casa': config.get('casa', CASA)})
         if p == '/api/progresso':
             with lock:
                 _, a = per_token(self.headers.get('X-Token'))
