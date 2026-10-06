@@ -13,6 +13,7 @@
 .pcard:hover{transform:translateY(-2px)}
 .pcard b{font-family:var(--display); font-size:19px; font-weight:600; line-height:1.2}
 .pcard span{font-size:13px; font-weight:800; color:var(--soft)}
+.vbadge{position:fixed; right:12px; bottom:10px; z-index:20; background:var(--navy); color:#fff; font-weight:800; font-size:12px; padding:4px 10px; border-radius:999px; opacity:.85; box-shadow:var(--shadow); pointer-events:none}
 .tiles{display:grid; grid-template-columns:repeat(4,1fr); gap:14px}
 .qrbox{display:grid; grid-template-columns:auto 1fr; gap:20px; align-items:center}
 .qr{background:#fff; border-radius:16px; padding:10px; width:172px; height:172px; display:grid; place-items:center}
@@ -40,7 +41,7 @@ input[type=password]:focus,input[type=search]:focus{outline:none; border-color:v
 <body>
 <div class="backdrop" id="backdrop" aria-hidden="true"></div>
 <header class="bar"><div class="in">
-  <span class="brand"><span id="logo-h"></span><span><b>Area istruttore</b><i>la rotta della classe</i></span></span>
+  <button class="brand" id="home-btn" aria-label="Torna alla classe"><span id="logo-h"></span><span><b>Area istruttore</b><i>la rotta della classe</i></span></button>
   <span class="spacer"></span>
   <nav class="nav" id="nav" hidden>
     <button class="navb" id="nav-classe" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21 H21 M6 17 V12 M11 17 V6 M16 17 V9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><span>Classe</span></button>
@@ -290,26 +291,30 @@ async function vPresentazioni(){
   vista='pres'; aperto=null; navCur('pres'); window.scrollTo({top:0});
   if(!P){ try{ const r=await fetch('presentazioni/elenco.json'); if(!r.ok) throw r; P=await r.json(); }catch(e){ P=null; } }
   const gruppi=P?[...new Set(P.map(x=>x.gruppo))]:[];
-  const tinta={'La scuola':'var(--coral)','Il corso':'var(--sea)','Ripasso':'var(--purple)','Appendici':'var(--blue)'};
+  const tinta={'La scuola':'var(--coral)','Il corso':'var(--sea)','Lezioni':'var(--green)','Ripasso':'var(--purple)','Appendici':'var(--blue)'};
   $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
     head('Da proiettare','Presentazioni','var(--blue)','book',true),
-    el('p',{class:'muted',style:'font-weight:700'},'Si aprono in una nuova scheda: un clic per lo schermo intero, poi avanti e indietro con le frecce, con il telecomando del presentatore o con un clic a destra e a sinistra. F per lo schermo intero, Esc per uscire.'),
+    el('p',{class:'muted',style:'font-weight:700'},'Si aprono qui: un clic per lo schermo intero, poi avanti e indietro con le frecce, con il telecomando del presentatore o con un clic a destra e a sinistra. F per lo schermo intero, Esc per uscire.'),
     ...(P?gruppi.map(g=>el('div',{class:'stack',style:'gap:12px'},
         el('span',{class:'pill',style:'--hue:'+(tinta[g]||'var(--sea)')},g),
         el('div',{class:'pres'},...P.filter(x=>x.gruppo===g).map(x=>
-          el('a',{class:'pcard',href:x.file,target:'_blank',rel:'noopener',style:'--hue:'+(tinta[g]||'var(--sea)')},el('b',{},x.titolo),el('span',{},x.slide+' slide · apri e proietta →')))))):
+          el('a',{class:'pcard',href:x.file,onclick:()=>{ try{ sessionStorage.setItem('corso-aula-vista','pres'); }catch(e){} },style:'--hue:'+(tinta[g]||'var(--sea)')},el('b',{},x.titolo),el('span',{},x.slide+' slide · apri e proietta →')))))):
       [el('p',{class:'notice'},'Le presentazioni si aprono solo dal computer dell’istruttore, quello dove gira il server.')])));
 }
 document.getElementById('nav-classe').addEventListener('click',()=>{aperto=null; vClasse(); window.scrollTo({top:0});});
 document.getElementById('nav-pres').addEventListener('click',vPresentazioni);
 document.getElementById('nav-aiuto').addEventListener('click',apriAiuto);
-fetch('api/info').then(r=>r.json()).then(i=>{ document.getElementById('versione').textContent='Area istruttore · versione '+(i.versione||''); }).catch(()=>{});
+document.getElementById('home-btn').addEventListener('click',()=>{ if(!pin.get()) return; aperto=null; vClasse(); window.scrollTo({top:0}); });
+fetch('api/info').then(r=>r.json()).then(i=>{
+  document.getElementById('versione').textContent='Area istruttore · versione '+(i.versione||'');
+  document.body.append(el('div',{class:'vbadge',title:'Versione dell’app'},'v'+(i.versione||'')));
+}).catch(()=>{});
 
 /* ---------- aiuto per l'istruttore ---------- */
 const AIUTO={
   classe:['La classe',['Il QR e l’indirizzo per far collegare gli allievi; «Proietta per la classe» li mostra in grande.','I quattro riquadri: allievi registrati, attivi oggi, slide studiate in media, risposte giuste.','La tabella: patente, esame, ultimo accesso e andamento nelle lezioni aperte. Si ordina per nome, data d’esame o ultimo accesso; clicca un allievo per il dettaglio.','«I quiz più sbagliati»: le domande da riprendere in aula, con la slide che le spiega.','«Scarica il riepilogo (CSV)» si apre con Excel.']],
   allievo:['Un allievo',['In alto patente, data d’esame, email e telefono (se li ha messi nel profilo).','La tabella per lezione e i quiz sbagliati, con cosa ha risposto e cosa era giusto.','«Nuovo codice personale» se l’ha dimenticato; «Azzera progressi» lo fa ripartire (il profilo resta); «Elimina allievo» cancella tutto.']],
-  pres:['Presentazioni',['Si aprono in una nuova scheda: un clic per lo schermo intero.','Avanti e indietro con le frecce, il telecomando del presentatore o un clic a destra/sinistra; Esc per uscire.','Si aprono solo da questo computer, non dai telefoni degli allievi.']],
+  pres:['Presentazioni',['Si aprono in questa pagina: un clic per lo schermo intero; «← Elenco» per tornare qui.','Avanti e indietro con le frecce, il telecomando del presentatore o un clic a destra/sinistra; Esc per uscire.','Si aprono solo da questo computer, non dai telefoni degli allievi.']],
   lez:['Lezioni aperte',['«Apri agli allievi» quando hai fatto la lezione in aula: la vedono entro mezzo minuto, con la sua scheda riassuntiva e le appendici collegate.','«Chiudi» la blocca di nuovo; i progressi restano.']],
 };
 const GUIDA=[
@@ -338,6 +343,8 @@ document.getElementById('nav-qr').addEventListener('click',proietta);
 (async function start(){
   try{ C=await (await fetch('corso.json')).json(); }
   catch(e){ $app.replaceChildren(el('h1',{},'Non trovo il corso: controlla la cartella www.')); return; }
+  // di ritorno da una presentazione si riapre l'elenco delle presentazioni
+  try{ if(sessionStorage.getItem('corso-aula-vista')==='pres'){ vista='pres'; sessionStorage.removeItem('corso-aula-vista'); } }catch(e){}
   if(pin.get()) carica(true); else vPin();
 })();
 })();

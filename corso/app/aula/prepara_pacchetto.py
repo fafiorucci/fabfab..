@@ -84,6 +84,8 @@ def gruppo(nome):
     if nome.startswith('Patente nautica'): return ('La scuola', 'Presentazione della scuola', 'scuola')
     if nome.startswith('Rotta verso'): return ('Il corso', 'Rotta verso la patente · il corso in sintesi', 'rotta')
     if nome.startswith('Addendum'): return ('Ripasso', 'Schede riassuntive', 'schede')
+    m = re.match(r'Lezione (\d+) - (.*)', nome)
+    if m: return ('Lezioni', f'Lezione {m.group(1)} · {m.group(2)}', 'lezione-' + m.group(1))
     m = re.match(r'Appendice ([A-Z]) - (.*)', nome)
     if m: return ('Appendici', f'Appendice {m.group(1)} · {m.group(2)}', 'appendice-' + m.group(1).lower())
     return None
@@ -99,7 +101,7 @@ for f in sorted(os.listdir(HTML)):
     open(os.path.join(PRES, g[2] + '.html'), 'w', encoding='utf-8').write(h)
     elenco.append({'gruppo': g[0], 'titolo': g[1], 'file': 'presentazioni/' + g[2] + '.html',
                    'slide': h.count('<div class="w"')})
-ordine = ['La scuola', 'Il corso', 'Ripasso', 'Appendici']
+ordine = ['La scuola', 'Il corso', 'Lezioni', 'Ripasso', 'Appendici']
 elenco.sort(key=lambda e: (ordine.index(e['gruppo']), e['titolo']))
 json.dump(elenco, open(os.path.join(PRES, 'elenco.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 

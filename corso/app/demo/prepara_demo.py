@@ -97,7 +97,9 @@ www = os.path.join(AULA, 'www')
 for f in ('stile.css', 'grafica.js'):
     shutil.copy(os.path.join(www, f), os.path.join(OUT, f))
 shutil.copy(os.path.join(www, 'vendor', 'qrcode.js'), OUT + '/vendor/qrcode.js')
-shutil.copy(os.path.join(QUI, 'demo-dati.js'), OUT + '/demo-dati.js')
+versione = re.search(r"const VERSIONE='([^']+)'", h).group(1)   # la stessa dell'app
+open(OUT + '/demo-dati.js', 'w', encoding='utf-8').write(
+    open(os.path.join(QUI, 'demo-dati.js'), encoding='utf-8').read().replace('__VERSIONE__', versione))
 d = open(os.path.join(AULA, 'docente.html'), encoding='utf-8').read()
 d = d.replace('<link rel="stylesheet" href="fonts/fonts.css">', FONT, 1)
 d = d.replace('<title>Area istruttore</title>', '<title>Area istruttore demo</title>', 1)

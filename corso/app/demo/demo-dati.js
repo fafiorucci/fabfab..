@@ -44,7 +44,7 @@
     // indirizzo d'aula di esempio: il QR non porta da nessuna parte e l'indirizzo non si mostra
     const app = 'http://192.168.1.20:8000';
     switch (u) {
-      case 'api/info': return json({ aula: true, versione: '0.1.0 · demo', attive: ATT });
+      case 'api/info': return json({ aula: true, versione: '__VERSIONE__ · demo', attive: ATT });
       case 'api/docente/allievi': return json({ allievi, indirizzi: [app], attive: ATT });
       case 'api/docente/lezione':
         ATT = b.attiva ? [...new Set([...ATT, b.id])] : ATT.filter(x => x !== b.id);

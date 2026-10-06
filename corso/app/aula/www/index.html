@@ -253,7 +253,7 @@ const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
 // versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
-const VERSIONE='0.2.0', RILASCIO='6 ottobre 2026';
+const VERSIONE='0.3.0', RILASCIO='6 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
@@ -296,6 +296,23 @@ async function api(path,body,keepalive){
   return j;
 }
 let giro=0; // cambia quando l'istruttore azzera i progressi di questo allievo
+// in aula: copia di sicurezza sul telefono, per lavorare anche quando il server non risponde;
+// al ritorno della rete si unisce ai dati del server (vince la risposta più recente, le slide viste si sommano)
+const COPIA='corso-aula-copia';
+const copia={
+  leggi(){ try{ const c=JSON.parse(localStorage.getItem(COPIA)||'null'); return c&&c.token===tok.get()?c:null; }catch(e){ return null; } },
+  scrivi(pendente){ try{ localStorage.setItem(COPIA,JSON.stringify({token:tok.get(),giro,pendente,ts:Date.now(),att:ATT?[...ATT]:null,S})); }catch(e){} },
+  togli(){ try{ localStorage.removeItem(COPIA); }catch(e){} }
+};
+function unisci(server,loc){
+  const out=Object.assign(blank(),server);
+  for(const [L,pp] of Object.entries(loc.visti||{})) out.visti[L]=[...new Set([...(out.visti[L]||[]),...pp])].sort((a,b)=>a-b);
+  for(const [q,r] of Object.entries(loc.risposte||{})){ const v=out.risposte[q];
+    if(!v||String(r.ts)>String(v.ts)) out.risposte[q]={...r,tentativi:Math.max(r.tentativi||1,v?v.tentativi||1:0)}; }
+  for(const [d,g] of Object.entries(loc.diario||{})){ const v=out.diario[d]||{q:0,s:0}; out.diario[d]={q:Math.max(v.q,g.q||0),s:Math.max(v.s,g.s||0)}; }
+  out.profilo=Object.assign({},server.profilo||{},loc.profilo||{});
+  return out;
+}
 const store={
   async load(){
     try{
@@ -303,12 +320,20 @@ const store={
       if(info.aula){
         mode='aula'; aula=info; if(info.attive) ATT=new Set(info.attive);
         if(tok.get()){
-          try{ const j=await api('progresso'); giro=j.giro||0; return conProfilo(Object.assign(blank(),j.stato,{nome:j.nome,consenso:true,creato:j.creato||null})); }
+          try{ const j=await api('progresso'); const dalServer=Object.assign(blank(),j.stato,{nome:j.nome,consenso:true,creato:j.creato||null});
+            const c=copia.leggi(); let st=dalServer;
+            // lavoro fatto senza rete (e non azzerato nel frattempo dall'istruttore): si unisce e si invia
+            if(c&&c.pendente&&(c.giro||0)===(j.giro||0)){ st=Object.assign(unisci(dalServer,c.S),{nome:j.nome,consenso:true,creato:j.creato||null}); setTimeout(()=>store.save(),300); }
+            giro=j.giro||0; return conProfilo(st); }
           catch(e){ if(e.status===401) tok.set(null); else throw e; }
         }
         return blank();
       }
-    }catch(e){ if(mode==='aula'){ offline=true; return blank(); } }
+    }catch(e){
+      // server dell'aula non raggiungibile: se su questo telefono c'è la copia, si continua con quella
+      const c=tok.get()&&copia.leggi();
+      if(mode==='aula'||c){ mode='aula'; offline=true; if(c&&c.att) ATT=new Set(c.att); giro=c?c.giro||0:giro;
+        return c?conProfilo(Object.assign(blank(),c.S)):blank(); } }
     try{
       if(C&&C.demo) throw 0;   // demo: niente archivio online, i progressi restano sul dispositivo
       const user=await claude.use('user');
@@ -330,10 +355,11 @@ const store={
     this.t=setTimeout(async()=>{
       const body=JSON.parse(JSON.stringify(S));
       if(mode==='aula'){
-        try{ await api('progresso',{visti:body.visti,risposte:body.risposte,profilo:body.profilo,diario:body.diario,giro}); offline=false; }
+        copia.scrivi(true);
+        try{ await api('progresso',{visti:body.visti,risposte:body.risposte,profilo:body.profilo,diario:body.diario,giro}); offline=false; copia.scrivi(false); }
         catch(e){
-          if(e.status===409){ giro=e.dati.giro||0; S=Object.assign(blank(),e.dati.stato,{nome:S.nome,consenso:true}); offline=false; go(vHome); return; }
-          if(e.status===401){ tok.set(null); S=blank(); renderWho(); go(vRegistrazione); return; } offline=true; console.warn('server dell’aula non raggiungibile',e); }
+          if(e.status===409){ giro=e.dati.giro||0; S=Object.assign(blank(),e.dati.stato,{nome:S.nome,consenso:true}); offline=false; copia.scrivi(false); go(vHome); return; }
+          if(e.status===401){ copia.togli(); tok.set(null); S=blank(); renderWho(); go(vRegistrazione); return; } offline=true; console.warn('server dell’aula non raggiungibile',e); }
         renderNet(); return;
       }
       if(mode==='cloud'){
@@ -846,7 +872,7 @@ function cancellaCard(){
         el('button',{class:'btn coral',onclick:async()=>{
           try{
             clearTimeout(store.t); store.t=null;
-            if(mode==='aula'){ await api('cancella',{codice:cod.value.trim()}); tok.set(null); }
+            if(mode==='aula'){ await api('cancella',{codice:cod.value.trim()}); copia.togli(); tok.set(null); }
             else if(mode==='cloud'){ await db.doc('data/users/'+uid+'/profile').delete(); }
             try{ localStorage.removeItem(KEY); }catch(e){}
           }catch(e){ msg.textContent=e.status?e.message:'Non riesco a cancellare adesso: riprova tra poco.'; return; }
@@ -897,6 +923,7 @@ const AIUTO_GUIDA=[
   ['Le slide sul telefono sono piccole',['Gira il telefono in orizzontale: la slide va a schermo intero. Oppure tocca ⛶ sulla slide.']],
   ['Ho cambiato telefono',['In aula: entra con lo stesso nome e lo stesso codice personale e ritrovi tutto.','Se hai dimenticato il codice, chiedi all’istruttore un codice nuovo.','Telefono in prestito? A fine lezione: Progressi → «Esci da questo dispositivo».']],
   ['Una lezione ha il lucchetto',['Si apre quando la fate in aula: l’istruttore la sblocca e la vedi entro mezzo minuto.']],
+  ['Posso studiare senza rete?',['Se il wifi dell’aula cade mentre studi, continua pure: quiz e slide viste restano sul telefono e si inviano da soli quando torna la connessione.','Non chiudere la scheda dell’app finché non sei di nuovo collegato.']],
   ['Dove sono i miei dati?',['In aula sul computer dell’istruttore, fuori aula nel tuo account o su questo dispositivo.','Dal profilo puoi scaricarli o cancellare l’account.']],
 ];
 function apriAiuto(){

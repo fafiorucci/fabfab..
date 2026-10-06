@@ -37,11 +37,12 @@
     + '<button data-d="1" title="Avanti (→)">›</button>'
     + '<button data-fs title="Schermo intero (F)">⛶' + (allievo ? '' : ' Schermo intero') + '</button>';
   document.body.append(bar);
+  // «← Corso» / «← Elenco»: torna alla pagina da cui si è arrivati, senza ricaricarla (e senza richiedere il PIN)
+  const indietro = bar.querySelector('a');
+  if (indietro) indietro.addEventListener('click', e => {
+    try { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { e.preventDefault(); history.back(); } } catch (x) {}
+  });
   if (allievo) {
-    // torna alla pagina dell'app da cui si è arrivati, senza ricaricarla
-    bar.querySelector('a').addEventListener('click', e => {
-      try { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { e.preventDefault(); history.back(); } } catch (x) {}
-    });
     const mark = document.createElement('div'); mark.className = 'pmark';
     mark.innerHTML = '<span>Fabrizio Fiorucci · vietata la duplicazione</span>';
     const nota = document.createElement('div'); nota.className = 'pnote';
