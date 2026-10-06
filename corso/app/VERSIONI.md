@@ -7,6 +7,10 @@ Numerazione `MAGGIORE.MINORE.CORREZIONE`:
 Il numero è in `corso/app/index.html` (`VERSIONE`, `RILASCIO`) e in `corso/app/aula/server.py` (`VERSIONE`): si cambiano insieme.
 Si vede in fondo all'app, nell'aiuto, nell'area istruttore e nella finestra del server.
 
+## 0.2.0 · 6 ottobre 2026
+- «Rivedi l'argomento»: la slide va a schermo intero (pulsante ⛶; da sola col telefono in orizzontale).
+- «N da ripassare» nei capitoli della lezione e nelle lezioni della home porta direttamente ai quiz sbagliati, dal primo.
+
 ## 0.1.0 · 6 ottobre 2026
 Prima versione numerata.
 - Allievi: 15 lezioni (aperte la 1 e la 2), slide a schermo intero, verifiche e raccolte di quiz ufficiali con rimando alla slide e recupero degli errori, schede riassuntive, numeri d'oro, appendici A-M, progressi, profilo (patente, esame, contatti, preferenze, obiettivo settimanale), aiuto per ogni pagina.

@@ -34,7 +34,7 @@ CONFIG = os.path.join(DATI, 'config.json')
 BACKUP = os.path.join(DATI, 'backup')
 PORTE = range(8000, 8011)
 MAX_CORPO = 1_000_000
-VERSIONE = '0.1.0'   # come l'app (corso/app/index.html): 0.x in prova, 1.0.0 al lancio
+VERSIONE = '0.2.0'   # come l'app (corso/app/index.html): 0.x in prova, 1.0.0 al lancio
 
 lock = threading.Lock()
 tentativi = {}  # chiave nome -> [errori, istante del blocco]

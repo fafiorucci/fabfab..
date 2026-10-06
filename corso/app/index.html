@@ -133,6 +133,8 @@ p{margin:0}
 .lez .num b{position:relative; display:grid; place-items:center; width:100%; height:100%; font-family:var(--display); font-size:30px; font-weight:700; color:#fff}
 .lez.fac{opacity:.78}
 .lez.locked{opacity:.6; box-shadow:none; background:transparent; border:2px dashed var(--line); border-left-width:2px}
+.chipbtn{border:0; font-family:inherit; cursor:pointer; text-decoration:underline; text-underline-offset:2px}
+.chipbtn:hover{filter:brightness(.95)} .chipbtn:focus-visible{outline:3px solid var(--dacc); outline-offset:2px}
 .chip{font-size:12px; font-weight:900; padding:3px 10px; border-radius:99px; background:var(--line); color:var(--soft); white-space:nowrap}
 .chip.ok{background:var(--ok-t); color:var(--ok)} .chip.ko{background:var(--ko-t); color:var(--ko)} .chip.todo{background:var(--sun-t); color:var(--ink)} .chip.rev{background:var(--lilac-t); color:var(--purple)}
 .cap{display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center; padding:14px 0; border-top:1px solid var(--line)}
@@ -249,7 +251,7 @@ const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
 // versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
-const VERSIONE='0.1.0', RILASCIO='6 ottobre 2026';
+const VERSIONE='0.2.0', RILASCIO='6 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
@@ -519,7 +521,7 @@ function vHome(){
         el('div',{class:'stack',style:'gap:8px; min-width:0'},
           el('div',{},el('span',{class:'pill',style:'--hue:'+hue},l.num+' · 2 ore'),el('h3',{style:'margin-top:6px'},l.titolo)),
           bar(v),
-          el('div',{class:'row',style:'gap:8px'},el('span',{class:'chip'},v+'% slide'),el('span',{class:'chip '+(s.giusti?'ok':'')},s.giusti+' giusti'),s.errati?el('span',{class:'chip ko'},s.errati+' da ripassare'):null,s.recuperati?el('span',{class:'chip rev'},s.recuperati+' recuperati'):null,fac?el('span',{class:'chip todo'},'Facoltativa per la tua patente'):null)),
+          el('div',{class:'row',style:'gap:8px'},el('span',{class:'chip'},v+'% slide'),el('span',{class:'chip '+(s.giusti?'ok':'')},s.giusti+' giusti'),s.errati?el('button',{class:'chip ko chipbtn',title:'Ripassa i quiz sbagliati della lezione',onclick:()=>go(vQuiz,{titolo:'Ripasso · '+l.num,ids:allQuiz(l.id).filter(q=>ans(q)&&!ans(q).ok),ritorno:['home']})},s.errati+' da ripassare →'):null,s.recuperati?el('span',{class:'chip rev'},s.recuperati+' recuperati'):null,fac?el('span',{class:'chip todo'},'Facoltativa per la tua patente'):null)),
         el('div',{class:'go'},el('button',{class:fac?'btn ghost':'btn',onclick:()=>go(vLezione,l.id)},s.viste?'Continua':'Inizia')));}),
     el('button',{class:'link',onclick:()=>go(vStorico)},'I tuoi progressi e lo storico dei quiz'),
     localNote()));
@@ -536,7 +538,7 @@ function vLezione(L){
     el('div',{class:'card',style:'--hue:'+hue},...l.capitoli.map((c,ci)=>{
       const v=c.pagine.filter(p=>sv.has(p)).length, chue=HUES[ci%5];
       const qs=c.quiz.flatMap(s=>s.ids), fatti=qs.filter(ans), ok=fatti.filter(q=>ans(q).ok).length;
-      const qstat=!qs.length?null:fatti.length<qs.length?el('span',{class:'chip todo'},qs.length+' quiz da fare'):ok===qs.length?el('span',{class:'chip ok'},'quiz superati'):el('span',{class:'chip ko'},(qs.length-ok)+' da ripassare');
+      const qstat=!qs.length?null:fatti.length<qs.length?el('span',{class:'chip todo'},qs.length+' quiz da fare'):ok===qs.length?el('span',{class:'chip ok'},'quiz superati'):el('button',{class:'chip ko chipbtn',title:'Ripassa i quiz sbagliati del capitolo',onclick:()=>go(vQuiz,{titolo:'Ripasso · '+c.titolo.replace(/^Capitolo \d+ · /,''),ids:qs.filter(q=>ans(q)&&!ans(q).ok),ritorno:['lezione',L]})},(qs.length-ok)+' da ripassare →');
       const acts=[el('button',{class:'btn ghost',onclick:()=>go(vSlide,L,ci,0)},'Studia')];
       if(c.quiz.length>3) acts.push(el('button',{class:'btn sea',onclick:()=>go(vRaccolta,L,ci)},'Quiz ('+c.quiz.length+')'));
       else if(c.quiz.length) acts.push(el('button',{class:'btn sea',onclick:()=>go(vQuiz,{titolo:'Verifica · '+c.titolo.replace(/^Capitolo \d+ · /,''),ids:c.quiz.flatMap(s=>s.ids),ritorno:['lezione',L]})},'Verifica'));
@@ -655,10 +657,13 @@ function vRivedi(qid,set,state){
     el('div',{class:'row',style:'justify-content:space-between'},el('button',{class:'link',onclick:back},'← Torna al quiz'),el('span',{class:'counter'},sr?'Schede riassuntive':l.num+' · slide '+p)),
     el('span',{class:'pill',style:'--hue:var(--purple)'},'Rivedi l’argomento · quiz '+qid),
     el('h2',{style:'color:var(--purple)'},sr?'I numeri d’oro del corso':l.capitoli[ci].titolo),
-    slideBox(el('img',{src:img(L,p),alt:'Slide '+p+' che spiega l’argomento del quiz '+qid}),null,null,null),
+    slideBox(el('img',{src:img(L,p),alt:'Slide '+p+' che spiega l’argomento del quiz '+qid}),null,null,null,true),
     el('div',{class:'card stack',style:'--hue:var(--purple); gap:8px'},el('p',{class:'muted',style:'font-weight:800'},'La domanda'),el('p',{style:'font-weight:800; font-size:17px'},C.quiz[qid].d),
       el('p',{class:'muted'},'Letta la slide, rifai la domanda: diventa giusta quando rispondi bene.')),
     el('div',{class:'vnav'},sr?null:el('button',{class:'btn ghost',onclick:()=>go(vSlide,L,ci,k)},'Continua a studiare da qui'),el('button',{class:'btn coral',onclick:()=>go(vQuiz,retry)},'Riprova la domanda'))));
+  // come nelle lezioni: ⛶ per lo schermo intero, da solo col telefono in orizzontale
+  cur={src:img(L,p), alt:'Slide che spiega l’argomento del quiz '+qid, label:sr?'Numeri d’oro':'Slide '+p, prima:null, dopo:null};
+  if(fsEl) fsRender(); else if(basso.matches) apriFs(true);
 }
 
 /* ---------- quiz a caselle ---------- */

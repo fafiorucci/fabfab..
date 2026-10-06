@@ -128,6 +128,8 @@ p{margin:0}
 .lez .num b{position:relative; display:grid; place-items:center; width:100%; height:100%; font-family:var(--display); font-size:30px; font-weight:700; color:#fff}
 .lez.fac{opacity:.78}
 .lez.locked{opacity:.6; box-shadow:none; background:transparent; border:2px dashed var(--line); border-left-width:2px}
+.chipbtn{border:0; font-family:inherit; cursor:pointer; text-decoration:underline; text-underline-offset:2px}
+.chipbtn:hover{filter:brightness(.95)} .chipbtn:focus-visible{outline:3px solid var(--dacc); outline-offset:2px}
 .chip{font-size:12px; font-weight:900; padding:3px 10px; border-radius:99px; background:var(--line); color:var(--soft); white-space:nowrap}
 .chip.ok{background:var(--ok-t); color:var(--ok)} .chip.ko{background:var(--ko-t); color:var(--ko)} .chip.todo{background:var(--sun-t); color:var(--ink)} .chip.rev{background:var(--lilac-t); color:var(--purple)}
 .cap{display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center; padding:14px 0; border-top:1px solid var(--line)}
