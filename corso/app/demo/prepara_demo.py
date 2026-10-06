@@ -19,6 +19,27 @@ APP = os.path.dirname(QUI)
 AULA = os.path.join(APP, 'aula')
 HTML = os.path.join(os.path.dirname(APP), 'export', 'html')
 APPENDICI_DEMO = ['C', 'E']
+SLIDE_DEMO = 4             # appendici e presentazioni: solo le prime slide
+
+
+def taglia(h, titolo):
+    """Tiene le prime SLIDE_DEMO slide di un HTML esportato (il resto non viene pubblicato), toglie le note
+    per l'istruttore e chiude con una slide «Nella versione completa»."""
+    inizi = [m.start() for m in re.finditer(r'<div class="w"', h)]
+    fine = h.index('<script>function fit()')
+    tot = len(inizi)
+    if tot > SLIDE_DEMO:
+        ultima = ('<div class="w" id="s-demo"><div class="f"><section class="s" style="position:absolute;inset:0;display:flex;'
+                  'flex-direction:column;align-items:center;justify-content:center;gap:40px;background:#16324F;color:#FFF8EE;'
+                  'font-family:Fredoka,\'Trebuchet MS\',sans-serif;text-align:center">'
+                  f'<p style="font-size:44px;color:#FFC145;font-weight:600">{titolo}</p>'
+                  '<p style="font-size:92px;font-weight:700;line-height:1.1">Nella versione completa</p>'
+                  f'<p style="font-size:48px;font-family:\'Nunito Sans\',Arial,sans-serif;font-weight:700">altre {tot - SLIDE_DEMO} slide</p>'
+                  '</section></div></div>\n')
+        h = h[:inizi[SLIDE_DEMO]] + ultima + h[fine:]
+    h = re.sub(r'<details class="nt">.*?</details>', '', h, flags=re.S)
+    return h, min(tot, SLIDE_DEMO), tot
+
 CAPITOLI_DEMO = 2          # Introduzione + Capitolo 1
 FONT = ('<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700'
         '&family=Nunito+Sans:wght@400;600;700;800;900&family=Caveat:wght@700&display=swap">')
@@ -48,9 +69,12 @@ for q in C['schede']['numeri_oro']:
     demo['quiz'][q] = {**C['quiz'][q], 'rivedi': ['SR', C['schede']['generali'][-1]]}
 immagini |= {f'SR-{p:03d}.jpg' for p in C['schede']['generali']}
 for a in C['appendici']:
-    demo['appendici'].append({**a, 'aperta': a['id'] in APPENDICI_DEMO})
+    voce = {**a, 'aperta': a['id'] in APPENDICI_DEMO}
     if a['id'] in APPENDICI_DEMO:
-        shutil.copy(f"{SRC}/{a['file']}", f"{OUT}/{a['file']}")
+        h, n, tot = taglia(open(f"{SRC}/{a['file']}", encoding='utf-8').read(), f"Appendice {a['id']} · {a['titolo']}")
+        open(f"{OUT}/{a['file']}", 'w', encoding='utf-8').write(h)
+        voce['slide'] = n
+    demo['appendici'].append(voce)
 for f in sorted(immagini):
     shutil.copy(f'{SRC}/slides/{f}', f'{OUT}/slides/{f}')
 json.dump(demo, open(OUT + '/corso.json', 'w'), ensure_ascii=False, separators=(',', ':'))
@@ -84,10 +108,10 @@ assert '/docente' not in proiettore and 'document.body.append(start)' not in pro
 elenco = []
 for nome, gruppo, titolo, file in (('Rotta verso la patente - Il corso in sintesi', 'Il corso', 'Rotta verso la patente · il corso in sintesi', 'rotta'),
                                    ('Appendice C - I nodi marinari', 'Appendici', 'Appendice C · I nodi marinari', 'appendice-c')):
-    p = open(os.path.join(HTML, nome + '.html'), encoding='utf-8').read()
+    p, n, tot = taglia(open(os.path.join(HTML, nome + '.html'), encoding='utf-8').read(), titolo)
     p = p.replace('</body>', '<script>' + proiettore + '</script></body>', 1)
     open(f'{OUT}/presentazioni/{file}.html', 'w', encoding='utf-8').write(p)
-    elenco.append({'gruppo': gruppo, 'titolo': titolo, 'file': f'presentazioni/{file}.html', 'slide': p.count('<div class="w"')})
+    elenco.append({'gruppo': gruppo, 'titolo': titolo, 'file': f'presentazioni/{file}.html', 'slide': n})
 json.dump(elenco, open(OUT + '/presentazioni/elenco.json', 'w'), ensure_ascii=False, indent=1)
 
 n = sum(len(fs) for _, _, fs in os.walk(OUT))
