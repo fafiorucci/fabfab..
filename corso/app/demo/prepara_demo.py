@@ -41,6 +41,7 @@ def taglia(h, titolo):
     return h, min(tot, SLIDE_DEMO), tot
 
 CAPITOLI_DEMO = 2          # Introduzione + Capitolo 1
+PAGINE_CAPITOLO_DEMO = 3   # del capitolo 1: le prime slide, più quella a cui rimanda la verifica
 FONT = ('<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700'
         '&family=Nunito+Sans:wght@400;600;700;800;900&family=Caveat:wght@700&display=swap">')
 
@@ -52,11 +53,17 @@ demo = {'demo': True, 'lezioni': [], 'appendici': [], 'schede': C['schede'], 'qu
 immagini = set()
 for L in C['lezioni']:
     if L['id'] == 'L01':
-        caps = L['capitoli'][:CAPITOLI_DEMO]
+        caps = [dict(c) for c in L['capitoli'][:CAPITOLI_DEMO]]
         resto = L['capitoli'][CAPITOLI_DEMO:]
         nq = sum(len(s['ids']) for c in resto for s in c['quiz'])
+        rimandi = {C['quiz'][q]['rivedi'][1] for c in caps for s in c['quiz'] for q in s['ids']}
+        for c in caps[1:]:
+            c['pagine'] = sorted(set(c['pagine'][:PAGINE_CAPITOLO_DEMO]) | (rimandi & set(c['pagine'])))
+        tutte = sum(len(c['pagine']) for c in L['capitoli'])
+        mostrate = sum(len(c['pagine']) for c in caps)
         demo['lezioni'].append({**L, 'attiva': True, 'capitoli': caps, 'appendici': APPENDICI_DEMO,
-                                'nota_demo': f'Nella versione completa la lezione continua con altri {len(resto)} capitoli e {nq} quiz ufficiali.'})
+                                'nota_demo': f'Demo: {mostrate} slide di esempio. Nella versione completa la lezione ha {tutte} slide, '
+                                             f'altri {len(resto)} capitoli e {nq} quiz ufficiali.'})
         for c in caps:
             immagini |= {f'L01-{p:03d}.jpg' for p in c['pagine']}
             for s in c['quiz']:
