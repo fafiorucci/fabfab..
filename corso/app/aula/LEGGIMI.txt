@@ -66,6 +66,8 @@ Indirizzo sul tuo computer:  http://localhost:8000/docente
   e quelli ancora da ripassare. Si aggiorna da sola ogni 20 secondi.
 - I quiz più sbagliati: le domande che la classe sbaglia di più, con la slide
   che le spiega. Utili per riprenderle in aula.
+- Per ogni allievo vedi anche patente, data d'esame e contatti, se li ha messi nel
+  suo profilo; puoi ordinare la classe per data d'esame.
 - Clic su un allievo: i suoi errori (cosa ha risposto e cosa era giusto),
   Gli allievi possono cancellare da soli il proprio account (Progressi → "Cancella il mio
   account", con il loro codice).

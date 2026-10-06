@@ -128,7 +128,12 @@ async function carica(primo){
 }
 
 /* ---------- la classe ---------- */
-let filtro='';
+let filtro='', ordine='nome';
+// dal profilo dell'allievo
+const PR=a=>(a.stato&&a.stato.profilo)||{};
+const patente=a=>{const p=PR(a); return [p.ambito==='entro'?'Entro 12 mg':p.ambito==='senza'?'Senza limiti':'',p.tipo==='motore'?'motore':p.tipo==='vela'?'vela':p.tipo==='entrambe'?'motore e vela':''].filter(Boolean).join(' · ')||'—';};
+const giorniA=d=>{ if(!d) return null; const [y,m,g]=d.split('-').map(Number); const t=new Date(); t.setHours(0,0,0,0); return Math.round((new Date(y,m-1,g)-t)/864e5); };
+const esame=a=>{const d=PR(a).esame, n=giorniA(d); if(!d) return '—'; const s=new Date(d+'T12:00').toLocaleDateString('it-IT',{day:'numeric',month:'short'}); return n>=0?s+' · tra '+n+' gg':s+' · passato';};
 function vClasse(silenzioso){
   aperto=null; vista='classe';
   const y=window.scrollY;
@@ -140,18 +145,24 @@ function vClasse(silenzioso){
   const tile=(v,t,hue,tint)=>el('div',{class:'stat',style:`--hue:${hue}; --tint:${tint}`},el('b',{},v),el('span',{},t));
 
   const cerca=el('input',{type:'search',placeholder:'Cerca un allievo',value:filtro,oninput:e=>{filtro=e.target.value; disegnaRighe();}});
+  const ord=el('select',{'aria-label':'Ordina per',onchange:e=>{ordine=e.target.value; disegnaRighe();}},
+    ...[['nome','Ordina per nome'],['esame','Ordina per data d’esame'],['ultimo','Ordina per ultimo accesso']].map(([v,t])=>el('option',{value:v,selected:ordine===v},t)));
   const corpo=el('tbody');
   const disegnaRighe=()=>{
     const k=filtro.trim().toLowerCase();
-    const righe=A.filter(a=>!k||a.nome.toLowerCase().includes(k)).sort((a,b)=>a.nome.localeCompare(b.nome,'it'));
+    const righe=A.filter(a=>!k||a.nome.toLowerCase().includes(k)).sort((a,b)=>
+      ordine==='esame'?((PR(a).esame||'9999')<(PR(b).esame||'9999')?-1:(PR(a).esame||'9999')>(PR(b).esame||'9999')?1:a.nome.localeCompare(b.nome,'it')):
+      ordine==='ultimo'?String(b.ultimo||'').localeCompare(String(a.ultimo||'')):a.nome.localeCompare(b.nome,'it'));
     corpo.replaceChildren(...righe.map(a=>{const t=totale(a.stato);
       return el('tr',{tabindex:'0',onclick:()=>vAllievo(a),onkeydown:e=>{if(e.key==='Enter')vAllievo(a);}},
-        el('td',{style:'font-weight:800'},a.nome),
+        el('td',{style:'font-weight:800'},el('span',{class:'row',style:'gap:8px; flex-wrap:nowrap'},el('span',{class:'av',style:'width:28px; height:28px; font-size:12px; border-width:0; background:'+(PR(a).colore||'#0B8A99')},((PR(a).nome||a.nome)[0]+((PR(a).cognome||'')[0]||'')).toUpperCase()),a.nome)),
+        el('td',{},patente(a)),
+        el('td',{style:'white-space:nowrap'},esame(a)),
         el('td',{},quando(a.ultimo)),
         ...LA().map((l,i)=>{const s=stato(a.stato,l.id); return el('td',{},el('div',{class:'mini'},bar(pct(s.viste,s.pagine),HUES[i%HUES.length]),el('small',{},pct(s.viste,s.pagine)+'% slide · '+s.giusti+'/'+s.quiz+' giusti')));}),
         el('td',{class:'num'},t.recuperati),
         el('td',{class:'num'},t.errati?el('span',{class:'chip ko'},String(t.errati)):'0'));}));
-    if(!righe.length) corpo.append(el('tr',{},el('td',{colspan:String(4+LA().length),class:'muted'},A.length?'Nessun allievo con questo nome.':'Nessun allievo registrato: fai aprire l’indirizzo qui sopra.')));
+    if(!righe.length) corpo.append(el('tr',{},el('td',{colspan:String(6+LA().length),class:'muted'},A.length?'Nessun allievo con questo nome.':'Nessun allievo registrato: fai aprire l’indirizzo qui sopra.')));
   };
   disegnaRighe();
 
@@ -173,9 +184,9 @@ function vClasse(silenzioso){
       tile(String(attivi),'attivi oggi','var(--purple)','var(--lilac-t)'),
       tile(sl+'%','slide studiate in media','var(--blue)','var(--blue-t)'),
       tile(f?pct(g,f)+'%':'—','risposte giuste','var(--coral)','var(--coral-t)')),
-    el('div',{class:'row',style:'justify-content:space-between'},head('Allievi','A che punto sono','var(--purple)','book',false),cerca),
+    el('div',{class:'row',style:'justify-content:space-between'},head('Allievi','A che punto sono','var(--purple)','book',false),el('div',{class:'row'},ord,cerca)),
     el('div',{class:'card tbl cls',style:'--hue:var(--purple)'},el('table',{},
-      el('thead',{},el('tr',{},el('th',{},'Allievo'),el('th',{},'Ultimo accesso'),...LA().map(l=>el('th',{},l.num)),el('th',{class:'num'},'Recuperati'),el('th',{class:'num'},'Da ripassare'))),corpo)),
+      el('thead',{},el('tr',{},el('th',{},'Allievo'),el('th',{},'Patente'),el('th',{},'Esame'),el('th',{},'Ultimo accesso'),...LA().map(l=>el('th',{},l.num)),el('th',{class:'num'},'Recuperati'),el('th',{class:'num'},'Da ripassare'))),corpo)),
     el('p',{class:'muted'},'Clicca un allievo per vedere i quiz sbagliati, dargli un codice nuovo se l’ha dimenticato o azzerare i suoi progressi. La pagina si aggiorna da sola ogni 20 secondi.'),
     head('Da riprendere in aula','I quiz più sbagliati','var(--coral)','flag',false),
     peggiori.length?el('div',{class:'card',style:'--hue:var(--coral)'},...peggiori.map(([q,c])=>{const Q=C.quiz[q];
@@ -212,6 +223,10 @@ function vAllievo(a,silenzioso){
   $app.replaceChildren(el('div',{class:'stack',style:'gap:20px'},
     el('button',{class:'link',onclick:()=>{aperto=null; vClasse(); window.scrollTo({top:0});}},'← La classe'),
     head('Allievo · ultimo accesso '+quando(a.ultimo),a.nome,'var(--purple)','book',true),
+    el('div',{class:'tiles'},...[['Patente',patente(a),'var(--sea)','var(--sea-t)'],['Esame',esame(a),'var(--coral)','var(--coral-t)'],
+        ['Email',PR(a).email||'—','var(--purple)','var(--lilac-t)'],['Telefono',PR(a).telefono||'—','var(--blue)','var(--blue-t)']].map(([t,v,h,ti])=>
+      el('div',{class:'stat',style:`--hue:${h}; --tint:${ti}`},el('span',{},t),el('p',{style:'font-weight:800; margin-top:4px; word-break:break-word'},
+        t==='Email'&&PR(a).email?el('a',{href:'mailto:'+PR(a).email},v):t==='Telefono'&&PR(a).telefono?el('a',{href:'tel:'+PR(a).telefono.replace(/\s/g,'')},v):v)))),
     el('div',{class:'card tbl',style:'--hue:var(--purple)'},el('table',{},
       el('thead',{},el('tr',{},el('th',{},'Lezione'),el('th',{class:'num'},'Slide'),el('th',{class:'num'},'Quiz risposti'),el('th',{class:'num'},'Giusti'),el('th',{class:'num'},'Recuperati'),el('th',{class:'num'},'Da ripassare'))),
       el('tbody',{},...LA().map(l=>{const s=stato(a.stato,l.id); return el('tr',{},el('td',{},l.num+' · '+l.titolo),el('td',{class:'num'},s.viste+' / '+s.pagine),el('td',{class:'num'},s.fatti+' / '+s.quiz),el('td',{class:'num'},s.giusti),el('td',{class:'num'},s.recuperati),el('td',{class:'num'},s.errati));})))),
@@ -241,9 +256,9 @@ function proietta(){
   document.body.append(o); document.addEventListener('keydown',esc); navCur('qr');
 }
 function esporta(){
-  const cols=['Allievo','Registrato','Ultimo accesso',...LA().flatMap(l=>[l.num+' slide %',l.num+' quiz risposti',l.num+' giusti']),'Recuperati','Da ripassare'];
+  const cols=['Allievo','Patente','Esame','Email','Telefono','Registrato','Ultimo accesso',...LA().flatMap(l=>[l.num+' slide %',l.num+' quiz risposti',l.num+' giusti']),'Recuperati','Da ripassare'];
   const righe=A.slice().sort((a,b)=>a.nome.localeCompare(b.nome,'it')).map(a=>{const t=totale(a.stato);
-    return [a.nome,a.creato||'',a.ultimo||'',...LA().flatMap(l=>{const s=stato(a.stato,l.id); return [pct(s.viste,s.pagine),s.fatti,s.giusti];}),t.recuperati,t.errati];});
+    return [a.nome,patente(a),PR(a).esame||'',PR(a).email||'',PR(a).telefono||'',a.creato||'',a.ultimo||'',...LA().flatMap(l=>{const s=stato(a.stato,l.id); return [pct(s.viste,s.pagine),s.fatti,s.giusti];}),t.recuperati,t.errati];});
   const csv='﻿'+[cols,...righe].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\r\n');
   const a=el('a',{href:URL.createObjectURL(new Blob([csv],{type:'text/csv'})),download:'classe-'+new Date().toISOString().slice(0,10)+'.csv'});
   document.body.append(a); a.click(); a.remove();

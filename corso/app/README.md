@@ -21,3 +21,7 @@ Pacchetto per il PC dell'istruttore: gli allievi sul wifi della scuola aprono l'
 
 - Tutte le 15 lezioni sono nell'elenco; quelle chiuse si vedono bloccate. Online sono aperte quelle con `attiva` in `corso.json` (si pubblicano solo le loro immagini); in aula le apre l'istruttore (Area istruttore → Lezioni) e il server non fornisce slide e appendici delle lezioni chiuse.
 - In cima a ogni lezione: la scheda riassuntiva e le appendici collegate. Menu «Materiali»: tutte le schede, i numeri d'oro con la loro verifica e le appendici A-M (si aprono con la prima lezione collegata).
+
+## Profilo dell'allievo
+
+Si apre toccando il proprio nome o avatar in alto: nome e cognome, colore dell'avatar, cambio del codice (in aula), patente (entro 12 miglia o senza limiti; motore, vela o entrambe), data d'esame, email e telefono, tema, testo più grande, obiettivo settimanale, scarica o cancella i propri dati. La patente segna come facoltative la lezione 9 (solo motore) e le lezioni 10-15 (entro le 12 miglia); la home mostra il conto alla rovescia e l'obiettivo della settimana (dal diario di studio: quiz e slide per giorno). L'istruttore vede patente, esame e contatti nella tabella della classe.

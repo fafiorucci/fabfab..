@@ -148,6 +148,30 @@ def stato_pulito(corpo):
                 'tentativi': max(1, min(int(r.get('tentativi') or 1), 999)),
                 'rivisto': bool(r.get('rivisto')),
             }
+    # profilo: solo campi noti, testi corti, valori ammessi
+    pr = corpo.get('profilo') or {}
+    if isinstance(pr, dict):
+        scelte = {'ambito': ('entro', 'senza'), 'tipo': ('motore', 'vela', 'entrambe'), 'tema': ('auto', 'chiaro', 'scuro'),
+                  'testo': ('normale', 'grande'), 'obiettivo_tipo': ('quiz', 'giorni')}
+        profilo = {}
+        for k, n in (('nome', 40), ('cognome', 40), ('email', 80), ('telefono', 30), ('colore', 20)):
+            v = ' '.join(str(pr.get(k, '')).split())[:n]
+            if v:
+                profilo[k] = v
+        for k, ok in scelte.items():
+            if pr.get(k) in ok:
+                profilo[k] = pr[k]
+        if re.fullmatch(r'\d{4}-\d{2}-\d{2}', str(pr.get('esame', ''))):
+            profilo['esame'] = pr['esame']
+        if isinstance(pr.get('obiettivo_n'), int) and 0 < pr['obiettivo_n'] <= 500:
+            profilo['obiettivo_n'] = pr['obiettivo_n']
+        stato['profilo'] = profilo
+    # diario di studio: per giorno, quiz risposti (q) e slide viste (s); ultimi 120 giorni
+    di = corpo.get('diario') or {}
+    if isinstance(di, dict):
+        giorni = sorted(k for k in di if isinstance(k, str) and re.fullmatch(r'\d{4}-\d{2}-\d{2}', k))[-120:]
+        stato['diario'] = {k: {'q': max(0, min(int((di[k] or {}).get('q') or 0), 9999)),
+                               's': max(0, min(int((di[k] or {}).get('s') or 0), 9999))} for k in giorni if isinstance(di[k], dict)}
     return stato
 
 
@@ -216,7 +240,7 @@ class Gestore(SimpleHTTPRequestHandler):
                 _, a = per_token(self.headers.get('X-Token'))
                 if not a:
                     return self.errore(401, 'Accesso scaduto: rientra con nome e codice.')
-                return self.rispondi(200, {'nome': a['nome'], 'stato': a['stato'], 'giro': a.get('giro', 0)})
+                return self.rispondi(200, {'nome': a['nome'], 'stato': a['stato'], 'giro': a.get('giro', 0), 'creato': a['creato']})
         if p == '/api/docente/allievi':
             if not self.docente_ok():
                 return self.errore(403, 'PIN errato.')
@@ -298,7 +322,30 @@ class Gestore(SimpleHTTPRequestHandler):
                     a['stato'] = stato_pulito(dati)
                 except (ValueError, TypeError):
                     return self.errore(400, 'Richiesta non valida.')
+                # nome e cognome cambiati nel profilo: aggiorna il nome con cui si entra, se non è di un altro
+                pr = a['stato'].get('profilo', {})
+                nuovo = ' '.join(x for x in (pr.get('nome'), pr.get('cognome')) if x)
+                k = chiave(nuovo)
+                if k and k != a['chiave'] and not any(b['chiave'] == k for b in archivio['allievi'].values()):
+                    a['nome'], a['chiave'] = nuovo, k
                 a['ultimo'] = adesso()
+                salva()
+            return self.rispondi(200, {'ok': True})
+
+        if p == '/api/codice':
+            # l'allievo cambia il proprio codice personale, dando quello vecchio
+            with lock:
+                _, a = per_token(self.headers.get('X-Token'))
+                if not a:
+                    return self.errore(401, 'Accesso scaduto: rientra con nome e codice.')
+                if not hmac.compare_digest(impronta(str(dati.get('vecchio', '')).strip(), a['sale']), a['codice']):
+                    time.sleep(0.6)
+                    return self.errore(403, 'Il codice attuale non è giusto.')
+                nuovo = str(dati.get('nuovo', '')).strip()
+                if not re.fullmatch(r'\d{4,6}', nuovo):
+                    return self.errore(400, 'Il nuovo codice è di 4 cifre (fino a 6).')
+                a['sale'] = secrets.token_hex(16)
+                a['codice'] = impronta(nuovo, a['sale'])
                 salva()
             return self.rispondi(200, {'ok': True})
 
@@ -344,7 +391,8 @@ class Gestore(SimpleHTTPRequestHandler):
                     salva()
                     return self.rispondi(200, {'codice': nuovo})
                 if p == '/api/docente/azzera':
-                    a['stato'] = {'visti': {}, 'risposte': {}}
+                    # azzera i progressi, il profilo resta
+                    a['stato'] = {'visti': {}, 'risposte': {}, 'profilo': a['stato'].get('profilo', {}), 'diario': {}}
                     a['giro'] = a.get('giro', 0) + 1
                     salva()
                     return self.rispondi(200, {'ok': True})
