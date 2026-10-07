@@ -7,6 +7,9 @@ Numerazione `MAGGIORE.MINORE.CORREZIONE`:
 Il numero è in `corso/app/index.html` (`VERSIONE`, `RILASCIO`) e in `corso/app/aula/server.py` (`VERSIONE`): si cambiano insieme.
 Si vede in fondo all'app, nell'aiuto, nell'area istruttore e nella finestra del server.
 
+## 0.5.2 · 7 ottobre 2026
+- Indirizzo dell'app da casa: `https://corsonautico-ondaportante.fafiorucci.workers.dev/` (Worker Cloudflare con file statici al posto del progetto Pages).
+
 ## 0.5.1 · 7 ottobre 2026
 - Indirizzo dell'app da casa: `https://corsonautico-ondaportante.pages.dev/` (progetto Cloudflare Pages «corsonautico-ondaportante»).
 

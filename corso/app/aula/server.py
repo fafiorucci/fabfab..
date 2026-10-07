@@ -35,8 +35,8 @@ BACKUP = os.path.join(DATI, 'backup')
 PORTE = range(8000, 8011)
 MAX_CORPO = 1_000_000
 # app «da casa» (https, installabile, funziona offline): si cambia in dati/config.json alla voce "casa"
-CASA = 'https://corsonautico-ondaportante.pages.dev/'
-VERSIONE = '0.5.1'   # come l'app (corso/app/index.html): 0.x in prova, 1.0.0 al lancio
+CASA = 'https://corsonautico-ondaportante.fafiorucci.workers.dev/'
+VERSIONE = '0.5.2'   # come l'app (corso/app/index.html): 0.x in prova, 1.0.0 al lancio
 
 lock = threading.Lock()
 tentativi = {}  # chiave nome -> [errori, istante del blocco]
