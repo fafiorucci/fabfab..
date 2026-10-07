@@ -251,7 +251,7 @@ const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
 // versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
-const VERSIONE='0.7.0', RILASCIO='7 ottobre 2026';
+const VERSIONE='0.7.1', RILASCIO='7 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
@@ -549,6 +549,7 @@ function vHome(){
       el('div',{class:'stack',style:'gap:4px'},el('h3',{},err.length+(err.length===1?' quiz da ripassare':' quiz da ripassare')),el('p',{class:'muted'},'Un errore diventa giusto quando rifai la domanda e rispondi bene.')),
       el('button',{class:'btn coral',onclick:()=>go(vQuiz,{titolo:'Ripasso degli errori',ids:err.slice(0,10),ritorno:['home']})},'Ripassa gli errori')):null,
     (()=>{ const a=avvisoCasa; avvisoCasa=null; return a?el('p',{class:'notice net',role:'status'},a):null; })(),
+    pannelloDocente(),
     pannelloCasa(),
     head('Il percorso','Le lezioni','var(--sea)','book',false),
     ...C.lezioni.map((l,i)=>{const hue=HUES[i%5];
@@ -890,6 +891,13 @@ async function inviaAllAula(){ const a=leggiAula(); if(!a) return;
   const t=await impacchetta({v:1,nome:S.nome,S:progressi()});
   location.href=a+'/#da-casa='+t; }
 const leggiAula=()=>{ try{ return localStorage.getItem(AULA_KEY); }catch(e){ return null; } };
+// online, entrato con l'email dell'istruttore: da qui si va all'area istruttore
+function pannelloDocente(){
+  if(!(C.online&&aula&&aula.docente)) return null;
+  return el('div',{class:'card row',style:'--hue:var(--sun); justify-content:space-between'},
+    el('div',{class:'stack',style:'gap:4px'},el('h3',{},'Sei entrato come istruttore'),el('p',{class:'muted'},'Classe, risultati, lezioni da aprire e presentazioni.')),
+    el('a',{class:'btn',href:'docente'},'Area istruttore →'));
+}
 function pannelloCasa(){
   if(C.online) return null;   // online i progressi arrivano all'istruttore da soli
   if(C.casa){ const a=leggiAula();

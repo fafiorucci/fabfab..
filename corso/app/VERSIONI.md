@@ -7,6 +7,9 @@ Numerazione `MAGGIORE.MINORE.CORREZIONE`:
 Il numero è in `corso/app/index.html` (`VERSIONE`, `RILASCIO`) e in `corso/app/aula/server.py` (`VERSIONE`): si cambiano insieme.
 Si vede in fondo all'app, nell'aiuto, nell'area istruttore e nella finestra del server.
 
+## 0.7.1 · 7 ottobre 2026
+- App online: chi entra con l'email dell'istruttore trova in home il pulsante «Area istruttore».
+
 ## 0.7.0 · 7 ottobre 2026
 - App online per tutto il corso, a casa e in aula, allo stesso indirizzo: l'allievo entra con l'email (Cloudflare Access) e la prima volta scrive solo il nome, senza codice personale; i progressi si salvano online a ogni risposta e, senza rete, si inviano al ritorno della connessione. Le slide delle lezioni aperte si scaricano subito per averle anche offline.
 - Area istruttore online (`/docente`, solo con l'email dell'istruttore): classe, risultati, quiz sbagliati, lezioni da aprire (senza ripubblicare), presentazioni da proiettare da qualunque computer.

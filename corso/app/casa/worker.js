@@ -143,7 +143,8 @@ export class Corso extends DurableObject {
     const st = this.ctx.storage, chiave = 'allievo:' + email;
     const a = await st.get(chiave);
 
-    if (p === '/api/info') return json({ aula: true, online: true, attive: await this.attive(), versione: VERSIONE });
+    if (p === '/api/info') return json({ aula: true, online: true, attive: await this.attive(), versione: VERSIONE,
+                                        docente: email === String(this.env.DOCENTE || '').toLowerCase() });
     if (p === '/api/progresso' && req.method === 'GET') {
       if (!a) return errore(401, 'Primo accesso: scrivi il tuo nome.');
       return json({ nome: a.nome, stato: a.stato, giro: a.giro || 0, creato: a.creato });
