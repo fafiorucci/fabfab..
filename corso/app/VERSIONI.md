@@ -7,6 +7,9 @@ Numerazione `MAGGIORE.MINORE.CORREZIONE`:
 Il numero è in `corso/app/index.html` (`VERSIONE`, `RILASCIO`) e in `corso/app/aula/server.py` (`VERSIONE`): si cambiano insieme.
 Si vede in fondo all'app, nell'aiuto, nell'area istruttore e nella finestra del server.
 
+## 0.8.0 · 7 ottobre 2026
+- App online: account di prova per altre scuole, creati dall'istruttore nella nuova scheda «Prove» dell'area istruttore, con scadenza (5 giorni di base). Chi prova vede l'app con le lezioni 1 e 2 (schede, numeri d'oro, appendice E) e un'area istruttore con allievi inventati e cinque presentazioni; mai gli allievi veri né le altre lezioni. Alla scadenza non si apre più niente.
+
 ## 0.7.1 · 7 ottobre 2026
 - App online: chi entra con l'email dell'istruttore trova in home il pulsante «Area istruttore».
 

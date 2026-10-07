@@ -86,6 +86,7 @@ for vecchio, nuovo in (
 d, n = re.subn(r'const GUIDA=\[.*?\n\];', '''const GUIDA=[
   ['Come entrano gli allievi',['Aprono l’indirizzo del corso (QR o link) ed entrano con la loro email: arriva un codice da inserire. La prima volta scrivono il nome.','Le email ammesse si gestiscono in Cloudflare Zero Trust → Access → Applications → policy «Allievi».','Per togliere un allievo: togli la sua email dalla policy e revoca la sessione (Zero Trust → Users).']],
   ['Senza rete',['L’app funziona anche senza rete fino a 7 giorni: le risposte si salvano sul telefono e arrivano qui appena torna la connessione.']],
+  ['Account di prova per altre scuole',['Scheda «Prove»: scrivi l’email e i giorni (5 di base) e crea l’account; poi aggiungi la stessa email alla policy «Allievi» su Cloudflare.','Chi prova vede l’app con le lezioni 1 e 2 e un’area istruttore con allievi inventati, mai i tuoi allievi. Alla scadenza non si apre più niente; «5 giorni da oggi» la prolunga, «Togli» la cancella.']],
   ['I dati',['Allievi e progressi sono salvati online sul servizio Cloudflare del corso. «Scarica il riepilogo (CSV)» ne fa una copia da aprire con Excel.']],
 ];''', d, count=1, flags=re.S)
 assert n == 1
@@ -125,7 +126,7 @@ open(OUT + '/wrangler.jsonc', 'w', encoding='utf-8').write(f'''// Generato da co
   "assets": {{
     "directory": "./public",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*", "/docente", "/docente/", "/docente.html", "/slides/*", "/appendici/*", "/presentazioni/*"]
+    "run_worker_first": ["/api/*", "/accesso.json", "/docente", "/docente/", "/docente.html", "/slides/*", "/appendici/*", "/presentazioni/*"]
   }},
   "durable_objects": {{ "bindings": [{{ "name": "CORSO", "class_name": "Corso" }}] }},
   "migrations": [{{ "tag": "v1", "new_sqlite_classes": ["Corso"] }}],

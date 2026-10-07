@@ -8,7 +8,9 @@
              niente codice personale. I dati stanno in un Durable Object (archivio SQLite di Cloudflare).
    - /docente e /api/docente/*  solo per l'email dell'istruttore (variabile DOCENTE).
    - slide, schede e appendici delle lezioni ancora chiuse non si scaricano (come contenuto_aperto in server.py);
-     le presentazioni solo per l'istruttore. */
+     le presentazioni solo per l'istruttore.
+   - account di prova per altre scuole (li crea l'istruttore, con scadenza): app con le lezioni 1-2 e area istruttore
+     con allievi inventati; mai i dati veri. Scaduta la prova non si apre più niente. */
 import { DurableObject } from 'cloudflare:workers';
 
 const VERSIONE = '__VERSIONE__';
@@ -63,26 +65,51 @@ async function aperto(p, attive, C) {
   return true;
 }
 
+// account di prova: cosa vedono e per quanto
+const PROVA_LEZIONI = ['L01', 'L02'];
+const PROVA_PRESENTAZIONI = ['scuola', 'rotta', 'lezione-01', 'lezione-02', 'appendice-e'];
+const RUOLI = new Map();   // email → {ruolo, scade}, per un minuto, per non chiedere all'archivio a ogni slide
+async function ruoloDi(archivio, email, origine) {
+  const c = RUOLI.get(email);
+  if (c && Date.now() - c.ts < 60e3) return c.r;
+  const r = await (await archivio.fetch(new Request(origine + '/interno/ruolo', { headers: { 'x-email': email } }))).json();
+  RUOLI.set(email, { r, ts: Date.now() });
+  return r;
+}
+
 export default {
   async fetch(req, env) {
     const url = new URL(req.url), p = url.pathname;
     const email = await emailDa(req, env);
     if (!email) return p.startsWith('/api/') ? errore(401, 'Accesso non verificato: rientra con la tua email.') : pagina(401, 'Accesso non verificato: ricarica la pagina ed entra con la tua email.');
-    const docente = email === String(env.DOCENTE || '').toLowerCase();
     const archivio = env.CORSO.get(env.CORSO.idFromName('corso'));
+    const R = email === String(env.DOCENTE || '').toLowerCase() ? { ruolo: 'docente' } : await ruoloDi(archivio, email, url.origin), ruolo = R.ruolo;
+    const prova = ruolo === 'prova', istruttore = ruolo === 'docente' || prova;
+    if (ruolo === 'scaduta')
+      return p.startsWith('/api/') || p === '/accesso.json' ? errore(403, 'Il periodo di prova è terminato.')
+        : pagina(403, 'Il periodo di prova dell’app del corso è terminato. Grazie per averla provata! Per informazioni contatta Fabrizio Fiorucci.');
 
     if (p.startsWith('/api/')) {
-      if (p.startsWith('/api/docente/') && !docente) return errore(403, 'Area riservata all’istruttore.');
-      const h = new Headers(req.headers); h.set('x-email', email); h.set('x-origine', url.origin);
+      if (p.startsWith('/api/docente/') && !istruttore) return errore(403, 'Area riservata all’istruttore.');
+      const h = new Headers(req.headers); h.set('x-email', email); h.set('x-ruolo', ruolo); h.set('x-origine', url.origin);
       return archivio.fetch(new Request(req.url, { method: req.method, headers: h, body: req.method === 'POST' ? await req.text() : undefined }));
     }
     if (p === '/docente' || p === '/docente/' || p === '/docente.html') {
-      if (!docente) return pagina(403, 'Questa pagina è riservata all’istruttore.');
+      if (!istruttore) return pagina(403, 'Questa pagina è riservata all’istruttore.');
       return env.ASSETS.fetch(new URL('/docente.html', url));
     }
-    if (p.startsWith('/presentazioni/') && !docente) return pagina(403, 'Le presentazioni si aprono dall’area istruttore.');
-    if (!docente && (p.startsWith('/slides/') || p.startsWith('/appendici/'))) {
-      const attive = await (await archivio.fetch(new Request(url.origin + '/interno/attive'))).json();
+    if (p.startsWith('/presentazioni/')) {
+      if (!istruttore) return pagina(403, 'Le presentazioni si aprono dall’area istruttore.');
+      if (prova) {
+        if (p === '/presentazioni/elenco.json') {
+          const elenco = await (await env.ASSETS.fetch(new URL('/presentazioni/elenco.json', url))).json();
+          return json(elenco.filter(x => PROVA_PRESENTAZIONI.some(n => x.file === 'presentazioni/' + n + '.html')));
+        }
+        if (!PROVA_PRESENTAZIONI.some(n => p === '/presentazioni/' + n + '.html')) return pagina(403, 'Nella prova questa presentazione non è disponibile.');
+      }
+    }
+    if (ruolo !== 'docente' && (p.startsWith('/slides/') || p.startsWith('/appendici/'))) {
+      const attive = prova ? R.attive : await (await archivio.fetch(new Request(url.origin + '/interno/attive'))).json();
       if (!(await aperto(p, attive, await corso(env, url)))) return pagina(403, 'Questa lezione non è ancora aperta.');
     }
     return env.ASSETS.fetch(req);
@@ -125,7 +152,31 @@ function statoPulito(corpo) {
   return stato;
 }
 
+// allievi inventati per l'area istruttore di prova (come demo/demo-dati.js), costruiti sulle lezioni 1-2
+function allieviInventati(C, attive) {
+  const quiz = C.lezioni.filter(l => attive.includes(l.id)).flatMap(l => l.capitoli.flatMap(c => c.quiz.flatMap(s => s.ids)));
+  const pagine = Object.fromEntries(C.lezioni.filter(l => attive.includes(l.id)).map(l => [l.id, l.capitoli.flatMap(c => c.pagine)]));
+  const giorno = (n, h, m) => { const d = new Date(); d.setDate(d.getDate() + n); d.setHours(h, m, 0, 0); return d.toISOString().slice(0, 19); };
+  const data = n => { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
+  return [['Giulia', 'Ferri', '#E4572E', 'senza', 'entrambe', 21, 0.9, 0.95, 0], ['Marco', 'Bassi', '#0B8A99', 'entro', 'motore', 9, 0.7, 0.6, -1],
+          ['Sara', 'Conti', '#7B5CD6', 'senza', 'vela', 35, 1, 0.85, 0], ['Luca', 'Moretti', '#2F6FDB', 'entro', 'motore', 9, 0.4, 0.5, -3],
+          ['Elena', 'Galli', '#2E9E5B', '', '', null, 0.2, 0.7, -6], ['Paolo', 'Riva', '#F4A300', 'senza', 'motore', 48, 0.8, 0.4, -2]]
+    .map(([nome, cognome, colore, ambito, tipo, esame, vista, bravura, ultimo], i) => {
+      const visti = Object.fromEntries(Object.entries(pagine).map(([l, pp]) => [l, pp.slice(0, Math.round(pp.length * vista))]));
+      const risposte = {};
+      quiz.slice(0, Math.round(quiz.length * vista)).forEach((q, k) => {
+        const ok = ((k * 7 + i * 3) % 10) / 10 < bravura, Q = C.quiz[q];
+        risposte[q] = { ok, scelta: ok ? Q.x : (Q.x + 1) % Q.r.length, ts: giorno(ultimo, 10, 0), tentativi: ok && k % 4 === 0 ? 2 : 1, rivisto: !ok && k % 2 === 0 };
+      });
+      const profilo = { nome, cognome, colore };
+      if (ambito) Object.assign(profilo, { ambito, tipo, esame: data(esame) });
+      return { id: 'esempio-' + i, nome: nome + ' ' + cognome + ' (esempio)', creato: giorno(-20 + i, 9, 0), ultimo: giorno(ultimo, 9 + i, (12 * i) % 60),
+               stato: { visti, risposte, profilo, diario: {} } };
+    });
+}
+
 export class Corso extends DurableObject {
+  async corso() { return (await this.env.ASSETS.fetch('https://corso/corso.json')).json(); }
   async attive() {
     let a = await this.ctx.storage.get('attive');
     if (!a) {
@@ -138,13 +189,21 @@ export class Corso extends DurableObject {
   async fetch(req) {
     const p = new URL(req.url).pathname, email = req.headers.get('x-email');
     if (p === '/interno/attive') return json(await this.attive());
+    if (p === '/interno/ruolo') {
+      const d = await this.ctx.storage.get('prova:' + email);
+      if (!d) return json({ ruolo: 'allievo' });
+      if (Date.now() > Date.parse(d.scade)) return json({ ruolo: 'scaduta' });
+      return json({ ruolo: 'prova', scade: d.scade, attive: d.attive || PROVA_LEZIONI });
+    }
+    const ruolo = req.headers.get('x-ruolo');
     let dati = {};
     if (req.method === 'POST') { try { dati = JSON.parse(await req.text() || '{}'); } catch (e) { return errore(400, 'Richiesta non valida.'); } }
     const st = this.ctx.storage, chiave = 'allievo:' + email;
     const a = await st.get(chiave);
 
-    if (p === '/api/info') return json({ aula: true, online: true, attive: await this.attive(), versione: VERSIONE,
-                                        docente: email === String(this.env.DOCENTE || '').toLowerCase() });
+    const d = ruolo === 'prova' ? await st.get('prova:' + email) : null;   // account di prova: lezioni e scadenza suoi
+    if (p === '/api/info') return json({ aula: true, online: true, attive: d ? d.attive : await this.attive(), versione: VERSIONE,
+                                        docente: ruolo === 'docente' || !!d, prova: d ? { scade: d.scade } : undefined });
     if (p === '/api/progresso' && req.method === 'GET') {
       if (!a) return errore(401, 'Primo accesso: scrivi il tuo nome.');
       return json({ nome: a.nome, stato: a.stato, giro: a.giro || 0, creato: a.creato });
@@ -170,11 +229,47 @@ export class Corso extends DurableObject {
     if (p === '/api/codice') return errore(400, 'Online non serve un codice: entri con la tua email.');
 
     // area istruttore (il Worker ha già controllato l'email)
+    const indirizzi = [req.headers.get('x-origine') + '/'];
+    if (d) {   // area istruttore di prova: allievi inventati più sé stesso come allievo; le lezioni 1-2 si aprono e chiudono solo per sé
+      const C = await this.corso();
+      if (p === '/api/docente/allievi') {
+        const elenco = allieviInventati(C, d.attive);
+        if (a) elenco.unshift({ id: email, nome: a.nome + ' (tu)', creato: a.creato, ultimo: a.ultimo, stato: a.stato });
+        return json({ allievi: elenco, indirizzi, attive: d.attive, prova: { scade: d.scade } });
+      }
+      if (p === '/api/docente/lezione') {
+        const id = String(dati.id || '');
+        if (!PROVA_LEZIONI.includes(id)) return errore(403, 'Nella prova si possono aprire e chiudere solo le lezioni 1 e 2.');
+        const s = new Set(d.attive); dati.attiva ? s.add(id) : s.delete(id);
+        d.attive = PROVA_LEZIONI.filter(x => s.has(x)); await st.put('prova:' + email, d);
+        return json({ attive: d.attive });
+      }
+      if (String(dati.id || '').toLowerCase() !== email) return errore(403, 'Nella prova gli allievi di esempio non si modificano.');
+    }
     if (p === '/api/docente/allievi') {
+      const prove = await st.list({ prefix: 'prova:' }), escluse = new Set([...prove.values()].map(x => x.email));
       const elenco = [...(await st.list({ prefix: 'allievo:' })).values()]
-        .filter(x => x.email !== String(this.env.DOCENTE || '').toLowerCase())   // l'istruttore che prova l'app non è in classe
+        .filter(x => x.email !== String(this.env.DOCENTE || '').toLowerCase() && !escluse.has(x.email))   // l'istruttore e le prove non sono in classe
         .map(x => ({ id: x.email, nome: x.nome, creato: x.creato, ultimo: x.ultimo, stato: x.stato }));
-      return json({ allievi: elenco, indirizzi: [req.headers.get('x-origine') + '/'], attive: await this.attive() });
+      return json({ allievi: elenco, indirizzi, attive: await this.attive(),
+                    prove: await Promise.all([...prove.values()].map(async x => ({ email: x.email, nota: x.nota || '', creato: x.creato, scade: x.scade,
+                                                                                usata: !!(await st.get('allievo:' + x.email)) }))) });
+    }
+    // account di prova per altre scuole: solo l'istruttore vero
+    if (p === '/api/docente/prova' && ruolo === 'docente') {
+      const e = corto(dati.email, 80).toLowerCase(), giorni = Math.max(1, Math.min(parseInt(dati.giorni) || 5, 60));
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) return errore(400, 'Scrivi un’email valida.');
+      if (e === String(this.env.DOCENTE || '').toLowerCase()) return errore(400, 'È l’email dell’istruttore.');
+      if (await st.get('allievo:' + e) && !(await st.get('prova:' + e))) return errore(400, 'Questa email è di un allievo del corso.');
+      const scade = new Date(Date.now() + giorni * 864e5).toISOString();
+      const vecchia = await st.get('prova:' + e);
+      await st.put('prova:' + e, { email: e, nota: corto(dati.nota, 60), creato: vecchia ? vecchia.creato : adesso(), scade, attive: vecchia ? vecchia.attive : PROVA_LEZIONI });
+      return json({ ok: true, scade });
+    }
+    if (p === '/api/docente/prova-togli' && ruolo === 'docente') {
+      const e = String(dati.email || '').toLowerCase();
+      await st.delete('prova:' + e); await st.delete('allievo:' + e);
+      return json({ ok: true });
     }
     if (p === '/api/docente/lezione') {
       const C = await (await this.env.ASSETS.fetch('https://corso/corso.json')).json();

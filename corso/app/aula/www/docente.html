@@ -48,6 +48,7 @@ input[type=password]:focus,input[type=search]:focus{outline:none; border-color:v
     <button class="navb" id="nav-qr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4 H10 V10 H4 Z M14 4 H20 V10 H14 Z M4 14 H10 V20 H4 Z M14 14 H16 M18 14 H20 V16 M14 18 V20 H16 M18 18 H20 V20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg><span>QR aula</span></button>
     <button class="navb" id="nav-pres"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4 H21 M4 4 V15 H20 V4 M12 15 V19 M8 21 L12 19 L16 21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Presentazioni</span></button>
     <button class="navb" id="nav-lez"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11 V7 a7 7 0 0 1 14 0 M4 11 H20 V21 H4 Z M12 15 V17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Lezioni</span></button>
+    <button class="navb" id="nav-prove" style="display:none"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 L20 7 V12 C20 17 16.5 20 12 21 C7.5 20 4 17 4 12 V7 Z M9 12 L11 14 L15 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Prove</span></button>
     <button class="navb" id="nav-aiuto" aria-label="Aiuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M9.3 9.4a2.8 2.8 0 1 1 3.9 2.6c-.8.4-1.2.9-1.2 1.8v.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17.4" r="1.3" fill="currentColor"/></svg><span>Aiuto</span></button>
   </nav>
 </div><svg class="waves" viewBox="0 0 960 14" preserveAspectRatio="none" aria-hidden="true"><path id="wv-h" fill="#12A4B5" fill-opacity=".45"/></svg></header>
@@ -62,6 +63,8 @@ input[type=password]:focus,input[type=search]:focus{outline:none; border-color:v
 const $app=document.getElementById('app');
 const PIN_KEY='corso-aula-pin';
 let C=null, A=[], indirizzi=[], aperto=null, timer=null, vista='classe', P=null, ATT=new Set();
+// app online: PROVE = account di prova per altre scuole (li vede solo l'istruttore); PROVA = chi guarda è un account di prova
+let PROVE=null, PROVA=null;
 const LA=()=>C.lezioni.filter(l=>ATT.has(l.id));   // lezioni aperte agli allievi
 const dove=r=>r[0]==='SR'?'Schede · i numeri d’oro':C.lezioni.find(l=>l.id===r[0]).num+' · slide '+r[1];
 
@@ -119,12 +122,14 @@ function vPin(msg){
 }
 
 async function carica(primo){
-  try{ const j=await api('docente/allievi'); A=j.allievi; indirizzi=j.indirizzi; ATT=new Set(j.attive||[]); }
+  try{ const j=await api('docente/allievi'); A=j.allievi; indirizzi=j.indirizzi; ATT=new Set(j.attive||[]); PROVE=j.prove||null; PROVA=j.prova||null;
+    document.getElementById('nav-prove').style.display=PROVE?'':'none'; }
   catch(e){ clearInterval(timer); timer=null; pin.set(null); return vPin(e.status===403?'PIN errato.':'Server non raggiungibile.'); }
   document.getElementById('nav').hidden=false;
   if(!timer) timer=setInterval(()=>carica(false),20000);
   if(vista==='pres') return primo?vPresentazioni():undefined;
   if(vista==='lez') return vLezioni();
+  if(vista==='prove') return primo?vProve():undefined;   // non si ridisegna mentre si scrive
   if(aperto){ const a=A.find(x=>x.id===aperto); if(a) return vAllievo(a,!primo); aperto=null; }
   vClasse(!primo);
 }
@@ -175,6 +180,7 @@ function vClasse(silenzioso){
 
   $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
     head('Area istruttore','La classe','var(--sea)','chart',true),
+    PROVA?el('div',{class:'notice'},'Area istruttore di prova: gli allievi sono inventati, tranne te se hai provato l’app. Puoi aprire e chiudere le lezioni 1 e 2. Prova valida fino al '+new Date(PROVA.scade).toLocaleDateString('it-IT',{day:'numeric',month:'long'})+'.'):null,
     el('div',{class:'card qrbox',style:'--hue:var(--sun)'},
       el('div',{class:'qr'},indirizzi[0]?qrSvg(indirizzi[0]):el('span',{class:'muted'},'—')),
       el('div',{class:'stack',style:'gap:8px'},el('span',{class:'pill',style:'--hue:var(--sun); color:#1B2A41'},'Per collegarsi'),
@@ -265,7 +271,38 @@ function esporta(){
   const a=el('a',{href:URL.createObjectURL(new Blob([csv],{type:'text/csv'})),download:'classe-'+new Date().toISOString().slice(0,10)+'.csv'});
   document.body.append(a); a.click(); a.remove();
 }
-function navCur(k){ for(const [id,v] of [['nav-classe','classe'],['nav-qr','qr'],['nav-pres','pres'],['nav-lez','lez']]) document.getElementById(id).toggleAttribute('aria-current',k===v); }
+function navCur(k){ for(const [id,v] of [['nav-classe','classe'],['nav-qr','qr'],['nav-pres','pres'],['nav-lez','lez'],['nav-prove','prove']]) document.getElementById(id).toggleAttribute('aria-current',k===v); }
+
+/* ---------- account di prova per altre scuole (app online) ---------- */
+function vProve(){
+  vista='prove'; aperto=null; navCur('prove');
+  const data=s=>new Date(s).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'});
+  const fE=el('input',{type:'email',id:'f-prova-email',placeholder:'nome@scuola.it',autocomplete:'off'});
+  const fG=el('input',{type:'number',id:'f-prova-giorni',min:'1',max:'60',value:'5',style:'max-width:110px'});
+  const fN=el('input',{type:'text',id:'f-prova-nota',placeholder:'Scuola o persona (facoltativo)',maxlength:'60'});
+  const msg=el('p',{class:'errmsg',role:'alert'});
+  const righe=(PROVE||[]).slice().sort((a,b)=>a.scade<b.scade?1:-1).map(x=>{ const scaduta=new Date(x.scade)<new Date();
+    return el('tr',{},el('td',{},el('b',{},x.email),x.nota?el('div',{class:'muted'},x.nota):null),
+      el('td',{},scaduta?el('span',{class:'chip ko'},'scaduta il '+data(x.scade)):'fino al '+data(x.scade)),
+      el('td',{},x.usata?'sì':'non ancora'),
+      el('td',{},el('div',{class:'row',style:'gap:6px'},
+        el('button',{class:'btn ghost',onclick:async()=>{try{await api('docente/prova',{email:x.email,giorni:5,nota:x.nota}); await carica(true);}catch(e){msg.textContent=e.message;}}},'5 giorni da oggi'),
+        el('button',{class:'btn ghost',onclick:async()=>{try{await api('docente/prova-togli',{email:x.email}); await carica(true);}catch(e){msg.textContent=e.message;}}},'Togli'))));});
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
+    head('Per altre scuole','Account di prova','var(--purple)','flag',true),
+    el('p',{class:'muted',style:'font-weight:700'},'Chi entra con un account di prova vede l’app come un allievo (lezioni 1 e 2, schede, numeri d’oro, appendice E) e un’area istruttore con allievi inventati. Non vede mai i tuoi allievi né le altre lezioni. Alla scadenza non si apre più niente.'),
+    el('form',{class:'card stack',style:'--hue:var(--purple)',onsubmit:async e=>{e.preventDefault(); msg.textContent='';
+        try{ await api('docente/prova',{email:fE.value.trim(),giorni:+fG.value||5,nota:fN.value.trim()}); fE.value=fN.value=''; await carica(true); }
+        catch(x){ msg.textContent=x.message; } }},
+      el('div',{class:'row'},el('label',{class:'fld',for:'f-prova-email'},'Email',fE),el('label',{class:'fld',for:'f-prova-giorni'},'Giorni',fG),el('label',{class:'fld',for:'f-prova-nota'},'Nota',fN)),
+      msg,
+      el('button',{class:'btn sea',type:'submit',style:'align-self:flex-start'},'Crea account di prova'),
+      el('p',{class:'notice'},'Poi aggiungi la stessa email su Cloudflare (Zero Trust → Access → Applications → policy «Allievi»): senza, non riesce a entrare. Mandale l’indirizzo dell’app e quello dell’area istruttore (…/docente).')),
+    righe.length?el('div',{class:'card tbl',style:'--hue:var(--purple)'},el('table',{},
+      el('thead',{},el('tr',{},el('th',{},'Email'),el('th',{},'Scadenza'),el('th',{},'Entrata'),el('th',{},''))),el('tbody',{},...righe))):
+      el('p',{class:'muted'},'Nessun account di prova.')));
+}
+document.getElementById('nav-prove').addEventListener('click',()=>{ window.scrollTo({top:0}); vProve(); });
 
 /* ---------- lezioni aperte agli allievi ---------- */
 function vLezioni(){
