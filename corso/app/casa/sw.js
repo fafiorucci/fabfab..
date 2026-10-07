@@ -14,6 +14,9 @@ self.addEventListener('activate', e => {
 // prima la copia conservata; se manca, la rete (e si conserva: per esempio i caratteri di Google)
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+  // il controllo dell'accesso e la pagina per rientrare vanno sempre in rete, mai nella copia
+  const u = new URL(e.request.url);
+  if (u.origin === location.origin && /\/(accesso\.json|entra\/?(index\.html)?)$/.test(u.pathname)) return;
   e.respondWith(caches.match(e.request, {ignoreSearch: true}).then(c => c || fetch(e.request).then(r => {
     if (r && (r.ok || r.type === 'opaque')) { const copia = r.clone(); caches.open(CACHE).then(k => k.put(e.request, copia)); }
     return r;

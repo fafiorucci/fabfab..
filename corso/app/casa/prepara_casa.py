@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
-"""Prepara l'app «da casa» di prova: installabile sul telefono e utilizzabile senza rete.
+"""Prepara l'app «da casa» di prova: installabile sul telefono e utilizzabile senza rete, ad accesso riservato.
 
   SP=<cartella di lavoro> python3 corso/app/casa/prepara_casa.py
 
-Scrive $SP/casa/, da pubblicare su un sito https (GitHub Pages, repository pubblico separato):
+Scrive $SP/casa/, da pubblicare su Cloudflare Pages (repository GitHub privato separato) protetto da
+Cloudflare Access (email ammesse e codice via email):
 - index.html             l'app degli allievi (riconosce «casa» in corso.json), con manifest e service worker;
 - corso.json             una sola «lezione»: le 8 slide di «Rotta verso la patente» e la verifica con i
                          6 quiz ufficiali dei numeri d'oro (le slide del corso non vanno sul sito pubblico);
 - slides/RV-NNN.jpg      le slide, con la filigrana;
-- manifest.webmanifest, sw.js, icone.
+- manifest.webmanifest, sw.js, icone;
+- accesso.json           il file che l'app chiede a ogni apertura con la rete per sapere se l'accesso c'è ancora;
+- entra/                 la pagina per rientrare con l'email (rimanda all'app);
+- _headers               regole di Cloudflare Pages (accesso.json e sw.js mai in cache).
 I progressi passano dall'app dell'aula con «Porta a casa» e tornano con «Invia all'aula».
 """
 import collections, io, json, math, os, re, shutil
@@ -61,7 +65,7 @@ for q in ids:
     best = max(tp, key=lambda i: sum(math.log(len(tp) / df[w]) for w in ws if w in tp[i]))
     quiz[q] = {**Q, 'rivedi': ['RV', best + 1]}
 corso = {
-    'casa': True,
+    'casa': True, 'accesso': 'accesso.json',
     'lezioni': [{'id': 'RV', 'num': 'Prova', 'titolo': 'Rotta verso la patente · il corso in sintesi', 'attiva': True,
                  'capitoli': [{'titolo': 'Il corso in sintesi', 'pagine': list(range(1, d.page_count + 1)),
                                'quiz': [{'titolo': 'Verifica · i numeri d’oro', 'ids': ids, 'raccolta': False}]}],
@@ -88,14 +92,21 @@ h = h.replace('<title>Corso Patente Nautica</title>', '<title>Corso nautico a ca
 h = ('<!doctype html>\n<html lang="it">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n'
      '<meta name="theme-color" content="#16324F">\n<link rel="manifest" href="manifest.webmanifest">\n'
      '<link rel="apple-touch-icon" href="icona-192.png">\n<meta name="apple-mobile-web-app-capable" content="yes">\n' + h)
-h = h.replace('</body>', "<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');</script></body>", 1) \
-    if '</body>' in h else h + "\n<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');</script>\n"
-open(OUT + '/index.html', 'w', encoding='utf-8').write(h)
+open(OUT + '/index.html', 'w', encoding='utf-8').write(h)   # il service worker lo registra l'app dopo il controllo dell'accesso
+
+# controllo dell'accesso: senza la sessione di Cloudflare Access la richiesta viene rimandata al login
+json.dump({'ok': True}, open(OUT + '/accesso.json', 'w'))
+os.makedirs(OUT + '/entra')
+open(OUT + '/entra/index.html', 'w', encoding='utf-8').write(
+    '<!doctype html>\n<html lang="it"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
+    '<title>Corso nautico a casa</title><body style="font-family:Arial,sans-serif;background:#16324F;color:#FFF8EE;padding:24px">'
+    '<p>Accesso riuscito, apro il corso…</p><script>location.replace(\'../\')</script></body></html>\n')
+open(OUT + '/_headers', 'w').write('/accesso.json\n  Cache-Control: no-store\n/sw.js\n  Cache-Control: no-cache\n/entra/*\n  Cache-Control: no-store\n')
 
 # service worker: conserva tutti i file al primo avvio, poi li serve anche senza rete
 file = sorted(os.path.relpath(os.path.join(r, f), OUT).replace(os.sep, '/') for r, _, fs in os.walk(OUT) for f in fs)
+file = [f for f in file if f not in ('index.html', 'accesso.json', '_headers', 'entra/index.html')]   # index è «./»
 sw = open(os.path.join(QUI, 'sw.js'), encoding='utf-8').read()
 sw = sw.replace('__VERSIONE__', versione).replace('__FILE__', json.dumps(['./'] + file))
 open(OUT + '/sw.js', 'w', encoding='utf-8').write(sw)
-open(OUT + '/.nojekyll', 'w').close()
 print(OUT, len(file) + 1, 'file,', sum(os.path.getsize(os.path.join(OUT, f)) for f in file) // 1024, 'KB; versione', versione)

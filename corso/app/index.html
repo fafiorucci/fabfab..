@@ -251,7 +251,7 @@ const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
 // versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
-const VERSIONE='0.4.0', RILASCIO='6 ottobre 2026';
+const VERSIONE='0.5.0', RILASCIO='7 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
@@ -884,12 +884,63 @@ function pannelloCasa(){
       el('span',{class:'pill',style:'--hue:var(--sea)'},'Studio a casa'),
       el('p',{style:'font-weight:700'},'Puoi studiare e fare i quiz anche senza rete: tutto resta su questo telefono. In aula, collegato al wifi della scuola, tocca «Invia all’aula» e l’istruttore vede quello che hai fatto.'),
       a?el('button',{class:'btn sea',style:'align-self:flex-start',onclick:inviaAllAula},'Invia all’aula'):
-        el('p',{class:'muted'},'Per collegarla all’aula, la prima volta apri questa app dal pulsante «Porta a casa» dell’app dell’aula.'));
+        el('p',{class:'muted'},'Per collegarla all’aula, la prima volta apri questa app dal pulsante «Porta a casa» dell’app dell’aula. Se l’hai appena aperta con l’email e il codice, torna all’app dell’aula e tocca di nuovo «Porta a casa».'));
   }
   if(mode==='aula'&&aula&&aula.casa) return el('div',{class:'card row',style:'--hue:var(--sea); justify-content:space-between'},
     el('div',{class:'stack',style:'gap:4px'},el('h3',{},'Studia anche a casa'),el('p',{class:'muted'},'Porta i tuoi progressi sul telefono: a casa funziona anche senza rete. Al ritorno in aula li invii all’istruttore.')),
     el('button',{class:'btn sea',onclick:portaACasa},'Porta a casa'));
   return null;
+}
+
+/* ---------- app da casa con accesso riservato (Cloudflare Access) ----------
+   Il sito è protetto: si entra con l'email ammessa e un codice. A ogni apertura con la rete l'app chiede
+   C.accesso senza passare dalla copia conservata: se l'accesso non c'è più, toglie slide e quiz dal
+   telefono e chiede di rientrare con l'email. Senza rete funziona, ma solo per GIORNI_OFFLINE giorni
+   dall'ultima verifica riuscita. I progressi restano sul telefono (non sono contenuti del corso). */
+const VERIFICA_KEY='corso-casa-verifica', GIORNI_OFFLINE=7;
+let regSW=null;
+const registraSW=()=>{ if(!regSW&&'serviceWorker' in navigator) regSW=navigator.serviceWorker.register('sw.js').catch(()=>null); };
+async function esitoAccesso(){
+  const ac=new AbortController(), t=setTimeout(()=>ac.abort(),8000);
+  try{ const r=await fetch(C.accesso+'?t='+Date.now(),{cache:'no-store',redirect:'manual',signal:ac.signal});
+    if(r.type==='opaqueredirect'||r.status===401||r.status===403) return 'no';   // rimanda al login: sessione scaduta o email tolta
+    if(!r.ok) return 'rete';
+    try{ const j=await r.json(); return j&&j.ok?'si':'no'; }catch(e){ return 'no'; } }
+  catch(e){ return 'rete'; }
+  finally{ clearTimeout(t); }
+}
+function blocco(titolo,righe,bottone,azione){
+  document.querySelectorAll('.blocco-accesso').forEach(x=>x.remove());
+  const b=el('div',{class:'blocco-accesso',role:'alertdialog','aria-modal':'true',style:'position:fixed;inset:0;z-index:90;background:var(--paper);display:flex;align-items:center;justify-content:center;padding:24px'},
+    el('div',{class:'card stack',style:'--hue:var(--sea);max-width:460px;gap:12px'},
+      el('img',{src:'stemma.webp',alt:'',style:'width:72px;height:72px;align-self:center'}),
+      el('h2',{},titolo),...righe.map(t=>el('p',{style:'font-weight:700'},t)),
+      bottone?el('button',{class:'btn sea',style:'align-self:flex-start',onclick:azione},bottone):null));
+  document.body.append(b);
+}
+async function togliContenuti(){
+  try{ localStorage.removeItem(VERIFICA_KEY); }catch(e){}
+  try{ if(regSW) await regSW; for(const r of await navigator.serviceWorker.getRegistrations()) await r.unregister(); }catch(e){}
+  try{ for(const k of await caches.keys()) if(k.startsWith('corso-casa-')) await caches.delete(k); }catch(e){}
+}
+function accessoNegato(){
+  blocco('Accesso da rinnovare',['Per continuare entra di nuovo con la tua email: ti arriva un codice da inserire.',
+    'Se il codice non arriva, il tuo accesso non è più attivo: rivolgiti all’istruttore.'],'Entra con la tua email',()=>{ location.href='entra/'; });
+  togliContenuti();
+}
+// true: si può usare l'app (se la verifica è recente, l'app parte subito e il controllo continua in sottofondo)
+async function controllaAccesso(){
+  if(!C.casa||!C.accesso){ if(C.casa) registraSW(); return true; }
+  let ultima=0; try{ ultima=+(localStorage.getItem(VERIFICA_KEY)||0); }catch(e){}
+  const recente=Date.now()-ultima<GIORNI_OFFLINE*864e5;
+  if(recente) registraSW(); else $app.replaceChildren(el('p',{class:'muted',style:'padding:24px'},'Controllo l’accesso…'));
+  const verifica=esitoAccesso().then(e=>{
+    if(e==='si'){ try{ localStorage.setItem(VERIFICA_KEY,String(Date.now())); }catch(x){} registraSW(); return true; }
+    if(e==='no'){ accessoNegato(); return false; }
+    if(!recente){ blocco('Collegati a internet',['Per sicurezza l’app va verificata con la rete almeno una volta ogni '+GIORNI_OFFLINE+' giorni.',
+      'Accendi i dati o il wifi e riprova: ci vuole un attimo.'],'Riprova',()=>location.reload()); return false; }
+    return true; });
+  return recente?true:verifica;
 }
 
 function vStorico(){
@@ -1012,6 +1063,7 @@ function suggerimento(){
 (async function start(){
   try{ C=await (await fetch('corso.json')).json(); document.getElementById('versione').textContent='App versione '+VERSIONE+' · '+RILASCIO+(C.demo?' · demo':''); }
   catch(e){ $app.replaceChildren(el('div',{class:'stack'},el('h1',{},'Non riesco a caricare il corso'),el('p',{class:'muted'},'Ricarica la pagina; se il problema resta, avvisa l’istruttore.'))); return; }
+  if(!await controllaAccesso()) return;
   S=blank(); vRegistrazione();
   S=conProfilo(await store.load()); applicaPreferenze(); renderWho();
   if(C.casa) document.getElementById('nav-mat').style.display='none';   // l'app da casa di prova non ha schede né appendici
