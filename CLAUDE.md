@@ -46,4 +46,5 @@ Il browser usa il proxy di `HTTPS_PROXY` per caricare i Google Fonts.
 - App online (allievi a casa e in aula, area istruttore `/docente`): dopo il pacchetto per l'aula si rifà
   `casa/prepara_casa.py` e si copia `$SP/casa` nel repository `fafiorucci/corso-nautico-prova` (branch `main`, push:
   Cloudflare ripubblica da solo). Indirizzo `https://corsonautico-ondaportante.fafiorucci.workers.dev/`, protetto da
-  Cloudflare Access; le lezioni si aprono dall'area istruttore. Dettagli in `corso/app/README.md`.
+  Cloudflare Access; le lezioni si aprono dall'area istruttore. Dallo stesso repository Cloudflare pubblica anche il sito
+  delle prove per altre scuole (`corsonautico-prova`, `wrangler.prova.jsonc`). Dettagli in `corso/app/README.md`.

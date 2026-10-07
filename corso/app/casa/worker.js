@@ -9,6 +9,8 @@
    - /docente e /api/docente/*  solo per l'email dell'istruttore (variabile DOCENTE).
    - slide, schede e appendici delle lezioni ancora chiuse non si scaricano (come contenuto_aperto in server.py);
      le presentazioni solo per l'istruttore.
+   - con MODO = "prova" (Worker «corsonautico-prova», senza Cloudflare Access e con i soli file della prova) si entra
+     con il link personale …/?p=<codice> creato dall'istruttore: il codice resta in un cookie e vale fino alla scadenza.
    - account di prova per altre scuole (li crea l'istruttore, con scadenza): app con le lezioni 1-2 e area istruttore
      con allievi inventati; mai i dati veri. Scaduta la prova non si apre più niente. */
 import { DurableObject } from 'cloudflare:workers';
@@ -100,10 +102,29 @@ async function ruoloDi(archivio, email, origine) {
 export default {
   async fetch(req, env) {
     const url = new URL(req.url), p = url.pathname;
-    const email = await emailDa(req, env);
-    if (!email) return p.startsWith('/api/') ? errore(401, 'Accesso non verificato: rientra con la tua email.') : pagina(401, 'Accesso non verificato: ricarica la pagina ed entra con la tua email.');
     const archivio = env.CORSO.get(env.CORSO.idFromName('corso'));
-    const R = email === String(env.DOCENTE || '').toLowerCase() ? { ruolo: 'docente' } : await ruoloDi(archivio, email, url.origin), ruolo = R.ruolo;
+    const sitoProva = env.MODO === 'prova';
+    let email;
+    if (sitoProva) {
+      // sito delle prove: si entra dal link personale (…/?p=<codice>), poi basta il cookie
+      const dalLink = url.searchParams.get('p');
+      if (dalLink) {
+        const t = dalLink.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 40);
+        RUOLI.delete('link:' + t);
+        const r = await ruoloDi(archivio, 'link:' + t, url.origin);
+        if (r.ruolo !== 'prova') return pagina(403, r.ruolo === 'scaduta' ? 'Questo link di prova è scaduto. Per informazioni contatta Fabrizio Fiorucci.' : 'Questo link di prova non è valido.');
+        return new Response(null, { status: 302, headers: { Location: '/', 'Set-Cookie': `corso_prova=${t}; Path=/; Max-Age=${60 * 86400}; HttpOnly; Secure; SameSite=Lax` } });
+      }
+      const m = (req.headers.get('cookie') || '').match(/(?:^|;\s*)corso_prova=([a-z0-9]+)/);
+      if (!m) return p.startsWith('/api/') || p === '/accesso.json' ? errore(401, 'Apri il link di prova che ti è stato mandato.')
+        : pagina(401, 'Per provare l’app del corso apri il link personale che ti è stato mandato.');
+      email = 'link:' + m[1];
+    } else {
+      email = await emailDa(req, env);
+      if (!email) return p.startsWith('/api/') ? errore(401, 'Accesso non verificato: rientra con la tua email.') : pagina(401, 'Accesso non verificato: ricarica la pagina ed entra con la tua email.');
+    }
+    const R = !sitoProva && email === String(env.DOCENTE || '').toLowerCase() ? { ruolo: 'docente' } : await ruoloDi(archivio, email, url.origin), ruolo = R.ruolo;
+    if (sitoProva && ruolo !== 'prova' && ruolo !== 'scaduta') return pagina(403, 'Questo link di prova non è valido.');
     const prova = ruolo === 'prova', istruttore = ruolo === 'docente' || prova;
     if (ruolo === 'scaduta')
       return p.startsWith('/api/') || p === '/accesso.json' ? errore(403, 'Il periodo di prova è terminato.')
@@ -201,6 +222,8 @@ function allieviInventati(C, attive) {
     });
 }
 
+const linkProva = (env, e) => String(env.PROVA_URL || '').replace(/\/?$/, '/') + '?p=' + e.slice(5);
+
 export class Corso extends DurableObject {
   async corso() { return (await this.env.ASSETS.fetch('https://corso/corso.json')).json(); }
   async attive() {
@@ -279,18 +302,21 @@ export class Corso extends DurableObject {
         .map(x => ({ id: x.email, nome: x.nome, creato: x.creato, ultimo: x.ultimo, stato: x.stato }));
       return json({ allievi: elenco, indirizzi, attive: await this.attive(),
                     prove: await Promise.all([...prove.values()].map(async x => ({ email: x.email, nota: x.nota || '', creato: x.creato, scade: x.scade,
+                                                                                link: x.email.startsWith('link:') ? linkProva(this.env, x.email) : null,
                                                                                 usata: !!(await st.get('allievo:' + x.email)) }))) });
     }
     // account di prova per altre scuole: solo l'istruttore vero
     if (p === '/api/docente/prova' && ruolo === 'docente') {
-      const e = corto(dati.email, 80).toLowerCase(), giorni = Math.max(1, Math.min(parseInt(dati.giorni) || 5, 60));
-      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) return errore(400, 'Scrivi un’email valida.');
+      // senza email: link personale per il sito delle prove (…/?p=<codice>), senza email né codice di Cloudflare
+      let e = corto(dati.email, 80).toLowerCase(), giorni = Math.max(1, Math.min(parseInt(dati.giorni) || 5, 60));
+      if (!e) e = 'link:' + [...crypto.getRandomValues(new Uint8Array(12))].map(x => (x % 36).toString(36)).join('');
+      if (!/^link:[a-z0-9]{8,40}$/.test(e) && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) return errore(400, 'Scrivi un’email valida, oppure lasciala vuota per un link di prova.');
       if (e === String(this.env.DOCENTE || '').toLowerCase()) return errore(400, 'È l’email dell’istruttore.');
       if (await st.get('allievo:' + e) && !(await st.get('prova:' + e))) return errore(400, 'Questa email è di un allievo del corso.');
       const scade = new Date(Date.now() + giorni * 864e5).toISOString();
       const vecchia = await st.get('prova:' + e);
       await st.put('prova:' + e, { email: e, nota: corto(dati.nota, 60), creato: vecchia ? vecchia.creato : adesso(), scade, attive: vecchia ? vecchia.attive : PROVA_LEZIONI });
-      return json({ ok: true, scade });
+      return json({ ok: true, scade, link: e.startsWith('link:') ? linkProva(this.env, e) : null });
     }
     if (p === '/api/docente/prova-togli' && ruolo === 'docente') {
       const e = String(dati.email || '').toLowerCase();

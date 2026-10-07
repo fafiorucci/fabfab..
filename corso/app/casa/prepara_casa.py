@@ -27,6 +27,9 @@ QUI = os.path.dirname(os.path.abspath(__file__))
 APP = os.path.dirname(QUI)
 WWW = os.path.join(APP, 'aula', 'www')
 WORKER = 'corsonautico-ondaportante'
+WORKER_PROVA = 'corsonautico-prova'                                          # sito delle prove, senza Cloudflare Access
+PROVA_URL = 'https://corsonautico-prova.fafiorucci.workers.dev/'
+PROVA_LEZIONI, PROVA_SLIDE = ('L01', 'L02'), 3                               # come in worker.js
 DOCENTE = 'fafiorucci@gmail.com'
 TEAM = 'ondaportante'                                                         # <team>.cloudflareaccess.com
 AUD = '492a093cc98e6ec93175617027cc6a35752c59b076b7ed02430ebff84ade1c01'      # applicazione Access del sito
@@ -130,7 +133,33 @@ open(OUT + '/wrangler.jsonc', 'w', encoding='utf-8').write(f'''// Generato da co
   }},
   "durable_objects": {{ "bindings": [{{ "name": "CORSO", "class_name": "Corso" }}] }},
   "migrations": [{{ "tag": "v1", "new_sqlite_classes": ["Corso"] }}],
-  "vars": {{ "DOCENTE": "{DOCENTE}", "TEAM": "{TEAM}", "AUD": "{AUD}" }}
+  "vars": {{ "DOCENTE": "{DOCENTE}", "TEAM": "{TEAM}", "AUD": "{AUD}", "PROVA_URL": "{PROVA_URL}" }}
+}}
+''')
+
+# sito delle prove: solo i file che servono alla prova (le prime slide delle lezioni 1 e 2, «Rotta verso la patente»);
+# stesso server in MODO «prova», che usa l'archivio del sito del corso
+PROVA = OUT + '/public-prova'
+shutil.copytree(PUB, PROVA, ignore=shutil.ignore_patterns('slides', 'appendici', 'presentazioni'))
+os.makedirs(PROVA + '/slides'); os.makedirs(PROVA + '/presentazioni')
+for L in C['lezioni']:
+    if L['id'] in PROVA_LEZIONI:
+        for n in [x for c in L['capitoli'] for x in c['pagine']][:PROVA_SLIDE]:
+            shutil.copy(f"{PUB}/slides/{L['id']}-{n:03d}.jpg", PROVA + '/slides/')
+shutil.copy(PUB + '/presentazioni/rotta.html', PROVA + '/presentazioni/')
+elenco = [x for x in json.load(open(PUB + '/presentazioni/elenco.json', encoding='utf-8')) if x['file'] == 'presentazioni/rotta.html']
+json.dump(elenco, open(PROVA + '/presentazioni/elenco.json', 'w'), ensure_ascii=False, indent=1)
+open(OUT + '/wrangler.prova.jsonc', 'w', encoding='utf-8').write(f'''// Generato da corso/app/casa/prepara_casa.py: non modificare a mano.
+// Sito delle prove per altre scuole: senza Cloudflare Access, si entra con il link creato nell'area istruttore.
+{{
+  "name": "{WORKER_PROVA}",
+  "main": "src/worker.js",
+  "compatibility_date": "2025-09-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {{ "directory": "./public-prova", "binding": "ASSETS", "run_worker_first": true }},
+  "durable_objects": {{ "bindings": [{{ "name": "CORSO", "class_name": "Corso", "script_name": "{WORKER}" }}] }},
+  "vars": {{ "MODO": "prova" }}
 }}
 ''')
 open(OUT + '/.gitignore', 'w').write('.wrangler/\nnode_modules/\n')   # file della prova in locale (wrangler dev)

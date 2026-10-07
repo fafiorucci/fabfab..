@@ -7,6 +7,9 @@ Numerazione `MAGGIORE.MINORE.CORREZIONE`:
 Il numero è in `corso/app/index.html` (`VERSIONE`, `RILASCIO`) e in `corso/app/aula/server.py` (`VERSIONE`): si cambiano insieme.
 Si vede in fondo all'app, nell'aiuto, nell'area istruttore e nella finestra del server.
 
+## 0.9.0 · 7 ottobre 2026
+- Account di prova con link, senza email né codice: nella scheda «Prove» si lascia vuota l'email e si ottiene un link personale (`https://corsonautico-prova.fafiorucci.workers.dev/?p=…`) da mandare alla scuola. Il sito delle prove è un secondo Worker senza Cloudflare Access che contiene solo le 6 slide di prova e «Rotta verso la patente»; alla scadenza o con «Togli» il link smette di funzionare e l'app mostra «Prova terminata».
+
 ## 0.8.1 · 7 ottobre 2026
 - Account di prova più ristretti: nell'app solo le prime 3 slide delle lezioni 1 e 2 con una verifica di esempio (niente schede, numeri d'oro né appendici); nell'area istruttore di prova solo la presentazione «Rotta verso la patente».
 - App online: le appendici delle lezioni chiuse restano bloccate anche chiedendole senza «.html».

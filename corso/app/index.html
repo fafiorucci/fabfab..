@@ -251,7 +251,7 @@ const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
 // versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
-const VERSIONE='0.8.1', RILASCIO='7 ottobre 2026';
+const VERSIONE='0.9.0', RILASCIO='7 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
@@ -947,6 +947,7 @@ async function togliContenuti(){
   try{ for(const k of await caches.keys()) if(k.startsWith('corso-casa-')) await caches.delete(k); }catch(e){}
 }
 function accessoNegato(){
+  if(C.prova){ blocco('Prova terminata',['Il periodo di prova dell’app del corso è terminato. Grazie per averla provata!','Per informazioni contatta Fabrizio Fiorucci.'],null,null); togliContenuti(); return; }
   blocco('Accesso da rinnovare',['Per continuare entra di nuovo con la tua email: ti arriva un codice da inserire.',
     'Se il codice non arriva, il tuo accesso non è più attivo: rivolgiti all’istruttore.'],'Entra con la tua email',()=>{ location.href='entra/'; });
   togliContenuti();
