@@ -251,7 +251,7 @@ const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
 // versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
-const VERSIONE='0.5.2', RILASCIO='7 ottobre 2026';
+const VERSIONE='0.6.0', RILASCIO='7 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
@@ -548,7 +548,7 @@ function vHome(){
       return el('div',{class:'card lez'+(fac?' fac':''),style:'--hue:'+(fac?'var(--soft)':hue)},
         el('div',{class:'num'},svgEl(`<path d="${blob(52,52,47,1+i,.07,8)}" fill="${hue}"/>`,'','0 0 104 104'),el('b',{},String(i+1))),
         el('div',{class:'stack',style:'gap:8px; min-width:0'},
-          el('div',{},el('span',{class:'pill',style:'--hue:'+hue},(C.casa?l.num:l.num+' · 2 ore')),el('h3',{style:'margin-top:6px'},l.titolo)),
+          el('div',{},el('span',{class:'pill',style:'--hue:'+hue},l.num+' · 2 ore'),el('h3',{style:'margin-top:6px'},l.titolo)),
           bar(v),
           el('div',{class:'row',style:'gap:8px'},el('span',{class:'chip'},v+'% slide'),el('span',{class:'chip '+(s.giusti?'ok':'')},s.giusti+' giusti'),s.errati?el('button',{class:'chip ko chipbtn',title:'Ripassa i quiz sbagliati della lezione',onclick:()=>go(vQuiz,{titolo:'Ripasso · '+l.num,ids:allQuiz(l.id).filter(q=>ans(q)&&!ans(q).ok),ritorno:['home']})},s.errati+' da ripassare →'):null,s.recuperati?el('span',{class:'chip rev'},s.recuperati+' recuperati'):null,fac?el('span',{class:'chip todo'},'Facoltativa per la tua patente'):null)),
         el('div',{class:'go'},el('button',{class:fac?'btn ghost':'btn',onclick:()=>go(vLezione,l.id)},s.viste?'Continua':'Inizia')));}),
@@ -561,7 +561,7 @@ function vLezione(L){
   const l=lez(L), sv=seen(L), hue=HUES[lidx(L)%5];
   $app.replaceChildren(el('div',{class:'stack',style:'gap:20px'},
     el('button',{class:'link',onclick:()=>go(vHome)},'← Tutte le lezioni'),
-    head((C.casa?l.num:l.num+' · 2 ore'),l.titolo,hue,lidx(L)===0?'hull':'propeller',true),
+    head(l.num+' · 2 ore',l.titolo,hue,lidx(L)===0?'hull':'propeller',true),
     extra(l),
     l.nota_demo?el('p',{class:'notice'},l.nota_demo):null,
     el('div',{class:'card',style:'--hue:'+hue},...l.capitoli.map((c,ci)=>{
@@ -1066,7 +1066,6 @@ function suggerimento(){
   if(!await controllaAccesso()) return;
   S=blank(); vRegistrazione();
   S=conProfilo(await store.load()); applicaPreferenze(); renderWho();
-  if(C.casa) document.getElementById('nav-mat').style.display='none';   // l'app da casa di prova non ha schede né appendici
   // dati arrivati dall'altra app: a casa da «Porta a casa», in aula da «Invia all'aula»
   try{
     const daAula=daHash('da-aula'), daCasa=daHash('da-casa');

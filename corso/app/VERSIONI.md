@@ -7,6 +7,9 @@ Numerazione `MAGGIORE.MINORE.CORREZIONE`:
 Il numero è in `corso/app/index.html` (`VERSIONE`, `RILASCIO`) e in `corso/app/aula/server.py` (`VERSIONE`): si cambiano insieme.
 Si vede in fondo all'app, nell'aiuto, nell'area istruttore e nella finestra del server.
 
+## 0.6.0 · 7 ottobre 2026
+- App da casa con tutto il materiale della web app: le 15 lezioni (aperte la 1 e la 2, le altre oscurate), schede riassuntive, numeri d'oro e appendici, con le stesse regole di apertura; tutto disponibile anche senza rete. Logo della scuola nella pagina di accesso.
+
 ## 0.5.2 · 7 ottobre 2026
 - Indirizzo dell'app da casa: `https://corsonautico-ondaportante.fafiorucci.workers.dev/` (Worker Cloudflare con file statici al posto del progetto Pages).
 
