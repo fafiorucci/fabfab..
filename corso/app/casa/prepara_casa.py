@@ -133,5 +133,6 @@ open(OUT + '/wrangler.jsonc', 'w', encoding='utf-8').write(f'''// Generato da co
   "vars": {{ "DOCENTE": "{DOCENTE}", "TEAM": "{TEAM}", "AUD": "{AUD}" }}
 }}
 ''')
+open(OUT + '/.gitignore', 'w').write('.wrangler/\nnode_modules/\n')   # file della prova in locale (wrangler dev)
 tot = sum(os.path.getsize(os.path.join(PUB, f)) for f in file)
 print(OUT, len(file), 'file,', tot // 1024, 'KB; nel service worker', len(nucleo) + 1, 'file; versione', versione)
