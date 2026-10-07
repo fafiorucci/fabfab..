@@ -7,6 +7,9 @@ Numerazione `MAGGIORE.MINORE.CORREZIONE`:
 Il numero è in `corso/app/index.html` (`VERSIONE`, `RILASCIO`) e in `corso/app/aula/server.py` (`VERSIONE`): si cambiano insieme.
 Si vede in fondo all'app, nell'aiuto, nell'area istruttore e nella finestra del server.
 
+## 0.5.1 · 7 ottobre 2026
+- Indirizzo dell'app da casa: `https://corsonautico-ondaportante.pages.dev/` (progetto Cloudflare Pages «corsonautico-ondaportante»).
+
 ## 0.5.0 · 7 ottobre 2026
 - App da casa ad accesso riservato: si pubblica su Cloudflare Pages protetto da Cloudflare Access (entrano solo le email ammesse, con un codice via email; sessione di 30 giorni). A ogni apertura con la rete l'app controlla l'accesso: se l'email è stata tolta, cancella slide e quiz dal telefono e chiede di rientrare. Senza rete funziona fino a 7 giorni dall'ultimo controllo riuscito, poi chiede di collegarsi. I progressi restano sul telefono.
 
