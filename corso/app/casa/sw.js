@@ -1,5 +1,6 @@
-/* App da casa: tiene in memoria app, slide e quiz, così si apre e funziona anche senza rete.
-   Generato da prepara_casa.py (versione e elenco dei file). */
+/* App online: tiene in memoria app, slide e quiz, così si apre e funziona anche senza rete.
+   Generato da prepara_casa.py (versione e elenco dei file). Le slide delle lezioni aperte le scarica l'app
+   (precarica) e qui si conservano man mano. */
 const CACHE = 'corso-casa-__VERSIONE__';
 const FILE = __FILE__;
 
@@ -14,9 +15,11 @@ self.addEventListener('activate', e => {
 // prima la copia conservata; se manca, la rete (e si conserva: per esempio i caratteri di Google)
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
-  // il controllo dell'accesso e la pagina per rientrare vanno sempre in rete, mai nella copia
+  // sempre in rete, mai nella copia: controllo dell'accesso, pagina per rientrare, progressi (api),
+  // area istruttore e presentazioni
   const u = new URL(e.request.url);
-  if (u.origin === location.origin && /\/(accesso\.json|entra\/?(index\.html)?)$/.test(u.pathname)) return;
+  if (u.origin === location.origin && (/\/(accesso\.json|entra\/?(index\.html)?)$/.test(u.pathname) ||
+      /\/(api|presentazioni)\//.test(u.pathname) || /\/docente(\.html|\/)?$/.test(u.pathname))) return;
   e.respondWith(caches.match(e.request, {ignoreSearch: true}).then(c => c || fetch(e.request).then(r => {
     if (r && (r.ok || r.type === 'opaque')) { const copia = r.clone(); caches.open(CACHE).then(k => k.put(e.request, copia)); }
     return r;

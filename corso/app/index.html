@@ -251,7 +251,7 @@ const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
 // versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
-const VERSIONE='0.6.0', RILASCIO='7 ottobre 2026';
+const VERSIONE='0.7.0', RILASCIO='7 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
@@ -311,19 +311,29 @@ function unisci(server,loc){
   out.profilo=Object.assign({},server.profilo||{},loc.profilo||{});
   return out;
 }
+// online, primo accesso con l'email: i progressi fatti su questo telefono con la versione precedente (senza server)
+// diventano quelli dell'account; altrimenti si chiede il nome
+async function primoOnline(){
+  let loc=null; try{ loc=JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){}
+  if(!loc||!loc.nome) return blank();
+  const j=await api('accedi',{nome:loc.nome}); tok.set(j.token); giro=j.giro||0;
+  const st=Object.assign(unisci(Object.assign(blank(),j.stato),Object.assign(blank(),loc)),{nome:j.nome,consenso:true,creato:loc.creato||null});
+  setTimeout(()=>{ store.save(); try{ localStorage.removeItem(KEY); }catch(e){} },300);
+  return conProfilo(st);
+}
 const store={
   async load(){
     try{
       const info=await api('info');
       if(info.aula){
         mode='aula'; aula=info; if(info.attive) ATT=new Set(info.attive);
-        if(tok.get()){
-          try{ const j=await api('progresso'); const dalServer=Object.assign(blank(),j.stato,{nome:j.nome,consenso:true,creato:j.creato||null});
+        if(tok.get()||info.online){
+          try{ const j=await api('progresso'); if(info.online) tok.set('online'); const dalServer=Object.assign(blank(),j.stato,{nome:j.nome,consenso:true,creato:j.creato||null});
             const c=copia.leggi(); let st=dalServer;
             // lavoro fatto senza rete (e non azzerato nel frattempo dall'istruttore): si unisce e si invia
             if(c&&c.pendente&&(c.giro||0)===(j.giro||0)){ st=Object.assign(unisci(dalServer,c.S),{nome:j.nome,consenso:true,creato:j.creato||null}); setTimeout(()=>store.save(),300); }
             giro=j.giro||0; return conProfilo(st); }
-          catch(e){ if(e.status===401) tok.set(null); else throw e; }
+          catch(e){ if(e.status===401){ tok.set(null); if(info.online) return await primoOnline(); } else throw e; }
         }
         return blank();
       }
@@ -376,7 +386,7 @@ setInterval(()=>{ if(mode==='aula' && offline && S && S.nome) store.save(); },15
 setInterval(async()=>{
   if(mode!=='aula'||!S||!S.nome) return;
   try{ const i=await api('info'); const n=new Set(i.attive||[]);
-    if([...n].sort().join()!==[...(ATT||[])].sort().join()){ ATT=n; if(curView===vHome||curView===vMateriali) curView(); } }catch(e){}
+    if([...n].sort().join()!==[...(ATT||[])].sort().join()){ ATT=n; if(curView===vHome||curView===vMateriali) curView(); precarica(); } }catch(e){}
 },30000);
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') store.flush(); });
 
@@ -477,7 +487,9 @@ function hero(note,title,sub){
   const wv=svgEl(`<path d="${wave(26,9,180,-60,1000,56)}" fill="#12A4B5" fill-opacity=".28"/><path d="${wave(40,7,140,-20,1000,56)}" fill="#12A4B5" fill-opacity=".38"/>`,'waves','0 0 960 56');
   wv.setAttribute('preserveAspectRatio','none'); h.append(wv); return h;
 }
-const localNote=()=>mode==='local'?el('p',{class:'notice'},'Modalità prova: i progressi restano su questo dispositivo.'):
+const localNote=()=>C&&C.online?(mode==='aula'&&!offline?el('p',{class:'notice net',id:'net'},'Collegato: i progressi sono salvati online e li vede l’istruttore.'):
+    el('p',{class:'notice net',id:'net'},'Senza rete: quiz e slide restano sul telefono e si inviano da soli appena torni online.')):
+  mode==='local'?el('p',{class:'notice'},'Modalità prova: i progressi restano su questo dispositivo.'):
   mode==='aula'?el('p',{class:'notice net',id:'net'},offline?'Server dell’aula non raggiungibile: controlla il wifi. Le risposte si salvano appena torna la connessione.':'Collegato all’aula: i progressi sono salvati sul computer dell’istruttore.'):null;
 function renderNet(){const n=document.getElementById('net'); if(n) n.replaceWith(localNote());}
 
@@ -489,19 +501,19 @@ function vRegistrazione(){
   const msg=el('p',{class:'errmsg',role:'alert'});
   const form=el('form',{class:'card stack',style:'--hue:var(--sea)',onsubmit:async e=>{e.preventDefault();
       if(!nome.value.trim()){nome.focus();return;}
-      if(mode==='aula' && !/^\d{4,6}$/.test(cod.value.trim())){msg.textContent='Il codice personale è di 4 cifre (fino a 6).'; cod.focus(); return;}
+      if(mode==='aula' && !C.online && !/^\d{4,6}$/.test(cod.value.trim())){msg.textContent='Il codice personale è di 4 cifre (fino a 6).'; cod.focus(); return;}
       if(!cons.checked){cons.focus();return;}
       if(mode==='aula'){
-        try{ const j=await api('accedi',{nome:nome.value.trim(),codice:cod.value.trim()}); tok.set(j.token);
+        try{ const j=await api('accedi',C.online?{nome:nome.value.trim()}:{nome:nome.value.trim(),codice:cod.value.trim()}); tok.set(j.token);
           giro=j.giro||0; S=conProfilo(Object.assign(blank(),j.stato,{nome:j.nome,consenso:true})); applicaPreferenze(); }
-        catch(err){ msg.textContent=err.status?err.message:'Non raggiungo il computer dell’aula: controlla di essere sul wifi della scuola.'; return; }
+        catch(err){ msg.textContent=err.status?err.message:C.online?'Non riesco a collegarmi: controlla la connessione e riprova.':'Non raggiungo il computer dell’aula: controlla di essere sul wifi della scuola.'; return; }
         try{ const att=sessionStorage.getItem('corso-da-casa'); if(att){ riceviDati(await spacchetta(att),'casa'); sessionStorage.removeItem('corso-da-casa'); } }catch(e){}
         renderWho(); go(vHome); return;
       }
       S.nome=nome.value.trim(); S.consenso=true; S.creato=new Date().toISOString(); conProfilo(S); store.save(); renderWho(); go(vHome);}},
-    head(mode==='aula'?'In aula':'Primo accesso',mode==='aula'?'Entra nel corso':'Registrati','var(--sea)','lifebuoy',false),
+    head(mode==='aula'&&!C.online?'In aula':'Primo accesso',mode==='aula'&&!C.online?'Entra nel corso':'Registrati','var(--sea)','lifebuoy',false),
     el('label',{class:'fld',for:'f-nome'},'Il tuo nome',nome),
-    mode==='aula'?el('label',{class:'fld',for:'f-cod'},'Il tuo codice personale',cod,el('span',{class:'muted',style:'font-weight:600; font-size:14px'},'La prima volta lo scegli tu; poi, con lo stesso nome e codice, ritrovi i progressi anche su un altro telefono o tablet.')):null,
+    mode==='aula'&&!C.online?el('label',{class:'fld',for:'f-cod'},'Il tuo codice personale',cod,el('span',{class:'muted',style:'font-weight:600; font-size:14px'},'La prima volta lo scegli tu; poi, con lo stesso nome e codice, ritrovi i progressi anche su un altro telefono o tablet.')):null,
     el('label',{class:'check',for:'f-cons'},cons,el('span',{},'Acconsento al salvataggio del mio nome e dei miei progressi (slide viste, quiz risposti) per seguire il corso. Posso cancellarli in ogni momento dalla pagina Progressi. So che slide, testi e immagini sono proprietà intellettuale di Fabrizio Fiorucci e mi impegno a non divulgarli né duplicarli.')),
     msg,
     el('button',{class:'btn sea',type:'submit',style:'align-self:flex-start'},'Inizia il corso'));
@@ -796,7 +808,7 @@ function vProfilo(){
     if(tt) tt.textContent=S.nome; if(av){ av.textContent=iniziali(); av.style.background=S.profilo.colore||'#0B8A99'; }
     err.textContent=''; msg.textContent='Salvato.'; setTimeout(()=>{msg.textContent='';},2500);
   };
-  const codice=mode==='aula'?(()=>{
+  const codice=mode==='aula'&&!C.online?(()=>{
     const v=el('input',{type:'text',id:id('cv'),inputmode:'numeric',autocomplete:'off',maxlength:'6',style:'max-width:140px'});
     const n=el('input',{type:'text',id:id('cn'),inputmode:'numeric',autocomplete:'off',maxlength:'6',style:'max-width:140px'});
     const m=el('p',{class:'okmsg',role:'status'}), e=el('p',{class:'errmsg',role:'alert'});
@@ -879,6 +891,7 @@ async function inviaAllAula(){ const a=leggiAula(); if(!a) return;
   location.href=a+'/#da-casa='+t; }
 const leggiAula=()=>{ try{ return localStorage.getItem(AULA_KEY); }catch(e){ return null; } };
 function pannelloCasa(){
+  if(C.online) return null;   // online i progressi arrivano all'istruttore da soli
   if(C.casa){ const a=leggiAula();
     return el('div',{class:'card stack',style:'--hue:var(--sea); gap:10px'},
       el('span',{class:'pill',style:'--hue:var(--sea)'},'Studio a casa'),
@@ -928,6 +941,21 @@ function accessoNegato(){
     'Se il codice non arriva, il tuo accesso non è più attivo: rivolgiti all’istruttore.'],'Entra con la tua email',()=>{ location.href='entra/'; });
   togliContenuti();
 }
+// online: le slide, le schede e le appendici delle lezioni aperte si scaricano subito, così ci sono anche senza rete
+let precaricando=false;
+async function precarica(){
+  if(!C.online||precaricando||!('caches' in window)||!('serviceWorker' in navigator)||!navigator.onLine) return;
+  precaricando=true;
+  try{
+    if(!navigator.serviceWorker.controller) await new Promise(r=>{ navigator.serviceWorker.addEventListener('controllerchange',r,{once:true}); setTimeout(r,8000); });
+    if(!navigator.serviceWorker.controller) return;
+    const u=[];
+    for(const l of aperte()){ for(const p of allPages(l.id)) u.push(img(l.id,p)); for(const p of l.scheda||[]) u.push(img('SR',p)); }
+    for(const p of C.schede.generali||[]) u.push(img('SR',p));
+    for(const a of C.appendici) if(appAperta(a)) u.push(a.file);
+    for(const x of u){ if(await caches.match(x,{ignoreSearch:true})) continue; try{ await fetch(x); }catch(e){ return; } }
+  } finally{ precaricando=false; }
+}
 // true: si può usare l'app (se la verifica è recente, l'app parte subito e il controllo continua in sottofondo)
 async function controllaAccesso(){
   if(!C.casa||!C.accesso){ if(C.casa) registraSW(); return true; }
@@ -958,33 +986,34 @@ function vStorico(){
       el('p',{class:'muted'},'Nessun errore da ripassare. Ottimo lavoro.'),
     head('Da capo','Ricomincia il corso','var(--blue)','lifebuoy',false),
     resetCard(),
-    mode==='aula'?el('div',{class:'card reset',style:'--hue:var(--sea)'},el('p',{class:'muted',style:'font-weight:700'},'Telefono o tablet in prestito? Esci quando hai finito: i progressi restano salvati in aula.'),
+    mode==='aula'&&!C.online?el('div',{class:'card reset',style:'--hue:var(--sea)'},el('p',{class:'muted',style:'font-weight:700'},'Telefono o tablet in prestito? Esci quando hai finito: i progressi restano salvati in aula.'),
       el('button',{class:'btn ghost',onclick:()=>{store.flush(); tok.set(null); S=blank(); renderWho(); go(vRegistrazione);}},'Esci da questo dispositivo')):null,
     el('p',{class:'muted'},'Per cancellare il tuo account vai al profilo, toccando il tuo nome in alto.'),
     localNote()));
 }
 function cancellaCard(){
   const box=el('div',{class:'card reset',style:'--hue:var(--coral)'});
-  const first=()=>[el('p',{class:'muted',style:'font-weight:700'},mode==='aula'?'Cancelli nome, codice e tutti i progressi dal computer dell’aula.':'Cancelli nome e tutti i progressi salvati.'),
+  const conCodice=mode==='aula'&&!C.online;
+  const first=()=>[el('p',{class:'muted',style:'font-weight:700'},C.online?'Cancelli nome e tutti i progressi salvati online.':mode==='aula'?'Cancelli nome, codice e tutti i progressi dal computer dell’aula.':'Cancelli nome e tutti i progressi salvati.'),
     el('button',{class:'btn ghost',onclick:ask},'Cancella il mio account')];
   const ask=()=>{
     const cod=el('input',{type:'text',id:'f-del',inputmode:'numeric',autocomplete:'off',maxlength:'6',placeholder:'4 cifre',style:'max-width:160px'});
     const msg=el('p',{class:'errmsg',role:'alert'});
     box.replaceChildren(el('div',{class:'stack',style:'gap:12px; width:100%'},
       el('p',{style:'font-weight:800'},'Sicuro? Il tuo nome e tutti i progressi spariscono per sempre: non si torna indietro.'),
-      mode==='aula'?el('label',{class:'fld',for:'f-del'},'Per conferma scrivi il tuo codice personale',cod):null, msg,
+      conCodice?el('label',{class:'fld',for:'f-del'},'Per conferma scrivi il tuo codice personale',cod):null, msg,
       el('div',{class:'row',style:'gap:8px'},el('button',{class:'btn ghost',onclick:()=>box.replaceChildren(...first())},'Annulla'),
         el('button',{class:'btn coral',onclick:async()=>{
           try{
             clearTimeout(store.t); store.t=null;
-            if(mode==='aula'){ await api('cancella',{codice:cod.value.trim()}); copia.togli(); tok.set(null); }
+            if(mode==='aula'){ await api('cancella',conCodice?{codice:cod.value.trim()}:{}); copia.togli(); tok.set(null); }
             else if(mode==='cloud'){ await db.doc('data/users/'+uid+'/profile').delete(); }
             try{ localStorage.removeItem(KEY); }catch(e){}
           }catch(e){ msg.textContent=e.status?e.message:'Non riesco a cancellare adesso: riprova tra poco.'; return; }
           S=blank(); renderWho(); go(vRegistrazione);
           $app.prepend(el('p',{class:'notice net'},'Account cancellato: nome e progressi sono stati eliminati.'));
         }},'Sì, cancella tutto'))));
-    if(mode==='aula') cod.focus();
+    if(conCodice) cod.focus();
   };
   box.append(...first()); return box;
 }
@@ -1076,6 +1105,7 @@ function suggerimento(){
   }catch(e){ console.warn('dati dall’altra app non letti',e); }
   if(S.nome) go(vHome); else vRegistrazione();
   setTimeout(suggerimento,1200);
+  setTimeout(precarica,1500);
 })();
 })();
 </script>

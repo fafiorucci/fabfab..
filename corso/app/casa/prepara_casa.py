@@ -1,77 +1,136 @@
 #!/usr/bin/env python3
-"""Prepara l'app «da casa»: installabile sul telefono e utilizzabile senza rete, ad accesso riservato.
+"""Prepara l'app online del corso: un solo indirizzo per gli allievi, a casa e in aula, con i progressi salvati
+online e l'area istruttore. Installabile sul telefono e utilizzabile senza rete, ad accesso riservato.
 
   SP=<cartella di lavoro> python3 corso/app/casa/prepara_casa.py
 
-Parte dall'uscita completa di app_build.py ($SP/app), come la web app: le 15 lezioni (aperte solo quelle con
-«attiva» in corso.json, le altre si vedono oscurate), schede, numeri d'oro e appendici.
-Scrive $SP/casa/, da pubblicare con Cloudflare (Worker con file statici collegato al repository GitHub privato
-separato) protetto da Cloudflare Access (email ammesse e codice via email):
-- index.html, corso.json  l'app degli allievi (riconosce «casa» in corso.json);
-- slides/                 le slide delle lezioni aperte e le schede (già con la filigrana); appendici/;
-- manifest.webmanifest, sw.js, icone;
-- accesso.json            il file che l'app chiede a ogni apertura con la rete per sapere se l'accesso c'è ancora;
-- entra/                  la pagina per rientrare con l'email (rimanda all'app);
-- _headers                regole di Cloudflare (accesso.json e sw.js mai in cache).
-Il logo della pagina di accesso di Cloudflare Access sta fuori dal sito protetto, nel progetto Cloudflare Pages
-«onda-logo» (https://onda-logo.pages.dev/logo.png, caricato a mano; l'immagine è logo-accesso.png).
-I progressi passano dall'app dell'aula con «Porta a casa» e tornano con «Invia all'aula».
-Quando si apre una nuova lezione (campo «attiva»), si rifà app_build.py e questo script e si pubblica.
+Parte dal pacchetto dell'aula (corso/app/aula/www, rifatto da aula/prepara_pacchetto.py: slide, appendici,
+caratteri in locale, presentazioni, area istruttore) e da corso/app/index.html.
+Scrive $SP/casa/, il contenuto del repository privato «corso-nautico-prova», che Cloudflare pubblica a ogni push:
+- wrangler.jsonc          configurazione del Worker «corsonautico-ondaportante» (file statici, Durable Object,
+                          email dell'istruttore, team e applicazione di Cloudflare Access);
+- src/worker.js           il server (da casa/worker.js): progressi degli allievi, area istruttore, lezioni aperte;
+- public/                 i file del sito: index.html e corso.json (con «online»), slide di tutte le lezioni
+                          (il Worker dà solo quelle delle lezioni aperte), appendici, presentazioni, docente.html,
+                          manifest, sw.js, icone, accesso.json, entra/, _headers.
+Il sito è protetto da Cloudflare Access (email ammesse e codice via email). Le lezioni si aprono dall'area
+istruttore online (…/docente), senza ripubblicare. Il logo della pagina di accesso sta fuori dal sito protetto,
+nel progetto Cloudflare Pages «onda-logo» (https://onda-logo.pages.dev/logo.png; l'immagine è logo-accesso.png).
 """
 import json, os, re, shutil
 from PIL import Image
 
 SP = os.environ.get('SP', '/tmp/scratch')
-SRC, OUT = SP + '/app', SP + '/casa'
+OUT = SP + '/casa'
+PUB = OUT + '/public'
 QUI = os.path.dirname(os.path.abspath(__file__))
 APP = os.path.dirname(QUI)
+WWW = os.path.join(APP, 'aula', 'www')
+WORKER = 'corsonautico-ondaportante'
+DOCENTE = 'fafiorucci@gmail.com'
+TEAM = 'ondaportante'                                                         # <team>.cloudflareaccess.com
+AUD = '492a093cc98e6ec93175617027cc6a35752c59b076b7ed02430ebff84ade1c01'      # applicazione Access del sito
 
 shutil.rmtree(OUT, ignore_errors=True)
-os.makedirs(OUT + '/slides')
+os.makedirs(PUB)
 
-# contenuti: tutto corso.json; delle slide solo lezioni aperte e schede (le altre lezioni restano oscurate)
-C = json.load(open(SRC + '/corso.json'))
-aperte = {L['id'] for L in C['lezioni'] if L.get('attiva')}
-for f in sorted(os.listdir(SRC + '/slides')):
-    if f.split('-')[0] in aperte | {'SR'}:
-        shutil.copy(f'{SRC}/slides/{f}', f'{OUT}/slides/{f}')
-shutil.copytree(SRC + '/appendici', OUT + '/appendici')
-C = {'casa': True, 'accesso': 'accesso.json', **C}
-json.dump(C, open(OUT + '/corso.json', 'w'), ensure_ascii=False, separators=(',', ':'))
+# contenuti dal pacchetto dell'aula
+for d in ('slides', 'appendici', 'fonts', 'vendor', 'presentazioni'):
+    shutil.copytree(os.path.join(WWW, d), os.path.join(PUB, d))
+for f in ('stile.css', 'grafica.js'):
+    shutil.copy(os.path.join(WWW, f), os.path.join(PUB, f))
+shutil.copy(os.path.join(APP, 'stemma.webp'), PUB + '/stemma.webp')
+C = json.load(open(os.path.join(WWW, 'corso.json'), encoding='utf-8'))
+C = {'casa': True, 'online': True, 'accesso': 'accesso.json', **C}
+json.dump(C, open(PUB + '/corso.json', 'w'), ensure_ascii=False, separators=(',', ':'))
 
 # icone dallo stemma
 stemma = Image.open(os.path.join(APP, 'stemma-originale.png')).convert('RGBA')
 for n in (192, 512):
-    stemma.resize((n, n), Image.LANCZOS).save(f'{OUT}/icona-{n}.png', optimize=True)
-shutil.copy(os.path.join(APP, 'stemma.webp'), OUT + '/stemma.webp')
-json.dump({'name': 'Corso Patente Nautica · a casa', 'short_name': 'Corso nautico', 'start_url': './', 'scope': './',
+    stemma.resize((n, n), Image.LANCZOS).save(f'{PUB}/icona-{n}.png', optimize=True)
+json.dump({'name': 'Corso Patente Nautica', 'short_name': 'Corso nautico', 'start_url': './', 'scope': './',
            'display': 'standalone', 'background_color': '#16324F', 'theme_color': '#16324F', 'lang': 'it',
            'icons': [{'src': 'icona-192.png', 'sizes': '192x192', 'type': 'image/png'},
                      {'src': 'icona-512.png', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'any'}]},
-          open(OUT + '/manifest.webmanifest', 'w'), ensure_ascii=False, indent=1)
+          open(PUB + '/manifest.webmanifest', 'w'), ensure_ascii=False, indent=1)
 
-# app: documento completo, manifest, service worker
+# app degli allievi: caratteri in locale (anche senza rete), manifest; il service worker lo registra l'app
 h = open(os.path.join(APP, 'index.html'), encoding='utf-8').read()
 versione = re.search(r"const VERSIONE='([^']+)'", h).group(1)
-h = h.replace('<title>Corso Patente Nautica</title>', '<title>Corso nautico a casa</title>', 1)
+h = re.sub(r'<link rel="preconnect"[^>]*>\n?', '', h)
+h = re.sub(r'<link rel="stylesheet" href="https://fonts\.googleapis\.com[^>]*>', '<link rel="stylesheet" href="fonts/fonts.css">', h)
+assert 'fonts.googleapis' not in h
 h = ('<!doctype html>\n<html lang="it">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n'
      '<meta name="theme-color" content="#16324F">\n<link rel="manifest" href="manifest.webmanifest">\n'
      '<link rel="apple-touch-icon" href="icona-192.png">\n<meta name="apple-mobile-web-app-capable" content="yes">\n' + h)
-open(OUT + '/index.html', 'w', encoding='utf-8').write(h)   # il service worker lo registra l'app dopo il controllo dell'accesso
+open(PUB + '/index.html', 'w', encoding='utf-8').write(h)
+
+# area istruttore: si entra con l'email dell'istruttore (lo controlla il Worker), niente PIN né codici personali
+d = open(os.path.join(WWW, 'docente.html'), encoding='utf-8').read()
+for vecchio, nuovo in (
+        ("const PIN_KEY='corso-aula-pin';", "const PIN_KEY='corso-aula-pin';\ntry{ sessionStorage.setItem(PIN_KEY,'online'); }catch(e){}   // online entra l'email dell'istruttore"),
+        ("'Gli allievi, sul wifi della scuola, inquadrano il QR o aprono:'", "'Gli allievi inquadrano il QR o aprono:'"),
+        ("'Collegatevi al wifi della scuola, inquadrate il QR, scrivete nome e un codice di 4 cifre.'",
+         "'Inquadrate il QR ed entrate con la vostra email: vi arriva un codice.'"),
+        ("vPin(e.status===403?'PIN errato.':'Server non raggiungibile.')",
+         "vPin(e.status===403?'Area riservata all’istruttore.':'Non riesco a collegarmi: controlla la connessione.')")):
+    assert vecchio in d, vecchio
+    d = d.replace(vecchio, nuovo, 1)
+for vecchio, nuovo in (
+        ('<span>QR aula</span>', '<span>QR</span>'),
+        ('dargli un codice nuovo se l’ha dimenticato o azzerare', 'o azzerare'),
+        ('«Nuovo codice personale» se l’ha dimenticato; ', ''),
+        ('Si aprono solo da questo computer, non dai telefoni degli allievi.', 'Si aprono solo con l’email dell’istruttore, non dai telefoni degli allievi.')):
+    assert vecchio in d, vecchio
+    d = d.replace(vecchio, nuovo)
+d, n = re.subn(r'const GUIDA=\[.*?\n\];', '''const GUIDA=[
+  ['Come entrano gli allievi',['Aprono l’indirizzo del corso (QR o link) ed entrano con la loro email: arriva un codice da inserire. La prima volta scrivono il nome.','Le email ammesse si gestiscono in Cloudflare Zero Trust → Access → Applications → policy «Allievi».','Per togliere un allievo: togli la sua email dalla policy e revoca la sessione (Zero Trust → Users).']],
+  ['Senza rete',['L’app funziona anche senza rete fino a 7 giorni: le risposte si salvano sul telefono e arrivano qui appena torna la connessione.']],
+  ['I dati',['Allievi e progressi sono salvati online sul servizio Cloudflare del corso. «Scarica il riepilogo (CSV)» ne fa una copia da aprire con Excel.']],
+];''', d, count=1, flags=re.S)
+assert n == 1
+d, n = re.subn(r"el\('button',\{class:'btn sea',onclick:async\(\)=>\{try\{const j=await api\('docente/codice'.*?'Nuovo codice personale'\),\s*", '', d, flags=re.S)
+assert n == 1
+open(PUB + '/docente.html', 'w', encoding='utf-8').write(d)
 
 # controllo dell'accesso: senza la sessione di Cloudflare Access la richiesta viene rimandata al login
-json.dump({'ok': True}, open(OUT + '/accesso.json', 'w'))
-os.makedirs(OUT + '/entra')
-open(OUT + '/entra/index.html', 'w', encoding='utf-8').write(
+json.dump({'ok': True}, open(PUB + '/accesso.json', 'w'))
+os.makedirs(PUB + '/entra')
+open(PUB + '/entra/index.html', 'w', encoding='utf-8').write(
     '<!doctype html>\n<html lang="it"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
-    '<title>Corso nautico a casa</title><body style="font-family:Arial,sans-serif;background:#16324F;color:#FFF8EE;padding:24px">'
+    '<title>Corso Patente Nautica</title><body style="font-family:Arial,sans-serif;background:#16324F;color:#FFF8EE;padding:24px">'
     '<p>Accesso riuscito, apro il corso…</p><script>location.replace(\'../\')</script></body></html>\n')
-open(OUT + '/_headers', 'w').write('/accesso.json\n  Cache-Control: no-store\n/sw.js\n  Cache-Control: no-cache\n/entra/*\n  Cache-Control: no-store\n')
+open(PUB + '/_headers', 'w').write('/accesso.json\n  Cache-Control: no-store\n/sw.js\n  Cache-Control: no-cache\n'
+                                   '/entra/*\n  Cache-Control: no-store\n/index.html\n  Cache-Control: no-cache\n')
 
-# service worker: conserva tutti i file al primo avvio, poi li serve anche senza rete
-file = sorted(os.path.relpath(os.path.join(r, f), OUT).replace(os.sep, '/') for r, _, fs in os.walk(OUT) for f in fs)
-file = [f for f in file if f not in ('index.html', 'accesso.json', '_headers', 'entra/index.html')]   # index è «./»
+# service worker: al primo avvio conserva app e caratteri; slide e appendici delle lezioni aperte le scarica l'app
+file = sorted(os.path.relpath(os.path.join(r, f), PUB).replace(os.sep, '/') for r, _, fs in os.walk(PUB) for f in fs)
+nucleo = [f for f in file if f in ('corso.json', 'manifest.webmanifest', 'icona-192.png', 'icona-512.png', 'stemma.webp')
+          or f.startswith('fonts/')]
 sw = open(os.path.join(QUI, 'sw.js'), encoding='utf-8').read()
-sw = sw.replace('__VERSIONE__', versione).replace('__FILE__', json.dumps(['./'] + file))
-open(OUT + '/sw.js', 'w', encoding='utf-8').write(sw)
-print(OUT, len(file) + 1, 'file,', sum(os.path.getsize(os.path.join(OUT, f)) for f in file) // 1024, 'KB; versione', versione)
+sw = sw.replace('__VERSIONE__', versione).replace('__FILE__', json.dumps(['./'] + nucleo))
+open(PUB + '/sw.js', 'w', encoding='utf-8').write(sw)
+
+# server
+os.makedirs(OUT + '/src')
+open(OUT + '/src/worker.js', 'w', encoding='utf-8').write(
+    open(os.path.join(QUI, 'worker.js'), encoding='utf-8').read().replace('__VERSIONE__', versione))
+open(OUT + '/wrangler.jsonc', 'w', encoding='utf-8').write(f'''// Generato da corso/app/casa/prepara_casa.py: non modificare a mano.
+{{
+  "name": "{WORKER}",
+  "main": "src/worker.js",
+  "compatibility_date": "2025-09-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {{
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*", "/docente", "/docente/", "/docente.html", "/slides/*", "/appendici/*", "/presentazioni/*"]
+  }},
+  "durable_objects": {{ "bindings": [{{ "name": "CORSO", "class_name": "Corso" }}] }},
+  "migrations": [{{ "tag": "v1", "new_sqlite_classes": ["Corso"] }}],
+  "vars": {{ "DOCENTE": "{DOCENTE}", "TEAM": "{TEAM}", "AUD": "{AUD}" }}
+}}
+''')
+tot = sum(os.path.getsize(os.path.join(PUB, f)) for f in file)
+print(OUT, len(file), 'file,', tot // 1024, 'KB; nel service worker', len(nucleo) + 1, 'file; versione', versione)
