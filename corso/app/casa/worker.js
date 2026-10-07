@@ -60,14 +60,34 @@ async function aperto(p, attive, C) {
   if (m) return attive.includes(m[1]);
   m = p.match(/^\/slides\/SR-(\d+)\.jpg$/);
   if (m) { const l = C.lezioni.find(x => (x.scheda || []).includes(+m[1])); return !l || attive.includes(l.id); }
-  m = p.match(/^\/appendici\/([a-z])\.html$/);
+  m = p.match(/^\/appendici\/([a-z])(?:\.html)?$/);   // anche senza «.html»
   if (m) { const a = C.appendici.find(x => x.file === 'appendici/' + m[1] + '.html'); return !a || a.lezioni.some(l => attive.includes(l)); }
   return true;
 }
 
 // account di prova: cosa vedono e per quanto
 const PROVA_LEZIONI = ['L01', 'L02'];
-const PROVA_PRESENTAZIONI = ['scuola', 'rotta', 'lezione-01', 'lezione-02', 'appendice-e'];
+const PROVA_SLIDE = 3;                       // delle lezioni 1 e 2 solo le prime slide
+const PROVA_PRESENTAZIONI = ['rotta'];       // nell'area istruttore solo «Rotta verso la patente»
+// il corso visto da un account di prova: lezioni 1 e 2 con le prime slide e la loro prima verifica (che rimanda a quelle
+// slide), niente schede, numeri d'oro né appendici; le altre lezioni oscurate
+function corsoProva(C) {
+  const quiz = {};
+  const lezioni = C.lezioni.map(l => {
+    if (!PROVA_LEZIONI.includes(l.id)) return { ...l, attiva: false, capitoli: [], scheda: [], appendici: [] };
+    const tutte = l.capitoli.flatMap(c => c.pagine), pagine = tutte.slice(0, PROVA_SLIDE);
+    const verifica = l.capitoli.flatMap(c => c.quiz).find(v => !v.raccolta && v.ids.length) || { ids: [] };
+    for (const q of verifica.ids) {
+      const Q = C.quiz[q];
+      quiz[q] = { ...Q, rivedi: Q.rivedi[0] === l.id && pagine.includes(Q.rivedi[1]) ? Q.rivedi : [l.id, pagine[pagine.length - 1]] };
+    }
+    const nq = l.capitoli.reduce((n, c) => n + c.quiz.reduce((m, v) => m + v.ids.length, 0), 0);
+    return { ...l, attiva: true, scheda: [], appendici: [],
+             capitoli: [{ titolo: 'Le prime slide', pagine, quiz: verifica.ids.length ? [{ titolo: 'Verifica di esempio', ids: verifica.ids, raccolta: false }] : [] }],
+             nota_demo: `Account di prova: ${pagine.length} slide di esempio. Nella versione completa la lezione ha ${tutte.length} slide e ${nq} quiz ufficiali.` };
+  });
+  return { ...C, prova: true, lezioni, appendici: C.appendici.map(a => ({ ...a, aperta: false })), schede: { generali: [], numeri_oro: [] }, quiz };
+}
 const RUOLI = new Map();   // email → {ruolo, scade}, per un minuto, per non chiedere all'archivio a ogni slide
 async function ruoloDi(archivio, email, origine) {
   const c = RUOLI.get(email);
@@ -105,11 +125,17 @@ export default {
           const elenco = await (await env.ASSETS.fetch(new URL('/presentazioni/elenco.json', url))).json();
           return json(elenco.filter(x => PROVA_PRESENTAZIONI.some(n => x.file === 'presentazioni/' + n + '.html')));
         }
-        if (!PROVA_PRESENTAZIONI.some(n => p === '/presentazioni/' + n + '.html')) return pagina(403, 'Nella prova questa presentazione non è disponibile.');
+        // i file statici rispondono anche senza «.html» (…/rotta.html rimanda a …/rotta)
+        if (!PROVA_PRESENTAZIONI.some(n => p.replace(/\.html$/, '') === '/presentazioni/' + n)) return pagina(403, 'Nella prova questa presentazione non è disponibile.');
       }
     }
-    if (ruolo !== 'docente' && (p.startsWith('/slides/') || p.startsWith('/appendici/'))) {
-      const attive = prova ? R.attive : await (await archivio.fetch(new Request(url.origin + '/interno/attive'))).json();
+    if (prova && p === '/corso.json') return json(corsoProva(await corso(env, url)));
+    if (prova && (p.startsWith('/slides/') || p.startsWith('/appendici/'))) {
+      const C = corsoProva(await corso(env, url)), m = p.match(/^\/slides\/(L\d+)-(\d+)\.jpg$/);
+      const l = m && R.attive.includes(m[1]) && C.lezioni.find(x => x.id === m[1]);
+      if (!l || !l.capitoli.some(c => c.pagine.includes(+m[2]))) return pagina(403, 'Nella prova questa slide non è disponibile.');
+    } else if (ruolo !== 'docente' && (p.startsWith('/slides/') || p.startsWith('/appendici/'))) {
+      const attive = await (await archivio.fetch(new Request(url.origin + '/interno/attive'))).json();
       if (!(await aperto(p, attive, await corso(env, url)))) return pagina(403, 'Questa lezione non è ancora aperta.');
     }
     return env.ASSETS.fetch(req);
@@ -231,7 +257,7 @@ export class Corso extends DurableObject {
     // area istruttore (il Worker ha già controllato l'email)
     const indirizzi = [req.headers.get('x-origine') + '/'];
     if (d) {   // area istruttore di prova: allievi inventati più sé stesso come allievo; le lezioni 1-2 si aprono e chiudono solo per sé
-      const C = await this.corso();
+      const C = corsoProva(await this.corso());
       if (p === '/api/docente/allievi') {
         const elenco = allieviInventati(C, d.attive);
         if (a) elenco.unshift({ id: email, nome: a.nome + ' (tu)', creato: a.creato, ultimo: a.ultimo, stato: a.stato });

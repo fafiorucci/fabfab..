@@ -251,7 +251,7 @@ const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
 // versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
-const VERSIONE='0.8.0', RILASCIO='7 ottobre 2026';
+const VERSIONE='0.8.1', RILASCIO='7 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
@@ -897,7 +897,7 @@ function pannelloDocente(){
   const prova=aula.prova, fino=prova?new Date(prova.scade).toLocaleDateString('it-IT',{day:'numeric',month:'long'}):'';
   return el('div',{class:'card row',style:'--hue:var(--sun); justify-content:space-between'},
     el('div',{class:'stack',style:'gap:4px'},el('h3',{},prova?'Account di prova fino al '+fino:'Sei entrato come istruttore'),
-      el('p',{class:'muted'},prova?'Prova l’app come un allievo con le lezioni 1 e 2, poi guarda l’area istruttore con una classe di esempio.':'Classe, risultati, lezioni da aprire e presentazioni.')),
+      el('p',{class:'muted'},prova?'Prova l’app come un allievo con le prime slide delle lezioni 1 e 2, poi guarda l’area istruttore con una classe di esempio.':'Classe, risultati, lezioni da aprire e presentazioni.')),
     el('a',{class:'btn',href:'docente'},'Area istruttore →'));
 }
 function pannelloCasa(){
@@ -1103,6 +1103,7 @@ function suggerimento(){
   try{ C=await (await fetch('corso.json')).json(); document.getElementById('versione').textContent='App versione '+VERSIONE+' · '+RILASCIO+(C.demo?' · demo':''); }
   catch(e){ $app.replaceChildren(el('div',{class:'stack'},el('h1',{},'Non riesco a caricare il corso'),el('p',{class:'muted'},'Ricarica la pagina; se il problema resta, avvisa l’istruttore.'))); return; }
   if(!await controllaAccesso()) return;
+  if(C.prova) document.getElementById('nav-mat').style.display='none';   // account di prova: niente schede né appendici
   S=blank(); vRegistrazione();
   S=conProfilo(await store.load()); applicaPreferenze(); renderWho();
   // dati arrivati dall'altra app: a casa da «Porta a casa», in aula da «Invia all'aula»

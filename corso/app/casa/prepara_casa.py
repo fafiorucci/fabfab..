@@ -126,7 +126,7 @@ open(OUT + '/wrangler.jsonc', 'w', encoding='utf-8').write(f'''// Generato da co
   "assets": {{
     "directory": "./public",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*", "/accesso.json", "/docente", "/docente/", "/docente.html", "/slides/*", "/appendici/*", "/presentazioni/*"]
+    "run_worker_first": ["/api/*", "/accesso.json", "/corso.json", "/docente", "/docente/", "/docente.html", "/slides/*", "/appendici/*", "/presentazioni/*"]
   }},
   "durable_objects": {{ "bindings": [{{ "name": "CORSO", "class_name": "Corso" }}] }},
   "migrations": [{{ "tag": "v1", "new_sqlite_classes": ["Corso"] }}],
