@@ -12,9 +12,9 @@ separato) protetto da Cloudflare Access (email ammesse e codice via email):
 - manifest.webmanifest, sw.js, icone;
 - accesso.json            il file che l'app chiede a ogni apertura con la rete per sapere se l'accesso c'è ancora;
 - entra/                  la pagina per rientrare con l'email (rimanda all'app);
-- _headers                regole di Cloudflare (accesso.json e sw.js mai in cache);
-- pubblico/logo.png       il logo per la pagina di accesso di Cloudflare Access: è l'unico file fuori dalla
-                          protezione (in Access un'applicazione per il percorso /pubblico con regola «Bypass»).
+- _headers                regole di Cloudflare (accesso.json e sw.js mai in cache).
+Il logo della pagina di accesso di Cloudflare Access sta fuori dal sito protetto, nel progetto Cloudflare Pages
+«onda-logo» (https://onda-logo.pages.dev/logo.png, caricato a mano; l'immagine è logo-accesso.png).
 I progressi passano dall'app dell'aula con «Porta a casa» e tornano con «Invia all'aula».
 Quando si apre una nuova lezione (campo «attiva»), si rifà app_build.py e questo script e si pubblica.
 """
@@ -44,8 +44,6 @@ stemma = Image.open(os.path.join(APP, 'stemma-originale.png')).convert('RGBA')
 for n in (192, 512):
     stemma.resize((n, n), Image.LANCZOS).save(f'{OUT}/icona-{n}.png', optimize=True)
 shutil.copy(os.path.join(APP, 'stemma.webp'), OUT + '/stemma.webp')
-os.makedirs(OUT + '/pubblico')
-Image.open(os.path.join(QUI, 'logo-accesso.png')).convert('RGBA').resize((256, 256), Image.LANCZOS).save(OUT + '/pubblico/logo.png', optimize=True)
 json.dump({'name': 'Corso Patente Nautica · a casa', 'short_name': 'Corso nautico', 'start_url': './', 'scope': './',
            'display': 'standalone', 'background_color': '#16324F', 'theme_color': '#16324F', 'lang': 'it',
            'icons': [{'src': 'icona-192.png', 'sizes': '192x192', 'type': 'image/png'},
@@ -72,7 +70,7 @@ open(OUT + '/_headers', 'w').write('/accesso.json\n  Cache-Control: no-store\n/s
 
 # service worker: conserva tutti i file al primo avvio, poi li serve anche senza rete
 file = sorted(os.path.relpath(os.path.join(r, f), OUT).replace(os.sep, '/') for r, _, fs in os.walk(OUT) for f in fs)
-file = [f for f in file if f not in ('index.html', 'accesso.json', '_headers', 'entra/index.html') and not f.startswith('pubblico/')]   # index è «./»
+file = [f for f in file if f not in ('index.html', 'accesso.json', '_headers', 'entra/index.html')]   # index è «./»
 sw = open(os.path.join(QUI, 'sw.js'), encoding='utf-8').read()
 sw = sw.replace('__VERSIONE__', versione).replace('__FILE__', json.dumps(['./'] + file))
 open(OUT + '/sw.js', 'w', encoding='utf-8').write(sw)
