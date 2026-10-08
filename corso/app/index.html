@@ -191,7 +191,17 @@ p{margin:0}
   .entra-dx{animation:entraDx .28s ease-out} .entra-sx{animation:entraSx .28s ease-out}
   @keyframes entraDx{from{transform:translateX(40px); opacity:0}} @keyframes entraSx{from{transform:translateX(-40px); opacity:0}}
 }
-@media (max-width:640px){ .quiznav{position:sticky; bottom:8px; background:var(--paper); padding:8px 0; z-index:5} }
+#app .quiz1 .txt{text-align:left; hyphens:manual; -webkit-hyphens:manual}
+.qtesta .qtitolo{display:none}
+@media (max-width:640px){
+  .quiznav{position:sticky; bottom:0; background:var(--paper); padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px)); z-index:5}
+  .quiznav .btn{padding:9px 16px}
+  .quizpagina{gap:10px!important} .quizpagina>.head{display:none}
+  .qtesta .qtitolo{display:block; font-weight:800; font-size:13px; color:var(--coral); text-align:right; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:60%}
+  .quiz1{padding:12px 12px 12px 14px; border-left-width:6px; gap:7px}
+  .quiz1 .txt{font-size:16.5px; line-height:1.4} .quiz1 .qid{font-size:12px}
+  .quiz1 .opt{padding:8px 11px; min-height:0; font-size:15px; gap:10px} .quiz1 .opt .box{width:21px; height:21px}
+}
 .result{display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:space-between}
 .result .big{font-family:var(--display); font-size:40px; font-weight:700; color:var(--hue)}
 table{border-collapse:collapse; width:100%; font-size:15px}
@@ -272,7 +282,7 @@ const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
 // versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
-const VERSIONE='0.11.0', RILASCIO='8 ottobre 2026';
+const VERSIONE='0.11.1', RILASCIO='8 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
@@ -754,7 +764,9 @@ function vQuiz(set,state){
   quizAttivo=state;
   const avanti=()=>{ if(curView!==vQuiz||quizAttivo!==state) return;   // nel frattempo si è cambiata pagina
     const j=state.i+1<N?state.i+1:null; if(j!=null) vai(j,1); else { clearTimeout(state.t); state.fine=true; vQuiz(set,state); window.scrollTo({top:0}); } };
-  const testa=[el('button',{class:'link',onclick:back},'← Indietro'), head('Quiz ufficiali DD 131/2022',set.titolo,'var(--coral)','quiz',true)];
+  // sul telefono la testata è una sola riga, così la domanda con le risposte sta tutta nello schermo
+  const testa=[el('div',{class:'row qtesta',style:'justify-content:space-between'},el('button',{class:'link',onclick:back},'← Indietro'),el('span',{class:'qtitolo'},set.titolo)),
+    head('Quiz ufficiali DD 131/2022',set.titolo,'var(--coral)','quiz',true)];
   if(state.fine){
     const sbagliate=ids.filter(q=>state.scelte[q]!=null&&state.scelte[q]!==C.quiz[q].x&&!(S.risposte[q]&&S.risposte[q].ok));
     const saltate=ids.filter(q=>state.scelte[q]==null), giusti=fatte().length-sbagliate.length;
@@ -781,11 +793,11 @@ function vQuiz(set,state){
     el('span',{class:'box'}),el('span',{},'abc'[j]+') '+r)));
   const fb=!fatta?null:scelta===q.x?el('div',{class:'fb ok'},'Giusto!'):el('div',{class:'fb ko'},'Sbagliato: la risposta esatta è la '+'abc'[q.x]+').');
   const card=el('div',{class:'card q quiz1'+(state.dir?(state.dir>0?' entra-dx':' entra-sx'):'')},
-    el('div',{class:'row',style:'justify-content:space-between'},el('p',{class:'qid'},'Domanda '+(state.i+1)+' di '+N+' · quiz '+qid),el('span',{class:'counter'},fatte().length+(fatte().length===1?' risposta':' risposte'))),
+    el('p',{class:'qid'},'Domanda '+(state.i+1)+' di '+N+' · quiz '+qid),
     el('div',{style:'--hue:var(--coral)'},bar(pct(state.i+(fatta?1:0),N))),
     el('p',{class:'txt'},q.d),...opts,fb);
   state.dir=0;
-  $app.replaceChildren(el('div',{class:'stack',style:'gap:16px'},...testa,card,
+  $app.replaceChildren(el('div',{class:'stack quizpagina',style:'gap:16px'},...testa,card,
     el('div',{class:'row quiznav',style:'justify-content:space-between'},
       el('button',{class:'btn ghost',disabled:state.i===0,onclick:()=>vai(state.i-1,-1)},'← Precedente'),
       el('button',{class:'btn'+(fatta?' sea':''),onclick:avanti},state.i===N-1?'Fine':fatta?'Avanti →':'Salta →'))));

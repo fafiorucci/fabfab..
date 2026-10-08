@@ -186,7 +186,17 @@ p{margin:0}
   .entra-dx{animation:entraDx .28s ease-out} .entra-sx{animation:entraSx .28s ease-out}
   @keyframes entraDx{from{transform:translateX(40px); opacity:0}} @keyframes entraSx{from{transform:translateX(-40px); opacity:0}}
 }
-@media (max-width:640px){ .quiznav{position:sticky; bottom:8px; background:var(--paper); padding:8px 0; z-index:5} }
+#app .quiz1 .txt{text-align:left; hyphens:manual; -webkit-hyphens:manual}
+.qtesta .qtitolo{display:none}
+@media (max-width:640px){
+  .quiznav{position:sticky; bottom:0; background:var(--paper); padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px)); z-index:5}
+  .quiznav .btn{padding:9px 16px}
+  .quizpagina{gap:10px!important} .quizpagina>.head{display:none}
+  .qtesta .qtitolo{display:block; font-weight:800; font-size:13px; color:var(--coral); text-align:right; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:60%}
+  .quiz1{padding:12px 12px 12px 14px; border-left-width:6px; gap:7px}
+  .quiz1 .txt{font-size:16.5px; line-height:1.4} .quiz1 .qid{font-size:12px}
+  .quiz1 .opt{padding:8px 11px; min-height:0; font-size:15px; gap:10px} .quiz1 .opt .box{width:21px; height:21px}
+}
 .result{display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:space-between}
 .result .big{font-family:var(--display); font-size:40px; font-weight:700; color:var(--hue)}
 table{border-collapse:collapse; width:100%; font-size:15px}
