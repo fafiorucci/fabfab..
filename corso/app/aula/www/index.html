@@ -66,8 +66,6 @@ header.bar .waves{display:block; width:100%; height:14px}
 .aiuto details ul{padding-left:20px; margin:0}
 .aiuto .info{font-size:13px; color:var(--soft); font-weight:700}
 /* menu a cassetto: si apre toccando il logo, in tutte le pagine */
-.brand .hamb{width:24px; height:24px; flex:none; display:none; margin-right:-2px}
-.brand.menu .hamb{display:block}
 .cassetto-ov{position:fixed; inset:0; z-index:40; background:rgba(11,24,38,.45)}
 .cassetto{position:fixed; top:0; left:0; bottom:0; z-index:41; width:min(360px,88vw); background:var(--paper); color:var(--ink); box-shadow:10px 0 30px rgba(0,0,0,.25); display:flex; flex-direction:column}
 @media (prefers-reduced-motion: no-preference){
@@ -292,7 +290,6 @@ footer.foot .legal{display:block; margin-top:4px; font-size:11.5px; font-weight:
 <div class="backdrop" id="backdrop" aria-hidden="true"></div>
 <header class="bar"><div class="in">
   <button class="brand" id="home-btn" aria-label="Corso Patente Nautica">
-    <svg class="hamb" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5H20M4 12H20M4 17.5H20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
     <span id="logo-h"></span>
     <span><b>Corso Patente Nautica</b><i>il mare, a vele spiegate</i></span>
   </button>
@@ -320,7 +317,7 @@ const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
 // versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
-const VERSIONE='0.13.0', RILASCIO='8 ottobre 2026';
+const VERSIONE='0.13.1', RILASCIO='8 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
