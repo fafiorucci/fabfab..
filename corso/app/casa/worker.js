@@ -9,7 +9,7 @@
    - /docente e /api/docente/*  solo per l'email dell'istruttore (variabile DOCENTE).
    - slide, schede e appendici delle lezioni ancora chiuse non si scaricano (come contenuto_aperto in server.py);
      le presentazioni solo per l'istruttore.
-   - con MODO = "prova" (Worker «corsonautico-prova», senza Cloudflare Access e con i soli file della prova) si entra
+   - con MODO = "prova" (Worker «corso-nautico-prova», senza Cloudflare Access e con i soli file della prova) si entra
      con il link personale …/?p=<codice> creato dall'istruttore: il codice resta in un cookie e vale fino alla scadenza.
    - account di prova per altre scuole (li crea l'istruttore, con scadenza): app con le lezioni 1-2 e area istruttore
      con allievi inventati; mai i dati veri. Scaduta la prova non si apre più niente. */
