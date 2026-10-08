@@ -7,6 +7,10 @@ Numerazione `MAGGIORE.MINORE.CORREZIONE`:
 Il numero è in `corso/app/index.html` (`VERSIONE`, `RILASCIO`) e in `corso/app/aula/server.py` (`VERSIONE`): si cambiano insieme.
 Si vede in fondo all'app, nell'aiuto, nell'area istruttore e nella finestra del server.
 
+## 0.11.0 · 8 ottobre 2026
+- Quiz uno per pagina: scelta la risposta si vede subito se è giusta e dopo un attimo si passa da soli alla domanda dopo (dopo un errore un po' di più, per leggere la risposta giusta); «Salta →» e «← Precedente»; in fondo il riepilogo con il punteggio, le domande saltate e gli errori con «Rivedi l'argomento». Ogni risposta si salva subito.
+- Home: riepilogo dei progressi su una riga; sui telefoni lo stemma non copre più il saluto.
+
 ## 0.10.0 · 8 ottobre 2026
 - Home: riepilogo dei progressi nel riquadro con lo stemma (slide studiate, quiz risposti, risposte giuste, quiz da ripassare con il pulsante per farli, giorni all'esame); testi giustificati con la sillabazione.
 - Telefoni piccoli: nella pagina di entrata lo stemma è piccolo in alto a destra e il modulo si vede senza scorrere.

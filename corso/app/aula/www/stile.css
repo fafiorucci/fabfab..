@@ -116,10 +116,10 @@ p{margin:0}
 .hero h1{color:#fff}
 .hero .sub{color:var(--navy-soft); font-size:17px}
 /* riepilogo dei progressi nella home */
-.recap{display:grid; grid-template-columns:repeat(auto-fit,minmax(96px,1fr)); gap:8px}
+.recap{display:flex; gap:8px} .recap>*{flex:1 1 0; min-width:0}
 .recap>*{background:rgba(255,255,255,.1); border:0; border-radius:14px; padding:9px 11px; color:#fff; text-align:left; font:inherit}
 .recap b{display:block; font-family:var(--display); font-size:24px; line-height:1.1; color:var(--dacc); font-variant-numeric:tabular-nums}
-.recap span{font-size:12.5px; font-weight:800; color:var(--navy-soft)}
+.recap span{display:block; font-size:12.5px; font-weight:800; color:var(--navy-soft)}
 .recap button{cursor:pointer} .recap button:hover{background:rgba(255,255,255,.18)}
 .recap button:focus-visible{outline:3px solid var(--dacc); outline-offset:2px}
 /* testo giustificato, con la sillabazione italiana */
@@ -180,6 +180,13 @@ p{margin:0}
 .fb{border-radius:14px; padding:12px 14px; font-weight:800; display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center}
 .fb.ok{background:var(--ok-t); color:var(--ok)} .fb.ko{background:var(--ko-t); color:var(--ko)}
 .fb .link{color:inherit}
+.quiz1 .txt{font-size:19px}
+.quiz1 .opt{padding:14px 16px; min-height:56px}
+@media (prefers-reduced-motion: no-preference){
+  .entra-dx{animation:entraDx .28s ease-out} .entra-sx{animation:entraSx .28s ease-out}
+  @keyframes entraDx{from{transform:translateX(40px); opacity:0}} @keyframes entraSx{from{transform:translateX(-40px); opacity:0}}
+}
+@media (max-width:640px){ .quiznav{position:sticky; bottom:8px; background:var(--paper); padding:8px 0; z-index:5} }
 .result{display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:space-between}
 .result .big{font-family:var(--display); font-size:40px; font-weight:700; color:var(--hue)}
 table{border-collapse:collapse; width:100%; font-size:15px}
@@ -209,8 +216,9 @@ footer.foot svg{width:28px; height:28px; flex:none; align-self:flex-start}
 footer.foot .legal{display:block; margin-top:4px; font-size:11.5px; font-weight:600; line-height:1.45; opacity:.85}
 @media (max-width:640px){
   .hero{padding:18px 18px 52px} .hero .in{grid-template-columns:1fr; gap:12px}
-  .hero .art{position:absolute; top:-4px; right:-4px; width:64px; max-width:64px}
-  .hero .note{font-size:22px; padding-right:68px} .hero h1{font-size:25px} .hero .sub{font-size:15px}
+  .hero .art{position:absolute; top:-4px; right:-4px; width:58px; max-width:58px}
+  .hero .note{font-size:22px; padding-right:64px; min-height:54px} .hero h1{font-size:25px} .hero .sub{font-size:15px}
+  .recap{gap:6px} .recap>*{padding:8px 6px; border-radius:12px} .recap b{font-size:19px} .recap span{font-size:10.5px; line-height:1.2}
   .hero.compatto .sub{display:none}
   .stats{gap:8px} .stat{padding:12px} .stat b{font-size:24px} .stat span{font-size:12px}
   .lez{grid-template-columns:auto 1fr} .lez .go{grid-column:1/-1}
