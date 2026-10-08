@@ -7,6 +7,9 @@ Numerazione `MAGGIORE.MINORE.CORREZIONE`:
 Il numero è in `corso/app/index.html` (`VERSIONE`, `RILASCIO`) e in `corso/app/aula/server.py` (`VERSIONE`): si cambiano insieme.
 Si vede in fondo all'app, nell'aiuto, nell'area istruttore e nella finestra del server.
 
+## 0.13.2 · 8 ottobre 2026
+- La prima volta, dopo l'entrata, un fumetto sotto il logo avvisa che toccandolo si apre il menu; poi quello sotto «?» per l'aiuto. Ognuno compare una sola volta per dispositivo (non compare più se si è già aperto il menu o l'aiuto) e si chiude da solo dopo 9 secondi.
+
 ## 0.13.1 · 8 ottobre 2026
 - Il menu a cassetto si apre toccando il logo: tolta l'icona ☰ accanto.
 

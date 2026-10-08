@@ -97,6 +97,7 @@ header.bar .waves{display:block; width:100%; height:14px}
 .cassetto .cf{font-size:12px; color:var(--soft); font-weight:700; padding:16px 10px 0}
 .suggerimento{position:fixed; z-index:30; right:12px; top:76px; max-width:240px; background:var(--dacc); color:#16324F; font-weight:800; font-size:14px; border-radius:14px; padding:10px 34px 10px 12px; box-shadow:var(--shadow)}
 .suggerimento::before{content:""; position:absolute; top:-8px; right:var(--fr,60px); border:8px solid transparent; border-top:0; border-bottom-color:var(--dacc)}
+.suggerimento.sx{right:auto; left:12px} .suggerimento.sx::before{right:auto; left:var(--fl,20px)}
 .suggerimento button{position:absolute; top:4px; right:6px; border:0; background:none; font:inherit; font-size:18px; color:#16324F; cursor:pointer}
 .whob{display:flex; align-items:center; gap:8px; background:none; border:0; color:inherit; font:inherit; cursor:pointer; padding:2px; border-radius:999px}
 .whob:focus-visible{outline:3px solid var(--dacc); outline-offset:2px}
@@ -315,7 +316,7 @@ const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
 // versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
-const VERSIONE='0.13.1', RILASCIO='8 ottobre 2026';
+const VERSIONE='0.13.2', RILASCIO='8 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
@@ -501,7 +502,8 @@ function linkInFondo(){
 }
 new MutationObserver(m=>{ if(m.some(x=>[...x.addedNodes].some(n=>!(n.classList&&n.classList.contains('in-fondo'))))) requestAnimationFrame(linkInFondo); }).observe($app,{childList:true});
 let curArgs=[];
-function go(fn,...a){ if(typeof chiudiFs==='function') chiudiFs(); cur=null; curView=fn; curArgs=a; window.scrollTo({top:0}); fn(...a); navCur(fn);}
+function go(fn,...a){ if(typeof chiudiFs==='function') chiudiFs(); cur=null; curView=fn; curArgs=a; window.scrollTo({top:0}); fn(...a); navCur(fn);
+  if(fn===vHome) setTimeout(suggerimento,1200); }
 function navCur(fn){
   document.getElementById('nav-home').toggleAttribute('aria-current',false);
   document.getElementById('nav-prog').toggleAttribute('aria-current',false);
@@ -516,7 +518,7 @@ function navCur(fn){
 // La lezione o il materiale della pagina aperta è già espanso e segnato.
 function apriMenu(){
   if(!S||!S.nome||document.querySelector('.cassetto')) return;
-  chiudiSuggerimento();
+  chiudiSuggerimento('corso-menu-visto');
   const br=document.getElementById('home-btn'), prima=document.activeElement;
   const chiudi=()=>{ ov.remove(); pan.remove(); document.removeEventListener('keydown',esc); br.setAttribute('aria-expanded','false'); if(prima&&prima.focus) prima.focus(); };
   const esc=e=>{ if(e.key==='Escape') chiudi(); };
@@ -1290,7 +1292,7 @@ const AIUTO_GUIDA=[
   ['Dove sono i miei dati?',['In aula sul computer dell’istruttore, fuori aula nel tuo account o su questo dispositivo.','Dal profilo puoi scaricarli o cancellare l’account.']],
 ];
 function apriAiuto(){
-  chiudiSuggerimento();
+  chiudiSuggerimento('corso-aiuto-visto');
   if(document.querySelector('.aiuto')) return;
   const nome=curView&&curView.name, qui=AIUTO_QUI[nome]||(S&&S.nome?AIUTO_QUI.vHome:AIUTO_QUI.vRegistrazione);
   const prima=document.activeElement;
@@ -1308,15 +1310,30 @@ function apriAiuto(){
   document.body.append(ov,pan); document.addEventListener('keydown',esc);
   pan.querySelector('.ax').focus();
 }
-// la prima volta, un piccolo suggerimento sotto il pulsante ? (poi non compare più su questo dispositivo)
-function chiudiSuggerimento(){ const s=document.querySelector('.suggerimento'); if(s){ s.remove(); try{localStorage.setItem('corso-aiuto-visto','1');}catch(e){} } }
+// la prima volta, piccoli suggerimenti uno dopo l'altro: sotto il logo (apre il menu, solo dopo l'entrata) e sotto il pulsante ?;
+// ognuno compare una volta sola su questo dispositivo
+const SUGGERIMENTI=[
+  {chiave:'corso-menu-visto', id:'logo-h', testo:'Tocca il logo: si apre il menu con tutte le lezioni, i capitoli e i materiali.', serveNome:true},
+  {chiave:'corso-aiuto-visto', id:'nav-aiuto', testo:'Serve una mano? Qui trovi l’aiuto per ogni pagina.'}];
+const giaVisto=k=>{ try{ return !!localStorage.getItem(k); }catch(e){ return false; } };
+let suggTimer=null;
+// chiave: il suggerimento da non mostrare più (aperto il menu o l'aiuto); senza, chiude quello visibile
+function chiudiSuggerimento(chiave){
+  if(chiave){ try{ localStorage.setItem(chiave,'1'); }catch(e){} }
+  const s=document.querySelector('.suggerimento'); if(!s) return;
+  try{ localStorage.setItem(s.dataset.chiave,'1'); }catch(e){}
+  s.remove(); clearTimeout(suggTimer); suggTimer=setTimeout(suggerimento,800);   // poi il prossimo, se c'è
+}
 function suggerimento(){
-  let visto=false; try{ visto=!!localStorage.getItem('corso-aiuto-visto'); }catch(e){}
-  if(visto||document.querySelector('.suggerimento')) return;
-  const b=document.getElementById('nav-aiuto').getBoundingClientRect();
-  const t=el('div',{class:'suggerimento',role:'status',style:'top:'+(b.bottom+10)+'px; --fr:'+Math.max(14,innerWidth-b.right+b.width/2-20-12)+'px'},
-    'Serve una mano? Qui trovi l’aiuto per ogni pagina.',el('button',{'aria-label':'Chiudi',onclick:chiudiSuggerimento},'×'));
-  document.body.append(t); setTimeout(chiudiSuggerimento,9000);
+  if(document.querySelector('.suggerimento,.aiuto,.cassetto,.fs')) return;
+  const sg=SUGGERIMENTI.find(x=>!giaVisto(x.chiave)&&(!x.serveNome||(S&&S.nome))); if(!sg) return;
+  const b=document.getElementById(sg.id).getBoundingClientRect(); if(!b.width) return;
+  const sx=b.left+b.width/2<innerWidth/2;   // pulsante a sinistra: il fumetto parte da sinistra
+  const l=Math.max(12,Math.min(b.left-8,innerWidth-252));   // sul PC il logo non è sul bordo: il fumetto gli sta sotto
+  const t=el('div',{class:'suggerimento'+(sx?' sx':''),role:'status','data-chiave':sg.chiave,
+    style:'top:'+(b.bottom+10)+'px; '+(sx?'left:'+l+'px; --fl:'+Math.max(14,b.left+b.width/2-l-8):'--fr:'+Math.max(14,innerWidth-b.right+b.width/2-20-12))+'px'},
+    sg.testo,el('button',{'aria-label':'Chiudi',onclick:()=>chiudiSuggerimento()},'×'));
+  document.body.append(t); clearTimeout(suggTimer); suggTimer=setTimeout(()=>chiudiSuggerimento(),9000);
 }
 (async function start(){
   try{ C=await (await fetch('corso.json')).json(); document.getElementById('versione').textContent='App versione '+VERSIONE+' · '+RILASCIO+(C.demo?' · demo':''); }
