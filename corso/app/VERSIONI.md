@@ -7,6 +7,11 @@ Numerazione `MAGGIORE.MINORE.CORREZIONE`:
 Il numero è in `corso/app/index.html` (`VERSIONE`, `RILASCIO`) e in `corso/app/aula/server.py` (`VERSIONE`): si cambiano insieme.
 Si vede in fondo all'app, nell'aiuto, nell'area istruttore e nella finestra del server.
 
+## 0.12.0 · 8 ottobre 2026
+- Appendici nel visore dell'app, come lezioni e schede: stesso sfondo, intestazione e fondo pagina, contatore, «← Indietro / Avanti →», schermo intero e dito per sfogliare; le pagine sono immagini con la filigrana (`AX-NNN.jpg`, da `app_build.py`) e si scaricano per l'uso senza rete. Dalla lezione si torna alla lezione, da Materiali a Materiali.
+- App online: subito dopo il primo accesso l'app si apre anche senza rete (prima serviva almeno una risposta salvata).
+- I quiz dei numeri d'oro rimandano alla slide della lezione che li spiega (se la lezione è aperta).
+
 ## 0.11.1 · 8 ottobre 2026
 - Quiz sul telefono: testata su una riga (← Indietro e titolo), domanda e risposte più compatte e senza sillabazione, pulsanti in fondo sempre visibili; la domanda con le risposte sta nello schermo anche sui telefoni piccoli.
 

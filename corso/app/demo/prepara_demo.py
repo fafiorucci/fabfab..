@@ -77,6 +77,7 @@ for q in C['schede']['numeri_oro']:
 immagini |= {f'SR-{p:03d}.jpg' for p in C['schede']['generali']}
 for a in C['appendici']:
     voce = {**a, 'aperta': a['id'] in APPENDICI_DEMO}
+    voce.pop('pagine', None)   # nella demo le appendici sono le presentazioni HTML ridotte
     if a['id'] in APPENDICI_DEMO:
         h, n, tot = taglia(open(f"{SRC}/{a['file']}", encoding='utf-8').read(), f"Appendice {a['id']} · {a['titolo']}")
         open(f"{OUT}/{a['file']}", 'w', encoding='utf-8').write(h)

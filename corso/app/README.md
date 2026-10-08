@@ -3,7 +3,7 @@
 Pubblicata come artifact: https://claude.ai/artifact/PoYsNRcs6eKTS3DW7WdLv4
 
 - `index.html` · l'app (registrazione, percorso delle lezioni, visore slide, quiz a caselle, storico, rimando dall'errore alla slide).
-- `app_build.py` · genera `corso.json` (15 lezioni con capitoli, quiz, scheda riassuntiva e appendici collegate), `slides/` (teoria delle lezioni e schede, con filigrana) e `appendici/` (HTML con il visore) dai file in `corso/export/`. Le lezioni aperte all'inizio sono in `ATTIVE`, l'abbinamento appendici-lezioni in `APPENDICI`.
+- `app_build.py` · genera `corso.json` (15 lezioni con capitoli, quiz, scheda riassuntiva e appendici collegate), `slides/` (teoria delle lezioni, schede e pagine delle appendici `AX-NNN.jpg`, con filigrana; l'app mostra le appendici nel suo visore) e `appendici/` (HTML con il visore) dai file in `corso/export/`. Le lezioni aperte all'inizio sono in `ATTIVE`, l'abbinamento appendici-lezioni in `APPENDICI`.
 
 Progressi per allievo nel `db` dell'artifact, in `data/users/<id>/profile` (privato per ogni allievo); senza `db` restano sul dispositivo.
 Progetto completo: documento «Progetto: corso di patente nautica in app e in libro».

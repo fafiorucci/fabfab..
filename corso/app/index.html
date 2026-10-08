@@ -282,7 +282,7 @@ const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
 // versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
-const VERSIONE='0.11.1', RILASCIO='8 ottobre 2026';
+const VERSIONE='0.12.0', RILASCIO='8 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
@@ -474,7 +474,7 @@ function navCur(fn){
   document.getElementById('nav-mat').toggleAttribute('aria-current',false);
   if(fn===vHome) document.getElementById('nav-home').setAttribute('aria-current','page');
   if(fn===vStorico) document.getElementById('nav-prog').setAttribute('aria-current','page');
-  if(fn===vMateriali||fn===vScheda) document.getElementById('nav-mat').setAttribute('aria-current','page');
+  if(fn===vMateriali||fn===vScheda||fn===vAppendice) document.getElementById('nav-mat').setAttribute('aria-current','page');
   const wb=document.querySelector('.whob'); if(wb) wb.toggleAttribute('aria-current',fn===vProfilo);
 }
 function head(pill,title,hue,icon,big){
@@ -544,7 +544,7 @@ function vRegistrazione(){
       if(!cons.checked){cons.focus();return;}
       if(mode==='aula'){
         try{ const j=await api('accedi',C.online?{nome:nome.value.trim()}:{nome:nome.value.trim(),codice:cod.value.trim()}); tok.set(j.token);
-          giro=j.giro||0; S=conProfilo(Object.assign(blank(),j.stato,{nome:j.nome,consenso:true})); applicaPreferenze(); }
+          giro=j.giro||0; S=conProfilo(Object.assign(blank(),j.stato,{nome:j.nome,consenso:true})); applicaPreferenze(); copia.scrivi(false); }
         catch(err){ msg.textContent=err.status?err.message:C.online?'Non riesco a collegarmi: controlla la connessione e riprova.':'Non raggiungo il computer dell’aula: controlla di essere sul wifi della scuola.'; return; }
         try{ const att=sessionStorage.getItem('corso-da-casa'); if(att){ riceviDati(await spacchetta(att),'casa'); sessionStorage.removeItem('corso-da-casa'); } }catch(e){}
         renderWho(); go(vHome); return;
@@ -637,12 +637,28 @@ function extra(l){
   if(l.scheda.length) voci.push(el('button',{class:'xcard',style:'--hue:var(--purple)',onclick:()=>go(vScheda,l.id,0)},
     el('span',{class:'xi'},svgEl(ICONS.quiz,'','0 0 100 100')),el('span',{},el('b',{},'Scheda riassuntiva'),el('small',{},'Regole e numeri da ricordare · '+l.scheda.length+(l.scheda.length===1?' pagina':' pagine')))));
   for(const id of l.appendici){ const a=appendice(id); if(!a) continue;
-    voci.push(el('button',{class:'xcard',style:'--hue:var(--blue)',onclick:()=>apriAppendice(a)},
+    voci.push(el('button',{class:'xcard',style:'--hue:var(--blue)',onclick:()=>apriAppendice(a,l.id)},
       el('span',{class:'xi'},el('b',{},a.id)),el('span',{},el('b',{},'Approfondisci · Appendice '+a.id),el('small',{},a.titolo+' · '+a.slide+' slide')))); }
   return voci.length?el('div',{class:'xrow'},...voci):null;
 }
 const indirizzoApp=a=>C.online?a.file.replace(/\.html$/,''):a.file;   // online i file si chiamano senza «.html»
-function apriAppendice(a){ store.flush(); location.href=indirizzoApp(a); }
+// le appendici con le pagine in immagine si sfogliano nel visore dell'app, come lezioni e schede;
+// senza (versioni vecchie, demo) si apre la presentazione HTML
+function apriAppendice(a,L){ if(a.pagine) return go(vAppendice,a.id,0,L); store.flush(); location.href=indirizzoApp(a); }
+function vAppendice(id,k,L){
+  const a=appendice(id), n=a.pagine, last=k===n-1, titolo='Appendice '+a.id+' · '+a.titolo;
+  const fuori=()=>L?go(vLezione,L):go(vMateriali);
+  const prev=el('button',{class:'btn ghost',disabled:k===0,onclick:()=>vAppendice(id,k-1,L)},'← Indietro');
+  const next=!last?el('button',{class:'btn',onclick:()=>vAppendice(id,k+1,L)},'Avanti →'):el('button',{class:'btn sea',onclick:fuori},'Fine appendice');
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:14px'},
+    el('div',{class:'row',style:'justify-content:space-between'},el('button',{class:'link',onclick:fuori},L?'← '+lez(L).num:'← Materiali'),el('span',{class:'counter'},(k+1)+' / '+n)),
+    el('span',{class:'pill',style:'--hue:var(--blue)'},'Approfondimento · Appendice '+a.id),
+    el('h2',{style:'color:var(--blue)'},a.titolo),
+    slideBox(el('img',{src:img('A'+a.id,k+1),alt:titolo+', pagina '+(k+1)}),el('div',{class:'vnav'},prev,next),
+      k>0?()=>vAppendice(id,k-1,L):null, !last?()=>vAppendice(id,k+1,L):null, true)));
+  cur={src:img('A'+a.id,k+1), alt:titolo, label:(k+1)+' / '+n, prima:k>0?()=>vAppendice(id,k-1,L):null, dopo:!last?()=>vAppendice(id,k+1,L):null};
+  if(fsEl) fsRender(); else if(basso.matches) apriFs(true);
+}
 
 function vRaccolta(L,ci){
   const c=lez(L).capitoli[ci];
@@ -1024,7 +1040,7 @@ async function precarica(){
     const u=[];
     for(const l of aperte()){ for(const p of allPages(l.id)) u.push(img(l.id,p)); for(const p of l.scheda||[]) u.push(img('SR',p)); }
     for(const p of C.schede.generali||[]) u.push(img('SR',p));
-    for(const a of C.appendici) if(appAperta(a)) u.push(indirizzoApp(a));
+    for(const a of C.appendici) if(appAperta(a)){ if(a.pagine) for(let p=1;p<=a.pagine;p++) u.push(img('A'+a.id,p)); else u.push(indirizzoApp(a)); }
     for(const x of u){ if(await caches.match(x,{ignoreSearch:true})) continue; try{ await fetch(x); }catch(e){ return; } }
   } finally{ precaricando=false; }
 }
@@ -1119,6 +1135,7 @@ const AIUTO_QUI={
   vQuiz:['I quiz',['Tocca una risposta per ogni domanda, poi «Controlla le risposte».','Se sbagli, «Rivedi l’argomento» apre la slide che lo spiega.','«Riprova gli errori» ripropone solo le domande sbagliate: un errore diventa giusto quando rispondi bene.']],
   vRivedi:['Rivedi l’argomento',['È la slide che spiega la domanda sbagliata: leggila e premi «Riprova la domanda».','«Continua a studiare da qui» apre il capitolo da questa slide.']],
   vScheda:['Scheda riassuntiva',['Regole e numeri da ricordare della lezione: rileggila il giorno dopo.','Si sfoglia come le slide, anche a schermo intero.']],
+  vAppendice:['Appendice',['Un approfondimento facoltativo collegato alle lezioni.','Si sfoglia come le slide: frecce, pulsanti o il dito; ⛶ per lo schermo intero.']],
   vMateriali:['Materiali',['Le schede riassuntive di tutte le lezioni, i numeri d’oro e la loro verifica.','Le appendici: approfondimenti facoltativi, si aprono con la lezione a cui sono collegate.','Dentro un’appendice si sfoglia col dito; «← Corso» per tornare.']],
   vStorico:['I tuoi progressi',['Per ogni lezione: slide viste, quiz risposti, giusti, recuperati (sbagliati e poi rifatti giusti), da ripassare.','Sotto, i quiz sbagliati con «Rivedi» e «Riprova».','«Ricomincia da capo» azzera i progressi, non il profilo.']],
   vProfilo:['Il tuo profilo',['Patente e data d’esame servono a segnare le lezioni facoltative e al conto alla rovescia.','Email e telefono sono facoltativi.','Tema, testo più grande e obiettivo della settimana cambiano l’app solo per te.','Ricordati di premere «Salva il profilo».']],
@@ -1168,6 +1185,7 @@ function suggerimento(){
   if(C.prova) document.getElementById('nav-mat').style.display='none';   // account di prova: niente schede né appendici
   S=blank(); vRegistrazione();
   S=conProfilo(await store.load()); applicaPreferenze(); renderWho();
+  if(mode==='aula'&&!offline&&S.nome) copia.scrivi(false);   // copia sul telefono subito, così si apre anche senza rete
   // dati arrivati dall'altra app: a casa da «Porta a casa», in aula da «Invia all'aula»
   try{
     const daAula=daHash('da-aula'), daCasa=daHash('da-casa');

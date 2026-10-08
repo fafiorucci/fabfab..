@@ -62,6 +62,8 @@ async function aperto(p, attive, C) {
   if (m) return attive.includes(m[1]);
   m = p.match(/^\/slides\/SR-(\d+)\.jpg$/);
   if (m) { const l = C.lezioni.find(x => (x.scheda || []).includes(+m[1])); return !l || attive.includes(l.id); }
+  m = p.match(/^\/slides\/A([A-Z])-\d+\.jpg$/);   // pagine delle appendici come immagini
+  if (m) { const a = C.appendici.find(x => x.id === m[1]); return !a || a.lezioni.some(l => attive.includes(l)); }
   m = p.match(/^\/appendici\/([a-z])(?:\.html)?$/);   // anche senza «.html»
   if (m) { const a = C.appendici.find(x => x.file === 'appendici/' + m[1] + '.html'); return !a || a.lezioni.some(l => attive.includes(l)); }
   return true;

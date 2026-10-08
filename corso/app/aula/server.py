@@ -36,7 +36,7 @@ PORTE = range(8000, 8011)
 MAX_CORPO = 1_000_000
 # app «da casa» (https, installabile, funziona offline): si cambia in dati/config.json alla voce "casa"
 CASA = 'https://corsonautico-ondaportante.fafiorucci.workers.dev/'
-VERSIONE = '0.11.1'   # come l'app (corso/app/index.html): 0.x in prova, 1.0.0 al lancio
+VERSIONE = '0.12.0'   # come l'app (corso/app/index.html): 0.x in prova, 1.0.0 al lancio
 
 lock = threading.Lock()
 tentativi = {}  # chiave nome -> [errori, istante del blocco]
@@ -93,6 +93,9 @@ def contenuto_aperto(p):
     if m:
         lez = SCHEDA_DI.get(int(m.group(1)))
         return lez is None or lez in attive
+    m = re.match(r'/slides/A([A-Z])-\d+\.jpg$', p)
+    if m:
+        return any(l in attive for l in APPENDICE.get(m.group(1).lower() + '.html', []))
     m = re.match(r'/appendici/([a-z]\.html)$', p)
     if m:
         return any(l in attive for l in APPENDICE.get(m.group(1), []))

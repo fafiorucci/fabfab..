@@ -7,7 +7,8 @@ Scrive in $SP/app/:
                risposte e la slide da rivedere;
 - slides/      le pagine di teoria delle 15 lezioni (LNN-NNN.jpg) e delle schede riassuntive (SR-NNN.jpg),
                con la filigrana;
-- appendici/   le appendici A-M in HTML, con il visore per gli allievi.
+- appendici/   le appendici A-M in HTML, con il visore per gli allievi; le loro pagine anche come immagini
+               (slides/AX-NNN.jpg), che l'app mostra nel suo visore come le lezioni.
 Le lezioni attive all'inizio sono in ATTIVE; poi le abilita l'istruttore (server d'aula) o una nuova
 pubblicazione (app online).
 """
@@ -161,8 +162,12 @@ for html in sorted(glob.glob(os.path.join(EXPORT, 'html', 'Appendice *.html'))):
     h = open(html, encoding='utf-8').read()
     h = h.replace('</body>', '<script>window.VISORE="allievo";' + visore + '</script></body>', 1)
     open(f'{OUT}/appendici/{a.lower()}.html', 'w', encoding='utf-8').write(h)
+    # le stesse pagine come immagini (AX-NNN.jpg, con la filigrana): l'app le mostra nel visore delle slide
+    doc = pymupdf.open(os.path.join(PDF, f'Appendice {a} - {titolo}.pdf'))
+    for i in range(doc.page_count):
+        immagine(doc, i, f'A{a}-{i + 1:03d}')
     corso['appendici'].append({'id': a, 'titolo': titolo, 'file': f'appendici/{a.lower()}.html',
-                               'slide': h.count('<div class="w"'), 'lezioni': APPENDICI[a]})
+                               'slide': h.count('<div class="w"'), 'pagine': doc.page_count, 'lezioni': APPENDICI[a]})
 
 json.dump(corso, open(OUT + '/corso.json', 'w'), ensure_ascii=False, separators=(',', ':'))
 print(len(os.listdir(OUT + '/slides')), 'immagini,', sum(os.path.getsize(OUT + '/slides/' + f) for f in os.listdir(OUT + '/slides')) // 1024, 'KB;',
