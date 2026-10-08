@@ -25,7 +25,7 @@
   --ok:#3CC3D2; --ok-t:#123B47; --ko:#FF7A62; --ko-t:#3E1E19; --shadow:0 8px 24px rgba(0,0,0,.35); color-scheme:dark}
 *{box-sizing:border-box}
 html,body{background:var(--paper)}
-body{margin:0; color:var(--ink); font-family:var(--text); font-size:16px; line-height:1.5; min-height:100%}
+body{margin:0; color:var(--ink); font-family:var(--text); font-size:16px; line-height:1.5; min-height:100%; overflow-x:clip}   /* la pagina che esce di lato col dito non fa scorrere lo schermo */
 .backdrop{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden}
 .backdrop svg{position:absolute}
 header.bar,main,footer.foot{position:relative; z-index:1}
@@ -63,6 +63,40 @@ header.bar .waves{display:block; width:100%; height:14px}
 .aiuto details p,.aiuto details li{color:var(--body); font-size:15px; margin:8px 0 0}
 .aiuto details ul{padding-left:20px; margin:0}
 .aiuto .info{font-size:13px; color:var(--soft); font-weight:700}
+/* menu a cassetto: si apre toccando il logo, in tutte le pagine */
+.brand .hamb{width:24px; height:24px; flex:none; display:none; margin-right:-2px}
+.brand.menu .hamb{display:block}
+.cassetto-ov{position:fixed; inset:0; z-index:40; background:rgba(11,24,38,.45)}
+.cassetto{position:fixed; top:0; left:0; bottom:0; z-index:41; width:min(360px,88vw); background:var(--paper); color:var(--ink); box-shadow:10px 0 30px rgba(0,0,0,.25); display:flex; flex-direction:column}
+@media (prefers-reduced-motion: no-preference){
+  .cassetto{animation:cassettoIn .2s ease-out} .cassetto-ov{animation:ovIn .2s}
+  @keyframes cassettoIn{from{transform:translateX(-100%)}} @keyframes ovIn{from{opacity:0}}
+}
+.cassetto .ch{background:var(--navy); color:#fff; padding:12px 14px; padding-top:max(12px,env(safe-area-inset-top)); display:flex; align-items:center; gap:10px}
+.cassetto .ch svg.lg{width:40px; height:40px; flex:none}
+.cassetto .ch b{font-family:var(--display); font-size:18px; flex:1; line-height:1.15}
+.cassetto .ch .ax{width:40px; height:40px; border-radius:50%; border:0; background:rgba(255,255,255,.14); color:#fff; display:grid; place-items:center; cursor:pointer; flex:none}
+.cassetto .ch .ax svg{width:20px; height:20px}
+.cassetto .cb{overflow:auto; padding:6px 10px calc(24px + env(safe-area-inset-bottom,0px)); display:flex; flex-direction:column; gap:2px; overscroll-behavior:contain}
+.cassetto .cb>*{flex:none}   /* nella colonna che scorre le voci non si schiacciano */
+.cassetto .sez{font-size:12px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:14px 10px 4px}
+.mv{display:flex; align-items:center; gap:10px; width:100%; text-align:left; font:inherit; font-weight:800; color:var(--ink); background:none; border:0; border-radius:12px; padding:9px 10px; cursor:pointer; min-height:44px}
+.mv:hover{background:var(--card)} .mv[aria-current]{background:var(--sea-t); color:var(--ink); box-shadow:inset 4px 0 0 var(--sea)}
+.mv:focus-visible{outline:3px solid var(--dacc); outline-offset:-3px}
+.mv .mi{flex:none; width:28px; height:28px; border-radius:9px; background:var(--hue,var(--sea)); color:#fff; display:grid; place-items:center; font-family:var(--display); font-size:14px; font-weight:700}
+.mv .mi svg{width:18px; height:18px}
+.mv .t{flex:1; min-width:0; line-height:1.3}
+.mv small{color:var(--soft); font-weight:800; font-size:12px; white-space:nowrap}
+.mv small.ok{color:var(--ok)}
+.mv:disabled{color:var(--soft); cursor:default; background:none} .mv:disabled .mi{background:var(--line); color:var(--soft)}
+.cassetto summary{list-style:none} .cassetto summary::-webkit-details-marker{display:none}
+.cassetto summary.mv::after{content:"›"; font-size:22px; line-height:1; color:var(--soft); width:14px; text-align:center}
+@media (prefers-reduced-motion: no-preference){.cassetto summary.mv::after{transition:transform .15s}}
+.cassetto details[open]>summary.mv::after{transform:rotate(90deg)}
+.cassetto .sub{display:flex; flex-direction:column; gap:1px; padding:2px 0 8px 8px; margin-left:23px; border-left:2px solid var(--line)}
+.cassetto .sub .mv{font-weight:700; font-size:15px; min-height:40px; padding:7px 10px}
+.cassetto .sub .mv.qz{font-size:14px; color:var(--coral); padding-left:26px}
+.cassetto .cf{font-size:12px; color:var(--soft); font-weight:700; padding:16px 10px 0}
 .suggerimento{position:fixed; z-index:30; right:12px; top:76px; max-width:240px; background:var(--dacc); color:#16324F; font-weight:800; font-size:14px; border-radius:14px; padding:10px 34px 10px 12px; box-shadow:var(--shadow)}
 .suggerimento::before{content:""; position:absolute; top:-8px; right:var(--fr,60px); border:8px solid transparent; border-top:0; border-bottom-color:var(--dacc)}
 .suggerimento button{position:absolute; top:4px; right:6px; border:0; background:none; font:inherit; font-size:18px; color:#16324F; cursor:pointer}
@@ -153,6 +187,7 @@ p{margin:0}
 .viewer{background:var(--navy); border-radius:22px; overflow:hidden; box-shadow:var(--shadow)}
 .viewer img{display:block; width:100%; aspect-ratio:16/9; object-fit:contain}
 .viewer{position:relative; touch-action:pan-y}
+.quiz1{touch-action:pan-y}
 .viewer .fsbtn{position:absolute; right:10px; bottom:10px; width:40px; height:40px; border-radius:12px; border:0; background:rgba(11,24,38,.72); color:#fff; display:grid; place-items:center; cursor:pointer}
 .fsbtn svg,.fs .fsx svg{width:22px; height:22px}
 /* schermo intero: solo la slide, si sfoglia toccando i lati o scorrendo */
@@ -254,7 +289,8 @@ footer.foot .legal{display:block; margin-top:4px; font-size:11.5px; font-weight:
 
 <div class="backdrop" id="backdrop" aria-hidden="true"></div>
 <header class="bar"><div class="in">
-  <button class="brand" id="home-btn" aria-label="Torna alla home">
+  <button class="brand" id="home-btn" aria-label="Corso Patente Nautica">
+    <svg class="hamb" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5H20M4 12H20M4 17.5H20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
     <span id="logo-h"></span>
     <span><b>Corso Patente Nautica</b><i>il mare, a vele spiegate</i></span>
   </button>
@@ -282,7 +318,7 @@ const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
 // versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
-const VERSIONE='0.12.0', RILASCIO='8 ottobre 2026';
+const VERSIONE='0.13.0', RILASCIO='8 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
@@ -467,7 +503,8 @@ function linkInFondo(){
   $app.append(el('div',{class:'in-fondo',style:'margin-top:24px'},el('button',{class:'link',type:'button',onclick:()=>{ b.click(); window.scrollTo({top:0}); }},b.textContent.trim())));
 }
 new MutationObserver(m=>{ if(m.some(x=>[...x.addedNodes].some(n=>!(n.classList&&n.classList.contains('in-fondo'))))) requestAnimationFrame(linkInFondo); }).observe($app,{childList:true});
-function go(fn,...a){ if(typeof chiudiFs==='function') chiudiFs(); cur=null; curView=fn; window.scrollTo({top:0}); fn(...a); navCur(fn);}
+let curArgs=[];
+function go(fn,...a){ if(typeof chiudiFs==='function') chiudiFs(); cur=null; curView=fn; curArgs=a; window.scrollTo({top:0}); fn(...a); navCur(fn);}
 function navCur(fn){
   document.getElementById('nav-home').toggleAttribute('aria-current',false);
   document.getElementById('nav-prog').toggleAttribute('aria-current',false);
@@ -476,6 +513,75 @@ function navCur(fn){
   if(fn===vStorico) document.getElementById('nav-prog').setAttribute('aria-current','page');
   if(fn===vMateriali||fn===vScheda||fn===vAppendice) document.getElementById('nav-mat').setAttribute('aria-current','page');
   const wb=document.querySelector('.whob'); if(wb) wb.toggleAttribute('aria-current',fn===vProfilo);
+}
+/* ---------- menu a cassetto: si apre dal logo, in tutte le pagine ---------- */
+// Home, ripasso, progressi e profilo; le lezioni con capitoli e verifiche; schede e appendici.
+// La lezione o il materiale della pagina aperta è già espanso e segnato.
+function apriMenu(){
+  if(!S||!S.nome||document.querySelector('.cassetto')) return;
+  chiudiSuggerimento();
+  const br=document.getElementById('home-btn'), prima=document.activeElement;
+  const chiudi=()=>{ ov.remove(); pan.remove(); document.removeEventListener('keydown',esc); br.setAttribute('aria-expanded','false'); if(prima&&prima.focus) prima.focus(); };
+  const esc=e=>{ if(e.key==='Escape') chiudi(); };
+  const vai=(...a)=>()=>{ chiudi(); go(...a); };
+  const v=curView, [A0,A1]=curArgs;
+  const icona=id=>{ const s=document.querySelector('#'+id+' svg'); return s?s.cloneNode(true):null; };
+  const voce=(mi,hue,testo,azione,o={})=>el('button',{class:'mv'+(o.cls?' '+o.cls:''),type:'button',style:'--hue:'+(hue||'var(--sea)'),disabled:!!o.dis,'aria-current':o.qui?'page':null,onclick:azione},
+    mi!=null?el('span',{class:'mi'},mi):null,el('span',{class:'t'},testo),o.nota!=null?el('small',{class:o.ok?'ok':''},o.nota):null);
+  const gruppo=(aperto,sommario,...dentro)=>el('details',{open:aperto},sommario,el('div',{class:'sub'},...dentro));
+  const sommario=(mi,hue,testo,nota)=>el('summary',{class:'mv',style:'--hue:'+hue},el('span',{class:'mi'},mi),el('span',{class:'t'},testo),nota!=null?el('small',{},nota):null);
+  const esito=ids=>{ const f=ids.filter(ans), ok=f.filter(q=>ans(q).ok).length; return f.length<ids.length?{nota:f.length+'/'+ids.length}:{nota:ok===ids.length?'✓':ok+'/'+ids.length,ok:ok===ids.length}; };
+  // la lezione della pagina aperta
+  const rit=v===vQuiz&&A0&&A0.ritorno||[];
+  const qui=v===vLezione||v===vSlide||v===vRaccolta||(v===vScheda&&A0!=='oro')?A0:(rit[0]==='lezione'||rit[0]==='raccolta')?rit[1]:v===vAppendice&&A1?A1:null;
+  const err=errati();
+  const lezioni=C.lezioni.map((l,i)=>{ const hue=HUES[i%5], n=l.num.slice(-2);
+    if(!attiva(l.id)) return voce(n,hue,l.titolo,null,{dis:true,nota:'🔒'});
+    const s=stato(l.id), dentro=[voce(null,null,'Panoramica della lezione',vai(vLezione,l.id),{qui:v===vLezione&&A0===l.id})];
+    l.capitoli.forEach((c,ci)=>{
+      const ids=c.quiz.flatMap(x=>x.ids), breve=c.titolo.replace(/^Capitolo \d+ · /,'');
+      if(c.quiz.length>3){ dentro.push(voce(null,null,'Raccolta quiz · ultimi 45 minuti',vai(vRaccolta,l.id,ci),{qui:v===vRaccolta&&A0===l.id,...esito(ids)})); return; }
+      if(c.pagine.length) dentro.push(voce(null,null,c.titolo,vai(vSlide,l.id,ci,0),{qui:v===vSlide&&A0===l.id&&A1===ci}));
+      if(ids.length) dentro.push(voce(null,null,'Verifica · '+ids.length+' quiz',vai(vQuiz,{titolo:'Verifica · '+breve,ids,ritorno:['lezione',l.id]}),{cls:'qz',...esito(ids)}));
+    });
+    if(l.scheda.length) dentro.push(voce(null,null,'Scheda riassuntiva',vai(vScheda,l.id,0),{qui:v===vScheda&&A0===l.id}));
+    for(const id of l.appendici){ const a=appendice(id); if(a&&appAperta(a)) dentro.push(voce(null,null,'Appendice '+a.id+' · '+a.titolo,()=>{ chiudi(); apriAppendice(a,l.id); },{qui:v===vAppendice&&A0===a.id})); }
+    return gruppo(qui===l.id,sommario(n,hue,l.titolo,pct(s.viste,s.pagine)+'%'),...dentro);
+  });
+  const materiali=C.prova?[]:[
+    el('p',{class:'sez'},'Materiali'),
+    gruppo(v===vScheda,sommario(svgEl(ICONS.quiz,'','0 0 100 100'),'var(--purple)','Schede riassuntive'),
+      voce(null,null,'I numeri d’oro del corso',vai(vScheda,'oro',0),{qui:v===vScheda&&A0==='oro'}),
+      voce(null,null,'Verifica dei numeri d’oro',vai(vQuiz,{titolo:'Verifica dei numeri d’oro',ids:C.schede.numeri_oro,ritorno:['materiali']}),{cls:'qz',...esito(C.schede.numeri_oro)}),
+      ...C.lezioni.filter(l=>l.scheda.length).map(l=>attiva(l.id)?voce(null,null,'Scheda '+l.num.slice(-2)+' · '+l.titolo,vai(vScheda,l.id,0),{qui:v===vScheda&&A0===l.id}):voce(null,null,'Scheda '+l.num.slice(-2)+' · '+l.titolo,null,{dis:true,nota:'🔒'}))),
+    gruppo(v===vAppendice,sommario('A','var(--blue)','Appendici'),
+      ...C.appendici.map(a=>appAperta(a)?voce(null,null,a.id+' · '+a.titolo,()=>{ chiudi(); apriAppendice(a); },{qui:v===vAppendice&&A0===a.id}):voce(null,null,a.id+' · '+a.titolo,null,{dis:true,nota:'🔒'}))),
+    voce(icona('nav-mat'),'var(--purple)','Tutti i materiali',vai(vMateriali),{qui:v===vMateriali})];
+  const ov=el('div',{class:'cassetto-ov',onclick:chiudi});
+  const pan=el('div',{class:'cassetto',role:'dialog','aria-modal':'true','aria-label':'Menu del corso'},
+    el('div',{class:'ch'},logo(true),el('b',{},'Corso Patente Nautica'),el('button',{class:'ax',type:'button','aria-label':'Chiudi il menu',onclick:chiudi},svgEl(ICON_X,'','0 0 24 24'))),
+    el('nav',{class:'cb','aria-label':'Menu del corso'},
+      voce(icona('nav-home'),'var(--sea)','Home',vai(vHome),{qui:v===vHome}),
+      err.length?voce('!','var(--coral)','Ripassa gli errori',vai(vQuiz,{titolo:'Ripasso degli errori',ids:err.slice(0,10),ritorno:['home']}),{nota:String(err.length)}):null,
+      el('p',{class:'sez'},'Le lezioni'),
+      ...lezioni,
+      ...materiali,
+      el('p',{class:'sez'},'Tu'),
+      voce(icona('nav-prog'),'var(--green)','I tuoi progressi',vai(vStorico),{qui:v===vStorico}),
+      voce(iniziali(),P().colore||'#0B8A99','Il mio profilo',vai(vProfilo),{qui:v===vProfilo}),
+      voce(icona('nav-aiuto'),'var(--blue)','Aiuto',()=>{ chiudi(); apriAiuto(); }),
+      el('p',{class:'cf'},'App versione '+VERSIONE+' · '+RILASCIO+(C.demo?' · demo':''))));
+  pan.querySelector('.ch svg').classList.add('lg');
+  // col dito verso sinistra il cassetto si richiude, come nelle app
+  let x0=null, y0=0;
+  pan.addEventListener('touchstart',e=>{ x0=e.touches[0].clientX; y0=e.touches[0].clientY; },{passive:true});
+  pan.addEventListener('touchend',e=>{ if(x0==null) return; const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0; x0=null;
+    if(dx<-60&&Math.abs(dy)<Math.abs(dx)/2) chiudi(); },{passive:true});
+  document.body.append(ov,pan); document.addEventListener('keydown',esc);
+  br.setAttribute('aria-expanded','true');
+  const sel=pan.querySelector('[aria-current]');
+  (sel||pan.querySelector('.ax')).focus({preventScroll:true});
+  if(sel) sel.scrollIntoView({block:'center'});
 }
 function head(pill,title,hue,icon,big){
   return el('div',{class:'head',style:'--hue:'+hue},badge(icon,hue),
@@ -510,6 +616,11 @@ function applicaPreferenze(){
 function renderWho(){
   $who.replaceChildren();
   document.getElementById('nav').hidden=!(S&&S.nome);
+  // registrati: il logo apre il menu a cassetto
+  const br=document.getElementById('home-btn'), menu=!!(S&&S.nome);
+  br.classList.toggle('menu',menu);
+  if(menu){ br.setAttribute('aria-label','Apri il menu'); br.setAttribute('aria-haspopup','dialog'); br.setAttribute('aria-expanded',document.querySelector('.cassetto')?'true':'false'); }
+  else{ br.setAttribute('aria-label','Corso Patente Nautica'); br.removeAttribute('aria-haspopup'); br.removeAttribute('aria-expanded'); }
   if(!S||!S.nome) return;
   const b=el('button',{class:'whob',type:'button','aria-label':'Il mio profilo',onclick:()=>go(vProfilo)},
     el('span',{class:'av',style:'background:'+(P().colore||'#0B8A99')},iniziali()),el('span',{class:'wn'},S.nome));
@@ -672,15 +783,44 @@ function vRaccolta(L,ci){
         el('div',{class:'row acts',style:'justify-content:flex-end'},el('button',{class:'btn sea',onclick:()=>go(vQuiz,{titolo:s.titolo,ids:s.ids,ritorno:['raccolta',L,ci]})},f.length?'Rifai':'Inizia')));}))));
 }
 
+/* ---------- scorrimento col dito, come nelle app ---------- */
+// la pagina segue il dito e, oltre una soglia, esce di lato e si passa a quella accanto; all'inizio e in fondo resiste.
+// Solo col tocco: sul PC restano pulsanti, frecce della tastiera e clic sui lati della slide.
+const pocoMoto=matchMedia('(prefers-reduced-motion: reduce)');
+let entrata=null;   // verso da cui entra la pagina dopo uno scorrimento: {d:1 da destra, -1 da sinistra, t}
+function trascina(t,prima,dopo){
+  let x0=null, y0=0, dx=0, dir=null;
+  const torna=()=>{ t.style.transition='transform .2s ease-out'; t.style.transform=''; };
+  t.addEventListener('touchstart',e=>{
+    if(e.touches.length>1||(window.visualViewport&&visualViewport.scale>1.05)){ x0=null; return; }   // pizzico o pagina ingrandita
+    x0=e.touches[0].clientX; y0=e.touches[0].clientY; dx=0; dir=null; t.style.transition='none'; },{passive:true});
+  t.addEventListener('touchmove',e=>{ if(x0==null) return;
+    const x=e.touches[0].clientX-x0, y=e.touches[0].clientY-y0;
+    if(!dir){ if(Math.abs(x)<10&&Math.abs(y)<10) return; dir=Math.abs(x)>Math.abs(y)?'h':'v'; }
+    if(dir!=='h') return;
+    dx=(x<0&&!dopo)||(x>0&&!prima)?x/4:x;
+    if(!pocoMoto.matches) t.style.transform='translateX('+dx+'px)'; },{passive:true});
+  t.addEventListener('touchend',()=>{ if(x0==null) return; x0=null;
+    if(dir!=='h') return;
+    const via=dx<-60&&dopo?dopo:dx>60&&prima?prima:null;
+    if(!via) return torna();
+    entrata={d:dx<0?1:-1,t:Date.now()};
+    if(pocoMoto.matches) return via();
+    t.style.transition='transform .15s ease-in, opacity .15s'; t.style.transform='translateX('+(dx<0?-1:1)*t.offsetWidth+'px)'; t.style.opacity='0';
+    setTimeout(via,140); },{passive:true});
+  t.addEventListener('touchcancel',()=>{ x0=null; torna(); },{passive:true});
+  // la pagina nuova entra dal lato opposto
+  if(entrata&&Date.now()-entrata.t<800&&!pocoMoto.matches&&t.animate)
+    t.animate([{transform:'translateX('+entrata.d*60+'px)',opacity:0},{transform:'none',opacity:1}],{duration:200,easing:'ease-out'});
+  entrata=null;
+}
+
 /* ---------- visore slide ---------- */
 const basso=matchMedia('(orientation:landscape) and (max-height:520px)');
 // slide + pulsanti; sul telefono si sfoglia anche toccando i lati o scorrendo col dito
 function slideBox(im,nav,prima,dopo,fs){
   const v=el('div',{class:'viewer'},im,fs?el('button',{class:'fsbtn',type:'button','aria-label':'Schermo intero',onclick:e=>{e.stopPropagation(); apriFs(false);}},svgEl(ICON_FS,'','0 0 24 24')):null);
-  let x0=null;
-  v.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
-  v.addEventListener('touchend',e=>{ if(x0==null)return; const dx=e.changedTouches[0].clientX-x0; x0=null;
-    if(Math.abs(dx)>50){ if(dx<0&&dopo)dopo(); if(dx>0&&prima)prima(); } },{passive:true});
+  trascina(v,prima,dopo);
   v.addEventListener('click',e=>{ const r=v.getBoundingClientRect(), f=(e.clientX-r.left)/r.width;
     if(f>.7&&dopo)dopo(); else if(f<.3&&prima)prima(); });
   return el('div',{class:'stack slidebox',style:'gap:14px'},v,nav);
@@ -808,11 +948,13 @@ function vQuiz(set,state){
       state.t=setTimeout(avanti,ok?900:2200); }},   // dopo un errore si lascia il tempo di leggere la risposta giusta
     el('span',{class:'box'}),el('span',{},'abc'[j]+') '+r)));
   const fb=!fatta?null:scelta===q.x?el('div',{class:'fb ok'},'Giusto!'):el('div',{class:'fb ko'},'Sbagliato: la risposta esatta è la '+'abc'[q.x]+').');
-  const card=el('div',{class:'card q quiz1'+(state.dir?(state.dir>0?' entra-dx':' entra-sx'):'')},
+  const card=el('div',{class:'card q quiz1'+(state.dir&&!entrata?(state.dir>0?' entra-dx':' entra-sx'):'')},
     el('p',{class:'qid'},'Domanda '+(state.i+1)+' di '+N+' · quiz '+qid),
     el('div',{style:'--hue:var(--coral)'},bar(pct(state.i+(fatta?1:0),N))),
     el('p',{class:'txt'},q.d),...opts,fb);
   state.dir=0;
+  // col dito: verso sinistra la domanda dopo (come «Salta →»), verso destra la precedente
+  trascina(card,state.i>0?()=>vai(state.i-1,-1):null,avanti);
   $app.replaceChildren(el('div',{class:'stack quizpagina',style:'gap:16px'},...testa,card,
     el('div',{class:'row quiznav',style:'justify-content:space-between'},
       el('button',{class:'btn ghost',disabled:state.i===0,onclick:()=>vai(state.i-1,-1)},'← Precedente'),
@@ -1117,7 +1259,7 @@ function resetCard(){
 }
 
 /* ---------- avvio ---------- */
-document.getElementById('home-btn').addEventListener('click',()=>{ if(S&&S.nome) go(vHome); });
+document.getElementById('home-btn').addEventListener('click',()=>{ if(S&&S.nome) apriMenu(); });
 document.getElementById('nav-home').addEventListener('click',()=>{ if(S&&S.nome) go(vHome); });
 document.getElementById('nav-prog').addEventListener('click',()=>{ if(S&&S.nome) go(vStorico); });
 document.getElementById('nav-mat').addEventListener('click',()=>{ if(S&&S.nome) go(vMateriali); });
@@ -1128,19 +1270,20 @@ document.getElementById('versione').textContent='App versione '+VERSIONE+' · '+
 // cosa si può fare nella schermata aperta: compare in cima al pannello
 const AIUTO_QUI={
   vRegistrazione:['Entrare nel corso',['Scrivi nome e cognome.','In aula scegli anche un codice personale di 4 cifre: con lo stesso nome e codice ritrovi i progressi su un altro telefono o tablet.','Spunta il consenso e premi «Inizia il corso».']],
-  vHome:['La home',['In alto il benvenuto e, se hai messo la data d’esame nel profilo, il conto alla rovescia.','I tre riquadri: slide studiate, quiz risposti, risposte giuste.','«Ripassa gli errori» ripropone i quiz sbagliati.','Le lezioni col lucchetto si aprono quando le fate in aula. «Facoltativa per la tua patente»: non serve per la patente che hai scelto, ma puoi studiarla.']],
+  vHome:['La home',['Tocca il logo in alto a sinistra: si apre il menu con tutte le lezioni, i capitoli, le verifiche e i materiali.','In alto il benvenuto e, se hai messo la data d’esame nel profilo, il conto alla rovescia.','I tre riquadri: slide studiate, quiz risposti, risposte giuste.','«Ripassa gli errori» ripropone i quiz sbagliati.','Le lezioni col lucchetto si aprono quando le fate in aula. «Facoltativa per la tua patente»: non serve per la patente che hai scelto, ma puoi studiarla.']],
   vLezione:['La lezione',['In cima: la scheda riassuntiva e le appendici per approfondire.','Ogni capitolo ha «Studia» (le slide) e «Verifica» (2 quiz ufficiali).','L’ultimo capitolo raccoglie i quiz degli ultimi 45 minuti, a gruppi di 3.']],
   vSlide:['Le slide',['Vai avanti e indietro con i pulsanti, toccando i lati della slide o scorrendo col dito.','⛶ in basso a destra mette la slide a schermo intero; col telefono in orizzontale si apre da solo.','Le slide viste contano nei progressi.']],
   vRaccolta:['Raccolta quiz',['I quiz degli ultimi 45 minuti, a gruppi di 3.','Giallo: da fare. Verde: tutti giusti. Rosso: qualcuno da ripassare.','«Rifai» ripropone il gruppo.']],
-  vQuiz:['I quiz',['Tocca una risposta per ogni domanda, poi «Controlla le risposte».','Se sbagli, «Rivedi l’argomento» apre la slide che lo spiega.','«Riprova gli errori» ripropone solo le domande sbagliate: un errore diventa giusto quando rispondi bene.']],
+  vQuiz:['I quiz',['Una domanda per pagina: tocca la risposta, vedi subito se è giusta e dopo un attimo passi alla domanda dopo.','«Salta →» o il dito verso sinistra: la domanda dopo. «← Precedente» o il dito verso destra: quella prima.','In fondo il riepilogo: «Rivedi l’argomento» apre la slide che spiega la domanda sbagliata, «Riprova gli errori» le ripropone.']],
   vRivedi:['Rivedi l’argomento',['È la slide che spiega la domanda sbagliata: leggila e premi «Riprova la domanda».','«Continua a studiare da qui» apre il capitolo da questa slide.']],
   vScheda:['Scheda riassuntiva',['Regole e numeri da ricordare della lezione: rileggila il giorno dopo.','Si sfoglia come le slide, anche a schermo intero.']],
   vAppendice:['Appendice',['Un approfondimento facoltativo collegato alle lezioni.','Si sfoglia come le slide: frecce, pulsanti o il dito; ⛶ per lo schermo intero.']],
-  vMateriali:['Materiali',['Le schede riassuntive di tutte le lezioni, i numeri d’oro e la loro verifica.','Le appendici: approfondimenti facoltativi, si aprono con la lezione a cui sono collegate.','Dentro un’appendice si sfoglia col dito; «← Corso» per tornare.']],
+  vMateriali:['Materiali',['Le schede riassuntive di tutte le lezioni, i numeri d’oro e la loro verifica.','Le appendici: approfondimenti facoltativi, si aprono con la lezione a cui sono collegate.','Dentro un’appendice si sfoglia col dito; «← Materiali» per tornare.']],
   vStorico:['I tuoi progressi',['Per ogni lezione: slide viste, quiz risposti, giusti, recuperati (sbagliati e poi rifatti giusti), da ripassare.','Sotto, i quiz sbagliati con «Rivedi» e «Riprova».','«Ricomincia da capo» azzera i progressi, non il profilo.']],
   vProfilo:['Il tuo profilo',['Patente e data d’esame servono a segnare le lezioni facoltative e al conto alla rovescia.','Email e telefono sono facoltativi.','Tema, testo più grande e obiettivo della settimana cambiano l’app solo per te.','Ricordati di premere «Salva il profilo».']],
 };
 const AIUTO_GUIDA=[
+  ['Il menu',['Tocca il logo in alto a sinistra: si apre il menu con la home, le lezioni (ognuna con i suoi capitoli e le verifiche), le schede, le appendici, i progressi e il profilo.','La lezione che stai studiando è già aperta. Per chiudere il menu tocca fuori, la ✕ o scorri verso sinistra.']],
   ['Come funziona il corso',['Le lezioni si aprono una alla volta, man mano che le fate in aula.','Ogni lezione: slide divise in capitoli, una verifica con 2 quiz ufficiali per capitolo, 36 quiz di raccolta alla fine, la scheda riassuntiva.','I quiz sono quelli ufficiali d’esame (DD 131/2022).']],
   ['Ho sbagliato un quiz: come diventa giusto?',['Apri «Rivedi l’argomento», leggi la slide e rifai la domanda. Quando rispondi bene, nei progressi conta tra i «recuperati».']],
   ['Le slide sul telefono sono piccole',['Gira il telefono in orizzontale: la slide va a schermo intero. Oppure tocca ⛶ sulla slide.']],

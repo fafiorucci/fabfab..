@@ -7,6 +7,11 @@ Numerazione `MAGGIORE.MINORE.CORREZIONE`:
 Il numero è in `corso/app/index.html` (`VERSIONE`, `RILASCIO`) e in `corso/app/aula/server.py` (`VERSIONE`): si cambiano insieme.
 Si vede in fondo all'app, nell'aiuto, nell'area istruttore e nella finestra del server.
 
+## 0.13.0 · 8 ottobre 2026
+- Menu a cassetto: toccando il logo in alto a sinistra (con l'icona ☰) si apre da sinistra il menu, in tutte le pagine: Home, ripasso degli errori, le lezioni (ognuna con panoramica, capitoli, verifiche con l'esito, raccolta quiz, scheda riassuntiva e appendici), le schede riassuntive, le appendici, i progressi, il profilo e l'aiuto. La lezione o il materiale della pagina aperta è già espanso e segnato; le voci chiuse hanno il lucchetto. Si chiude con la ✕, toccando fuori, con Esc o scorrendo verso sinistra.
+- Scorrimento col dito come nelle app, solo sul tocco: la slide (lezioni, schede, appendici) e la domanda del quiz seguono il dito ed escono di lato; verso sinistra si va avanti (nel quiz come «Salta →»), verso destra indietro; all'inizio e in fondo la pagina resiste. Sul PC restano pulsanti, frecce e clic sui lati.
+- Aiuto aggiornato (menu, quiz uno per pagina).
+
 ## 0.12.0 · 8 ottobre 2026
 - Appendici nel visore dell'app, come lezioni e schede: stesso sfondo, intestazione e fondo pagina, contatore, «← Indietro / Avanti →», schermo intero e dito per sfogliare; le pagine sono immagini con la filigrana (`AX-NNN.jpg`, da `app_build.py`) e si scaricano per l'uso senza rete. Dalla lezione si torna alla lezione, da Materiali a Materiali.
 - App online: subito dopo il primo accesso l'app si apre anche senza rete (prima serviva almeno una risposta salvata).
