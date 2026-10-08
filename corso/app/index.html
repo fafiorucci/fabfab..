@@ -120,6 +120,16 @@ p{margin:0}
 .hero .in{position:relative; display:grid; grid-template-columns:1.4fr 1fr; gap:24px; align-items:center}
 .hero h1{color:#fff}
 .hero .sub{color:var(--navy-soft); font-size:17px}
+/* riepilogo dei progressi nella home */
+.recap{display:grid; grid-template-columns:repeat(auto-fit,minmax(96px,1fr)); gap:8px}
+.recap>*{background:rgba(255,255,255,.1); border:0; border-radius:14px; padding:9px 11px; color:#fff; text-align:left; font:inherit}
+.recap b{display:block; font-family:var(--display); font-size:24px; line-height:1.1; color:var(--dacc); font-variant-numeric:tabular-nums}
+.recap span{font-size:12.5px; font-weight:800; color:var(--navy-soft)}
+.recap button{cursor:pointer} .recap button:hover{background:rgba(255,255,255,.18)}
+.recap button:focus-visible{outline:3px solid var(--dacc); outline-offset:2px}
+/* testo giustificato, con la sillabazione italiana */
+#app p{text-align:justify; hyphens:auto; -webkit-hyphens:auto}
+#app .notice,#app .errmsg,#app .okmsg,#app .counter,#app .row>p{text-align:left}
 .hero .note{color:var(--dacc); font-size:30px}
 .hero .waves{position:absolute; left:0; right:0; bottom:0; width:100%; height:56px}
 .hero .art{width:100%; max-width:300px; height:auto; justify-self:center; filter:drop-shadow(0 10px 24px rgba(0,0,0,.35))}
@@ -203,7 +213,10 @@ footer.foot{max-width:960px; margin:0 auto; padding:8px 16px 28px; display:flex;
 footer.foot svg{width:28px; height:28px; flex:none; align-self:flex-start}
 footer.foot .legal{display:block; margin-top:4px; font-size:11.5px; font-weight:600; line-height:1.45; opacity:.85}
 @media (max-width:640px){
-  .hero .in{grid-template-columns:1fr} .hero .art{max-width:200px}
+  .hero{padding:18px 18px 52px} .hero .in{grid-template-columns:1fr; gap:12px}
+  .hero .art{position:absolute; top:-4px; right:-4px; width:64px; max-width:64px}
+  .hero .note{font-size:22px; padding-right:68px} .hero h1{font-size:25px} .hero .sub{font-size:15px}
+  .hero.compatto .sub{display:none}
   .stats{gap:8px} .stat{padding:12px} .stat b{font-size:24px} .stat span{font-size:12px}
   .lez{grid-template-columns:auto 1fr} .lez .go{grid-column:1/-1}
   .cap{grid-template-columns:auto 1fr} .cap .acts{grid-column:1/-1; justify-content:flex-start!important}
@@ -251,7 +264,7 @@ const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
 // versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
-const VERSIONE='0.9.1', RILASCIO='8 ottobre 2026';
+const VERSIONE='0.10.0', RILASCIO='8 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
@@ -428,6 +441,14 @@ const errati=()=>Object.entries(S.risposte).filter(([q,a])=>!a.ok && C.quiz[q]).
 const etichetta=r=>r[0]==='SR'?'I numeri d’oro':lez(r[0]).num+', slide '+r[1];
 function bar(v){return el('div',{class:'bar-p',role:'progressbar','aria-valuenow':v,'aria-valuemin':0,'aria-valuemax':100},el('i',{style:'width:'+v+'%'}));}
 let curView=null;
+// il primo link «← …» della pagina si ripete in fondo, così non serve risalire
+function linkInFondo(){
+  const vecchio=$app.querySelector(':scope > .in-fondo'); if(vecchio) vecchio.remove();
+  const b=[...$app.querySelectorAll('button.link')].find(x=>x.textContent.trim().startsWith('←'));
+  if(!b||document.documentElement.scrollHeight<=innerHeight*1.4) return;
+  $app.append(el('div',{class:'in-fondo',style:'margin-top:24px'},el('button',{class:'link',type:'button',onclick:()=>{ b.click(); window.scrollTo({top:0}); }},b.textContent.trim())));
+}
+new MutationObserver(m=>{ if(m.some(x=>[...x.addedNodes].some(n=>!(n.classList&&n.classList.contains('in-fondo'))))) requestAnimationFrame(linkInFondo); }).observe($app,{childList:true});
 function go(fn,...a){ if(typeof chiudiFs==='function') chiudiFs(); cur=null; curView=fn; window.scrollTo({top:0}); fn(...a); navCur(fn);}
 function navCur(fn){
   document.getElementById('nav-home').toggleAttribute('aria-current',false);
@@ -480,10 +501,10 @@ function renderWho(){
 function heroArt(){
   return el('img',{class:'art',src:'stemma.webp',alt:'Il mare, a vele spiegate · Sailing with passion, teaching with heart',width:'300',height:'300'});
 }
-function hero(note,title,sub){
-  const h=el('div',{class:'hero'});
+function hero(note,title,sub,extra,compatto){
+  const h=el('div',{class:'hero'+(compatto?' compatto':'')});
   h.append(svgEl(`<path d="${blob(820,40,180,1.1)}" fill="#1F4466"/><path d="${blob(-10,300,120,2.3)}" fill="#1F4466"/>`,'blobs','0 0 900 300'));
-  h.append(el('div',{class:'in'},el('div',{class:'stack',style:'gap:10px'},el('p',{class:'note'},note),el('h1',{},title),squiggle('#FFC145',200),el('p',{class:'sub'},sub)),heroArt()));
+  h.append(el('div',{class:'in'},el('div',{class:'stack',style:'gap:10px; min-width:0'},el('p',{class:'note'},note),el('h1',{},title),squiggle('#FFC145',200),extra||null,el('p',{class:'sub'},sub)),heroArt()));
   const wv=svgEl(`<path d="${wave(26,9,180,-60,1000,56)}" fill="#12A4B5" fill-opacity=".28"/><path d="${wave(40,7,140,-20,1000,56)}" fill="#12A4B5" fill-opacity=".38"/>`,'waves','0 0 960 56');
   wv.setAttribute('preserveAspectRatio','none'); h.append(wv); return h;
 }
@@ -518,7 +539,7 @@ function vRegistrazione(){
     msg,
     el('button',{class:'btn sea',type:'submit',style:'align-self:flex-start'},'Inizia il corso'));
   $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
-    hero('Patente nautica · entro 12 miglia e senza limiti','Il corso in tasca: lezioni, quiz ufficiali e i tuoi progressi','Studi le slide, fai le verifiche con i quiz del DD 131/2022 e, quando sbagli, torni alla slide che spiega l’argomento. '+(C&&C.demo?'In questa demo trovi alcuni contenuti di esempio.':'Le lezioni si aprono man mano che le fate in aula.')),
+    hero('Patente nautica · entro 12 miglia e senza limiti','Il corso in tasca: lezioni, quiz ufficiali e i tuoi progressi','Studi le slide, fai le verifiche con i quiz del DD 131/2022 e, quando sbagli, torni alla slide che spiega l’argomento. '+(C&&C.demo?'In questa demo trovi alcuni contenuti di esempio.':'Le lezioni si aprono man mano che le fate in aula.'),null,true),
     bannerDemo(), form, C&&C.demo?null:localNote()));
 }
 
@@ -532,7 +553,13 @@ function vHome(){
   const sum=k=>tot.reduce((a,s)=>a+s[k],0);
   const err=errati();
   $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
-    hero('Bentornato a bordo','Ciao '+(p.nome||S.nome.split(' ')[0])+', si riparte da qui',sottotitolo),
+    hero('Bentornato a bordo','Ciao '+(p.nome||S.nome.split(' ')[0])+', si riparte da qui',sottotitolo,
+      el('div',{class:'recap'},
+        el('div',{},el('b',{},pct(sum('viste'),sum('pagine'))+'%'),el('span',{},'slide studiate')),
+        el('div',{},el('b',{},sum('fatti')+'/'+sum('quiz')),el('span',{},'quiz risposti')),
+        el('div',{},el('b',{},sum('fatti')?pct(sum('giusti'),sum('fatti'))+'%':'—'),el('span',{},'risposte giuste')),
+        err.length?el('button',{type:'button',title:'Ripassa i quiz sbagliati',onclick:()=>go(vQuiz,{titolo:'Ripasso degli errori',ids:err.slice(0,10),ritorno:['home']})},el('b',{},String(err.length)),el('span',{},'da ripassare →')):null,
+        ge!=null&&ge>=0?el('div',{},el('b',{},String(ge)),el('span',{},ge===1?'giorno all’esame':'giorni all’esame')):null)),
     bannerDemo(),
     (!p.ambito||!p.tipo||!p.esame)?el('div',{class:'card row',style:'--hue:var(--sun); justify-content:space-between'},
       el('div',{class:'stack',style:'gap:4px'},el('h3',{},'Completa il tuo profilo'),el('p',{class:'muted'},'Dicci che patente prendi e quando hai l’esame: l’app ti mostra le lezioni che ti servono e il conto alla rovescia.')),
@@ -541,10 +568,6 @@ function vHome(){
       ge!=null&&ge>=0?el('div',{class:'card countdown',style:'--hue:var(--coral)'},el('b',{},String(ge)),el('div',{},el('h3',{},ge===1?'giorno all’esame':'giorni all’esame'),el('p',{class:'muted'},new Date(p.esame+'T12:00').toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'})))):null,
       meta?el('div',{class:'card stack',style:'--hue:var(--green); gap:8px'},el('h3',{},'Obiettivo della settimana'),el('div',{style:'--hue:var(--green)'},bar(Math.min(100,pct(meta.fatto,meta.n)))),
         el('p',{class:'muted',style:'font-weight:800'},meta.fatto+' / '+meta.n+' '+meta.cosa+(meta.fatto>=meta.n?' · raggiunto!':''))):null):null,
-    el('div',{class:'stats'},
-      el('div',{class:'stat',style:'--hue:var(--sea); --tint:var(--sea-t)'},el('b',{},pct(sum('viste'),sum('pagine'))+'%'),el('span',{},'slide studiate')),
-      el('div',{class:'stat',style:'--hue:var(--purple); --tint:var(--lilac-t)'},el('b',{},sum('fatti')+' / '+sum('quiz')),el('span',{},'quiz risposti')),
-      el('div',{class:'stat',style:'--hue:var(--coral); --tint:var(--coral-t)'},el('b',{},sum('fatti')?pct(sum('giusti'),sum('fatti'))+'%':'—'),el('span',{},'risposte giuste'))),
     err.length?el('div',{class:'card row',style:'--hue:var(--coral); justify-content:space-between'},
       el('div',{class:'stack',style:'gap:4px'},el('h3',{},err.length+(err.length===1?' quiz da ripassare':' quiz da ripassare')),el('p',{class:'muted'},'Un errore diventa giusto quando rifai la domanda e rispondi bene.')),
       el('button',{class:'btn coral',onclick:()=>go(vQuiz,{titolo:'Ripasso degli errori',ids:err.slice(0,10),ritorno:['home']})},'Ripassa gli errori')):null,
@@ -600,7 +623,8 @@ function extra(l){
       el('span',{class:'xi'},el('b',{},a.id)),el('span',{},el('b',{},'Approfondisci · Appendice '+a.id),el('small',{},a.titolo+' · '+a.slide+' slide')))); }
   return voci.length?el('div',{class:'xrow'},...voci):null;
 }
-function apriAppendice(a){ store.flush(); location.href=a.file; }
+const indirizzoApp=a=>C.online?a.file.replace(/\.html$/,''):a.file;   // online i file si chiamano senza «.html»
+function apriAppendice(a){ store.flush(); location.href=indirizzoApp(a); }
 
 function vRaccolta(L,ci){
   const c=lez(L).capitoli[ci];
@@ -807,7 +831,7 @@ function vProfilo(){
     store.save(); applicaPreferenze(); renderWho(); navCur(vProfilo);
     const tt=$app.querySelector('.head h1'), av=$app.querySelector('.head .av');
     if(tt) tt.textContent=S.nome; if(av){ av.textContent=iniziali(); av.style.background=S.profilo.colore||'#0B8A99'; }
-    err.textContent=''; msg.textContent='Salvato.'; setTimeout(()=>{msg.textContent='';},2500);
+    err.textContent=''; msg.replaceChildren('Salvato. ',el('button',{class:'btn',style:'margin-left:8px',onclick:()=>go(vHome)},'Torna alla home →'));
   };
   const codice=mode==='aula'&&!C.online?(()=>{
     const v=el('input',{type:'text',id:id('cv'),inputmode:'numeric',autocomplete:'off',maxlength:'6',style:'max-width:140px'});
@@ -963,7 +987,7 @@ async function precarica(){
     const u=[];
     for(const l of aperte()){ for(const p of allPages(l.id)) u.push(img(l.id,p)); for(const p of l.scheda||[]) u.push(img('SR',p)); }
     for(const p of C.schede.generali||[]) u.push(img('SR',p));
-    for(const a of C.appendici) if(appAperta(a)) u.push(a.file);
+    for(const a of C.appendici) if(appAperta(a)) u.push(indirizzoApp(a));
     for(const x of u){ if(await caches.match(x,{ignoreSearch:true})) continue; try{ await fetch(x); }catch(e){ return; } }
   } finally{ precaricando=false; }
 }

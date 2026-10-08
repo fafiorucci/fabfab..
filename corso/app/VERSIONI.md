@@ -7,6 +7,13 @@ Numerazione `MAGGIORE.MINORE.CORREZIONE`:
 Il numero è in `corso/app/index.html` (`VERSIONE`, `RILASCIO`) e in `corso/app/aula/server.py` (`VERSIONE`): si cambiano insieme.
 Si vede in fondo all'app, nell'aiuto, nell'area istruttore e nella finestra del server.
 
+## 0.10.0 · 8 ottobre 2026
+- Home: riepilogo dei progressi nel riquadro con lo stemma (slide studiate, quiz risposti, risposte giuste, quiz da ripassare con il pulsante per farli, giorni all'esame); testi giustificati con la sillabazione.
+- Telefoni piccoli: nella pagina di entrata lo stemma è piccolo in alto a destra e il modulo si vede senza scorrere.
+- Profilo: dopo «Salva il profilo» c'è «Torna alla home →».
+- Il link per tornare indietro («← …») si ripete anche in fondo alle pagine lunghe.
+- App online: le appendici si aprono anche dalla copia sul telefono (prima davano errore).
+
 ## 0.9.1 · 8 ottobre 2026
 - Sito delle prove: il Worker si chiama `corso-nautico-prova` (come su Cloudflare); i link di prova sono `https://corso-nautico-prova.fafiorucci.workers.dev/?p=…`.
 

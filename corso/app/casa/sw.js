@@ -20,7 +20,9 @@ self.addEventListener('fetch', e => {
   const u = new URL(e.request.url);
   if (u.origin === location.origin && (/\/(accesso\.json|entra\/?(index\.html)?)$/.test(u.pathname) ||
       /\/(api|presentazioni)\//.test(u.pathname) || /\/docente(\.html|\/)?$/.test(u.pathname))) return;
-  e.respondWith(caches.match(e.request, {ignoreSearch: true}).then(c => c || fetch(e.request).then(r => {
+  // una risposta arrivata dopo un rimando (…/e.html → …/e) non si può dare a una pagina: se ne fa una copia pulita
+  const pulita = r => r && r.redirected ? r.blob().then(b => new Response(b, {status: r.status, statusText: r.statusText, headers: r.headers})) : r;
+  e.respondWith(caches.match(e.request, {ignoreSearch: true}).then(pulita).then(c => c || fetch(e.request).then(r => {
     if (r && (r.ok || r.type === 'opaque')) { const copia = r.clone(); caches.open(CACHE).then(k => k.put(e.request, copia)); }
     return r;
   }).catch(() => e.request.mode === 'navigate' ? caches.match('./') : undefined)));

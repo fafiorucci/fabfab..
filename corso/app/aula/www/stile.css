@@ -115,6 +115,16 @@ p{margin:0}
 .hero .in{position:relative; display:grid; grid-template-columns:1.4fr 1fr; gap:24px; align-items:center}
 .hero h1{color:#fff}
 .hero .sub{color:var(--navy-soft); font-size:17px}
+/* riepilogo dei progressi nella home */
+.recap{display:grid; grid-template-columns:repeat(auto-fit,minmax(96px,1fr)); gap:8px}
+.recap>*{background:rgba(255,255,255,.1); border:0; border-radius:14px; padding:9px 11px; color:#fff; text-align:left; font:inherit}
+.recap b{display:block; font-family:var(--display); font-size:24px; line-height:1.1; color:var(--dacc); font-variant-numeric:tabular-nums}
+.recap span{font-size:12.5px; font-weight:800; color:var(--navy-soft)}
+.recap button{cursor:pointer} .recap button:hover{background:rgba(255,255,255,.18)}
+.recap button:focus-visible{outline:3px solid var(--dacc); outline-offset:2px}
+/* testo giustificato, con la sillabazione italiana */
+#app p{text-align:justify; hyphens:auto; -webkit-hyphens:auto}
+#app .notice,#app .errmsg,#app .okmsg,#app .counter,#app .row>p{text-align:left}
 .hero .note{color:var(--dacc); font-size:30px}
 .hero .waves{position:absolute; left:0; right:0; bottom:0; width:100%; height:56px}
 .hero .art{width:100%; max-width:300px; height:auto; justify-self:center; filter:drop-shadow(0 10px 24px rgba(0,0,0,.35))}
@@ -198,7 +208,10 @@ footer.foot{max-width:960px; margin:0 auto; padding:8px 16px 28px; display:flex;
 footer.foot svg{width:28px; height:28px; flex:none; align-self:flex-start}
 footer.foot .legal{display:block; margin-top:4px; font-size:11.5px; font-weight:600; line-height:1.45; opacity:.85}
 @media (max-width:640px){
-  .hero .in{grid-template-columns:1fr} .hero .art{max-width:200px}
+  .hero{padding:18px 18px 52px} .hero .in{grid-template-columns:1fr; gap:12px}
+  .hero .art{position:absolute; top:-4px; right:-4px; width:64px; max-width:64px}
+  .hero .note{font-size:22px; padding-right:68px} .hero h1{font-size:25px} .hero .sub{font-size:15px}
+  .hero.compatto .sub{display:none}
   .stats{gap:8px} .stat{padding:12px} .stat b{font-size:24px} .stat span{font-size:12px}
   .lez{grid-template-columns:auto 1fr} .lez .go{grid-column:1/-1}
   .cap{grid-template-columns:auto 1fr} .cap .acts{grid-column:1/-1; justify-content:flex-start!important}
