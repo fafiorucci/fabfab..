@@ -154,10 +154,12 @@ Il modulo meteo diventa uno dei moduli di una suite per lo skipper:
 - L'app è uno **strumento di supporto**: non sostituisce i bollettini ufficiali né il giudizio dello skipper. Lo dirà chiaramente in ogni report.
 - Le licenze e le condizioni d'uso di ogni fonte (modelli, carte, mappe, polari) vanno verificate prima di un uso pubblico o commerciale.
 
-## 10. Decisioni da prendere [DA DECIDERE]
+## 10. Decisioni prese
 
-1. **Uso:** privato o per amici (gratuito) oppure prodotto commerciale? Cambiano le licenze dei dati e i costi.
-2. **Area geografica iniziale:** solo il Mediterraneo o le coste italiane? Su quest'area si sceglie quali modelli locali usare.
-3. **Stack frontend:** SvelteKit o React.
-4. **Account:** accesso con Google/Apple oppure semplice link di invito senza registrazione?
-5. **Nome e marchio:** "Skipper Meteo" come modulo, "Skipper WebApp" come contenitore?
+1. **Uso:** privato tra amici, gratuito (Open-Meteo in modalità non commerciale).
+2. **Area iniziale:** Mediterraneo; si allarga in seguito.
+3. **Stack frontend:** SvelteKit.
+4. **Accesso:** link di invito, senza registrazione.
+5. **Nomi:** "Skipper Meteo" per il modulo, "Skipper WebApp" per la suite.
+
+L'MVP 1 è nella cartella [`skipper/`](../skipper/).
