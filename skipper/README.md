@@ -28,7 +28,12 @@ npm test          # test unitari
 npm run build     # sito statico in build/
 ```
 
-Per pubblicarlo in una sottocartella (es. GitHub Pages): `BASE_PATH=/nome-repo npm run build`.
+Per pubblicarlo in una sottocartella: `BASE_PATH=/nome-repo/skipper npm run build`.
+
+## Pubblicazione
+
+Il workflow `.github/workflows/pages.yml` controlla e compila l'app a ogni PR. A ogni push su `main` la pubblica su GitHub Pages: la pagina meteo semplice va alla radice del sito, Skipper Meteo va sotto `/skipper/`.
+Una tantum, nelle impostazioni del repository: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 
 ## Dati e limiti
 
