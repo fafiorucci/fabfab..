@@ -46,11 +46,11 @@ function p90Over(d: AtmoGrid | MarineGrid, key: string, hours: number[], cells: 
 
 const fmt = (x: number, d = 0) => x.toFixed(d).replace('.', ',');
 
-export function assess(atmo: AtmoGrid[], marine: MarineGrid | null, limits: Limits, mask: Uint8Array | null): DayVerdict[] {
+/** Valuta i giorni sulle celle indicate (di norma: punti di mare nella zona inquadrata). */
+export function assess(atmo: AtmoGrid[], marine: MarineGrid | null, limits: Limits, cells?: number[]): DayVerdict[] {
 	const ref = atmo[0] ?? marine;
 	if (!ref) return [];
-	const N = nCells(ref.grid);
-	const cells = [...Array(N).keys()].filter((i) => !mask || mask[i]);
+	if (!cells) cells = [...Array(nCells(ref.grid)).keys()];
 	const days = hoursByDay(ref.times, ref.utcOffset);
 
 	return [...days.entries()].map(([date, hours]) => {

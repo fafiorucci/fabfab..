@@ -46,7 +46,7 @@
 		</article>
 	{/each}
 	<p class="note">
-		Valori al 90° percentile su mare aperto dell'area, ore 7–20. Strumento di supporto: consulta sempre il bollettino ufficiale
+		Valori al 90° percentile sui punti di mare della zona inquadrata, ore 7–20. Strumento di supporto: consulta sempre il bollettino ufficiale
 		(<a href="https://www.meteoam.it/it/meteo-mare" target="_blank" rel="noopener">Meteomar</a>) prima di uscire.
 	</p>
 </div>

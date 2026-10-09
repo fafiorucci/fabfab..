@@ -6,13 +6,21 @@
 	import LineChart, { type Line } from '#lib/components/LineChart.svelte';
 	import TripForm from '#lib/components/TripForm.svelte';
 	import Verdicts from '#lib/components/Verdicts.svelte';
+	import Footer from '#lib/components/Footer.svelte';
+	import { BRAND } from '#lib/brand.ts';
 	import {
 		fetchAtmoGrid,
 		fetchMarineGrid,
 		fetchPoint,
 		fetchPointMarine,
-		makeGrid,
+		callsToday,
+		DAILY_LIMIT,
+		gridForView,
+		gridKey,
+		homeBox,
 		type AtmoGrid,
+		type BBox,
+		type Grid,
 		type MarineGrid,
 		type PointMarine,
 		type PointSeries
@@ -35,6 +43,10 @@
 	let gen = 0;
 	let marineErr: string | null = $state(null);
 	let loading = $state(0);
+	/** Griglia dei dati: segue la zona inquadrata sulla mappa. */
+	let grid = $state.raw<Grid | null>(null);
+	let calls = $state(0);
+	let viewTimer: ReturnType<typeof setTimeout> | undefined;
 
 	// ----- Vista -----
 	let layerId: LayerId = $state('wind');
@@ -80,23 +92,43 @@
 		point = null;
 		pointData = [];
 		pointMarine = null;
-		load($state.snapshot(trip) as Trip);
-		if (fromInvite) flash(`Uscita condivisa: ${t.name}`);
-	}
-
-	async function load(t: Trip) {
-		const my = ++gen;
+		// Nuova uscita: si riparte da zero; la mappa inquadra la zona e i dati arrivano con la vista.
+		gen++;
 		atmo = {};
 		atmoErr = {};
 		marine = null;
 		marineErr = null;
+		grid = null;
 		ti = -1;
-		const jobs: Promise<void>[] = t.models.map(async (m) => {
+		calls = callsToday();
+		if (fromInvite) flash(`Uscita condivisa: ${t.name}`);
+	}
+
+	/** La mappa si è fermata su una nuova zona: se serve, scarica la griglia corrispondente. */
+	function onView(b: BBox) {
+		view = b;
+		clearTimeout(viewTimer);
+		viewTimer = setTimeout(() => {
+			if (!trip) return;
+			const g = gridForView(b);
+			if (grid && gridKey(g) === gridKey(grid)) return;
+			grid = g;
+			load($state.snapshot(trip) as Trip, g);
+		}, 900); // si attende che la mappa sia ferma: zoom e spostamenti di fila non sprecano chiamate
+	}
+
+	async function load(t: Trip, g: Grid) {
+		const my = ++gen;
+		atmoErr = {};
+		marineErr = null;
+		// Il modello mostrato sulla mappa per primo, così il campo compare subito.
+		const order = [modelId, ...t.models.filter((m) => m !== modelId)].filter((m) => t.models.includes(m));
+		const jobs: Promise<void>[] = order.map(async (m) => {
 			try {
-				const g = await fetchAtmoGrid(t, m);
+				const d = await fetchAtmoGrid(t, m, g);
 				if (gen !== my) return;
-				atmo = { ...atmo, [m]: g };
-				if (ti < 0) ti = startIndex(g.times, g.utcOffset);
+				atmo = { ...atmo, [m]: d };
+				if (ti < 0) ti = startIndex(d.times, d.utcOffset);
 			} catch (e) {
 				if (gen === my) atmoErr = { ...atmoErr, [m]: (e as Error).message };
 			}
@@ -104,8 +136,8 @@
 		jobs.push(
 			(async () => {
 				try {
-					const g = await fetchMarineGrid(t);
-					if (gen === my) marine = g;
+					const d = await fetchMarineGrid(t, g);
+					if (gen === my) marine = d;
 				} catch (e) {
 					if (gen === my) marineErr = (e as Error).message;
 				}
@@ -114,6 +146,7 @@
 		loading = jobs.length;
 		for (const j of jobs) j.finally(() => gen === my && loading--);
 		await Promise.all(jobs);
+		calls = callsToday();
 		if (gen === my && ti < 0) ti = 0;
 	}
 
@@ -129,42 +162,57 @@
 	}
 
 	// ----- Derivati -----
-	const grid = $derived(trip ? makeGrid(trip) : null);
-	const loadedModels = $derived(trip ? trip.models.filter((m) => atmo[m]) : []);
-	const ref = $derived(atmo[modelId] ?? atmo[loadedModels[0]] ?? marine);
+	/** Dati già allineati alla griglia corrente (gli altri sono della zona precedente, in attesa di aggiornamento). */
+	const isCurrent = (d: { grid: Grid } | null | undefined) => !!d && !!grid && gridKey(d.grid) === gridKey(grid);
+	const loadedModels = $derived(trip ? trip.models.filter((m) => isCurrent(atmo[m])) : []);
+	const marineNow = $derived(isCurrent(marine) ? marine : null);
+	const anyModel = $derived(trip ? trip.models.find((m) => atmo[m]) : undefined);
+	const mapModel = $derived(atmo[modelId] ?? (anyModel ? atmo[anyModel] : null));
+	const ref = $derived(mapModel ?? marine);
 	const times = $derived(ref?.times ?? []);
 	const utcOffset = $derived(ref?.utcOffset ?? 0);
 	const now = $derived(times[Math.max(0, ti)] ?? 0);
-	const mask = $derived(seaMask(marine));
+	const mask = $derived(seaMask(marineNow));
 	const layer = $derived(LAYERS[layerId]);
-	const mapModel = $derived(atmo[modelId] ?? atmo[loadedModels[0]] ?? null);
+	const home = $derived(trip ? homeBox(trip) : null);
 
 	const at = (g: AtmoGrid | MarineGrid) => timeIndex(g, now);
 
 	const field = $derived.by(() => {
-		if (!grid || !times.length) return null;
-		if (layerId === 'wave') return marine ? frame(marine, 'wave', at(marine)) : null;
+		if (!times.length) return null;
+		if (layerId === 'wave') return marine ? { grid: marine.grid, values: frame(marine, 'wave', at(marine)) } : null;
 		if (layerId === 'spread') {
+			if (!grid || loadedModels.length < 2) return null;
 			const frames = loadedModels.map((m) => frame(atmo[m], 'wind', at(atmo[m])));
-			return frames.length >= 2 ? spread(frames, nCells(grid)) : null;
+			return { grid, values: spread(frames, nCells(grid)) };
 		}
-		return mapModel ? frame(mapModel, layerId, at(mapModel)) : null;
+		return mapModel ? { grid: mapModel.grid, values: frame(mapModel, layerId, at(mapModel)) } : null;
 	});
 
 	const arrows = $derived.by(() => {
-		if (layerId === 'wave') return marine ? { dir: frame(marine, 'waveDir', at(marine)), value: frame(marine, 'wave', at(marine)) } : null;
+		if (layerId === 'wave') return marine ? { grid: marine.grid, dir: frame(marine, 'waveDir', at(marine)), value: frame(marine, 'wave', at(marine)) } : null;
 		if (!mapModel) return null;
 		const k = at(mapModel);
-		return { dir: frame(mapModel, 'dir', k), value: frame(mapModel, 'wind', k) };
+		return { grid: mapModel.grid, dir: frame(mapModel, 'dir', k), value: frame(mapModel, 'wind', k) };
 	});
 
 	const wind = $derived.by(() => {
 		if (!mapModel || layerId === 'wave') return null;
 		const k = at(mapModel);
-		return { u: frame(mapModel, 'u', k), v: frame(mapModel, 'v', k) };
+		return { grid: mapModel.grid, u: frame(mapModel, 'u', k), v: frame(mapModel, 'v', k) };
 	});
 
-	const verdicts = $derived(trip ? assess(loadedModels.map((m) => atmo[m]), marine, trip.limits, mask) : []);
+	// Celle della zona inquadrata: solo mare se c'è la maschera, altrimenti tutte.
+	const areaCells = $derived.by(() => {
+		if (!grid) return [];
+		const box = view ?? grid.bbox;
+		const sea = cellsIn(grid, box, mask);
+		return sea.length ? sea : cellsIn(grid, box);
+	});
+	const areaIsSea = $derived(!!mask && !!grid && cellsIn(grid, view ?? grid.bbox, mask).length > 0);
+	const gridStep = $derived(grid && grid.lats.length > 1 ? grid.lats[1] - grid.lats[0] : 0);
+
+	const verdicts = $derived(trip ? assess(loadedModels.map((m) => atmo[m]), marineNow, trip.limits, areaCells) : []);
 
 	const timeLabel = $derived.by(() => {
 		if (!now) return '';
@@ -172,20 +220,10 @@
 		return `${dayLabel(p.date)} ${p.label}`;
 	});
 
-	// Celle dell'area inquadrata (solo mare se disponibile la maschera).
-	const areaCells = $derived.by(() => {
-		if (!grid) return [];
-		const all = cellsIn(grid, grid.bbox, mask);
-		if (!view) return all;
-		const c = cellsIn(grid, view, mask);
-		return c.length ? c : all;
-	});
-	const areaIsWhole = $derived(grid && view ? cellsIn(grid, view, mask).length === 0 || areaCells.length === cellsIn(grid, grid.bbox, mask).length : true);
-
 	const areaRows = $derived.by(() => {
 		if (areaMetric === 'wave') {
-			if (!marine) return [];
-			return [{ id: 'marine', label: 'Onda (miglior modello)', color: '#0f4c5c', s: stats(pick(frame(marine, 'wave', at(marine)), areaCells)), series: areaSeries(marine, 'wave', areaCells, 'max') }];
+			if (!marineNow) return [];
+			return [{ id: 'marine', label: 'Onda (miglior modello)', color: '#0f4c5c', s: stats(pick(frame(marineNow, 'wave', at(marineNow)), areaCells)), series: areaSeries(marineNow, 'wave', areaCells, 'max') }];
 		}
 		const metric = areaMetric;
 		return loadedModels.map((m) => {
@@ -287,7 +325,7 @@
 	<header class="top" class:has-trip={trip && !editing}>
 		<div class="brand">
 			<svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><path d="M16 3 L16 24 L6 24 Z" fill="#ff7a1a" /><path d="M18 7 L18 24 L26 24 Z" fill="#fff" opacity=".9" /><path d="M4 26 Q16 31 28 26" stroke="#5fc2d6" stroke-width="2.5" fill="none" /></svg>
-			<span>Skipper <b>Meteo</b></span>
+			<span>Skipper <b>Meteo</b> <small class="org">{BRAND.org}</small></span>
 		</div>
 		{#if trip && !editing}
 			<button class="trip" onclick={() => (editing = true)} title="Modifica uscita">
@@ -305,6 +343,7 @@
 		<div class="sheet">
 			<div class="sheet-card">
 				<TripForm {trip} onsave={(t) => setTrip(t)} oncancel={loadedModels.length || marine ? () => (editing = false) : undefined} />
+				<Footer />
 			</div>
 		</div>
 	{/if}
@@ -314,7 +353,7 @@
 			<section class="mapcol">
 				<MapView
 					bind:this={mapView}
-					{grid}
+					{home}
 					{field}
 					{layer}
 					{arrows}
@@ -324,7 +363,7 @@
 					particles={particlesOn}
 					{point}
 					onpick={pickPoint}
-					onview={(b) => (view = b)}
+					onview={onView}
 				/>
 
 				<div class="ctrl layers">
@@ -352,6 +391,7 @@
 					<button class:on={base === 'satellite'} onclick={() => (base = 'satellite')}>Satellite</button>
 					<button class:on={seamarks} onclick={() => (seamarks = !seamarks)} title="Segnali nautici OpenSeaMap">⚓</button>
 					<button class:on={particlesOn} onclick={() => (particlesOn = !particlesOn)} title="Particelle del vento">〰</button>
+					<button onclick={() => mapView?.goHome()} title="Torna alla zona dell'uscita">⌂</button>
 				</div>
 
 				<div class="timeline">
@@ -388,6 +428,10 @@
 				{/if}
 
 				{#if tab === 'verdict'}
+					<p class="muted small">
+						Valutazione della <b>zona inquadrata</b> sulla mappa ({areaIsSea ? `${areaCells.length} punti di mare` : `${areaCells.length} punti`}, passo {fmt(gridStep, 2)}°).
+						Sposta o zooma la mappa per valutare un altro tratto; ⌂ riporta alla zona dell'uscita.
+					</p>
 					{#if verdicts.length}
 						<Verdicts {verdicts} limits={trip.limits} />
 					{:else if loading}
@@ -402,7 +446,7 @@
 						<button class:on={areaMetric === 'wave'} onclick={() => (areaMetric = 'wave')}>Onda</button>
 					</div>
 					<p class="muted small">
-						{areaIsWhole ? "Tutta l'area dell'uscita" : 'Zona inquadrata sulla mappa'} · {areaCells.length} punti di mare · {timeLabel}.
+						Zona inquadrata · {areaCells.length} punti {areaIsSea ? 'di mare' : ''} · {timeLabel}.
 						Zooma o sposta la mappa per confrontare i modelli su un tratto preciso.
 					</p>
 					{#if areaSpread !== null}
@@ -476,6 +520,10 @@
 						{/if}
 					{/if}
 				{/if}
+				<p class="budget" class:warn={calls > DAILY_LIMIT * 0.8}>
+					Chiamate Open-Meteo oggi da questo dispositivo: ~{calls.toLocaleString('it-IT')} / {DAILY_LIMIT.toLocaleString('it-IT')}
+				</p>
+				<Footer />
 			</aside>
 		</main>
 	{/if}
@@ -508,6 +556,14 @@
 	}
 	.brand b {
 		color: var(--accent);
+	}
+	.brand .org {
+		display: block;
+		font-size: 0.62rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: #8fb4c8;
+		line-height: 1;
 	}
 	.trip {
 		min-width: 0;
@@ -795,6 +851,14 @@
 	.errors ul {
 		margin: 6px 0 0;
 		padding-left: 18px;
+	}
+	.budget {
+		margin: 8px 0 0;
+		font-size: 0.72rem;
+		color: var(--muted);
+	}
+	.budget.warn {
+		color: var(--nogo);
 	}
 	.toast {
 		position: fixed;

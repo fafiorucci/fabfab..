@@ -71,7 +71,7 @@ export class Particles {
 	private spawn(): P {
 		const g = this.grid!;
 		const [w, s, e, n] = g.bbox;
-		return { lon: w + Math.random() * (e - w), lat: s + Math.random() * (n - s), age: Math.floor(Math.random() * 80) };
+		return { lon: w + Math.random() * (e - w), lat: s + Math.random() * (n - s), age: Math.floor(Math.random() * 150) };
 	}
 
 	private step() {
@@ -81,7 +81,7 @@ export class Particles {
 		ctx.save();
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.globalCompositeOperation = 'destination-in';
-		ctx.fillStyle = 'rgba(0,0,0,0.9)';
+		ctx.fillStyle = 'rgba(0,0,0,0.94)';
 		ctx.fillRect(0, 0, w, h);
 		ctx.restore();
 		ctx.globalCompositeOperation = 'source-over';
@@ -92,7 +92,7 @@ export class Particles {
 
 		// Spostamento in gradi per nodo per frame, costante a schermo a ogni zoom.
 		const pxPerDeg = (512 * 2 ** map.getZoom()) / 360;
-		const k = 0.1 / pxPerDeg;
+		const k = 0.035 / pxPerDeg; // ≈ 50 px/s a 25 nodi
 
 		ctx.lineWidth = 1.2;
 		ctx.strokeStyle = 'rgba(255,255,255,0.85)';
@@ -101,7 +101,7 @@ export class Particles {
 			const p = this.parts[i];
 			const uu = sample(grid, u, p.lon, p.lat);
 			const vv = sample(grid, v, p.lon, p.lat);
-			if (Number.isNaN(uu) || Number.isNaN(vv) || p.age > 90) {
+			if (Number.isNaN(uu) || Number.isNaN(vv) || p.age > 160) {
 				this.parts[i] = this.spawn();
 				continue;
 			}

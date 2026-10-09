@@ -5,8 +5,14 @@ const FORECAST_URL = 'https://api.open-meteo.com/v1/forecast';
 const MARINE_URL = 'https://marine-api.open-meteo.com/v1/marine';
 const GEO_URL = 'https://geocoding-api.open-meteo.com/v1/search';
 
-/** Passo della griglia in gradi. 0,25° ≈ 25 km: compromesso tra dettaglio e numero di chiamate. */
-export const GRID_STEP = 0.25;
+/** Passi possibili della griglia, in gradi: si sceglie il più fine compatibile con il numero di punti. */
+export const STEPS = [0.1, 0.125, 0.25, 0.5, 1, 2, 4] as const;
+/**
+ * Punti massimi per vista. Ogni punto conta come una chiamata Open-Meteo per modello:
+ * 64 punti × (6 modelli + onda) ≈ 450 chiamate per zona nuova, sul limite gratuito di 10.000 al giorno.
+ * L'interpolazione bilineare rende comunque il campo continuo.
+ */
+export const MAX_POINTS = 64;
 
 export const ATMO_VARS = ['wind_speed_10m', 'wind_direction_10m', 'wind_gusts_10m', 'pressure_msl', 'precipitation'] as const;
 export const MARINE_VARS = ['wave_height', 'wave_direction', 'wave_period', 'swell_wave_height'] as const;
@@ -37,18 +43,42 @@ export interface GridData<V extends string> extends Series {
 export type AtmoGrid = GridData<AtmoVar> & { model: string };
 export type MarineGrid = GridData<MarineVar>;
 
-export function makeGrid(trip: Pick<Trip, 'lat' | 'lon' | 'radius'>): Grid {
-	const snap = (x: number) => Math.round(x / GRID_STEP) * GRID_STEP;
-	const n = Math.round(trip.radius / GRID_STEP);
-	const lat0 = snap(trip.lat);
-	const lon0 = snap(trip.lon);
-	const lats: number[] = [];
-	const lons: number[] = [];
-	for (let i = -n; i <= n; i++) {
-		lats.push(+(lat0 + i * GRID_STEP).toFixed(3));
-		lons.push(+(lon0 + i * GRID_STEP).toFixed(3));
-	}
+export type BBox = [number, number, number, number];
+
+function gridOn(bbox: BBox, step: number): Grid {
+	// Bordi allineati ai multipli del passo: gli spostamenti più piccoli di un passo riusano la stessa griglia.
+	const q = step;
+	const w = Math.max(-180, Math.floor((bbox[0] - step) / q) * q);
+	const e = Math.min(180, Math.ceil((bbox[2] + step) / q) * q);
+	const s = Math.max(-80, Math.floor((bbox[1] - step) / q) * q);
+	const n = Math.min(80, Math.ceil((bbox[3] + step) / q) * q);
+	const range = (a: number, b: number) => {
+		const out: number[] = [];
+		for (let i = 0; a + i * step <= b + 1e-9; i++) out.push(+(a + i * step).toFixed(3));
+		return out;
+	};
+	const lats = range(s, n);
+	const lons = range(w, e);
 	return { lats, lons, bbox: [lons[0], lats[0], lons[lons.length - 1], lats[lats.length - 1]] };
+}
+
+/** Griglia che copre (con un piccolo margine) la zona inquadrata [ovest, sud, est, nord]. */
+export function gridForView(bbox: BBox): Grid {
+	let g = gridOn(bbox, STEPS[STEPS.length - 1]);
+	for (const step of STEPS) {
+		g = gridOn(bbox, step);
+		if (g.lats.length * g.lons.length <= MAX_POINTS) break;
+	}
+	return g;
+}
+
+export const gridKey = (g: Grid) => `${g.bbox.join(',')}:${g.lats.length}x${g.lons.length}`;
+
+/** Zona iniziale dell'uscita attorno al porto. */
+export function homeBox(trip: Pick<Trip, 'lat' | 'lon' | 'radius'>): BBox {
+	const r = trip.radius;
+	const rx = r / Math.cos((trip.lat * Math.PI) / 180);
+	return [trip.lon - rx, trip.lat - r, trip.lon + rx, trip.lat + r];
 }
 
 export const cellCount = (g: Grid) => g.lats.length * g.lons.length;
@@ -65,6 +95,29 @@ function gridPoints(g: Grid) {
 
 const cache = new Map<string, Promise<unknown>>();
 
+// ----- Conteggio indicativo delle chiamate del giorno (per stare nel limite gratuito) -----
+const BUDGET_KEY = 'skipper-meteo:calls';
+export const DAILY_LIMIT = 10_000;
+
+export function callsToday(): number {
+	try {
+		const v = JSON.parse(localStorage.getItem(BUDGET_KEY) ?? 'null');
+		return v?.day === new Date().toDateString() ? v.n : 0;
+	} catch {
+		return 0;
+	}
+}
+
+function countCalls(url: string) {
+	const lat = new URL(url).searchParams.get('latitude');
+	const n = lat ? lat.split(',').length : 1;
+	try {
+		localStorage.setItem(BUDGET_KEY, JSON.stringify({ day: new Date().toDateString(), n: callsToday() + n }));
+	} catch {
+		/* storage non disponibile */
+	}
+}
+
 async function getJson(url: string): Promise<unknown> {
 	const hit = cache.get(url);
 	if (hit) return hit;
@@ -72,6 +125,7 @@ async function getJson(url: string): Promise<unknown> {
 		let res: Response;
 		try {
 			res = await fetch(url);
+			countCalls(url);
 		} catch {
 			throw new Error('Rete non disponibile: nessun dato in memoria per questa richiesta.');
 		}
@@ -107,8 +161,7 @@ function toUV(speed: number, dirFrom: number): [number, number] {
 	return [-speed * Math.sin(r), -speed * Math.cos(r)];
 }
 
-export async function fetchAtmoGrid(trip: Trip, model: string): Promise<AtmoGrid> {
-	const grid = makeGrid(trip);
+export async function fetchAtmoGrid(trip: Trip, model: string, grid: Grid): Promise<AtmoGrid> {
 	const pts = gridPoints(grid);
 	const params = new URLSearchParams({
 		latitude: pts.lat.join(','),
@@ -143,8 +196,7 @@ export async function fetchAtmoGrid(trip: Trip, model: string): Promise<AtmoGrid
 	return { model, grid, times, utcOffset: list[0].utc_offset_seconds, values: v };
 }
 
-export async function fetchMarineGrid(trip: Trip): Promise<MarineGrid> {
-	const grid = makeGrid(trip);
+export async function fetchMarineGrid(trip: Trip, grid: Grid): Promise<MarineGrid> {
 	const pts = gridPoints(grid);
 	const params = new URLSearchParams({
 		latitude: pts.lat.join(','),

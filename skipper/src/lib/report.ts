@@ -2,6 +2,7 @@ import { LEVEL_LABEL, type DayVerdict } from './meteo/assess';
 import { dayLabel } from './meteo/grid';
 import { modelById } from './meteo/models';
 import type { Trip } from './trip';
+import { BRAND } from './brand';
 
 const LEVEL_COLOR = { go: '#2e9d5b', caution: '#e0a020', nogo: '#d64545', nodata: '#8592a3' } as const;
 const LEVEL_ICON = { go: '🟢', caution: '🟡', nogo: '🔴', nodata: '⚪' } as const;
@@ -22,7 +23,7 @@ export function reportText(trip: Trip, verdicts: DayVerdict[], link: string): st
 				(v.models.length ? ` — vento fino a ${fmt(maxWind)} kn, raffiche ${fmt(maxGust)} kn, onda ${fmt(v.wave, 1)} m` : '')
 		);
 	}
-	lines.push('', `Apri la valutazione: ${link}`, 'Strumento di supporto: verifica sempre il bollettino ufficiale.');
+	lines.push('', `Apri la valutazione: ${link}`, 'Strumento di supporto: verifica sempre il bollettino ufficiale.', `${BRAND.app} · ${BRAND.org} · a cura di ${BRAND.author}`);
 	return lines.join('\n');
 }
 
@@ -56,6 +57,12 @@ export async function reportImage(trip: Trip, verdicts: DayVerdict[], mapPng: st
 	ctx.fillStyle = '#ffffff';
 	ctx.font = font(26, 600);
 	ctx.fillText('SKIPPER METEO', 48, 56);
+	ctx.textAlign = 'right';
+	ctx.fillStyle = '#8fb4c8';
+	ctx.font = font(22, 700);
+	ctx.fillText(BRAND.org.toUpperCase(), W - 48, 56);
+	ctx.textAlign = 'left';
+	ctx.fillStyle = '#ffffff';
 	ctx.font = font(44, 700);
 	ctx.fillText(trip.name, 48, 112);
 	ctx.font = font(26);
@@ -98,7 +105,10 @@ export async function reportImage(trip: Trip, verdicts: DayVerdict[], mapPng: st
 
 	ctx.fillStyle = '#6b7a8c';
 	ctx.font = font(20);
-	ctx.fillText('Dati Open-Meteo (CC BY 4.0). Strumento di supporto: verifica sempre il bollettino ufficiale.', 48, H - 50);
+	ctx.fillText('Dati Open-Meteo (CC BY 4.0). Strumento di supporto: verifica sempre il bollettino ufficiale.', 48, H - 62);
+	ctx.fillStyle = '#0f4c5c';
+	ctx.font = font(20, 600);
+	ctx.fillText(`© ${BRAND.year} ${BRAND.author} · ${BRAND.org}`, 48, H - 32);
 	return new Promise((resolve) => c.toBlob((b) => resolve(b!), 'image/png'));
 }
 

@@ -1,10 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { makeGrid, type AtmoGrid, type AtmoVar, type MarineGrid, type MarineVar } from './api';
+import { gridForView, gridKey, MAX_POINTS, type AtmoGrid, type Grid, type AtmoVar, type MarineGrid, type MarineVar } from './api';
 import { assess } from './assess';
 import { cellsIn, localParts, sample, spread, stats, timeIndex } from './grid';
 import { decodeTrip, defaultTrip, encodeTrip, validateTrip } from '../trip';
 
-const grid = makeGrid({ lat: 42.81, lon: 10.33, radius: 0.5 });
+const grid: Grid = {
+	lats: [42.25, 42.5, 42.75, 43, 43.25],
+	lons: [9.75, 10, 10.25, 10.5, 10.75],
+	bbox: [9.75, 42.25, 10.75, 43.25]
+};
 const N = grid.lats.length * grid.lons.length;
 
 /** 48 ore dal 2026-10-10 00:00 ora locale (UTC+2). */
@@ -26,13 +30,34 @@ function marine(wave: number): MarineGrid {
 	return { grid, times, utcOffset: OFF, values };
 }
 
-describe('griglia', () => {
-	it('è centrata sul porto e allineata al passo', () => {
-		expect(grid.lats).toEqual([42.25, 42.5, 42.75, 43, 43.25]);
-		expect(grid.lons).toEqual([9.75, 10, 10.25, 10.5, 10.75]);
-		expect(grid.bbox).toEqual([9.75, 42.25, 10.75, 43.25]);
+describe('griglia della vista', () => {
+	it('copre tutta la zona inquadrata con un margine', () => {
+		const view: [number, number, number, number] = [8.3, 41.1, 12.9, 44.2];
+		const g = gridForView(view);
+		expect(g.bbox[0]).toBeLessThan(view[0]);
+		expect(g.bbox[1]).toBeLessThan(view[1]);
+		expect(g.bbox[2]).toBeGreaterThan(view[2]);
+		expect(g.bbox[3]).toBeGreaterThan(view[3]);
+		expect(g.lats.length * g.lons.length).toBeLessThanOrEqual(MAX_POINTS);
 	});
 
+	it('si infittisce zoomando e resta entro il limite di punti', () => {
+		const wide = gridForView([3, 36, 18, 45]); // mezzo Mediterraneo
+		const close = gridForView([10.2, 42.7, 10.5, 42.9]); // un golfo
+		const step = (g: Grid) => g.lats[1] - g.lats[0];
+		expect(step(close)).toBeLessThan(step(wide));
+		expect(step(close)).toBeCloseTo(0.1);
+		for (const g of [wide, close]) expect(g.lats.length * g.lons.length).toBeLessThanOrEqual(MAX_POINTS);
+	});
+
+	it('riusa la stessa griglia per piccoli spostamenti', () => {
+		const a = gridForView([9.2, 41.6, 11.3, 43.3]);
+		const b = gridForView([9.25, 41.65, 11.35, 43.35]); // spostamento di ~3 miglia
+		expect(gridKey(b)).toBe(gridKey(a));
+	});
+});
+
+describe('griglia', () => {
 	it('interpola linearmente e ignora i nodi mancanti', () => {
 		const f = new Float32Array(N).map((_, i) => i % grid.lons.length); // cresce verso est
 		expect(sample(grid, f, 10.125, 42.6)).toBeCloseTo(1.5);
@@ -64,26 +89,26 @@ describe('valutazione', () => {
 	const limits = { wind: 20, gust: 28, wave: 1.5 };
 
 	it('via libera se tutti i modelli sono entro i limiti', () => {
-		const v = assess([atmo('a', 10), atmo('b', 12)], marine(0.6), limits, null);
+		const v = assess([atmo('a', 10), atmo('b', 12)], marine(0.6), limits);
 		expect(v.map((d) => d.date)).toEqual(['2026-10-10', '2026-10-11']);
 		expect(v[0].level).toBe('go');
 	});
 
 	it('attenzione se un solo modello su tre supera i limiti', () => {
-		const v = assess([atmo('a', 10), atmo('b', 12), atmo('c', 24)], marine(0.6), limits, null);
+		const v = assess([atmo('a', 10), atmo('b', 12), atmo('c', 24)], marine(0.6), limits);
 		expect(v[0].level).toBe('caution');
 		expect(v[0].models.find((m) => m.model === 'c')?.over).toBe(true);
 	});
 
 	it('restare in porto se la maggioranza supera o l’onda è oltre il limite', () => {
-		expect(assess([atmo('a', 25), atmo('b', 22)], marine(0.6), limits, null)[0].level).toBe('nogo');
-		expect(assess([atmo('a', 10)], marine(2.2), limits, null)[0].level).toBe('nogo');
+		expect(assess([atmo('a', 25), atmo('b', 22)], marine(0.6), limits)[0].level).toBe('nogo');
+		expect(assess([atmo('a', 10)], marine(2.2), limits)[0].level).toBe('nogo');
 	});
 
 	it('dati insufficienti se nessun modello copre il giorno', () => {
 		const g = atmo('a', 10);
 		g.values.wind.fill(NaN);
-		expect(assess([g], null, limits, null)[0].level).toBe('nodata');
+		expect(assess([g], null, limits)[0].level).toBe('nodata');
 	});
 });
 
