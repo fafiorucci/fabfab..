@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Studio Meteo</title>
+  <meta name="description" content="Previsioni meteo attuali, orarie e settimanali basate su Open-Meteo.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="brand">☀️ Studio Meteo</h1>
+    <form id="search-form" class="search" autocomplete="off" role="search">
+      <input id="search-input" type="search" placeholder="Cerca una città…" aria-label="Cerca una città">
+      <ul id="suggestions" class="suggestions" role="listbox" hidden></ul>
+    </form>
+    <div class="actions">
+      <button id="geo-btn" type="button" title="Usa la mia posizione" aria-label="Usa la mia posizione">📍</button>
+      <button id="unit-btn" type="button" title="Cambia unità" aria-label="Cambia unità">°C</button>
+    </div>
+  </header>
+
+  <main id="app">
+    <p id="status" class="status" role="status">Caricamento…</p>
+
+    <section id="current" class="card current" hidden>
+      <div class="current-main">
+        <div>
+          <h2 id="place"></h2>
+          <p id="updated" class="muted"></p>
+        </div>
+        <div class="current-temp">
+          <span id="cur-icon" class="big-icon"></span>
+          <span id="cur-temp" class="big-temp"></span>
+        </div>
+        <p id="cur-desc" class="desc"></p>
+      </div>
+      <dl class="stats">
+        <div><dt>Percepita</dt><dd id="cur-feels"></dd></div>
+        <div><dt>Umidità</dt><dd id="cur-hum"></dd></div>
+        <div><dt>Vento</dt><dd id="cur-wind"></dd></div>
+        <div><dt>Pressione</dt><dd id="cur-press"></dd></div>
+        <div><dt>Precipitazioni</dt><dd id="cur-prec"></dd></div>
+        <div><dt>Indice UV</dt><dd id="cur-uv"></dd></div>
+        <div><dt>Alba</dt><dd id="cur-sunrise"></dd></div>
+        <div><dt>Tramonto</dt><dd id="cur-sunset"></dd></div>
+      </dl>
+    </section>
+
+    <section id="hourly" class="card" hidden>
+      <h3>Prossime 24 ore</h3>
+      <div id="chart" class="chart"></div>
+      <div id="hourly-list" class="hourly-list"></div>
+    </section>
+
+    <section id="daily" class="card" hidden>
+      <h3>Prossimi 7 giorni</h3>
+      <ul id="daily-list" class="daily-list"></ul>
+    </section>
+  </main>
+
+  <footer class="footer muted">
+    Dati: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
