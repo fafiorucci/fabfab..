@@ -57,6 +57,13 @@ In alternativa, su GitHub clicca sul nome del file e poi sul pulsante **Download
 
 - [Corso patente nautica - app aula (ZIP)](app/Corso%20patente%20nautica%20-%20app%20aula.zip?raw=true): l'app delle lezioni 1 e 2 da usare sul wifi della scuola, con l'area istruttore. Si estrae e si avvia con un doppio clic; istruzioni nel file LEGGIMI.txt dentro lo zip. Si rigenera con `python3 corso/app/aula/prepara_pacchetto.py --python <python-3.12.x-embed-amd64.zip>`.
 
+- [Corso patente nautica - demo (ZIP)](app/Corso%20patente%20nautica%20-%20demo.zip?raw=true): la demo dell'app con contenuti di esempio, da far vedere ad altre scuole. Si estrae e si apre con un doppio clic su `index.html`, anche senza internet. Si rigenera con `corso/app/demo/prepara_demo.py`.
+
+## Istruzioni
+
+- [Come entrare nell'app del corso (PDF)](istruzioni/Come%20entrare%20nell%E2%80%99app%20del%20corso.pdf?raw=true): per gli allievi.
+- [Linee guida dell'app del corso (PDF)](istruzioni/Linee%20guida%20dell'app%20del%20corso.pdf?raw=true): per l'istruttore. Indirizzi, iscrivere e togliere allievi, posti di Zero Trust, prove per altre scuole, demo, aula, limiti di Cloudflare, problemi frequenti. Copia del documento [Linee guida dell'app del corso](https://claude.ai/artifact/Vobm2Vk1CxQBc5F99v2uv4), da riesportare quando cambia.
+
 ## Rigenerare l'export
 
 Quando un deck cambia, si riscarica dall'artifact e si lancia
