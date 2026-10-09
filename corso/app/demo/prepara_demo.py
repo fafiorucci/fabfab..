@@ -9,8 +9,11 @@ Parte dall'uscita completa di app_build.py ($SP/app) e scrive $SP/demo/:
                  appendici C ed E di esempio, scheda della lezione 1 e numeri d'oro;
 - docente.html   l'area istruttore con allievi inventati (demo-dati.js al posto del server);
 - presentazioni/ due presentazioni da proiettare di esempio.
+Poi lo zip da aprire senza server (corso/export/app/Corso patente nautica - demo.zip): stessi file, con i dati
+(corso.json, elenco delle presentazioni) dentro dati-locali.js e i caratteri in locale, così index.html si apre
+con un doppio clic anche senza internet.
 """
-import json, os, re, shutil
+import json, os, re, shutil, zipfile
 
 SP = os.environ.get('SP', '/tmp/scratch')
 SRC, OUT = SP + '/app', SP + '/demo'
@@ -127,3 +130,71 @@ json.dump(elenco, open(OUT + '/presentazioni/elenco.json', 'w'), ensure_ascii=Fa
 n = sum(len(fs) for _, _, fs in os.walk(OUT))
 kb = sum(os.path.getsize(os.path.join(r, f)) for r, _, fs in os.walk(OUT) for f in fs) // 1024
 print(OUT, n, 'file,', kb, 'KB;', len(immagini), 'immagini,', len(demo['quiz']), 'quiz')
+
+# ---------- zip da aprire con un doppio clic su index.html (senza server, anche senza internet) ----------
+# Aperta dal disco (file://) la pagina non può leggere i file con fetch: corso.json e l'elenco delle presentazioni
+# vanno in dati-locali.js, caricato per primo, che risponde al loro posto. Caratteri dal pacchetto dell'aula.
+EXPORT_APP = os.path.join(os.path.dirname(APP), 'export', 'app')
+ZIP = os.path.join(EXPORT_APP, 'Corso patente nautica - demo.zip')
+CARTELLA = 'Corso patente nautica - demo'
+locali = {'corso.json': json.load(open(OUT + '/corso.json')), 'presentazioni/elenco.json': elenco}
+dati_locali = ('/* Demo aperta dal disco: i dati che la pagina chiederebbe al server, già qui dentro. */\n(function(){\n'
+               'const F=' + json.dumps(locali, ensure_ascii=False, separators=(',', ':')) + ';\n'
+               'const orig=window.fetch?window.fetch.bind(window):null;\n'
+               'window.fetch=function(url,opt){ const u=String(url&&url.url||url).split(/[?#]/)[0];\n'
+               '  for(const k in F) if(u===k||u.endsWith(\'/\'+k)) return Promise.resolve(new Response(JSON.stringify(F[k]),{status:200,headers:{\'Content-Type\':\'application/json\'}}));\n'
+               '  if(/^(\\.\\/)?api\\//.test(u)) return Promise.reject(new TypeError(\'demo senza server\'));\n'
+               '  return orig?orig(url,opt):Promise.reject(new TypeError(\'fetch\')); };\n})();\n')
+LEGGIMI = '''CORSO PATENTE NAUTICA · DEMO
+
+Per aprire la demo: fai doppio clic su index.html (si apre nel browser: Chrome, Edge, Firefox o Safari).
+Non serve internet e non serve installare niente.
+
+- index.html     l'app degli allievi: ti registri con un nome qualsiasi e provi lezione 1, quiz, scheda e appendici.
+                 I progressi restano solo su questo computer, nel browser.
+- docente.html   l'area istruttore di esempio, con allievi inventati (si apre anche dall'app).
+
+Tieni insieme tutti i file della cartella: se sposti index.html da sola, la demo non trova slide e dati.
+Fabrizio Fiorucci · Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa
+'''
+FONT_LOCALE = re.compile(r'<link rel="preconnect" href="https://fonts\.googleapis\.com">\s*|<link rel="stylesheet" href="https://fonts\.googleapis\.com[^>]*>')
+
+
+def per_il_disco(nome, testo):
+    # caratteri locali; i link «../» e «./» del web portano alla pagina, che dal disco va scritta per esteso
+    if nome.endswith('.html'):
+        su = '../' if '/' in nome else ''
+        if 'fonts.googleapis' in testo:
+            testo = FONT_LOCALE.sub('', testo)
+            testo = testo.replace('</head>', f'<link rel="stylesheet" href="{su}fonts/fonts.css"></head>', 1) if '</head>' in testo \
+                else testo.replace('<style>', f'<link rel="stylesheet" href="{su}fonts/fonts.css">\n<style>', 1)
+            assert 'fonts.googleapis' not in testo and 'fonts/fonts.css' in testo, nome
+        testo = testo.replace('href=\\"../\\"', 'href=\\"../index.html\\"').replace('href="../"', 'href="../index.html"')
+    if nome == 'index.html':
+        testo = testo.replace('<script>', '<script src="dati-locali.js"></script>\n<script>', 1)
+    if nome == 'docente.html':
+        testo = testo.replace('<script src="vendor/qrcode.js"></script>', '<script src="dati-locali.js"></script>\n<script src="vendor/qrcode.js"></script>', 1)
+        assert testo.index('dati-locali.js') < testo.index('demo-dati.js')
+    if nome == 'demo-dati.js':
+        testo = testo.replace('<a href="./"', '<a href="index.html"')
+    return testo
+
+
+os.makedirs(EXPORT_APP, exist_ok=True)
+with zipfile.ZipFile(ZIP, 'w', zipfile.ZIP_DEFLATED) as z:
+    for r, _, fs in os.walk(OUT):
+        for f in sorted(fs):
+            pieno = os.path.join(r, f); nome = os.path.relpath(pieno, OUT).replace(os.sep, '/')
+            if nome in locali: continue
+            if nome.endswith(('.html', '.js')):
+                z.writestr(f'{CARTELLA}/{nome}', per_il_disco(nome, open(pieno, encoding='utf-8').read()))
+            else:
+                z.write(pieno, f'{CARTELLA}/{nome}')
+    z.writestr(f'{CARTELLA}/dati-locali.js', dati_locali)
+    z.writestr(f'{CARTELLA}/LEGGIMI.txt', LEGGIMI)
+    fonts = os.path.join(www, 'fonts')
+    for f in sorted(os.listdir(fonts)):
+        z.write(os.path.join(fonts, f), f'{CARTELLA}/fonts/{f}')
+    nomi = z.namelist()
+assert not any('fonts.googleapis' in z.open(n).read().decode('utf-8', 'ignore') for z in [zipfile.ZipFile(ZIP)] for n in nomi if n.endswith('.html'))
+print(ZIP, len(nomi), 'file,', os.path.getsize(ZIP) // 1024, 'KB')

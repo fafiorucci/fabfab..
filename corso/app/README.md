@@ -30,7 +30,7 @@ Si apre toccando il proprio nome o avatar in alto: nome e cognome, colore dell'a
 
 - Versione corrente e regole di numerazione: `VERSIONI.md`.
 - Aiuto: pulsante «?» in alto, nell'app e nell'area istruttore; mostra cosa si fa nella pagina aperta e le domande frequenti. La prima volta compare un suggerimento sotto il pulsante.
-- Demo: `demo/prepara_demo.py` costruisce in `$SP/demo` una versione dimostrativa (lezione 1 fino al capitolo 1, scheda della lezione 1, numeri d'oro, appendici C ed E, area istruttore con allievi inventati da `demo/demo-dati.js`). Pubblicata come artifact separato.
+- Demo: `demo/prepara_demo.py` costruisce in `$SP/demo` una versione dimostrativa (lezione 1 fino al capitolo 1, scheda della lezione 1, numeri d'oro, appendici C ed E, area istruttore con allievi inventati da `demo/demo-dati.js`). Pubblicata come artifact separato. Lo stesso script scrive anche `corso/export/app/Corso patente nautica - demo.zip`, da aprire senza server: si scompatta e si fa doppio clic su `index.html` (dati in `dati-locali.js`, caratteri locali, funziona anche senza internet).
 
 ## App online (a casa e in aula)
 
