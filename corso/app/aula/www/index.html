@@ -1,0 +1,1376 @@
+<!doctype html>
+<html lang="it">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corso Patente Nautica</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+/* Layout: come le slide del corso. Barra blu notte con il logo, fondo carta con macchie colorate e onde,
+   titoli con badge a macchia + etichetta colorata, schede bianche con il bordo colorato a sinistra. */
+:root{
+  --paper:#FFF8EE; --card:#FFFFFF; --ink:#1B2A41; --body:#34465E; --soft:#5E6E82; --line:#EDE5D6;
+  --navy:#16324F; --navy-2:#1F4466; --navy-ink:#FFFFFF; --navy-soft:#C9D6E3; --dacc:#FFC145;
+  --coral:#E4572E; --sea:#0B8A99; --sun:#F4A300; --green:#2E9E5B; --blue:#2F6FDB; --purple:#7B5CD6;
+  --coral-t:#FFE3D9; --sea-t:#D5F3F5; --sun-t:#FFF0C9; --green-t:#DFF3E4; --blue-t:#E1EAFD; --lilac-t:#ECE6FB;
+  --ok:#0B8A99; --ok-t:#D5F3F5; --ko:#C8402A; --ko-t:#FFE3D9; --shadow:0 8px 24px rgba(27,42,65,.10);
+  --display:'Fredoka','Trebuchet MS',sans-serif; --text:'Nunito Sans',Arial,sans-serif; --hand:'Caveat','Brush Script MT',cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0F1E2E; --card:#16293D; --ink:#EEF3F8; --body:#D3DEE9; --soft:#A7B6C6; --line:#25405A;
+  --navy:#0B1826; --navy-2:#173350; --coral-t:#3D2219; --sea-t:#123B47; --sun-t:#3A3017; --green-t:#163626; --blue-t:#1B2B4A; --lilac-t:#2A2547;
+  --coral:#FF7A55; --sea:#3CC3D2; --sun:#FFC145; --green:#4FC98A; --blue:#7FA8FF; --purple:#A891FF;
+  --ok:#3CC3D2; --ok-t:#123B47; --ko:#FF7A62; --ko-t:#3E1E19; --shadow:0 8px 24px rgba(0,0,0,.35); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0F1E2E; --card:#16293D; --ink:#EEF3F8; --body:#D3DEE9; --soft:#A7B6C6; --line:#25405A;
+  --navy:#0B1826; --navy-2:#173350; --coral-t:#3D2219; --sea-t:#123B47; --sun-t:#3A3017; --green-t:#163626; --blue-t:#1B2B4A; --lilac-t:#2A2547;
+  --coral:#FF7A55; --sea:#3CC3D2; --sun:#FFC145; --green:#4FC98A; --blue:#7FA8FF; --purple:#A891FF;
+  --ok:#3CC3D2; --ok-t:#123B47; --ko:#FF7A62; --ko-t:#3E1E19; --shadow:0 8px 24px rgba(0,0,0,.35); color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--paper)}
+body{margin:0; color:var(--ink); font-family:var(--text); font-size:16px; line-height:1.5; min-height:100%; overflow-x:clip}   /* la pagina che esce di lato col dito non fa scorrere lo schermo */
+.backdrop{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden}
+.backdrop svg{position:absolute}
+header.bar,main,footer.foot{position:relative; z-index:1}
+header.bar{position:sticky; top:env(safe-area-inset-top,0px); z-index:5; background:var(--navy); color:var(--navy-ink)}
+header.bar .in{max-width:960px; margin:0 auto; padding:10px 16px 6px; display:flex; align-items:center; gap:12px}
+header.bar .waves{display:block; width:100%; height:14px}
+.brand{display:flex; align-items:center; gap:12px; cursor:pointer; background:none; border:0; color:inherit; padding:0; font:inherit; text-align:left}
+.brand svg{width:44px; height:44px; flex:none}
+.brand b{display:block; font-family:var(--display); font-size:20px; font-weight:700; line-height:1.1}
+.brand i{display:block; font-family:var(--hand); font-style:normal; font-size:20px; line-height:1; color:var(--dacc)}
+.spacer{flex:1}
+.nav{display:flex; gap:6px}
+.nav[hidden]{display:none}
+.navb{font:inherit; font-weight:800; font-size:14px; display:inline-flex; align-items:center; gap:6px; padding:7px 13px; border-radius:999px; border:2px solid rgba(255,248,238,.35); background:transparent; color:var(--navy-ink); cursor:pointer}
+.navb svg{width:18px; height:18px}
+.navb:hover{border-color:var(--dacc)}
+.navb[aria-current="page"]{background:var(--dacc); border-color:var(--dacc); color:#16324F}
+.navb:focus-visible{outline:3px solid var(--dacc); outline-offset:2px}
+.tbl .sh{display:none}
+.reset{display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between}
+.who{display:flex; align-items:center; gap:8px; font-weight:800; font-size:14px; color:var(--navy-soft)}
+.who img{width:30px; height:30px; border-radius:50%; border:2px solid var(--dacc)}
+/* aiuto: pannello laterale, si apre solo quando serve */
+.aiuto-ov{position:fixed; inset:0; z-index:40; background:rgba(11,24,38,.45)}
+.aiuto{position:fixed; top:0; right:0; bottom:0; z-index:41; width:min(440px,100vw); background:var(--paper); color:var(--ink); box-shadow:-10px 0 30px rgba(0,0,0,.25); display:flex; flex-direction:column}
+.aiuto .ah{background:var(--navy); color:#fff; padding:16px 18px; display:flex; align-items:center; gap:12px}
+.aiuto .ah h2{color:#fff; font-size:21px; flex:1}
+.aiuto .ax{width:40px; height:40px; border-radius:50%; border:0; background:rgba(255,255,255,.14); color:#fff; display:grid; place-items:center; cursor:pointer; flex:none}
+.aiuto .ax svg{width:20px; height:20px}
+.aiuto .ab{overflow:auto; padding:18px; display:flex; flex-direction:column; gap:16px}
+.aiuto .qui{background:var(--card); border-radius:18px; padding:16px; border-left:8px solid var(--sea); box-shadow:var(--shadow)}
+.aiuto .qui ul{margin:8px 0 0; padding-left:20px} .aiuto .qui li{margin:4px 0}
+.aiuto details{background:var(--card); border-radius:14px; padding:12px 14px; border:2px solid var(--line)}
+.aiuto summary{cursor:pointer; font-weight:800}
+.aiuto details p,.aiuto details li{color:var(--body); font-size:15px; margin:8px 0 0}
+.aiuto details ul{padding-left:20px; margin:0}
+.aiuto .info{font-size:13px; color:var(--soft); font-weight:700}
+/* menu a cassetto: si apre toccando il logo, in tutte le pagine */
+.cassetto-ov{position:fixed; inset:0; z-index:40; background:rgba(11,24,38,.45)}
+.cassetto{position:fixed; top:0; left:0; bottom:0; z-index:41; width:min(360px,88vw); background:var(--paper); color:var(--ink); box-shadow:10px 0 30px rgba(0,0,0,.25); display:flex; flex-direction:column}
+@media (prefers-reduced-motion: no-preference){
+  .cassetto{animation:cassettoIn .2s ease-out} .cassetto-ov{animation:ovIn .2s}
+  @keyframes cassettoIn{from{transform:translateX(-100%)}} @keyframes ovIn{from{opacity:0}}
+}
+.cassetto .ch{background:var(--navy); color:#fff; padding:12px 14px; padding-top:max(12px,env(safe-area-inset-top)); display:flex; align-items:center; gap:10px}
+.cassetto .ch svg.lg{width:40px; height:40px; flex:none}
+.cassetto .ch b{font-family:var(--display); font-size:18px; flex:1; line-height:1.15}
+.cassetto .ch .ax{width:40px; height:40px; border-radius:50%; border:0; background:rgba(255,255,255,.14); color:#fff; display:grid; place-items:center; cursor:pointer; flex:none}
+.cassetto .ch .ax svg{width:20px; height:20px}
+.cassetto .cb{overflow:auto; padding:6px 10px calc(24px + env(safe-area-inset-bottom,0px)); display:flex; flex-direction:column; gap:2px; overscroll-behavior:contain}
+.cassetto .cb>*{flex:none}   /* nella colonna che scorre le voci non si schiacciano */
+.cassetto .sez{font-size:12px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:14px 10px 4px}
+.mv{display:flex; align-items:center; gap:10px; width:100%; text-align:left; font:inherit; font-weight:800; color:var(--ink); background:none; border:0; border-radius:12px; padding:9px 10px; cursor:pointer; min-height:44px}
+.mv:hover{background:var(--card)} .mv[aria-current]{background:var(--sea-t); color:var(--ink); box-shadow:inset 4px 0 0 var(--sea)}
+.mv:focus-visible{outline:3px solid var(--dacc); outline-offset:-3px}
+.mv .mi{flex:none; width:28px; height:28px; border-radius:9px; background:var(--hue,var(--sea)); color:#fff; display:grid; place-items:center; font-family:var(--display); font-size:14px; font-weight:700}
+.mv .mi svg{width:18px; height:18px}
+.mv .t{flex:1; min-width:0; line-height:1.3}
+.mv small{color:var(--soft); font-weight:800; font-size:12px; white-space:nowrap}
+.mv small.ok{color:var(--ok)}
+.mv:disabled{color:var(--soft); cursor:default; background:none} .mv:disabled .mi{background:var(--line); color:var(--soft)}
+.cassetto summary{list-style:none} .cassetto summary::-webkit-details-marker{display:none}
+.cassetto summary.mv::after{content:"›"; font-size:22px; line-height:1; color:var(--soft); width:14px; text-align:center}
+@media (prefers-reduced-motion: no-preference){.cassetto summary.mv::after{transition:transform .15s}}
+.cassetto details[open]>summary.mv::after{transform:rotate(90deg)}
+.cassetto .sub{display:flex; flex-direction:column; gap:1px; padding:2px 0 8px 8px; margin-left:23px; border-left:2px solid var(--line)}
+.cassetto .sub .mv{font-weight:700; font-size:15px; min-height:40px; padding:7px 10px}
+.cassetto .sub .mv.qz{font-size:14px; color:var(--coral); padding-left:26px}
+.cassetto .cf{font-size:12px; color:var(--soft); font-weight:700; padding:16px 10px 0}
+.suggerimento{position:fixed; z-index:30; right:12px; top:76px; max-width:240px; background:var(--dacc); color:#16324F; font-weight:800; font-size:14px; border-radius:14px; padding:10px 34px 10px 12px; box-shadow:var(--shadow)}
+.suggerimento::before{content:""; position:absolute; top:-8px; right:var(--fr,60px); border:8px solid transparent; border-top:0; border-bottom-color:var(--dacc)}
+.suggerimento.sx{right:auto; left:12px} .suggerimento.sx::before{right:auto; left:var(--fl,20px)}
+.suggerimento button{position:absolute; top:4px; right:6px; border:0; background:none; font:inherit; font-size:18px; color:#16324F; cursor:pointer}
+.whob{display:flex; align-items:center; gap:8px; background:none; border:0; color:inherit; font:inherit; cursor:pointer; padding:2px; border-radius:999px}
+.whob:focus-visible{outline:3px solid var(--dacc); outline-offset:2px}
+.av{width:34px; height:34px; border-radius:50%; display:grid; place-items:center; color:#fff; font-family:var(--display); font-size:15px; border:2px solid var(--dacc); flex:none}
+.whob[aria-current] .av{box-shadow:0 0 0 3px rgba(255,193,69,.45)}
+/* profilo */
+.seg{display:flex; flex-wrap:wrap; gap:8px}
+.seg label{position:relative; cursor:pointer}
+.seg input{position:absolute; opacity:0; inset:0; margin:0; cursor:pointer}
+.seg span{display:inline-block; padding:8px 14px; border-radius:999px; border:2px solid var(--line); font-weight:800; font-size:14px; background:var(--card)}
+.seg input:checked+span{border-color:var(--sea); background:var(--sea-t); color:var(--ink)}
+.seg input:focus-visible+span{outline:3px solid var(--dacc); outline-offset:2px}
+.sw input+span{width:38px; height:38px; padding:0; border-radius:50%; border:3px solid transparent}
+.sw input:checked+span{border-color:var(--ink); background:inherit}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+input[type=date],input[type=email],input[type=tel],input[type=number],select{font:inherit; padding:11px 13px; border-radius:12px; border:2px solid var(--line); background:var(--card); color:var(--ink)}
+input[type=date]:focus,input[type=email]:focus,input[type=tel]:focus,input[type=number]:focus,select:focus{outline:none; border-color:var(--sea)}
+.okmsg{color:var(--sea); font-weight:800}
+.okmsg:empty{display:none}
+.countdown{display:flex; align-items:center; gap:14px}
+.countdown b{font-family:var(--display); font-size:40px; line-height:1; color:var(--hue)}
+.wrap{max-width:960px; margin:0 auto; padding-inline:16px; padding-block:24px 40px}
+h1,h2,h3{font-family:var(--display); font-weight:700; line-height:1.12; text-wrap:balance; margin:0}
+h1{font-size:clamp(28px,4.4vw,40px)} h2{font-size:24px} h3{font-size:19px; font-weight:600}
+p{margin:0}
+.muted{color:var(--soft)}
+.stack{display:flex; flex-direction:column; gap:16px}
+.row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+.pill{align-self:flex-start; font-size:12px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; color:#fff; background:var(--hue,var(--coral)); padding:3px 12px; border-radius:30px}
+/* tema scuro: i colori diventano chiari, quindi testo scuro sulle etichette */
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pill{color:#0F1E2E}}
+:root[data-theme="dark"] .pill{color:#0F1E2E}
+.head{display:flex; gap:16px; align-items:center}
+.head .badge{width:64px; height:64px; flex:none}
+.head h1,.head h2{color:var(--hue,var(--coral))}
+.head .t{display:flex; flex-direction:column; gap:6px; min-width:0}
+.squig{display:block; height:12px}
+.note{font-family:var(--hand); font-size:26px; font-weight:700; line-height:1.1; color:var(--hue,var(--coral))}
+.card{background:var(--card); border-radius:22px; padding:20px; box-shadow:var(--shadow); border-left:10px solid var(--hue,var(--sea))}
+.card.plain{border-left:0}
+.btn{font:inherit; font-weight:800; font-size:15px; border-radius:999px; padding:10px 18px; border:2px solid var(--ink); background:var(--ink); color:var(--paper); cursor:pointer; display:inline-flex; align-items:center; gap:8px}
+.btn.ghost{background:transparent; color:var(--ink)}
+.btn.sea{background:var(--sea); border-color:var(--sea); color:#fff}
+.btn.coral{background:var(--coral); border-color:var(--coral); color:#fff}
+.btn:disabled{opacity:.45; cursor:not-allowed}
+.btn:focus-visible,.opt:focus-visible,.brand:focus-visible,.link:focus-visible{outline:3px solid var(--dacc); outline-offset:2px}
+.link{background:none; border:0; padding:0; font:inherit; font-weight:800; color:var(--sea); cursor:pointer; text-decoration:underline; text-underline-offset:3px; align-self:flex-start}
+.bar-p{height:10px; border-radius:99px; background:var(--line); overflow:hidden}
+.bar-p i{display:block; height:100%; background:var(--hue,var(--sea)); border-radius:99px}
+/* benvenuto: pannello blu come la copertina */
+.hero{position:relative; overflow:hidden; background:var(--navy); color:#fff; border-radius:28px; padding:28px 28px 64px}
+.hero .blobs{position:absolute; inset:0; width:100%; height:100%}
+.hero .in{position:relative; display:grid; grid-template-columns:1.4fr 1fr; gap:24px; align-items:center}
+.hero h1{color:#fff}
+.hero .sub{color:var(--navy-soft); font-size:17px}
+/* riepilogo dei progressi nella home */
+.recap{display:flex; gap:8px} .recap>*{flex:1 1 0; min-width:0}
+.recap>*{background:rgba(255,255,255,.1); border:0; border-radius:14px; padding:9px 11px; color:#fff; text-align:left; font:inherit}
+.recap b{display:block; font-family:var(--display); font-size:24px; line-height:1.1; color:var(--dacc); font-variant-numeric:tabular-nums}
+.recap span{display:block; font-size:12.5px; font-weight:800; color:var(--navy-soft)}
+.recap button{cursor:pointer} .recap button:hover{background:rgba(255,255,255,.18)}
+.recap button:focus-visible{outline:3px solid var(--dacc); outline-offset:2px}
+/* testo giustificato, con la sillabazione italiana */
+#app p{text-align:justify; hyphens:auto; -webkit-hyphens:auto}
+#app .notice,#app .errmsg,#app .okmsg,#app .counter,#app .row>p{text-align:left}
+.hero .note{color:var(--dacc); font-size:30px}
+.hero .waves{position:absolute; left:0; right:0; bottom:0; width:100%; height:56px}
+.hero .art{width:100%; max-width:300px; height:auto; justify-self:center; filter:drop-shadow(0 10px 24px rgba(0,0,0,.35))}
+.stats{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+.stat{border-radius:22px; padding:16px 18px; background:var(--tint)}
+.stat b{display:block; font-family:var(--display); font-size:34px; font-weight:700; color:var(--hue); font-variant-numeric:tabular-nums; line-height:1.1}
+.stat span{font-size:14px; color:var(--body); font-weight:800}
+.lez{display:grid; grid-template-columns:auto 1fr auto; gap:18px; align-items:center}
+.lez .num{position:relative; width:72px; height:72px; flex:none}
+.lez .num svg{position:absolute; inset:0; width:100%; height:100%}
+.lez .num b{position:relative; display:grid; place-items:center; width:100%; height:100%; font-family:var(--display); font-size:30px; font-weight:700; color:#fff}
+.lez.fac{opacity:.78}
+.lez.locked{opacity:.6; box-shadow:none; background:transparent; border:2px dashed var(--line); border-left-width:2px}
+.chipbtn{border:0; font-family:inherit; cursor:pointer; text-decoration:underline; text-underline-offset:2px}
+.chipbtn:hover{filter:brightness(.95)} .chipbtn:focus-visible{outline:3px solid var(--dacc); outline-offset:2px}
+.chip{font-size:12px; font-weight:900; padding:3px 10px; border-radius:99px; background:var(--line); color:var(--soft); white-space:nowrap}
+.chip.ok{background:var(--ok-t); color:var(--ok)} .chip.ko{background:var(--ko-t); color:var(--ko)} .chip.todo{background:var(--sun-t); color:var(--ink)} .chip.rev{background:var(--lilac-t); color:var(--purple)}
+.cap{display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center; padding:14px 0; border-top:1px solid var(--line)}
+.cap:first-child{border-top:0}
+.cap .dot{width:40px; height:40px; border-radius:50%; background:var(--hue); color:#fff; display:grid; place-items:center; font-family:var(--display); font-weight:700; font-size:18px}
+.viewer{background:var(--navy); border-radius:22px; overflow:hidden; box-shadow:var(--shadow)}
+.viewer img{display:block; width:100%; aspect-ratio:16/9; object-fit:contain}
+.viewer{position:relative; touch-action:pan-y}
+.quiz1{touch-action:pan-y}
+.viewer .fsbtn{position:absolute; right:10px; bottom:10px; width:40px; height:40px; border-radius:12px; border:0; background:rgba(11,24,38,.72); color:#fff; display:grid; place-items:center; cursor:pointer}
+.fsbtn svg,.fs .fsx svg{width:22px; height:22px}
+/* schermo intero: solo la slide, si sfoglia toccando i lati o scorrendo */
+.fs{position:fixed; inset:0; z-index:50; background:#0B1826; display:flex; align-items:center; justify-content:center; touch-action:pan-y; user-select:none; -webkit-user-select:none}
+.fs img{width:100%; height:100%; object-fit:contain; display:block}
+.fs .fsx{position:absolute; top:max(10px,env(safe-area-inset-top)); right:max(10px,env(safe-area-inset-right)); width:44px; height:44px; border-radius:50%; border:0; background:rgba(255,255,255,.16); color:#fff; display:grid; place-items:center; cursor:pointer}
+.fs .fsc{position:absolute; top:max(14px,env(safe-area-inset-top)); left:max(14px,env(safe-area-inset-left)); font-family:var(--display); font-weight:700; color:#fff; background:rgba(228,87,46,.9); border-radius:20px; padding:1px 12px; font-size:14px; font-variant-numeric:tabular-nums; pointer-events:none}
+.fs .fsh{position:absolute; top:50%; transform:translateY(-50%); width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.12); color:#fff; display:grid; place-items:center; font-size:20px; pointer-events:none}
+/* telefono in orizzontale: lo schermo è basso, la slide si adatta all'altezza e la barra non resta fissa */
+@media (orientation:landscape) and (max-height:520px){
+  header.bar{position:relative}
+  .slidebox{gap:6px!important}
+  .viewer{display:flex; justify-content:center; border-radius:12px; align-self:center; max-width:100%}
+  .viewer img{width:auto; max-width:100%; height:calc(100dvh - 62px)}
+  .slidebox .vnav .btn{padding:6px 14px; font-size:14px}
+}
+.vnav{display:flex; align-items:center; gap:12px; justify-content:space-between; flex-wrap:wrap}
+.counter{font-family:var(--display); font-weight:700; color:#fff; background:var(--coral); border-radius:20px; padding:2px 12px; font-variant-numeric:tabular-nums}
+.q{display:flex; flex-direction:column; gap:10px; border-left-color:var(--coral)}
+.q .qid{font-size:13px; font-weight:900; color:var(--coral)}
+.q .txt{font-weight:800; font-size:18px}
+.opt{display:flex; gap:12px; align-items:flex-start; text-align:left; width:100%; font:inherit; color:var(--ink); background:var(--card); border:2px solid var(--line); border-radius:14px; padding:12px 14px; cursor:pointer}
+.opt .box{flex:none; width:24px; height:24px; border-radius:7px; border:2px solid var(--soft); margin-top:1px; display:grid; place-items:center}
+.opt[aria-checked="true"]{border-color:var(--sea)} .opt[aria-checked="true"] .box{border-color:var(--sea); background:var(--sea)}
+.opt[aria-checked="true"] .box::after,.opt.right .box::after{content:""; width:8px; height:13px; border:solid #fff; border-width:0 3px 3px 0; transform:rotate(45deg) translate(-1px,-1px)}
+.opt.right{border-color:var(--ok); background:var(--ok-t); font-weight:800} .opt.right .box{background:var(--ok); border-color:var(--ok)}
+.opt.wrong{border-color:var(--ko); background:var(--ko-t)} .opt.wrong .box{border-color:var(--ko); background:var(--ko)}
+.opt.wrong .box::after{content:"\00d7"; color:#fff; font-weight:900; font-size:18px; line-height:1; border:0; transform:none; width:auto; height:auto}
+.opt:disabled{cursor:default}
+.fb{border-radius:14px; padding:12px 14px; font-weight:800; display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center}
+.fb.ok{background:var(--ok-t); color:var(--ok)} .fb.ko{background:var(--ko-t); color:var(--ko)}
+.fb .link{color:inherit}
+.quiz1 .txt{font-size:19px}
+.quiz1 .opt{padding:14px 16px; min-height:56px}
+@media (prefers-reduced-motion: no-preference){
+  .entra-dx{animation:entraDx .28s ease-out} .entra-sx{animation:entraSx .28s ease-out}
+  @keyframes entraDx{from{transform:translateX(40px); opacity:0}} @keyframes entraSx{from{transform:translateX(-40px); opacity:0}}
+}
+#app .quiz1 .txt{text-align:left; hyphens:manual; -webkit-hyphens:manual}
+.qtesta .qtitolo{display:none}
+@media (max-width:640px){
+  .quiznav{position:sticky; bottom:0; background:var(--paper); padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px)); z-index:5}
+  .quiznav .btn{padding:9px 16px}
+  .quizpagina{gap:10px!important} .quizpagina>.head{display:none}
+  .qtesta .qtitolo{display:block; font-weight:800; font-size:13px; color:var(--coral); text-align:right; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:60%}
+  .quiz1{padding:12px 12px 12px 14px; border-left-width:6px; gap:7px}
+  .quiz1 .txt{font-size:16.5px; line-height:1.4} .quiz1 .qid{font-size:12px}
+  .quiz1 .opt{padding:8px 11px; min-height:0; font-size:15px; gap:10px} .quiz1 .opt .box{width:21px; height:21px}
+}
+.result{display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:space-between}
+.result .big{font-family:var(--display); font-size:40px; font-weight:700; color:var(--hue)}
+table{border-collapse:collapse; width:100%; font-size:15px}
+th,td{text-align:left; padding:10px; border-bottom:1px solid var(--line)}
+th{font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--soft)}
+td.num,th.num{text-align:right; font-variant-numeric:tabular-nums}
+.tbl{overflow-x:auto}
+/* scheda riassuntiva e appendici: in cima alla lezione e nei Materiali */
+.xrow{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px}
+.xcard{display:flex; gap:12px; align-items:center; text-align:left; font:inherit; color:var(--ink); background:var(--card); border:2px solid var(--hue); border-radius:18px; padding:12px 14px; cursor:pointer; box-shadow:var(--shadow)}
+.xcard:hover{transform:translateY(-1px)}
+.xcard .xi{flex:none; width:46px; height:46px; border-radius:14px; background:var(--hue); color:#fff; display:grid; place-items:center; font-family:var(--display); font-size:22px}
+.xcard .xi svg{width:30px; height:30px}
+.xcard b{display:block; font-weight:800; line-height:1.25} .xcard small{display:block; color:var(--soft); font-weight:700; font-size:13px; line-height:1.35}
+.xcard[disabled]{cursor:default; border-style:dashed; border-color:var(--line); box-shadow:none; background:transparent; transform:none} .xcard[disabled] .xi{background:var(--line); color:var(--soft)} .xcard[disabled] b{color:var(--soft)}
+.errmsg{color:var(--coral); font-weight:800; margin:0}
+.errmsg:empty{display:none}
+.notice.net{background:var(--sea-t)}
+.notice{background:var(--sun-t); border-radius:14px; padding:10px 14px; font-size:14px; font-weight:800}
+label.fld{display:flex; flex-direction:column; gap:6px; font-weight:800}
+input[type=text]{font:inherit; padding:11px 13px; border-radius:12px; border:2px solid var(--line); background:var(--card); color:var(--ink)}
+input[type=text]:focus{outline:none; border-color:var(--sea)}
+.check{display:flex; gap:10px; align-items:flex-start; font-size:14px}
+.check input{margin-top:3px; width:20px; height:20px; accent-color:var(--sea); flex:none}
+footer.foot{max-width:960px; margin:0 auto; padding:8px 16px 28px; display:flex; gap:10px; align-items:center; color:var(--soft); font-size:13px; font-weight:700}
+footer.foot svg{width:28px; height:28px; flex:none; align-self:flex-start}
+footer.foot .legal{display:block; margin-top:4px; font-size:11.5px; font-weight:600; line-height:1.45; opacity:.85}
+@media (max-width:640px){
+  .hero{padding:18px 18px 52px} .hero .in{grid-template-columns:1fr; gap:12px}
+  .hero .art{position:absolute; top:-4px; right:-4px; width:58px; max-width:58px}
+  .hero .note{font-size:22px; padding-right:64px; min-height:54px} .hero h1{font-size:25px} .hero .sub{font-size:15px}
+  .recap{gap:6px} .recap>*{padding:8px 6px; border-radius:12px} .recap b{font-size:19px} .recap span{font-size:10.5px; line-height:1.2}
+  .hero.compatto .sub{display:none}
+  .stats{gap:8px} .stat{padding:12px} .stat b{font-size:24px} .stat span{font-size:12px}
+  .lez{grid-template-columns:auto 1fr} .lez .go{grid-column:1/-1}
+  .cap{grid-template-columns:auto 1fr} .cap .acts{grid-column:1/-1; justify-content:flex-start!important}
+  .head .badge{width:52px; height:52px} .brand i{display:none}
+  header.bar .in{gap:8px} .brand{gap:8px} .brand svg{width:38px; height:38px} .brand b{font-size:16px}
+  .navb{padding:6px 9px; font-size:13px} .who .wn{display:none} .grid2{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  .navb span{display:none} .navb{padding:7px 9px} .brand b{font-size:15px}
+}
+@media (max-width:420px){
+  .brand > span:last-child{display:none} header.bar .in{gap:6px} .nav{gap:4px}
+  .tbl{padding:12px 8px} .tbl table{font-size:13px} .tbl th,.tbl td{padding:8px 4px; white-space:nowrap} .tbl th{letter-spacing:0; font-size:11px} .tbl .lt{display:none} .tbl .sh{display:inline}
+}
+@media (prefers-reduced-motion: no-preference){.opt,.btn{transition:background .15s, border-color .15s, transform .15s} .btn:active{transform:scale(.97)}}
+</style>
+
+<div class="backdrop" id="backdrop" aria-hidden="true"></div>
+<header class="bar"><div class="in">
+  <button class="brand" id="home-btn" aria-label="Corso Patente Nautica">
+    <span id="logo-h"></span>
+    <span><b>Corso Patente Nautica</b><i>il mare, a vele spiegate</i></span>
+  </button>
+  <span class="spacer"></span>
+  <nav class="nav" id="nav" hidden>
+    <button class="navb" id="nav-home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 L12 3 L21 11 M5 9.5 V21 H10 V15 H14 V21 H19 V9.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Home</span></button>
+    <button class="navb" id="nav-prog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21 H21 M6 17 V12 M11 17 V6 M16 17 V9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><span>Progressi</span></button>
+    <button class="navb" id="nav-mat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6 Q8 3.5 3 4.5 V19 Q8 18 12 20.5 Q16 18 21 19 V4.5 Q16 3.5 12 6 Z M12 6 V20.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg><span>Materiali</span></button>
+  </nav>
+  <button class="navb" id="nav-aiuto" aria-label="Aiuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M9.3 9.4a2.8 2.8 0 1 1 3.9 2.6c-.8.4-1.2.9-1.2 1.8v.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17.4" r="1.3" fill="currentColor"/></svg><span>Aiuto</span></button>
+  <span class="who" id="who"></span>
+</div><svg class="waves" viewBox="0 0 960 14" preserveAspectRatio="none" aria-hidden="true"><path id="wv-h" fill="#12A4B5" fill-opacity=".45"/></svg></header>
+
+<main class="wrap" id="app">
+  <div class="stack" style="padding-block:24px">
+    <span class="pill">Caricamento</span>
+    <h1>Preparo le lezioni 1 e 2…</h1>
+  </div>
+</main>
+<footer class="foot"><span id="logo-f"></span><span>Fabrizio Fiorucci · Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa<small class="legal">La proprietà intellettuale di questo materiale è di Fabrizio Fiorucci, ne sono proibite la divulgazione e la duplicazione.</small><small class="legal" id="versione"></small></span></footer>
+
+<script>
+(function(){
+const $app=document.getElementById('app'), $who=document.getElementById('who');
+let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
+const KEY='corso-nautico-v1';
+// versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
+const VERSIONE='0.14.1', RILASCIO='9 ottobre 2026';
+const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
+const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
+const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
+
+/* ---------- grafica delle slide: macchie, onde, linea ondulata, logo, icone ---------- */
+function blob(cx,cy,r,seed=0,k=.18,n=7){const p=[];for(let i=0;i<n;i++){const a=2*Math.PI*i/n,rr=r*(1+k*Math.sin(3*a+seed)+.5*k*Math.cos(5*a+seed*1.7));p.push([cx+rr*Math.cos(a),cy+rr*Math.sin(a)]);}
+  let d=`M${((p[0][0]+p[1][0])/2).toFixed(1)} ${((p[0][1]+p[1][1])/2).toFixed(1)} `;for(let i=0;i<n;i++){const a=p[(i+1)%n],b=p[(i+2)%n];d+=`Q${a[0].toFixed(1)} ${a[1].toFixed(1)} ${((a[0]+b[0])/2).toFixed(1)} ${((a[1]+b[1])/2).toFixed(1)} `;}return d+'Z';}
+function wave(y,amp,per,x0,x1,h){let d=`M${x0} ${y} `;for(let x=x0;x<x1;x+=per)d+=`q${per/4} ${-amp} ${per/2} 0 t${per/2} 0 `;return d+`L${x1} ${h} L${x0} ${h} Z`;}
+const W='#FFFFFF', SK=`stroke="${W}" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"`;
+const ICONS={
+  lifebuoy:`<circle cx="50" cy="50" r="30" fill="none" stroke="${W}" stroke-opacity=".45" stroke-width="18"/><circle cx="50" cy="50" r="30" fill="none" stroke="${W}" stroke-width="18" stroke-dasharray="23.6 23.6" transform="rotate(-11 50 50)"/>`,
+  hull:`<path d="M10 55 L90 55 L78 75 L22 75 Z" fill="${W}"/><path d="M34 55 L34 38 L64 38 L72 55" ${SK}/><path d="M8 90 q10.5 -7 21 0 t21 0 t21 0 t21 0" ${SK}/>`,
+  propeller:`<circle cx="50" cy="50" r="9" fill="${W}"/>`+[0,120,240].map(a=>`<ellipse cx="50" cy="25" rx="11" ry="20" fill="${W}" transform="rotate(${a} 50 50)"/>`).join(''),
+  quiz:`<rect x="16" y="12" width="68" height="80" rx="10" ${SK}/><path d="M30 34 L40 44 L56 26 M30 62 L70 62 M30 76 L60 76" ${SK}/>`,
+  book:`<path d="M50 24 Q30 12 10 18 L10 82 Q30 76 50 88 Q70 76 90 82 L90 18 Q70 12 50 24 Z M50 24 L50 88" ${SK}/>`,
+  chart:`<path d="M12 88 L90 88" ${SK}/><rect x="18" y="50" width="16" height="36" rx="3" fill="${W}"/><rect x="42" y="26" width="16" height="60" rx="3" fill="${W}"/><rect x="66" y="60" width="16" height="26" rx="3" fill="${W}"/>`,
+  compass:`<circle cx="50" cy="50" r="38" ${SK}/><polygon points="50,14 58,50 50,86 42,50" fill="${W}"/><polygon points="14,50 50,42 86,50 50,58" fill="${W}" fill-opacity=".7"/>`,
+  flag:`<path d="M24 10 L24 92" ${SK}/><path d="M28 14 L82 14 L70 32 L82 50 L28 50 Z" fill="${W}"/>`};
+function svgEl(html,cls,vb){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('viewBox',vb);if(cls)s.setAttribute('class',cls);s.setAttribute('aria-hidden','true');s.innerHTML=html;return s;}
+const badge=(icon,hue)=>svgEl(`<path d="${blob(52,52,47,1,.07,8)}" fill="${hue}"/><g transform="translate(22 22) scale(.6)">${ICONS[icon]}</g>`,'badge','0 0 104 104');
+const squiggle=(hue,w=150)=>{const s=svgEl(`<path d="M5 9 ${Array(Math.floor(w/44)).fill('q11 -10 22 0 t22 0').join(' ')}" fill="none" stroke="${hue}" stroke-width="7" stroke-linecap="round"/>`,'squig',`0 0 ${w} 18`);s.style.width=w*.8+'px';return s;};
+function logo(dark){const ring=dark?'#FFF8EE':'var(--ink)',acc=dark?'#FFC145':'var(--coral)',wv=dark?'#7FD3DC':'var(--sea)';
+  const ticks=[0,45,90,135,180,225,315].map(d=>{const a=d*Math.PI/180;return `<line x1="${100+78*Math.cos(a)}" y1="${100+78*Math.sin(a)}" x2="${100+86*Math.cos(a)}" y2="${100+86*Math.sin(a)}" stroke="${ring}" stroke-width="4" stroke-linecap="round"/>`}).join('');
+  return svgEl(`<circle cx="100" cy="100" r="92" fill="none" stroke="${ring}" stroke-width="7"/>${ticks}<path d="M100 16 L109 34 L91 34 Z" fill="${acc}"/><path d="M97 42 L97 132 L46 132 Q66 92 97 42 Z" fill="${ring}"/><path d="M104 54 L104 132 L148 132 Q128 96 104 54 Z" fill="${acc}"/><path d="M44 140 L156 140 Q148 156 126 158 L74 158 Q52 156 44 140 Z" fill="${ring}"/><path d="M50 173 Q62.5 165 75 173 T100 173 T125 173 T150 173" fill="none" stroke="${wv}" stroke-width="6" stroke-linecap="round"/>`,'', '0 0 200 200');}
+document.getElementById('logo-h').append(logo(true));
+document.getElementById('logo-f').append(logo(false));
+document.getElementById('wv-h').setAttribute('d',wave(8,6,60,-30,1000,14));
+document.getElementById('backdrop').append(
+  Object.assign(svgEl(`<path d="${blob(300,120,240,1.3)}" fill="var(--sun-t)"/>`,'','0 0 600 400'),{style:'right:-160px; top:40px; width:520px'}),
+  Object.assign(svgEl(`<path d="${blob(200,260,200,0.7)}" fill="var(--sea-t)"/>`,'','0 0 400 400'),{style:'left:-180px; bottom:-120px; width:420px'}),
+  Object.assign(svgEl(`<circle cx="20" cy="20" r="18" fill="var(--coral)" fill-opacity=".18"/><circle cx="50" cy="70" r="9" fill="var(--sea)" fill-opacity=".25"/>`,'','0 0 80 90'),{style:'right:28px; top:46%; width:70px'}));
+
+/* ---------- archivio: server dell'aula, db personale dell'artifact, oppure questo dispositivo ---------- */
+const TOKEN_KEY='corso-aula-token';
+const tok={get(){try{return localStorage.getItem(TOKEN_KEY)}catch(e){return null}}, set(v){try{v?localStorage.setItem(TOKEN_KEY,v):localStorage.removeItem(TOKEN_KEY)}catch(e){}}};
+async function api(path,body,keepalive){
+  const r=await fetch('api/'+path,{method:body===undefined?'GET':'POST',keepalive:!!keepalive,headers:{'Content-Type':'application/json','X-Token':tok.get()||''},body:body===undefined?undefined:JSON.stringify(body)});
+  const j=await r.json().catch(()=>({}));
+  if(r.status===403&&j.sospeso) accessoSospeso();   // l'istruttore ha bloccato questo allievo, IP o dispositivo
+  if(!r.ok) throw Object.assign(new Error(j.errore||('errore '+r.status)),{status:r.status,dati:j});
+  return j;
+}
+let giro=0; // cambia quando l'istruttore azzera i progressi di questo allievo
+// in aula: copia di sicurezza sul telefono, per lavorare anche quando il server non risponde;
+// al ritorno della rete si unisce ai dati del server (vince la risposta più recente, le slide viste si sommano)
+const COPIA='corso-aula-copia';
+const copia={
+  leggi(){ try{ const c=JSON.parse(localStorage.getItem(COPIA)||'null'); return c&&c.token===tok.get()?c:null; }catch(e){ return null; } },
+  scrivi(pendente){ try{ localStorage.setItem(COPIA,JSON.stringify({token:tok.get(),giro,pendente,ts:Date.now(),att:ATT?[...ATT]:null,S})); }catch(e){} },
+  togli(){ try{ localStorage.removeItem(COPIA); }catch(e){} }
+};
+function unisci(server,loc){
+  const out=Object.assign(blank(),server);
+  for(const [L,pp] of Object.entries(loc.visti||{})) out.visti[L]=[...new Set([...(out.visti[L]||[]),...pp])].sort((a,b)=>a-b);
+  for(const [q,r] of Object.entries(loc.risposte||{})){ const v=out.risposte[q];
+    if(!v||String(r.ts)>String(v.ts)) out.risposte[q]={...r,tentativi:Math.max(r.tentativi||1,v?v.tentativi||1:0)}; }
+  for(const [d,g] of Object.entries(loc.diario||{})){ const v=out.diario[d]||{q:0,s:0}; out.diario[d]={q:Math.max(v.q,g.q||0),s:Math.max(v.s,g.s||0)}; }
+  out.profilo=Object.assign({},server.profilo||{},loc.profilo||{});
+  return out;
+}
+// online, primo accesso con l'email: i progressi fatti su questo telefono con la versione precedente (senza server)
+// diventano quelli dell'account; altrimenti si chiede il nome
+async function primoOnline(){
+  let loc=null; try{ loc=JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){}
+  if(!loc||!loc.nome) return blank();
+  const j=await api('accedi',{nome:loc.nome}); tok.set(j.token); giro=j.giro||0;
+  const st=Object.assign(unisci(Object.assign(blank(),j.stato),Object.assign(blank(),loc)),{nome:j.nome,consenso:true,creato:loc.creato||null});
+  setTimeout(()=>{ store.save(); try{ localStorage.removeItem(KEY); }catch(e){} },300);
+  return conProfilo(st);
+}
+const store={
+  async load(){
+    try{
+      const info=await api('info');
+      if(info.aula){
+        mode='aula'; aula=info; if(info.attive) ATT=new Set(info.attive);
+        if(tok.get()||info.online){
+          try{ const j=await api('progresso'); if(info.online) tok.set('online'); const dalServer=Object.assign(blank(),j.stato,{nome:j.nome,consenso:true,creato:j.creato||null});
+            const c=copia.leggi(); let st=dalServer;
+            // lavoro fatto senza rete (e non azzerato nel frattempo dall'istruttore): si unisce e si invia
+            if(c&&c.pendente&&(c.giro||0)===(j.giro||0)){ st=Object.assign(unisci(dalServer,c.S),{nome:j.nome,consenso:true,creato:j.creato||null}); setTimeout(()=>store.save(),300); }
+            giro=j.giro||0; return conProfilo(st); }
+          catch(e){ if(e.status===401){ tok.set(null); if(info.online) return await primoOnline(); } else throw e; }
+        }
+        return blank();
+      }
+    }catch(e){
+      // server dell'aula non raggiungibile: se su questo telefono c'è la copia, si continua con quella
+      const c=tok.get()&&copia.leggi();
+      if(mode==='aula'||c){ mode='aula'; offline=true; if(c&&c.att) ATT=new Set(c.att); giro=c?c.giro||0:giro;
+        return c?conProfilo(Object.assign(blank(),c.S)):blank(); } }
+    try{
+      if(C&&(C.demo||C.casa)) throw 0;   // demo e app da casa: niente archivio online, i progressi restano sul dispositivo
+      const user=await claude.use('user');
+      if(user){ me=await user.me(); uid=me.id; }
+      db=await claude.use('db');
+      if(db && uid){
+        const snap=await db.doc('data/users/'+uid+'/profile').get();
+        mode='cloud';
+        return snap.exists ? Object.assign(blank(),snap.data()) : blank();
+      }
+    }catch(e){ console.warn('db non disponibile',e); }
+    mode='local';
+    try{ const raw=localStorage.getItem(KEY); if(raw) return Object.assign(blank(),JSON.parse(raw)); }catch(e){}
+    return blank();
+  },
+  t:null,
+  save(){
+    clearTimeout(this.t);
+    this.t=setTimeout(async()=>{
+      const body=JSON.parse(JSON.stringify(S));
+      if(mode==='aula'){
+        copia.scrivi(true);
+        try{ await api('progresso',{visti:body.visti,risposte:body.risposte,profilo:body.profilo,diario:body.diario,giro}); offline=false; copia.scrivi(false); }
+        catch(e){
+          if(e.status===409){ giro=e.dati.giro||0; S=Object.assign(blank(),e.dati.stato,{nome:S.nome,consenso:true}); offline=false; copia.scrivi(false); go(vHome); return; }
+          if(e.status===401){ copia.togli(); tok.set(null); S=blank(); renderWho(); go(vRegistrazione); return; } offline=true; console.warn('server dell’aula non raggiungibile',e); }
+        renderNet(); return;
+      }
+      if(mode==='cloud'){
+        try{ await db.doc('data/users/'+uid+'/profile').set(body); return; }
+        catch(e){ console.warn('salvataggio non riuscito',e); }
+      }
+      try{ localStorage.setItem(KEY,JSON.stringify(body)); }catch(e){}
+    },400);
+  },
+  flush(){ if(this.t && mode==='aula'){ clearTimeout(this.t); this.t=null; api('progresso',{visti:S.visti,risposte:S.risposte,profilo:S.profilo,diario:S.diario,giro},true).catch(()=>{}); return; }
+    if(this.t){ clearTimeout(this.t); this.t=null; try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} if(mode==='cloud'){ db.doc('data/users/'+uid+'/profile').set(JSON.parse(JSON.stringify(S))).catch(()=>{}); } } }
+};
+addEventListener('pagehide',()=>store.flush());
+setInterval(()=>{ if(mode==='aula' && offline && S && S.nome) store.save(); },15000);
+// in aula: quando l'istruttore apre una lezione, la home e i materiali si aggiornano da soli
+setInterval(async()=>{
+  if(mode!=='aula'||!S||!S.nome) return;
+  try{ const i=await api('info'); const n=new Set(i.attive||[]);
+    if([...n].sort().join()!==[...(ATT||[])].sort().join()){ ATT=n; if(curView===vHome||curView===vMateriali) curView(); precarica(); } }catch(e){}
+},30000);
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') store.flush(); });
+
+/* ---------- utilità ---------- */
+const el=(tag,attrs={},...kids)=>{const n=document.createElement(tag);for(const[k,v] of Object.entries(attrs)){if(k==='class')n.className=v;else if(k==='style')n.setAttribute('style',v);else if(k.startsWith('on'))n.addEventListener(k.slice(2),v);else if(v!==false&&v!=null)n.setAttribute(k,v===true?'':v);}for(const k of kids.flat()){if(k==null||k===false)continue;n.append(k.nodeType?k:document.createTextNode(String(k)));}return n;};
+const lez=id=>C.lezioni.find(l=>l.id===id);
+// lezioni aperte agli allievi: in aula le decide l'istruttore, online il campo «attiva» di corso.json
+let ATT=null;
+const attiva=id=>ATT?ATT.has(id):!!(lez(id)&&lez(id).attiva);
+const aperte=()=>C.lezioni.filter(l=>attiva(l.id));
+const appendice=id=>C.appendici.find(a=>a.id===id);
+const appAperta=a=>a.aperta!==undefined?a.aperta:a.lezioni.some(attiva);
+// versione dimostrativa (corso.json con «demo»): solo contenuti di esempio, progressi su questo dispositivo
+const DEMO_CHIUSO='Nella versione completa';
+function bannerDemo(){
+  if(!C||!C.demo) return null;
+  return el('div',{class:'card stack',style:'--hue:var(--sun); gap:10px'},
+    el('span',{class:'pill',style:'--hue:var(--sun); color:#16324F'},'Versione dimostrativa'),
+    el('p',{style:'font-weight:700'},'Stai provando l’app del corso con alcuni contenuti di esempio: la prima parte della lezione 1, la sua scheda riassuntiva, i numeri d’oro e due appendici. Le altre lezioni sono nella versione completa. I progressi restano su questo dispositivo.'),
+    el('div',{class:'row'},el('a',{class:'btn ghost',href:'docente.html'},'Guarda l’area istruttore di esempio →'),
+      S&&S.nome?el('button',{class:'btn ghost',onclick:()=>{ try{ localStorage.removeItem(KEY); }catch(e){} location.reload(); }},'Ricomincia la demo'):null));
+}
+const prima=a=>lez(a.lezioni.find(attiva)||a.lezioni[0]);
+// la slide da rivedere: quella della lezione, oppure i numeri d'oro se la lezione è ancora chiusa
+const rivedi=q=>{const r=C.quiz[q].rivedi; return r[0]==='SR'||attiva(r[0])?r:['SR',C.schede.generali[C.schede.generali.length-1]];};
+const lidx=id=>C.lezioni.findIndex(l=>l.id===id);
+const img=(L,p)=>'slides/'+L+'-'+String(p).padStart(3,'0')+'.jpg';
+const allPages=L=>lez(L).capitoli.flatMap(c=>c.pagine);
+const allQuiz=L=>lez(L).capitoli.flatMap(c=>c.quiz.flatMap(s=>s.ids));
+const seen=L=>new Set(S.visti[L]||[]);
+const ans=q=>S.risposte[q];
+const pct=(a,b)=>b?Math.round(100*a/b):0;
+function stato(L){
+  const pages=allPages(L), sv=seen(L), qs=allQuiz(L);
+  const fatti=qs.filter(q=>ans(q)), giusti=fatti.filter(q=>ans(q).ok), recuperati=giusti.filter(q=>ans(q).tentativi>1);
+  return {pagine:pages.length, viste:pages.filter(p=>sv.has(p)).length, quiz:qs.length, fatti:fatti.length, giusti:giusti.length, errati:fatti.length-giusti.length, recuperati:recuperati.length};
+}
+const errati=()=>Object.entries(S.risposte).filter(([q,a])=>!a.ok && C.quiz[q]).map(([q])=>q);
+const etichetta=r=>r[0]==='SR'?'I numeri d’oro':lez(r[0]).num+', slide '+r[1];
+function bar(v){return el('div',{class:'bar-p',role:'progressbar','aria-valuenow':v,'aria-valuemin':0,'aria-valuemax':100},el('i',{style:'width:'+v+'%'}));}
+let curView=null;
+// il primo link «← …» della pagina si ripete in fondo, così non serve risalire
+function linkInFondo(){
+  const vecchio=$app.querySelector(':scope > .in-fondo'); if(vecchio) vecchio.remove();
+  const b=[...$app.querySelectorAll('button.link')].find(x=>x.textContent.trim().startsWith('←'));
+  if(!b||document.documentElement.scrollHeight<=innerHeight*1.4) return;
+  $app.append(el('div',{class:'in-fondo',style:'margin-top:24px'},el('button',{class:'link',type:'button',onclick:()=>{ b.click(); window.scrollTo({top:0}); }},b.textContent.trim())));
+}
+new MutationObserver(m=>{ if(m.some(x=>[...x.addedNodes].some(n=>!(n.classList&&n.classList.contains('in-fondo'))))) requestAnimationFrame(linkInFondo); }).observe($app,{childList:true});
+let curArgs=[];
+function go(fn,...a){ if(typeof chiudiFs==='function') chiudiFs(); cur=null; curView=fn; curArgs=a; window.scrollTo({top:0}); fn(...a); navCur(fn);
+  if(fn===vHome) setTimeout(suggerimento,1200); }
+function navCur(fn){
+  document.getElementById('nav-home').toggleAttribute('aria-current',false);
+  document.getElementById('nav-prog').toggleAttribute('aria-current',false);
+  document.getElementById('nav-mat').toggleAttribute('aria-current',false);
+  if(fn===vHome) document.getElementById('nav-home').setAttribute('aria-current','page');
+  if(fn===vStorico) document.getElementById('nav-prog').setAttribute('aria-current','page');
+  if(fn===vMateriali||fn===vScheda||fn===vAppendice) document.getElementById('nav-mat').setAttribute('aria-current','page');
+  const wb=document.querySelector('.whob'); if(wb) wb.toggleAttribute('aria-current',fn===vProfilo);
+}
+/* ---------- menu a cassetto: si apre dal logo, in tutte le pagine ---------- */
+// Home, ripasso, progressi e profilo; le lezioni con capitoli e verifiche; schede e appendici.
+// La lezione o il materiale della pagina aperta è già espanso e segnato.
+function apriMenu(){
+  if(!S||!S.nome||document.querySelector('.cassetto')) return;
+  chiudiSuggerimento('corso-menu-visto');
+  const br=document.getElementById('home-btn'), prima=document.activeElement;
+  const chiudi=()=>{ ov.remove(); pan.remove(); document.removeEventListener('keydown',esc); br.setAttribute('aria-expanded','false'); if(prima&&prima.focus) prima.focus(); };
+  const esc=e=>{ if(e.key==='Escape') chiudi(); };
+  const vai=(...a)=>()=>{ chiudi(); go(...a); };
+  const v=curView, [A0,A1]=curArgs;
+  const icona=id=>{ const s=document.querySelector('#'+id+' svg'); return s?s.cloneNode(true):null; };
+  const voce=(mi,hue,testo,azione,o={})=>el('button',{class:'mv'+(o.cls?' '+o.cls:''),type:'button',style:'--hue:'+(hue||'var(--sea)'),disabled:!!o.dis,'aria-current':o.qui?'page':null,onclick:azione},
+    mi!=null?el('span',{class:'mi'},mi):null,el('span',{class:'t'},testo),o.nota!=null?el('small',{class:o.ok?'ok':''},o.nota):null);
+  const gruppo=(aperto,sommario,...dentro)=>el('details',{open:aperto},sommario,el('div',{class:'sub'},...dentro));
+  const sommario=(mi,hue,testo,nota)=>el('summary',{class:'mv',style:'--hue:'+hue},el('span',{class:'mi'},mi),el('span',{class:'t'},testo),nota!=null?el('small',{},nota):null);
+  const esito=ids=>{ const f=ids.filter(ans), ok=f.filter(q=>ans(q).ok).length; return f.length<ids.length?{nota:f.length+'/'+ids.length}:{nota:ok===ids.length?'✓':ok+'/'+ids.length,ok:ok===ids.length}; };
+  // la lezione della pagina aperta
+  const rit=v===vQuiz&&A0&&A0.ritorno||[];
+  const qui=v===vLezione||v===vSlide||v===vRaccolta||(v===vScheda&&A0!=='oro')?A0:(rit[0]==='lezione'||rit[0]==='raccolta')?rit[1]:v===vAppendice&&A1?A1:null;
+  const err=errati();
+  const lezioni=C.lezioni.map((l,i)=>{ const hue=HUES[i%5], n=l.num.slice(-2);
+    if(!attiva(l.id)) return voce(n,hue,l.titolo,null,{dis:true,nota:'🔒'});
+    const s=stato(l.id), dentro=[voce(null,null,'Panoramica della lezione',vai(vLezione,l.id),{qui:v===vLezione&&A0===l.id})];
+    l.capitoli.forEach((c,ci)=>{
+      const ids=c.quiz.flatMap(x=>x.ids), breve=c.titolo.replace(/^Capitolo \d+ · /,'');
+      if(c.quiz.length>3){ dentro.push(voce(null,null,'Raccolta quiz · ultimi 45 minuti',vai(vRaccolta,l.id,ci),{qui:v===vRaccolta&&A0===l.id,...esito(ids)})); return; }
+      if(c.pagine.length) dentro.push(voce(null,null,c.titolo,vai(vSlide,l.id,ci,0),{qui:v===vSlide&&A0===l.id&&A1===ci}));
+      if(ids.length) dentro.push(voce(null,null,'Verifica · '+ids.length+' quiz',vai(vQuiz,{titolo:'Verifica · '+breve,ids,ritorno:['lezione',l.id]}),{cls:'qz',...esito(ids)}));
+    });
+    if(l.scheda.length) dentro.push(voce(null,null,'Scheda riassuntiva',vai(vScheda,l.id,0),{qui:v===vScheda&&A0===l.id}));
+    for(const id of l.appendici){ const a=appendice(id); if(a&&appAperta(a)) dentro.push(voce(null,null,'Appendice '+a.id+' · '+a.titolo,()=>{ chiudi(); apriAppendice(a,l.id); },{qui:v===vAppendice&&A0===a.id})); }
+    return gruppo(qui===l.id,sommario(n,hue,l.titolo,pct(s.viste,s.pagine)+'%'),...dentro);
+  });
+  const materiali=C.prova?[]:[
+    el('p',{class:'sez'},'Materiali'),
+    gruppo(v===vScheda,sommario(svgEl(ICONS.quiz,'','0 0 100 100'),'var(--purple)','Schede riassuntive'),
+      voce(null,null,'I numeri d’oro del corso',vai(vScheda,'oro',0),{qui:v===vScheda&&A0==='oro'}),
+      voce(null,null,'Verifica dei numeri d’oro',vai(vQuiz,{titolo:'Verifica dei numeri d’oro',ids:C.schede.numeri_oro,ritorno:['materiali']}),{cls:'qz',...esito(C.schede.numeri_oro)}),
+      ...C.lezioni.filter(l=>l.scheda.length).map(l=>attiva(l.id)?voce(null,null,'Scheda '+l.num.slice(-2)+' · '+l.titolo,vai(vScheda,l.id,0),{qui:v===vScheda&&A0===l.id}):voce(null,null,'Scheda '+l.num.slice(-2)+' · '+l.titolo,null,{dis:true,nota:'🔒'}))),
+    gruppo(v===vAppendice,sommario('A','var(--blue)','Appendici'),
+      ...C.appendici.map(a=>appAperta(a)?voce(null,null,a.id+' · '+a.titolo,()=>{ chiudi(); apriAppendice(a); },{qui:v===vAppendice&&A0===a.id}):voce(null,null,a.id+' · '+a.titolo,null,{dis:true,nota:'🔒'}))),
+    voce(icona('nav-mat'),'var(--purple)','Tutti i materiali',vai(vMateriali),{qui:v===vMateriali})];
+  const ov=el('div',{class:'cassetto-ov',onclick:chiudi});
+  const pan=el('div',{class:'cassetto',role:'dialog','aria-modal':'true','aria-label':'Menu del corso'},
+    el('div',{class:'ch'},logo(true),el('b',{},'Corso Patente Nautica'),el('button',{class:'ax',type:'button','aria-label':'Chiudi il menu',onclick:chiudi},svgEl(ICON_X,'','0 0 24 24'))),
+    el('nav',{class:'cb','aria-label':'Menu del corso'},
+      voce(icona('nav-home'),'var(--sea)','Home',vai(vHome),{qui:v===vHome}),
+      err.length?voce('!','var(--coral)','Ripassa gli errori',vai(vQuiz,{titolo:'Ripasso degli errori',ids:err.slice(0,10),ritorno:['home']}),{nota:String(err.length)}):null,
+      el('p',{class:'sez'},'Le lezioni'),
+      ...lezioni,
+      ...materiali,
+      el('p',{class:'sez'},'Tu'),
+      voce(icona('nav-prog'),'var(--green)','I tuoi progressi',vai(vStorico),{qui:v===vStorico}),
+      voce(iniziali(),P().colore||'#0B8A99','Il mio profilo',vai(vProfilo),{qui:v===vProfilo}),
+      voce(icona('nav-aiuto'),'var(--blue)','Aiuto',()=>{ chiudi(); apriAiuto(); }),
+      el('p',{class:'cf'},'App versione '+VERSIONE+' · '+RILASCIO+(C.demo?' · demo':''))));
+  pan.querySelector('.ch svg').classList.add('lg');
+  // col dito verso sinistra il cassetto si richiude, come nelle app
+  let x0=null, y0=0;
+  pan.addEventListener('touchstart',e=>{ x0=e.touches[0].clientX; y0=e.touches[0].clientY; },{passive:true});
+  pan.addEventListener('touchend',e=>{ if(x0==null) return; const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0; x0=null;
+    if(dx<-60&&Math.abs(dy)<Math.abs(dx)/2) chiudi(); },{passive:true});
+  document.body.append(ov,pan); document.addEventListener('keydown',esc);
+  br.setAttribute('aria-expanded','true');
+  const sel=pan.querySelector('[aria-current]');
+  (sel||pan.querySelector('.ax')).focus({preventScroll:true});
+  if(sel) sel.scrollIntoView({block:'center'});
+}
+function head(pill,title,hue,icon,big){
+  return el('div',{class:'head',style:'--hue:'+hue},badge(icon,hue),
+    el('div',{class:'t'},el('span',{class:'pill'},pill),el(big?'h1':'h2',{},title),squiggle(hue)));
+}
+function seenAdd(L,p){ if(!(S.visti[L]||[]).includes(p)) segna('s',1); S.visti[L]=Array.from(new Set([...(S.visti[L]||[]),p])).sort((a,b)=>a-b); store.save();}
+
+/* ---------- profilo, diario di studio, preferenze ---------- */
+const P=()=>S.profilo||(S.profilo={});
+// alla prima volta nome e cognome vengono dal nome scritto all'ingresso
+function conProfilo(st){ st.profilo=st.profilo||{}; st.diario=st.diario||{};
+  if(!st.profilo.nome&&st.nome){ const parti=st.nome.trim().split(/\s+/); st.profilo.nome=parti.shift(); if(parti.length) st.profilo.cognome=parti.join(' '); }
+  return st; }
+const oggi=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+function segna(k,n){ const d=oggi(), g=S.diario[d]||(S.diario[d]={q:0,s:0}); g[k]+=n; }
+// questa settimana, da lunedì a oggi
+function settimana(){ const t=new Date(); t.setHours(0,0,0,0); const lun=new Date(t); lun.setDate(t.getDate()-((t.getDay()+6)%7));
+  let q=0,s=0,giorni=0; for(const d=new Date(lun); d<=t; d.setDate(d.getDate()+1)){ const g=S.diario[oggi(d)]; if(g&&(g.q||g.s)){ q+=g.q; s+=g.s; giorni++; } }
+  return {q,s,giorni}; }
+function giorniEsame(){ const e=P().esame; if(!e) return null; const [y,m,d]=e.split('-').map(Number); const t=new Date(); t.setHours(0,0,0,0);
+  return Math.round((new Date(y,m-1,d)-t)/864e5); }
+// lezioni che per la patente scelta non servono: la vela per chi fa solo motore, il carteggio oltre le 12 miglia per chi resta entro
+const facoltativa=id=>{ const p=P(); return (p.tipo==='motore'&&id==='L09')||(p.ambito==='entro'&&Number(id.slice(1))>=10); };
+const COLORI=['#E4572E','#0B8A99','#7B5CD6','#2F6FDB','#2E9E5B','#F4A300','#16324F'];
+const iniziali=()=>((P().nome||S.nome||'?')[0]+((P().cognome||'')[0]||'')).toUpperCase();
+function applicaPreferenze(){
+  const p=S&&S.profilo||{}, r=document.documentElement;
+  if(p.tema==='chiaro') r.dataset.theme='light'; else if(p.tema==='scuro') r.dataset.theme='dark'; else delete r.dataset.theme;
+  r.style.zoom=p.testo==='grande'?'1.12':'';
+}
+
+function renderWho(){
+  $who.replaceChildren();
+  document.getElementById('nav').hidden=!(S&&S.nome);
+  // registrati: il logo apre il menu a cassetto
+  const br=document.getElementById('home-btn'), menu=!!(S&&S.nome);
+  br.classList.toggle('menu',menu);
+  if(menu){ br.setAttribute('aria-label','Apri il menu'); br.setAttribute('aria-haspopup','dialog'); br.setAttribute('aria-expanded',document.querySelector('.cassetto')?'true':'false'); }
+  else{ br.setAttribute('aria-label','Corso Patente Nautica'); br.removeAttribute('aria-haspopup'); br.removeAttribute('aria-expanded'); }
+  if(!S||!S.nome) return;
+  const b=el('button',{class:'whob',type:'button','aria-label':'Il mio profilo',onclick:()=>go(vProfilo)},
+    el('span',{class:'av',style:'background:'+(P().colore||'#0B8A99')},iniziali()),el('span',{class:'wn'},S.nome));
+  $who.append(b);
+}
+
+function heroArt(){
+  return el('img',{class:'art',src:'stemma.webp',alt:'Il mare, a vele spiegate · Sailing with passion, teaching with heart',width:'300',height:'300'});
+}
+function hero(note,title,sub,extra,compatto){
+  const h=el('div',{class:'hero'+(compatto?' compatto':'')});
+  h.append(svgEl(`<path d="${blob(820,40,180,1.1)}" fill="#1F4466"/><path d="${blob(-10,300,120,2.3)}" fill="#1F4466"/>`,'blobs','0 0 900 300'));
+  h.append(el('div',{class:'in'},el('div',{class:'stack',style:'gap:10px; min-width:0'},el('p',{class:'note'},note),el('h1',{},title),squiggle('#FFC145',200),extra||null,el('p',{class:'sub'},sub)),heroArt()));
+  const wv=svgEl(`<path d="${wave(26,9,180,-60,1000,56)}" fill="#12A4B5" fill-opacity=".28"/><path d="${wave(40,7,140,-20,1000,56)}" fill="#12A4B5" fill-opacity=".38"/>`,'waves','0 0 960 56');
+  wv.setAttribute('preserveAspectRatio','none'); h.append(wv); return h;
+}
+const localNote=()=>C&&C.online?(mode==='aula'&&!offline?el('p',{class:'notice net',id:'net'},'Collegato: i progressi sono salvati online e li vede l’istruttore.'):
+    el('p',{class:'notice net',id:'net'},'Senza rete: quiz e slide restano sul telefono e si inviano da soli appena torni online.')):
+  mode==='local'?el('p',{class:'notice'},'Modalità prova: i progressi restano su questo dispositivo.'):
+  mode==='aula'?el('p',{class:'notice net',id:'net'},offline?'Server dell’aula non raggiungibile: controlla il wifi. Le risposte si salvano appena torna la connessione.':'Collegato all’aula: i progressi sono salvati sul computer dell’istruttore.'):null;
+function renderNet(){const n=document.getElementById('net'); if(n) n.replaceWith(localNote());}
+
+/* ---------- registrazione ---------- */
+function vRegistrazione(){
+  const nome=el('input',{type:'text',id:'f-nome',autocomplete:'name',value:(me&&me.name)||'',placeholder:'Nome e cognome'});
+  const cons=el('input',{type:'checkbox',id:'f-cons'});
+  const cod=el('input',{type:'text',id:'f-cod',inputmode:'numeric',autocomplete:'off',maxlength:'6',placeholder:'4 cifre',style:'max-width:160px'});
+  const msg=el('p',{class:'errmsg',role:'alert'});
+  const form=el('form',{class:'card stack',style:'--hue:var(--sea)',onsubmit:async e=>{e.preventDefault();
+      if(!nome.value.trim()){nome.focus();return;}
+      if(mode==='aula' && !C.online && !/^\d{4,6}$/.test(cod.value.trim())){msg.textContent='Il codice personale è di 4 cifre (fino a 6).'; cod.focus(); return;}
+      if(!cons.checked){cons.focus();return;}
+      if(mode==='aula'){
+        try{ const j=await api('accedi',C.online?{nome:nome.value.trim()}:{nome:nome.value.trim(),codice:cod.value.trim()}); tok.set(j.token);
+          giro=j.giro||0; S=conProfilo(Object.assign(blank(),j.stato,{nome:j.nome,consenso:true})); applicaPreferenze(); copia.scrivi(false); }
+        catch(err){ msg.textContent=err.status?err.message:C.online?'Non riesco a collegarmi: controlla la connessione e riprova.':'Non raggiungo il computer dell’aula: controlla di essere sul wifi della scuola.'; return; }
+        try{ const att=sessionStorage.getItem('corso-da-casa'); if(att){ riceviDati(await spacchetta(att),'casa'); sessionStorage.removeItem('corso-da-casa'); } }catch(e){}
+        renderWho(); go(vHome); return;
+      }
+      S.nome=nome.value.trim(); S.consenso=true; S.creato=new Date().toISOString(); conProfilo(S); store.save(); renderWho(); go(vHome);}},
+    head(mode==='aula'&&!C.online?'In aula':'Primo accesso',mode==='aula'&&!C.online?'Entra nel corso':'Registrati','var(--sea)','lifebuoy',false),
+    el('label',{class:'fld',for:'f-nome'},'Il tuo nome',nome),
+    mode==='aula'&&!C.online?el('label',{class:'fld',for:'f-cod'},'Il tuo codice personale',cod,el('span',{class:'muted',style:'font-weight:600; font-size:14px'},'La prima volta lo scegli tu; poi, con lo stesso nome e codice, ritrovi i progressi anche su un altro telefono o tablet.')):null,
+    el('label',{class:'check',for:'f-cons'},cons,el('span',{},'Acconsento al salvataggio del mio nome e dei miei progressi (slide viste, quiz risposti) per seguire il corso. Posso cancellarli in ogni momento dalla pagina Progressi. So che slide, testi e immagini sono proprietà intellettuale di Fabrizio Fiorucci e mi impegno a non divulgarli né duplicarli.'+
+      (C&&C.online?' Per proteggere i materiali, il server registra per 90 giorni i miei accessi: data e ora, indirizzo IP con la località approssimativa, tipo di dispositivo e browser, file aperti; li vede solo l’istruttore.':''))),
+    msg,
+    el('button',{class:'btn sea',type:'submit',style:'align-self:flex-start'},'Inizia il corso'));
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
+    hero('Patente nautica · entro 12 miglia e senza limiti','Il corso in tasca: lezioni, quiz ufficiali e i tuoi progressi','Studi le slide, fai le verifiche con i quiz del DD 131/2022 e, quando sbagli, torni alla slide che spiega l’argomento. '+(C&&C.demo?'In questa demo trovi alcuni contenuti di esempio.':'Le lezioni si aprono man mano che le fate in aula.'),null,true),
+    bannerDemo(), form, C&&C.demo?null:localNote()));
+}
+
+/* ---------- home ---------- */
+function vHome(){
+  const tot=aperte().filter(l=>!facoltativa(l.id)).map(l=>stato(l.id));
+  const ge=giorniEsame(), p=P(), sett=settimana();
+  const meta=p.obiettivo_tipo&&p.obiettivo_n?{fatto:p.obiettivo_tipo==='quiz'?sett.q:sett.giorni, n:p.obiettivo_n, cosa:p.obiettivo_tipo==='quiz'?'quiz':'giorni di studio'}:null;
+  const sottotitolo=ge==null?'Riprendi la lezione da dove l’hai lasciata, oppure ripassa i quiz sbagliati.':
+    ge>1?'Mancano '+ge+' giorni all’esame: riprendi da dove eri rimasto.':ge===1?'Domani c’è l’esame: ripassa schede e numeri d’oro.':ge===0?'Oggi è il giorno dell’esame: in bocca al lupo!':'Com’è andato l’esame? Aggiorna la data nel profilo.';
+  const sum=k=>tot.reduce((a,s)=>a+s[k],0);
+  const err=errati();
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
+    hero('Bentornato a bordo','Ciao '+(p.nome||S.nome.split(' ')[0])+', si riparte da qui',sottotitolo,
+      el('div',{class:'recap'},
+        el('div',{},el('b',{},pct(sum('viste'),sum('pagine'))+'%'),el('span',{},'slide')),
+        el('div',{},el('b',{},sum('fatti')+'/'+sum('quiz')),el('span',{},'quiz')),
+        el('div',{},el('b',{},sum('fatti')?pct(sum('giusti'),sum('fatti'))+'%':'—'),el('span',{},'giuste')),
+        err.length?el('button',{type:'button',title:'Ripassa i quiz sbagliati',onclick:()=>go(vQuiz,{titolo:'Ripasso degli errori',ids:err.slice(0,10),ritorno:['home']})},el('b',{},String(err.length)),el('span',{},'da ripassare →')):null,
+        ge!=null&&ge>=0?el('div',{},el('b',{},String(ge)),el('span',{},ge===1?'giorno all’esame':'giorni all’esame')):null)),
+    bannerDemo(),
+    (!p.ambito||!p.tipo||!p.esame)?el('div',{class:'card row',style:'--hue:var(--sun); justify-content:space-between'},
+      el('div',{class:'stack',style:'gap:4px'},el('h3',{},'Completa il tuo profilo'),el('p',{class:'muted'},'Dicci che patente prendi e quando hai l’esame: l’app ti mostra le lezioni che ti servono e il conto alla rovescia.')),
+      el('button',{class:'btn',onclick:()=>go(vProfilo)},'Vai al profilo')):null,
+    ge!=null&&ge>=0||meta?el('div',{class:'grid2'},
+      ge!=null&&ge>=0?el('div',{class:'card countdown',style:'--hue:var(--coral)'},el('b',{},String(ge)),el('div',{},el('h3',{},ge===1?'giorno all’esame':'giorni all’esame'),el('p',{class:'muted'},new Date(p.esame+'T12:00').toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'})))):null,
+      meta?el('div',{class:'card stack',style:'--hue:var(--green); gap:8px'},el('h3',{},'Obiettivo della settimana'),el('div',{style:'--hue:var(--green)'},bar(Math.min(100,pct(meta.fatto,meta.n)))),
+        el('p',{class:'muted',style:'font-weight:800'},meta.fatto+' / '+meta.n+' '+meta.cosa+(meta.fatto>=meta.n?' · raggiunto!':''))):null):null,
+    err.length?el('div',{class:'card row',style:'--hue:var(--coral); justify-content:space-between'},
+      el('div',{class:'stack',style:'gap:4px'},el('h3',{},err.length+(err.length===1?' quiz da ripassare':' quiz da ripassare')),el('p',{class:'muted'},'Un errore diventa giusto quando rifai la domanda e rispondi bene.')),
+      el('button',{class:'btn coral',onclick:()=>go(vQuiz,{titolo:'Ripasso degli errori',ids:err.slice(0,10),ritorno:['home']})},'Ripassa gli errori')):null,
+    (()=>{ const a=avvisoCasa; avvisoCasa=null; return a?el('p',{class:'notice net',role:'status'},a):null; })(),
+    pannelloDocente(),
+    pannelloCasa(),
+    head('Il percorso','Le lezioni','var(--sea)','book',false),
+    ...C.lezioni.map((l,i)=>{const hue=HUES[i%5];
+      if(!attiva(l.id)) return el('div',{class:'card lez locked'},
+        el('div',{class:'num'},svgEl(`<path d="${blob(52,52,47,1+i,.07,8)}" fill="var(--line)"/>`,'','0 0 104 104'),el('b',{style:'color:var(--soft)'},String(i+1))),
+        el('div',{class:'stack',style:'gap:6px; min-width:0'},el('span',{class:'muted',style:'font-weight:800; font-size:13px'},l.num),el('h3',{class:'muted'},l.titolo),
+          el('div',{class:'row',style:'gap:6px'},el('span',{class:'chip'},'🔒 '+(C.demo?DEMO_CHIUSO:'Si apre quando la facciamo in aula')),facoltativa(l.id)?el('span',{class:'chip todo'},'Facoltativa per la tua patente'):null)));
+      const s=stato(l.id), v=pct(s.viste,s.pagine), fac=facoltativa(l.id);
+      return el('div',{class:'card lez'+(fac?' fac':''),style:'--hue:'+(fac?'var(--soft)':hue)},
+        el('div',{class:'num'},svgEl(`<path d="${blob(52,52,47,1+i,.07,8)}" fill="${hue}"/>`,'','0 0 104 104'),el('b',{},String(i+1))),
+        el('div',{class:'stack',style:'gap:8px; min-width:0'},
+          el('div',{},el('span',{class:'pill',style:'--hue:'+hue},l.num+' · 2 ore'),el('h3',{style:'margin-top:6px'},l.titolo)),
+          bar(v),
+          el('div',{class:'row',style:'gap:8px'},el('span',{class:'chip'},v+'% slide'),el('span',{class:'chip '+(s.giusti?'ok':'')},s.giusti+' giusti'),s.errati?el('button',{class:'chip ko chipbtn',title:'Ripassa i quiz sbagliati della lezione',onclick:()=>go(vQuiz,{titolo:'Ripasso · '+l.num,ids:allQuiz(l.id).filter(q=>ans(q)&&!ans(q).ok),ritorno:['home']})},s.errati+' da ripassare →'):null,s.recuperati?el('span',{class:'chip rev'},s.recuperati+' recuperati'):null,fac?el('span',{class:'chip todo'},'Facoltativa per la tua patente'):null)),
+        el('div',{class:'go'},el('button',{class:fac?'btn ghost':'btn',onclick:()=>go(vLezione,l.id)},s.viste?'Continua':'Inizia')));}),
+    el('button',{class:'link',onclick:()=>go(vStorico)},'I tuoi progressi e lo storico dei quiz'),
+    localNote()));
+}
+
+/* ---------- lezione ---------- */
+function vLezione(L){
+  const l=lez(L), sv=seen(L), hue=HUES[lidx(L)%5];
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:20px'},
+    el('button',{class:'link',onclick:()=>go(vHome)},'← Tutte le lezioni'),
+    head(l.num+' · 2 ore',l.titolo,hue,lidx(L)===0?'hull':'propeller',true),
+    extra(l),
+    l.nota_demo?el('p',{class:'notice'},l.nota_demo):null,
+    el('div',{class:'card',style:'--hue:'+hue},...l.capitoli.map((c,ci)=>{
+      const v=c.pagine.filter(p=>sv.has(p)).length, chue=HUES[ci%5];
+      const qs=c.quiz.flatMap(s=>s.ids), fatti=qs.filter(ans), ok=fatti.filter(q=>ans(q).ok).length;
+      const qstat=!qs.length?null:fatti.length<qs.length?el('span',{class:'chip todo'},qs.length+' quiz da fare'):ok===qs.length?el('span',{class:'chip ok'},'quiz superati'):el('button',{class:'chip ko chipbtn',title:'Ripassa i quiz sbagliati del capitolo',onclick:()=>go(vQuiz,{titolo:'Ripasso · '+c.titolo.replace(/^Capitolo \d+ · /,''),ids:qs.filter(q=>ans(q)&&!ans(q).ok),ritorno:['lezione',L]})},(qs.length-ok)+' da ripassare →');
+      const acts=[el('button',{class:'btn ghost',onclick:()=>go(vSlide,L,ci,0)},'Studia')];
+      if(c.quiz.length>3) acts.push(el('button',{class:'btn sea',onclick:()=>go(vRaccolta,L,ci)},'Quiz ('+c.quiz.length+')'));
+      else if(c.quiz.length) acts.push(el('button',{class:'btn sea',onclick:()=>go(vQuiz,{titolo:'Verifica · '+c.titolo.replace(/^Capitolo \d+ · /,''),ids:c.quiz.flatMap(s=>s.ids),ritorno:['lezione',L]})},'Verifica'));
+      return el('div',{class:'cap',style:'--hue:'+chue},el('span',{class:'dot'},ci===0?'i':ci===l.capitoli.length-1&&c.quiz.length>3?'Q':String(ci)),
+        el('div',{class:'stack',style:'gap:6px; min-width:0'},el('h3',{},c.titolo),
+          el('div',{class:'row',style:'gap:8px'},el('span',{class:'chip '+(v===c.pagine.length?'ok':'')},v+' / '+c.pagine.length+' slide'),qstat)),
+        el('div',{class:'row acts',style:'gap:8px; justify-content:flex-end'},...acts));
+    }))));
+}
+// in cima alla lezione: la scheda riassuntiva e le appendici per approfondire
+function extra(l){
+  const voci=[];
+  if(l.scheda.length) voci.push(el('button',{class:'xcard',style:'--hue:var(--purple)',onclick:()=>go(vScheda,l.id,0)},
+    el('span',{class:'xi'},svgEl(ICONS.quiz,'','0 0 100 100')),el('span',{},el('b',{},'Scheda riassuntiva'),el('small',{},'Regole e numeri da ricordare · '+l.scheda.length+(l.scheda.length===1?' pagina':' pagine')))));
+  for(const id of l.appendici){ const a=appendice(id); if(!a) continue;
+    voci.push(el('button',{class:'xcard',style:'--hue:var(--blue)',onclick:()=>apriAppendice(a,l.id)},
+      el('span',{class:'xi'},el('b',{},a.id)),el('span',{},el('b',{},'Approfondisci · Appendice '+a.id),el('small',{},a.titolo+' · '+a.slide+' slide')))); }
+  return voci.length?el('div',{class:'xrow'},...voci):null;
+}
+const indirizzoApp=a=>C.online?a.file.replace(/\.html$/,''):a.file;   // online i file si chiamano senza «.html»
+// le appendici con le pagine in immagine si sfogliano nel visore dell'app, come lezioni e schede;
+// senza (versioni vecchie, demo) si apre la presentazione HTML
+function apriAppendice(a,L){ if(a.pagine) return go(vAppendice,a.id,0,L); store.flush(); location.href=indirizzoApp(a); }
+function vAppendice(id,k,L){
+  const a=appendice(id), n=a.pagine, last=k===n-1, titolo='Appendice '+a.id+' · '+a.titolo;
+  const fuori=()=>L?go(vLezione,L):go(vMateriali);
+  const prev=el('button',{class:'btn ghost',disabled:k===0,onclick:()=>vAppendice(id,k-1,L)},'← Indietro');
+  const next=!last?el('button',{class:'btn',onclick:()=>vAppendice(id,k+1,L)},'Avanti →'):el('button',{class:'btn sea',onclick:fuori},'Fine appendice');
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:14px'},
+    el('div',{class:'row',style:'justify-content:space-between'},el('button',{class:'link',onclick:fuori},L?'← '+lez(L).num:'← Materiali'),el('span',{class:'counter'},(k+1)+' / '+n)),
+    el('span',{class:'pill',style:'--hue:var(--blue)'},'Approfondimento · Appendice '+a.id),
+    el('h2',{style:'color:var(--blue)'},a.titolo),
+    slideBox(el('img',{src:img('A'+a.id,k+1),alt:titolo+', pagina '+(k+1)}),el('div',{class:'vnav'},prev,next),
+      k>0?()=>vAppendice(id,k-1,L):null, !last?()=>vAppendice(id,k+1,L):null, true)));
+  cur={src:img('A'+a.id,k+1), alt:titolo, label:(k+1)+' / '+n, prima:k>0?()=>vAppendice(id,k-1,L):null, dopo:!last?()=>vAppendice(id,k+1,L):null};
+  if(fsEl) fsRender(); else if(basso.matches) apriFs(true);
+}
+
+function vRaccolta(L,ci){
+  const c=lez(L).capitoli[ci];
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:20px'},
+    el('button',{class:'link',onclick:()=>go(vLezione,L)},'← '+lez(L).num),
+    head('Ultimi 45 minuti','Raccolta quiz','var(--green)','quiz',true),
+    el('div',{class:'card',style:'--hue:var(--green)'},...c.quiz.map((s,si)=>{const f=s.ids.filter(ans), ok=f.filter(q=>ans(q).ok).length;
+      return el('div',{class:'cap',style:'--hue:'+HUES[si%5]},el('span',{class:'dot'},String(si+1)),
+        el('div',{class:'stack',style:'gap:6px'},el('h3',{},s.titolo.replace(/^Quiz \d+ · /,'')),
+          el('span',{class:'chip '+(f.length===s.ids.length?(ok===s.ids.length?'ok':'ko'):'todo'),style:'align-self:flex-start'},f.length<s.ids.length?s.ids.length+' quiz':ok+' / '+s.ids.length+' giusti')),
+        el('div',{class:'row acts',style:'justify-content:flex-end'},el('button',{class:'btn sea',onclick:()=>go(vQuiz,{titolo:s.titolo,ids:s.ids,ritorno:['raccolta',L,ci]})},f.length?'Rifai':'Inizia')));}))));
+}
+
+/* ---------- scorrimento col dito, come nelle app ---------- */
+// la pagina segue il dito e, oltre una soglia, esce di lato e si passa a quella accanto; all'inizio e in fondo resiste.
+// Solo col tocco: sul PC restano pulsanti, frecce della tastiera e clic sui lati della slide.
+const pocoMoto=matchMedia('(prefers-reduced-motion: reduce)');
+let entrata=null;   // verso da cui entra la pagina dopo uno scorrimento: {d:1 da destra, -1 da sinistra, t}
+function trascina(t,prima,dopo){
+  let x0=null, y0=0, dx=0, dir=null;
+  const torna=()=>{ t.style.transition='transform .2s ease-out'; t.style.transform=''; };
+  t.addEventListener('touchstart',e=>{
+    if(e.touches.length>1||(window.visualViewport&&visualViewport.scale>1.05)){ x0=null; return; }   // pizzico o pagina ingrandita
+    x0=e.touches[0].clientX; y0=e.touches[0].clientY; dx=0; dir=null; t.style.transition='none'; },{passive:true});
+  t.addEventListener('touchmove',e=>{ if(x0==null) return;
+    const x=e.touches[0].clientX-x0, y=e.touches[0].clientY-y0;
+    if(!dir){ if(Math.abs(x)<10&&Math.abs(y)<10) return; dir=Math.abs(x)>Math.abs(y)?'h':'v'; }
+    if(dir!=='h') return;
+    dx=(x<0&&!dopo)||(x>0&&!prima)?x/4:x;
+    if(!pocoMoto.matches) t.style.transform='translateX('+dx+'px)'; },{passive:true});
+  t.addEventListener('touchend',()=>{ if(x0==null) return; x0=null;
+    if(dir!=='h') return;
+    const via=dx<-60&&dopo?dopo:dx>60&&prima?prima:null;
+    if(!via) return torna();
+    entrata={d:dx<0?1:-1,t:Date.now()};
+    if(pocoMoto.matches) return via();
+    t.style.transition='transform .15s ease-in, opacity .15s'; t.style.transform='translateX('+(dx<0?-1:1)*t.offsetWidth+'px)'; t.style.opacity='0';
+    setTimeout(via,140); },{passive:true});
+  t.addEventListener('touchcancel',()=>{ x0=null; torna(); },{passive:true});
+  // la pagina nuova entra dal lato opposto
+  if(entrata&&Date.now()-entrata.t<800&&!pocoMoto.matches&&t.animate)
+    t.animate([{transform:'translateX('+entrata.d*60+'px)',opacity:0},{transform:'none',opacity:1}],{duration:200,easing:'ease-out'});
+  entrata=null;
+}
+
+/* ---------- visore slide ---------- */
+const basso=matchMedia('(orientation:landscape) and (max-height:520px)');
+// slide + pulsanti; sul telefono si sfoglia anche toccando i lati o scorrendo col dito
+function slideBox(im,nav,prima,dopo,fs){
+  const v=el('div',{class:'viewer'},im,fs?el('button',{class:'fsbtn',type:'button','aria-label':'Schermo intero',onclick:e=>{e.stopPropagation(); apriFs(false);}},svgEl(ICON_FS,'','0 0 24 24')):null);
+  trascina(v,prima,dopo);
+  v.addEventListener('click',e=>{ const r=v.getBoundingClientRect(), f=(e.clientX-r.left)/r.width;
+    if(f>.7&&dopo)dopo(); else if(f<.3&&prima)prima(); });
+  return el('div',{class:'stack slidebox',style:'gap:14px'},v,nav);
+}
+const ICON_FS='<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>';
+const ICON_X='<path d="M6 6L18 18M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>';
+let cur=null, fsEl=null, fsAuto=false;   // cur = slide mostrata: {src, alt, label, prima, dopo, fine}
+function apriFs(auto){
+  if(!cur) return;
+  fsAuto=auto;
+  if(!fsEl){
+    fsEl=el('div',{class:'fs',role:'dialog','aria-label':'Slide a schermo intero'});
+    let x0=null;
+    fsEl.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
+    fsEl.addEventListener('touchend',e=>{ if(x0==null)return; const dx=e.changedTouches[0].clientX-x0; x0=null;
+      if(Math.abs(dx)>50){ fsVai(dx<0?1:-1); } },{passive:true});
+    fsEl.addEventListener('click',e=>{ if(e.target.closest('.fsx'))return; const f=e.clientX/innerWidth; if(f>.6)fsVai(1); else if(f<.4)fsVai(-1); });
+    document.body.append(fsEl);
+    const d=document.documentElement, rq=d.requestFullscreen||d.webkitRequestFullscreen;
+    if(rq){ try{ const r=rq.call(d); if(r&&r.catch) r.catch(()=>{}); }catch(e){} }
+    try{ screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{}); }catch(e){}
+  }
+  fsRender();
+}
+function fsVai(d){ if(d>0){ if(cur.dopo) cur.dopo(); else chiudiFs(); } else if(cur.prima) cur.prima(); }
+function fsRender(){
+  if(!fsEl||!cur) return;
+  fsEl.replaceChildren(el('img',{src:cur.src,alt:cur.alt}),
+    cur.prima?el('span',{class:'fsh',style:'left:10px','aria-hidden':'true'},'‹'):null,
+    el('span',{class:'fsh',style:'right:10px','aria-hidden':'true'},cur.dopo?'›':'✓'),
+    el('span',{class:'fsc'},cur.label),
+    el('button',{class:'fsx',type:'button','aria-label':'Esci dallo schermo intero',onclick:()=>chiudiFs()},svgEl(ICON_X,'','0 0 24 24')));
+}
+function chiudiFs(){
+  if(!fsEl) return;
+  fsEl.remove(); fsEl=null; fsAuto=false;
+  const ex=document.exitFullscreen||document.webkitExitFullscreen;
+  if((document.fullscreenElement||document.webkitFullscreenElement)&&ex){ try{ const r=ex.call(document); if(r&&r.catch) r.catch(()=>{}); }catch(e){} }
+  try{ screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock(); }catch(e){}
+}
+document.addEventListener('keydown',e=>{ if(fsEl&&e.key==='Escape') chiudiFs(); });
+// telefono girato in orizzontale su una slide: si apre da solo lo schermo intero; tornando in verticale si chiude
+basso.addEventListener('change',()=>{ if(basso.matches&&cur&&document.querySelector('.slidebox')) apriFs(true); else if(!basso.matches&&fsAuto) chiudiFs(); });
+function vSlide(L,ci,k){
+  const c=lez(L).capitoli[ci], p=c.pagine[k];
+  seenAdd(L,p);
+  const last=k===c.pagine.length-1;
+  const prev=el('button',{class:'btn ghost',disabled:k===0,onclick:()=>vSlide(L,ci,k-1)},'← Indietro');
+  let next;
+  if(!last) next=el('button',{class:'btn',onclick:()=>vSlide(L,ci,k+1)},'Avanti →');
+  else if(c.quiz.length>3) next=el('button',{class:'btn sea',onclick:()=>go(vRaccolta,L,ci)},'Vai ai quiz →');
+  else if(c.quiz.length) next=el('button',{class:'btn sea',onclick:()=>go(vQuiz,{titolo:'Verifica · '+c.titolo.replace(/^Capitolo \d+ · /,''),ids:c.quiz.flatMap(s=>s.ids),ritorno:['lezione',L]})},'Fai la verifica →');
+  else if(lez(L).scheda.length&&ci===lez(L).capitoli.length-1) next=el('button',{class:'btn sea',onclick:()=>go(vScheda,L,0)},'Scheda riassuntiva →');
+  else next=el('button',{class:'btn sea',onclick:()=>go(vLezione,L)},'Fine capitolo');
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:14px'},
+    el('div',{class:'row',style:'justify-content:space-between'},el('button',{class:'link',onclick:()=>go(vLezione,L)},'← '+lez(L).num),el('span',{class:'counter'},(k+1)+' / '+c.pagine.length)),
+    el('h2',{style:'color:'+HUES[ci%5]},c.titolo),
+    slideBox(el('img',{src:img(L,p),alt:'Slide '+p+' della '+lez(L).num.toLowerCase()+': '+c.titolo}),el('div',{class:'vnav'},prev,next),
+      k>0?()=>vSlide(L,ci,k-1):null, !last?()=>vSlide(L,ci,k+1):null, true)));
+  cur={src:img(L,p), alt:'Slide '+p+' della '+lez(L).num.toLowerCase(), label:(k+1)+' / '+c.pagine.length,
+       prima:k>0?()=>vSlide(L,ci,k-1):null, dopo:!last?()=>vSlide(L,ci,k+1):null};
+  if(fsEl) fsRender(); else if(basso.matches) apriFs(true);
+  document.onkeydown=e=>{ if(!document.querySelector('.viewer'))return; if(e.key==='ArrowRight'&&!last)vSlide(L,ci,k+1); if(e.key==='ArrowLeft'&&k>0)vSlide(L,ci,k-1); };
+}
+function vRivedi(qid,set,state){
+  curView=vRivedi;
+  const [L,p]=rivedi(qid), sr=L==='SR', l=sr?null:lez(L);
+  const ci=sr?-1:l.capitoli.findIndex(c=>c.pagine.includes(p)), k=sr?0:l.capitoli[ci].pagine.indexOf(p);
+  if(!sr) seenAdd(L,p);
+  if(S.risposte[qid]){S.risposte[qid].rivisto=true; store.save();}
+  const back=()=>go(vQuiz,set,state);
+  const retry={titolo:'Riprova la domanda',ids:[qid],ritorno:set.ritorno};
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:14px'},
+    el('div',{class:'row',style:'justify-content:space-between'},el('button',{class:'link',onclick:back},'← Torna al quiz'),el('span',{class:'counter'},sr?'Schede riassuntive':l.num+' · slide '+p)),
+    el('span',{class:'pill',style:'--hue:var(--purple)'},'Rivedi l’argomento · quiz '+qid),
+    el('h2',{style:'color:var(--purple)'},sr?'I numeri d’oro del corso':l.capitoli[ci].titolo),
+    slideBox(el('img',{src:img(L,p),alt:'Slide '+p+' che spiega l’argomento del quiz '+qid}),null,null,null,true),
+    el('div',{class:'card stack',style:'--hue:var(--purple); gap:8px'},el('p',{class:'muted',style:'font-weight:800'},'La domanda'),el('p',{style:'font-weight:800; font-size:17px'},C.quiz[qid].d),
+      el('p',{class:'muted'},'Letta la slide, rifai la domanda: diventa giusta quando rispondi bene.')),
+    el('div',{class:'vnav'},sr?null:el('button',{class:'btn ghost',onclick:()=>go(vSlide,L,ci,k)},'Continua a studiare da qui'),el('button',{class:'btn coral',onclick:()=>go(vQuiz,retry)},'Riprova la domanda'))));
+  // come nelle lezioni: ⛶ per lo schermo intero, da solo col telefono in orizzontale
+  cur={src:img(L,p), alt:'Slide che spiega l’argomento del quiz '+qid, label:sr?'Numeri d’oro':'Slide '+p, prima:null, dopo:null};
+  if(fsEl) fsRender(); else if(basso.matches) apriFs(true);
+}
+
+/* ---------- quiz a caselle ---------- */
+// quiz uno per pagina: scelta la risposta si vede subito se è giusta e dopo un attimo si passa alla domanda dopo;
+// si può saltare e tornare indietro; in fondo il riepilogo con gli errori e il rimando alle slide
+let quizAttivo=null;
+function vQuiz(set,state){
+  state=state&&state.ordine?state:{i:0,scelte:{},fine:false,ordine:true};
+  const ids=set.ids, N=ids.length;
+  const back=()=>{const r=set.ritorno; if(r[0]==='lezione')go(vLezione,r[1]); else if(r[0]==='raccolta')go(vRaccolta,r[1],r[2]); else if(r[0]==='materiali')go(vMateriali); else go(vHome);};
+  const fatte=()=>ids.filter(q=>state.scelte[q]!=null);
+  const vai=(i,dir)=>{ clearTimeout(state.t); state.i=i; state.fine=false; state.dir=dir; vQuiz(set,state); window.scrollTo({top:0}); };
+  const prossima=()=>{ for(let k=1;k<=N;k++){ const j=(state.i+k)%N; if(state.scelte[ids[j]]==null&&j>state.i) return j; } return null; };
+  quizAttivo=state;
+  const avanti=()=>{ if(curView!==vQuiz||quizAttivo!==state) return;   // nel frattempo si è cambiata pagina
+    const j=state.i+1<N?state.i+1:null; if(j!=null) vai(j,1); else { clearTimeout(state.t); state.fine=true; vQuiz(set,state); window.scrollTo({top:0}); } };
+  // sul telefono la testata è una sola riga, così la domanda con le risposte sta tutta nello schermo
+  const testa=[el('div',{class:'row qtesta',style:'justify-content:space-between'},el('button',{class:'link',onclick:back},'← Indietro'),el('span',{class:'qtitolo'},set.titolo)),
+    head('Quiz ufficiali DD 131/2022',set.titolo,'var(--coral)','quiz',true)];
+  if(state.fine){
+    const sbagliate=ids.filter(q=>state.scelte[q]!=null&&state.scelte[q]!==C.quiz[q].x&&!(S.risposte[q]&&S.risposte[q].ok));
+    const saltate=ids.filter(q=>state.scelte[q]==null), giusti=fatte().length-sbagliate.length;
+    const hue=giusti===N?'var(--sea)':'var(--coral)';
+    $app.replaceChildren(el('div',{class:'stack',style:'gap:16px'},...testa,
+      el('div',{class:'card result',style:'--hue:'+hue},
+        el('div',{},el('div',{class:'big'},giusti+' / '+N),el('p',{class:'muted',style:'font-weight:800'},giusti===N?'Tutte giuste: avanti così.':saltate.length&&!sbagliate.length?'Ti mancano '+saltate.length+(saltate.length===1?' domanda.':' domande.'):'Rivedi l’argomento e riprova gli errori.')),
+        el('div',{class:'row'},
+          saltate.length?el('button',{class:'btn',onclick:()=>vai(ids.indexOf(saltate[0]),1)},'Rispondi alle saltate ('+saltate.length+')'):null,
+          sbagliate.length?el('button',{class:'btn coral',onclick:()=>go(vQuiz,{titolo:'Riprova gli errori',ids:sbagliate,ritorno:set.ritorno})},'Riprova gli errori'):null,
+          el('button',{class:'btn sea',onclick:back},'Continua'))),
+      ...sbagliate.map(qid=>{ const q=C.quiz[qid];
+        return el('div',{class:'card q',style:'--hue:var(--coral)'},el('p',{class:'qid'},'Domanda '+(ids.indexOf(qid)+1)+' · quiz '+qid),el('p',{class:'txt'},q.d),
+          el('div',{class:'fb ko'},el('span',{},'Hai risposto '+'abc'[state.scelte[qid]]+'), la giusta è '+'abc'[q.x]+') '+q.r[q.x])),
+          el('button',{class:'link',onclick:()=>{window.scrollTo({top:0}); vRivedi(qid,set,state);}},'Rivedi l’argomento → '+etichetta(rivedi(qid)))); })));
+    return;
+  }
+  const qid=ids[state.i], q=C.quiz[qid], scelta=state.scelte[qid], fatta=scelta!=null;
+  const opts=q.r.map((r,j)=>el('button',{class:fatta?(j===q.x?'opt right':(j===scelta?'opt wrong':'opt')):'opt',type:'button',disabled:fatta,
+    onclick:()=>{ state.scelte[qid]=j; const prev=S.risposte[qid], ok=j===q.x;
+      S.risposte[qid]={ok,scelta:j,ts:new Date().toISOString(),tentativi:(prev?prev.tentativi:0)+1,rivisto:!!(prev&&prev.rivisto)};
+      segna('q',1); store.save(); vQuiz(set,state);
+      state.t=setTimeout(avanti,ok?900:2200); }},   // dopo un errore si lascia il tempo di leggere la risposta giusta
+    el('span',{class:'box'}),el('span',{},'abc'[j]+') '+r)));
+  const fb=!fatta?null:scelta===q.x?el('div',{class:'fb ok'},'Giusto!'):el('div',{class:'fb ko'},'Sbagliato: la risposta esatta è la '+'abc'[q.x]+').');
+  const card=el('div',{class:'card q quiz1'+(state.dir&&!entrata?(state.dir>0?' entra-dx':' entra-sx'):'')},
+    el('p',{class:'qid'},'Domanda '+(state.i+1)+' di '+N+' · quiz '+qid),
+    el('div',{style:'--hue:var(--coral)'},bar(pct(state.i+(fatta?1:0),N))),
+    el('p',{class:'txt'},q.d),...opts,fb);
+  state.dir=0;
+  // col dito: verso sinistra la domanda dopo (come «Salta →»), verso destra la precedente
+  trascina(card,state.i>0?()=>vai(state.i-1,-1):null,avanti);
+  $app.replaceChildren(el('div',{class:'stack quizpagina',style:'gap:16px'},...testa,card,
+    el('div',{class:'row quiznav',style:'justify-content:space-between'},
+      el('button',{class:'btn ghost',disabled:state.i===0,onclick:()=>vai(state.i-1,-1)},'← Precedente'),
+      el('button',{class:'btn'+(fatta?' sea':''),onclick:avanti},state.i===N-1?'Fine':fatta?'Avanti →':'Salta →'))));
+}
+
+/* ---------- schede riassuntive ---------- */
+// L = lezione, oppure 'oro' per «Come usare le schede» e «I numeri d'oro del corso»
+function vScheda(L,k){
+  const oro=L==='oro', pp=oro?C.schede.generali:lez(L).scheda, p=pp[k], last=k===pp.length-1;
+  const titolo=oro?'Schede riassuntive · i numeri d’oro':'Scheda riassuntiva · '+lez(L).num;
+  const fuori=()=>oro?go(vMateriali):go(vLezione,L);
+  const prev=el('button',{class:'btn ghost',disabled:k===0,onclick:()=>vScheda(L,k-1)},'← Indietro');
+  const next=!last?el('button',{class:'btn',onclick:()=>vScheda(L,k+1)},'Avanti →'):
+    oro?el('button',{class:'btn sea',onclick:()=>go(vQuiz,{titolo:'Verifica dei numeri d’oro',ids:C.schede.numeri_oro,ritorno:['materiali']})},'Verifica dei numeri →'):
+    el('button',{class:'btn sea',onclick:fuori},'Fine scheda');
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:14px'},
+    el('div',{class:'row',style:'justify-content:space-between'},el('button',{class:'link',onclick:fuori},oro?'← Materiali':'← '+lez(L).num),el('span',{class:'counter'},(k+1)+' / '+pp.length)),
+    el('span',{class:'pill',style:'--hue:var(--purple)'},'Da rileggere il giorno dopo la lezione'),
+    el('h2',{style:'color:var(--purple)'},oro?'I numeri d’oro del corso':lez(L).titolo),
+    slideBox(el('img',{src:img('SR',p),alt:titolo+', pagina '+(k+1)}),el('div',{class:'vnav'},prev,next),
+      k>0?()=>vScheda(L,k-1):null, !last?()=>vScheda(L,k+1):null, true)));
+  cur={src:img('SR',p), alt:titolo, label:(k+1)+' / '+pp.length, prima:k>0?()=>vScheda(L,k-1):null, dopo:!last?()=>vScheda(L,k+1):null};
+  if(fsEl) fsRender(); else if(basso.matches) apriFs(true);
+}
+
+/* ---------- materiali: schede riassuntive e appendici ---------- */
+function vMateriali(){
+  const scheda=l=>attiva(l.id)?
+    el('button',{class:'xcard',style:'--hue:var(--purple)',onclick:()=>go(vScheda,l.id,0)},el('span',{class:'xi'},l.num.slice(-2)),el('span',{},el('b',{},l.titolo),el('small',{},'Scheda · '+l.scheda.length+(l.scheda.length===1?' pagina':' pagine')))):
+    el('button',{class:'xcard',disabled:true},el('span',{class:'xi'},l.num.slice(-2)),el('span',{},el('b',{},l.titolo),el('small',{},'🔒 '+(C.demo?DEMO_CHIUSO:'Con la '+l.num))));
+  const app=a=>appAperta(a)?
+    el('button',{class:'xcard',style:'--hue:var(--blue)',onclick:()=>apriAppendice(a)},el('span',{class:'xi'},a.id),el('span',{},el('b',{},a.titolo),el('small',{},a.slide+' slide · '+(C.demo?'esempio di appendice':'approfondimento della '+prima(a).num)))):
+    el('button',{class:'xcard',disabled:true},el('span',{class:'xi'},a.id),el('span',{},el('b',{},a.titolo),el('small',{},'🔒 '+(C.demo?DEMO_CHIUSO:'Si apre con la '+prima(a).num))));
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
+    head('Materiali','Schede e appendici','var(--purple)','book',true),
+    el('p',{class:'muted',style:'font-weight:700'},'Le schede riassuntive raccolgono, lezione per lezione, le regole e i numeri da ricordare: rileggile il giorno dopo. Le appendici sono approfondimenti facoltativi. Si aprono man mano che le lezioni vengono fatte in aula.'),
+    head('Ripasso','Schede riassuntive','var(--purple)','quiz',false),
+    el('div',{class:'xrow'},
+      el('button',{class:'xcard',style:'--hue:var(--sun)',onclick:()=>go(vScheda,'oro',0)},el('span',{class:'xi'},'★'),el('span',{},el('b',{},'I numeri d’oro del corso'),el('small',{},'Come usare le schede e i numeri che tornano nei quiz'))),
+      el('button',{class:'xcard',style:'--hue:var(--coral)',onclick:()=>go(vQuiz,{titolo:'Verifica dei numeri d’oro',ids:C.schede.numeri_oro,ritorno:['materiali']})},el('span',{class:'xi'},svgEl(ICONS.quiz,'','0 0 100 100')),el('span',{},el('b',{},'Verifica dei numeri d’oro'),el('small',{},C.schede.numeri_oro.length+' quiz ufficiali')))),
+    el('div',{class:'xrow'},...C.lezioni.filter(l=>l.scheda.length).map(scheda)),
+    head('Approfondire','Appendici','var(--blue)','book',false),
+    el('div',{class:'xrow'},...C.appendici.map(app)),
+    localNote()));
+}
+
+/* ---------- profilo ---------- */
+function vProfilo(){
+  const p=P(), id=k=>'pf-'+k;
+  const testo=(k,label,attrs={})=>el('label',{class:'fld',for:id(k)},label,el('input',{type:'text',id:id(k),value:p[k]||'',...attrs}));
+  // patente e tipo partono senza scelta: le altre voci hanno un valore predefinito (il primo)
+  const scelta=(k,voci,cls='seg',nessuna=false)=>el('div',{class:cls,role:'radiogroup'},...voci.map(([v,t])=>el('label',{},
+    el('input',{type:'radio',name:id(k),value:v,checked:(nessuna?p[k]:(p[k]||voci[0][0]))===v}),el('span',{style:cls.includes('sw')?'background:'+v:''},cls.includes('sw')?'':t))));
+  const val=k=>{const r=document.querySelector('input[name="'+id(k)+'"]:checked'); return r?r.value:'';};
+  const campo=k=>document.getElementById(id(k)).value.trim();
+  const msg=el('p',{class:'okmsg',role:'status'}), err=el('p',{class:'errmsg',role:'alert'});
+  const sezione=(pill,titolo,hue,icon,...dentro)=>el('div',{class:'stack',style:'gap:14px'},head(pill,titolo,hue,icon,false),el('div',{class:'card stack',style:'--hue:'+hue+'; gap:16px'},...dentro));
+  const nAll=el('input',{type:'number',id:id('obiettivo_n'),min:'1',max:'500',value:p.obiettivo_n||'',placeholder:'es. 30',style:'max-width:120px'});
+  const salva=()=>{
+    const nome=campo('nome'); if(!nome){ err.textContent='Il nome non può restare vuoto.'; document.getElementById(id('nome')).focus(); return; }
+    const em=campo('email'); if(em&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ err.textContent='L’indirizzo email non sembra giusto.'; document.getElementById(id('email')).focus(); return; }
+    const n=parseInt(nAll.value,10);
+    Object.assign(S.profilo,{nome,cognome:campo('cognome'),colore:val('colore'),ambito:val('ambito'),tipo:val('tipo'),
+      esame:document.getElementById(id('esame')).value,email:em,telefono:campo('telefono'),tema:val('tema'),testo:val('testo'),
+      obiettivo_tipo:val('obiettivo_tipo'),obiettivo_n:n>0?Math.min(n,500):undefined});
+    for(const k of Object.keys(S.profilo)) if(S.profilo[k]===''||S.profilo[k]==null) delete S.profilo[k];
+    S.nome=[S.profilo.nome,S.profilo.cognome].filter(Boolean).join(' ');
+    store.save(); applicaPreferenze(); renderWho(); navCur(vProfilo);
+    const tt=$app.querySelector('.head h1'), av=$app.querySelector('.head .av');
+    if(tt) tt.textContent=S.nome; if(av){ av.textContent=iniziali(); av.style.background=S.profilo.colore||'#0B8A99'; }
+    err.textContent=''; msg.replaceChildren('Salvato. ',el('button',{class:'btn',style:'margin-left:8px',onclick:()=>go(vHome)},'Torna alla home →'));
+  };
+  const codice=mode==='aula'&&!C.online?(()=>{
+    const v=el('input',{type:'text',id:id('cv'),inputmode:'numeric',autocomplete:'off',maxlength:'6',style:'max-width:140px'});
+    const n=el('input',{type:'text',id:id('cn'),inputmode:'numeric',autocomplete:'off',maxlength:'6',style:'max-width:140px'});
+    const m=el('p',{class:'okmsg',role:'status'}), e=el('p',{class:'errmsg',role:'alert'});
+    return el('div',{class:'stack',style:'gap:10px'},el('h3',{},'Codice personale'),
+      el('div',{class:'row'},el('label',{class:'fld',for:id('cv')},'Codice attuale',v),el('label',{class:'fld',for:id('cn')},'Nuovo codice',n)),e,m,
+      el('button',{class:'btn ghost',type:'button',style:'align-self:flex-start',onclick:async()=>{
+        m.textContent=''; e.textContent='';
+        if(!/^\d{4,6}$/.test(n.value.trim())){ e.textContent='Il nuovo codice è di 4 cifre (fino a 6).'; n.focus(); return; }
+        try{ await api('codice',{vecchio:v.value.trim(),nuovo:n.value.trim()}); v.value=n.value=''; m.textContent='Codice cambiato: usalo la prossima volta che entri.'; }
+        catch(x){ e.textContent=x.status?x.message:'Non raggiungo il computer dell’aula.'; } }},'Cambia codice'));})():null;
+  const scarica=()=>{ const a=el('a',{href:URL.createObjectURL(new Blob([JSON.stringify({nome:S.nome,profilo:S.profilo,progressi:{slide_viste:S.visti,risposte:S.risposte},diario:S.diario},null,1)],{type:'application/json'})),download:'i-miei-dati-corso-nautico.json'});
+    document.body.append(a); a.click(); a.remove(); };
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
+    el('button',{class:'link',onclick:()=>go(vHome)},'← Home'),
+    el('div',{class:'head',style:'--hue:'+(p.colore||'var(--sea)')},el('span',{class:'av',style:'width:64px; height:64px; font-size:26px; background:'+(p.colore||'#0B8A99')},iniziali()),
+      el('div',{class:'t'},el('span',{class:'pill',style:'--hue:var(--sea)'},'Il mio profilo'),el('h1',{style:'color:var(--ink)'},S.nome),squiggle('var(--sea)'))),
+    sezione('Chi sono','Nome e avatar','var(--sea)','lifebuoy',
+      el('div',{class:'grid2'},testo('nome','Nome',{autocomplete:'given-name'}),testo('cognome','Cognome',{autocomplete:'family-name'})),
+      el('div',{class:'stack',style:'gap:8px'},el('span',{style:'font-weight:800'},'Colore dell’avatar'),scelta('colore',COLORI.map(c=>[c,c]),'seg sw')),
+      codice),
+    sezione('Il mio obiettivo','Patente ed esame','var(--coral)','flag',
+      el('div',{class:'stack',style:'gap:8px'},el('span',{style:'font-weight:800'},'Fin dove'),scelta('ambito',[['entro','Entro 12 miglia'],['senza','Senza limiti dalla costa']],'seg',true)),
+      el('div',{class:'stack',style:'gap:8px'},el('span',{style:'font-weight:800'},'Che patente'),scelta('tipo',[['motore','Motore'],['vela','Vela'],['entrambe','Motore e vela']],'seg',true)),
+      el('p',{class:'muted',style:'font-size:14px'},'Le lezioni che non servono alla tua patente restano disponibili, segnate come facoltative: la 9 (vela) se fai solo motore, dalla 10 alla 15 (carteggio oltre le 12 miglia) se resti entro le 12.'),
+      el('label',{class:'fld',for:id('esame')},'Data prevista dell’esame',el('input',{type:'date',id:id('esame'),value:p.esame||'',style:'max-width:220px'}))),
+    sezione('Contatti','Email e telefono','var(--purple)','book',
+      el('div',{class:'grid2'},el('label',{class:'fld',for:id('email')},'Email',el('input',{type:'email',id:id('email'),value:p.email||'',autocomplete:'email'})),
+        el('label',{class:'fld',for:id('telefono')},'Telefono',el('input',{type:'tel',id:id('telefono'),value:p.telefono||'',autocomplete:'tel'}))),
+      el('p',{class:'muted',style:'font-size:14px'},mode==='aula'?'Facoltativi. Li vede solo l’istruttore, per avvisi e recuperi.':'Facoltativi. Restano salvati con i tuoi progressi.')),
+    sezione('Preferenze','Come studio','var(--green)','chart',
+      el('div',{class:'stack',style:'gap:8px'},el('span',{style:'font-weight:800'},'Tema'),scelta('tema',[['auto','Automatico'],['chiaro','Chiaro'],['scuro','Scuro']])),
+      el('div',{class:'stack',style:'gap:8px'},el('span',{style:'font-weight:800'},'Testo'),scelta('testo',[['normale','Normale'],['grande','Più grande']])),
+      el('div',{class:'stack',style:'gap:8px'},el('span',{style:'font-weight:800'},'Obiettivo della settimana'),
+        el('div',{class:'row'},scelta('obiettivo_tipo',[['','Nessuno'],['quiz','Quiz'],['giorni','Giorni di studio']]),el('label',{class:'row',for:id('obiettivo_n'),style:'gap:8px; font-weight:800'},nAll,'a settimana')))),
+    el('div',{class:'row'},el('button',{class:'btn sea',onclick:salva},'Salva il profilo'),msg,err),
+    sezione('I miei dati','Scarica o cancella','var(--blue)','book',
+      el('div',{class:'reset'},el('p',{class:'muted',style:'font-weight:700'},'Una copia di profilo, progressi e risposte, in un file.'),el('button',{class:'btn ghost',onclick:scarica},'Scarica i miei dati'))),
+    cancellaCard(),
+    localNote()));
+}
+
+/* ---------- storico ---------- */
+/* ---------- studio a casa: passaggio dei dati tra app dell'aula e app da casa ----------
+   L'app da casa (https, installabile, offline) e quella dell'aula (http sul PC dell'istruttore) non possono
+   parlarsi direttamente: i progressi viaggiano nel link che apre l'altra app (#da-aula=… / #da-casa=…). */
+let avvisoCasa=null;
+const AULA_KEY='corso-casa-aula';
+async function impacchetta(o){
+  const testo=JSON.stringify(o), b=new TextEncoder().encode(testo);
+  const b64=x=>btoa(String.fromCharCode(...new Uint8Array(x))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  if(window.CompressionStream){ try{ const z=await new Response(new Blob([b]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer(); return 'z.'+b64(z); }catch(e){} }
+  return 'j.'+b64(b);
+}
+async function spacchetta(t){
+  const [k,d]=[t.slice(0,2),t.slice(2)], bin=Uint8Array.from(atob(d.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0));
+  const dati=k==='z.'?await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer():bin;
+  return JSON.parse(new TextDecoder().decode(dati));
+}
+const daHash=chiave=>{ const m=location.hash.match(new RegExp('[#&]'+chiave+'=([^&]+)')); return m?m[1]:null; };
+const pulisciHash=()=>history.replaceState(null,'',location.pathname+location.search);
+const progressi=()=>({visti:S.visti,risposte:S.risposte,profilo:S.profilo,diario:S.diario});
+// quante cose nuove porta l'altra app
+function novita(prima,dopo){ let q=0,sl=0;
+  for(const [k,r] of Object.entries(dopo.risposte||{})){ const v=prima.risposte[k]; if(!v||String(r.ts)>String(v.ts)) q++; }
+  for(const [L,pp] of Object.entries(dopo.visti||{})) sl+=pp.filter(x=>!(prima.visti[L]||[]).includes(x)).length;
+  return {q,sl}; }
+function riceviDati(pacco,da){
+  const n=novita(S,pacco.S), nome=S.nome;
+  S=conProfilo(Object.assign(unisci(S,pacco.S),{nome:nome||pacco.nome,consenso:true}));
+  store.save(); renderWho();
+  avvisoCasa=(da==='casa'?'Arrivati da casa: ':'Arrivati dall’aula: ')+n.q+(n.q===1?' quiz':' quiz')+' e '+n.sl+(n.sl===1?' slide':' slide')+'.';
+}
+// in aula: «Porta a casa» apre l'app da casa con i progressi
+async function portaACasa(){ store.flush();
+  const t=await impacchetta({v:1,nome:S.nome,aula:location.origin,S:progressi()});
+  location.href=aula.casa.replace(/#.*$/,'')+'#da-aula='+t; }
+// a casa: «Invia all'aula» apre l'app dell'aula, che unisce e salva sul server
+async function inviaAllAula(){ const a=leggiAula(); if(!a) return;
+  const t=await impacchetta({v:1,nome:S.nome,S:progressi()});
+  location.href=a+'/#da-casa='+t; }
+const leggiAula=()=>{ try{ return localStorage.getItem(AULA_KEY); }catch(e){ return null; } };
+// online, entrato con l'email dell'istruttore: da qui si va all'area istruttore
+function pannelloDocente(){
+  if(!(C.online&&aula&&aula.docente)) return null;
+  const prova=aula.prova, fino=prova?new Date(prova.scade).toLocaleDateString('it-IT',{day:'numeric',month:'long'}):'';
+  return el('div',{class:'card row',style:'--hue:var(--sun); justify-content:space-between'},
+    el('div',{class:'stack',style:'gap:4px'},el('h3',{},prova?'Account di prova fino al '+fino:'Sei entrato come istruttore'),
+      el('p',{class:'muted'},prova?'Prova l’app come un allievo con le prime slide delle lezioni 1 e 2, poi guarda l’area istruttore con una classe di esempio.':'Classe, risultati, lezioni da aprire e presentazioni.')),
+    el('a',{class:'btn',href:'docente'},'Area istruttore →'));
+}
+function pannelloCasa(){
+  if(C.online) return null;   // online i progressi arrivano all'istruttore da soli
+  if(C.casa){ const a=leggiAula();
+    return el('div',{class:'card stack',style:'--hue:var(--sea); gap:10px'},
+      el('span',{class:'pill',style:'--hue:var(--sea)'},'Studio a casa'),
+      el('p',{style:'font-weight:700'},'Puoi studiare e fare i quiz anche senza rete: tutto resta su questo telefono. In aula, collegato al wifi della scuola, tocca «Invia all’aula» e l’istruttore vede quello che hai fatto.'),
+      a?el('button',{class:'btn sea',style:'align-self:flex-start',onclick:inviaAllAula},'Invia all’aula'):
+        el('p',{class:'muted'},'Per collegarla all’aula, la prima volta apri questa app dal pulsante «Porta a casa» dell’app dell’aula. Se l’hai appena aperta con l’email e il codice, torna all’app dell’aula e tocca di nuovo «Porta a casa».'));
+  }
+  if(mode==='aula'&&aula&&aula.casa) return el('div',{class:'card row',style:'--hue:var(--sea); justify-content:space-between'},
+    el('div',{class:'stack',style:'gap:4px'},el('h3',{},'Studia anche a casa'),el('p',{class:'muted'},'Porta i tuoi progressi sul telefono: a casa funziona anche senza rete. Al ritorno in aula li invii all’istruttore.')),
+    el('button',{class:'btn sea',onclick:portaACasa},'Porta a casa'));
+  return null;
+}
+
+/* ---------- app da casa con accesso riservato (Cloudflare Access) ----------
+   Il sito è protetto: si entra con l'email ammessa e un codice. A ogni apertura con la rete l'app chiede
+   C.accesso senza passare dalla copia conservata: se l'accesso non c'è più, toglie slide e quiz dal
+   telefono e chiede di rientrare con l'email. Senza rete funziona, ma solo per GIORNI_OFFLINE giorni
+   dall'ultima verifica riuscita. I progressi restano sul telefono (non sono contenuti del corso). */
+const VERIFICA_KEY='corso-casa-verifica', GIORNI_OFFLINE=7;
+let regSW=null;
+const registraSW=()=>{ if(!regSW&&'serviceWorker' in navigator) regSW=navigator.serviceWorker.register('sw.js').catch(()=>null); };
+async function esitoAccesso(){
+  const ac=new AbortController(), t=setTimeout(()=>ac.abort(),8000);
+  try{ const r=await fetch(C.accesso+'?t='+Date.now(),{cache:'no-store',redirect:'manual',signal:ac.signal});
+    if(r.status===403){ try{ if((await r.clone().json()).sospeso) return 'sospeso'; }catch(x){} return 'no'; }   // bloccato dall'istruttore
+    if(r.type==='opaqueredirect'||r.status===401) return 'no';   // rimanda al login: sessione scaduta o email tolta
+    if(!r.ok) return 'rete';
+    try{ const j=await r.json(); return j&&j.ok?'si':'no'; }catch(e){ return 'no'; } }
+  catch(e){ return 'rete'; }
+  finally{ clearTimeout(t); }
+}
+function blocco(titolo,righe,bottone,azione){
+  document.querySelectorAll('.blocco-accesso').forEach(x=>x.remove());
+  const b=el('div',{class:'blocco-accesso',role:'alertdialog','aria-modal':'true',style:'position:fixed;inset:0;z-index:90;background:var(--paper);display:flex;align-items:center;justify-content:center;padding:24px'},
+    el('div',{class:'card stack',style:'--hue:var(--sea);max-width:460px;gap:12px'},
+      el('img',{src:'stemma.webp',alt:'',style:'width:72px;height:72px;align-self:center'}),
+      el('h2',{},titolo),...righe.map(t=>el('p',{style:'font-weight:700'},t)),
+      bottone?el('button',{class:'btn sea',style:'align-self:flex-start',onclick:azione},bottone):null));
+  document.body.append(b);
+}
+async function togliContenuti(){
+  try{ localStorage.removeItem(VERIFICA_KEY); }catch(e){}
+  try{ if(regSW) await regSW; for(const r of await navigator.serviceWorker.getRegistrations()) await r.unregister(); }catch(e){}
+  try{ for(const k of await caches.keys()) if(k.startsWith('corso-casa-')) await caches.delete(k); }catch(e){}
+}
+function accessoSospeso(){
+  blocco('Accesso sospeso',['Il tuo accesso all’app del corso è stato sospeso dall’istruttore.','Per chiarimenti rivolgiti a Fabrizio Fiorucci.'],null,null);
+  togliContenuti();
+}
+// app online: un codice casuale per questo dispositivo, in un cookie, così il registro degli accessi distingue i dispositivi
+function codiceDispositivo(){
+  let id=''; try{ id=localStorage.getItem('corso-dispositivo')||''; }catch(e){}
+  if(!/^[a-z0-9]{12,40}$/.test(id)){ id=[...crypto.getRandomValues(new Uint8Array(16))].map(x=>(x%36).toString(36)).join(''); try{ localStorage.setItem('corso-dispositivo',id); }catch(e){} }
+  document.cookie='corso_disp='+id+'; Path=/; Max-Age=34560000; SameSite=Lax'+(location.protocol==='https:'?'; Secure':'');
+}
+function accessoNegato(){
+  if(C.prova){ blocco('Prova terminata',['Il periodo di prova dell’app del corso è terminato. Grazie per averla provata!','Per informazioni contatta Fabrizio Fiorucci.'],null,null); togliContenuti(); return; }
+  blocco('Accesso da rinnovare',['Per continuare entra di nuovo con la tua email: ti arriva un codice da inserire.',
+    'Se il codice non arriva, il tuo accesso non è più attivo: rivolgiti all’istruttore.'],'Entra con la tua email',()=>{ location.href='entra/'; });
+  togliContenuti();
+}
+// online: le slide, le schede e le appendici delle lezioni aperte si scaricano subito, così ci sono anche senza rete
+let precaricando=false;
+async function precarica(){
+  if(!C.online||precaricando||!('caches' in window)||!('serviceWorker' in navigator)||!navigator.onLine) return;
+  precaricando=true;
+  try{
+    if(!navigator.serviceWorker.controller) await new Promise(r=>{ navigator.serviceWorker.addEventListener('controllerchange',r,{once:true}); setTimeout(r,8000); });
+    if(!navigator.serviceWorker.controller) return;
+    const u=[];
+    for(const l of aperte()){ for(const p of allPages(l.id)) u.push(img(l.id,p)); for(const p of l.scheda||[]) u.push(img('SR',p)); }
+    for(const p of C.schede.generali||[]) u.push(img('SR',p));
+    for(const a of C.appendici) if(appAperta(a)){ if(a.pagine) for(let p=1;p<=a.pagine;p++) u.push(img('A'+a.id,p)); else u.push(indirizzoApp(a)); }
+    for(const x of u){ if(await caches.match(x,{ignoreSearch:true})) continue; try{ await fetch(x); }catch(e){ return; } }
+  } finally{ precaricando=false; }
+}
+// true: si può usare l'app (se la verifica è recente, l'app parte subito e il controllo continua in sottofondo)
+async function controllaAccesso(){
+  if(!C.casa||!C.accesso){ if(C.casa) registraSW(); return true; }
+  let ultima=0; try{ ultima=+(localStorage.getItem(VERIFICA_KEY)||0); }catch(e){}
+  const recente=Date.now()-ultima<GIORNI_OFFLINE*864e5;
+  if(recente) registraSW(); else $app.replaceChildren(el('p',{class:'muted',style:'padding:24px'},'Controllo l’accesso…'));
+  const verifica=esitoAccesso().then(e=>{
+    if(e==='si'){ try{ localStorage.setItem(VERIFICA_KEY,String(Date.now())); }catch(x){} registraSW(); return true; }
+    if(e==='no'){ accessoNegato(); return false; }
+    if(e==='sospeso'){ accessoSospeso(); return false; }
+    if(!recente){ blocco('Collegati a internet',['Per sicurezza l’app va verificata con la rete almeno una volta ogni '+GIORNI_OFFLINE+' giorni.',
+      'Accendi i dati o il wifi e riprova: ci vuole un attimo.'],'Riprova',()=>location.reload()); return false; }
+    return true; });
+  return recente?true:verifica;
+}
+
+function vStorico(){
+  const rows=aperte().map(l=>{const s=stato(l.id); return el('tr',{},el('td',{},el('span',{class:'lt'},l.num+' · '+l.titolo),el('span',{class:'sh'},l.num.replace('Lezione ','L'))),el('td',{class:'num'},s.viste+' / '+s.pagine),el('td',{class:'num'},s.fatti+' / '+s.quiz),el('td',{class:'num'},s.giusti),el('td',{class:'num'},s.recuperati),el('td',{class:'num'},s.errati));});
+  const err=errati();
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:20px'},
+    el('button',{class:'link',onclick:()=>go(vHome)},'← Home'),
+    head('Storico','I tuoi progressi','var(--purple)','chart',true),
+    el('div',{class:'card tbl',style:'--hue:var(--purple)'},el('table',{},el('thead',{},el('tr',{},el('th',{},'Lezione'),el('th',{class:'num'},'Slide'),el('th',{class:'num'},'Quiz',el('span',{class:'lt'},' risposti')),el('th',{class:'num'},'Giusti'),el('th',{class:'num'},el('span',{class:'lt'},'Recuperati'),el('span',{class:'sh'},'Recup.')),el('th',{class:'num'},el('span',{class:'lt'},'Da ripassare'),el('span',{class:'sh'},'Errati')))),el('tbody',{},...rows))),
+    el('p',{class:'muted'},'«Recuperati»: quiz sbagliati la prima volta e poi rifatti giusti.'),
+    head('Da ripassare','Quiz sbagliati','var(--coral)','flag',false),
+    err.length?el('div',{class:'card',style:'--hue:var(--coral)'},...err.map((q,i)=>{const Q=C.quiz[q], a=S.risposte[q];return el('div',{class:'cap',style:'--hue:var(--coral)'},el('span',{class:'dot'},String(i+1)),
+        el('div',{class:'stack',style:'gap:4px; min-width:0'},el('div',{class:'row',style:'gap:8px'},el('span',{class:'chip'},'quiz '+q),el('span',{class:'chip ko'},a.tentativi+(a.tentativi===1?' tentativo':' tentativi')),a.rivisto?el('span',{class:'chip rev'},'slide rivista'):null),el('p',{style:'font-weight:700'},Q.d)),
+        el('div',{class:'row acts',style:'gap:8px; justify-content:flex-end'},el('button',{class:'btn ghost',onclick:()=>{window.scrollTo({top:0}); vRivedi(q,{titolo:'Riprova la domanda',ids:[q],ritorno:['home']},{scelte:{},controllato:false});}},'Rivedi'),el('button',{class:'btn coral',onclick:()=>go(vQuiz,{titolo:'Riprova la domanda',ids:[q],ritorno:['home']})},'Riprova')));})):
+      el('p',{class:'muted'},'Nessun errore da ripassare. Ottimo lavoro.'),
+    head('Da capo','Ricomincia il corso','var(--blue)','lifebuoy',false),
+    resetCard(),
+    mode==='aula'&&!C.online?el('div',{class:'card reset',style:'--hue:var(--sea)'},el('p',{class:'muted',style:'font-weight:700'},'Telefono o tablet in prestito? Esci quando hai finito: i progressi restano salvati in aula.'),
+      el('button',{class:'btn ghost',onclick:()=>{store.flush(); tok.set(null); S=blank(); renderWho(); go(vRegistrazione);}},'Esci da questo dispositivo')):null,
+    el('p',{class:'muted'},'Per cancellare il tuo account vai al profilo, toccando il tuo nome in alto.'),
+    localNote()));
+}
+function cancellaCard(){
+  const box=el('div',{class:'card reset',style:'--hue:var(--coral)'});
+  const conCodice=mode==='aula'&&!C.online;
+  const first=()=>[el('p',{class:'muted',style:'font-weight:700'},C.online?'Cancelli nome e tutti i progressi salvati online.':mode==='aula'?'Cancelli nome, codice e tutti i progressi dal computer dell’aula.':'Cancelli nome e tutti i progressi salvati.'),
+    el('button',{class:'btn ghost',onclick:ask},'Cancella il mio account')];
+  const ask=()=>{
+    const cod=el('input',{type:'text',id:'f-del',inputmode:'numeric',autocomplete:'off',maxlength:'6',placeholder:'4 cifre',style:'max-width:160px'});
+    const msg=el('p',{class:'errmsg',role:'alert'});
+    box.replaceChildren(el('div',{class:'stack',style:'gap:12px; width:100%'},
+      el('p',{style:'font-weight:800'},'Sicuro? Il tuo nome e tutti i progressi spariscono per sempre: non si torna indietro.'),
+      conCodice?el('label',{class:'fld',for:'f-del'},'Per conferma scrivi il tuo codice personale',cod):null, msg,
+      el('div',{class:'row',style:'gap:8px'},el('button',{class:'btn ghost',onclick:()=>box.replaceChildren(...first())},'Annulla'),
+        el('button',{class:'btn coral',onclick:async()=>{
+          try{
+            clearTimeout(store.t); store.t=null;
+            if(mode==='aula'){ await api('cancella',conCodice?{codice:cod.value.trim()}:{}); copia.togli(); tok.set(null); }
+            else if(mode==='cloud'){ await db.doc('data/users/'+uid+'/profile').delete(); }
+            try{ localStorage.removeItem(KEY); }catch(e){}
+          }catch(e){ msg.textContent=e.status?e.message:'Non riesco a cancellare adesso: riprova tra poco.'; return; }
+          S=blank(); renderWho(); go(vRegistrazione);
+          $app.prepend(el('p',{class:'notice net'},'Account cancellato: nome e progressi sono stati eliminati.'));
+        }},'Sì, cancella tutto'))));
+    if(conCodice) cod.focus();
+  };
+  box.append(...first()); return box;
+}
+function resetCard(){
+  const box=el('div',{class:'card reset',style:'--hue:var(--blue)'});
+  const ask=()=>box.replaceChildren(
+    el('p',{style:'font-weight:700'},'Azzeri slide studiate, risposte e storico dei quiz. Il nome resta. Non si torna indietro.'),
+    el('div',{class:'row',style:'gap:8px'},el('button',{class:'btn ghost',onclick:()=>{box.replaceChildren(...first())}},'Annulla'),
+      el('button',{class:'btn coral',onclick:()=>{S.visti={}; S.risposte={}; store.save(); store.flush(); go(vHome);}},'Sì, azzera tutto')));
+  const first=()=>[el('p',{class:'muted',style:'font-weight:700'},'Vuoi ripartire da zero, come il primo giorno?'),
+    el('button',{class:'btn ghost',onclick:ask},'Ricomincia da capo')];
+  box.append(...first()); return box;
+}
+
+/* ---------- avvio ---------- */
+document.getElementById('home-btn').addEventListener('click',()=>{ if(S&&S.nome) apriMenu(); });
+document.getElementById('nav-home').addEventListener('click',()=>{ if(S&&S.nome) go(vHome); });
+document.getElementById('nav-prog').addEventListener('click',()=>{ if(S&&S.nome) go(vStorico); });
+document.getElementById('nav-mat').addEventListener('click',()=>{ if(S&&S.nome) go(vMateriali); });
+document.getElementById('nav-aiuto').addEventListener('click',()=>apriAiuto());
+document.getElementById('versione').textContent='App versione '+VERSIONE+' · '+RILASCIO+(C&&C.demo?' · demo':'');
+
+/* ---------- aiuto ---------- */
+// cosa si può fare nella schermata aperta: compare in cima al pannello
+const AIUTO_QUI={
+  vRegistrazione:['Entrare nel corso',['Scrivi nome e cognome.','In aula scegli anche un codice personale di 4 cifre: con lo stesso nome e codice ritrovi i progressi su un altro telefono o tablet.','Spunta il consenso e premi «Inizia il corso».']],
+  vHome:['La home',['Tocca il logo in alto a sinistra: si apre il menu con tutte le lezioni, i capitoli, le verifiche e i materiali.','In alto il benvenuto e, se hai messo la data d’esame nel profilo, il conto alla rovescia.','I tre riquadri: slide studiate, quiz risposti, risposte giuste.','«Ripassa gli errori» ripropone i quiz sbagliati.','Le lezioni col lucchetto si aprono quando le fate in aula. «Facoltativa per la tua patente»: non serve per la patente che hai scelto, ma puoi studiarla.']],
+  vLezione:['La lezione',['In cima: la scheda riassuntiva e le appendici per approfondire.','Ogni capitolo ha «Studia» (le slide) e «Verifica» (2 quiz ufficiali).','L’ultimo capitolo raccoglie i quiz degli ultimi 45 minuti, a gruppi di 3.']],
+  vSlide:['Le slide',['Vai avanti e indietro con i pulsanti, toccando i lati della slide o scorrendo col dito.','⛶ in basso a destra mette la slide a schermo intero; col telefono in orizzontale si apre da solo.','Le slide viste contano nei progressi.']],
+  vRaccolta:['Raccolta quiz',['I quiz degli ultimi 45 minuti, a gruppi di 3.','Giallo: da fare. Verde: tutti giusti. Rosso: qualcuno da ripassare.','«Rifai» ripropone il gruppo.']],
+  vQuiz:['I quiz',['Una domanda per pagina: tocca la risposta, vedi subito se è giusta e dopo un attimo passi alla domanda dopo.','«Salta →» o il dito verso sinistra: la domanda dopo. «← Precedente» o il dito verso destra: quella prima.','In fondo il riepilogo: «Rivedi l’argomento» apre la slide che spiega la domanda sbagliata, «Riprova gli errori» le ripropone.']],
+  vRivedi:['Rivedi l’argomento',['È la slide che spiega la domanda sbagliata: leggila e premi «Riprova la domanda».','«Continua a studiare da qui» apre il capitolo da questa slide.']],
+  vScheda:['Scheda riassuntiva',['Regole e numeri da ricordare della lezione: rileggila il giorno dopo.','Si sfoglia come le slide, anche a schermo intero.']],
+  vAppendice:['Appendice',['Un approfondimento facoltativo collegato alle lezioni.','Si sfoglia come le slide: frecce, pulsanti o il dito; ⛶ per lo schermo intero.']],
+  vMateriali:['Materiali',['Le schede riassuntive di tutte le lezioni, i numeri d’oro e la loro verifica.','Le appendici: approfondimenti facoltativi, si aprono con la lezione a cui sono collegate.','Dentro un’appendice si sfoglia col dito; «← Materiali» per tornare.']],
+  vStorico:['I tuoi progressi',['Per ogni lezione: slide viste, quiz risposti, giusti, recuperati (sbagliati e poi rifatti giusti), da ripassare.','Sotto, i quiz sbagliati con «Rivedi» e «Riprova».','«Ricomincia da capo» azzera i progressi, non il profilo.']],
+  vProfilo:['Il tuo profilo',['Patente e data d’esame servono a segnare le lezioni facoltative e al conto alla rovescia.','Email e telefono sono facoltativi.','Tema, testo più grande e obiettivo della settimana cambiano l’app solo per te.','Ricordati di premere «Salva il profilo».']],
+};
+const AIUTO_GUIDA=[
+  ['Il menu',['Tocca il logo in alto a sinistra: si apre il menu con la home, le lezioni (ognuna con i suoi capitoli e le verifiche), le schede, le appendici, i progressi e il profilo.','La lezione che stai studiando è già aperta. Per chiudere il menu tocca fuori, la ✕ o scorri verso sinistra.']],
+  ['Come funziona il corso',['Le lezioni si aprono una alla volta, man mano che le fate in aula.','Ogni lezione: slide divise in capitoli, una verifica con 2 quiz ufficiali per capitolo, 36 quiz di raccolta alla fine, la scheda riassuntiva.','I quiz sono quelli ufficiali d’esame (DD 131/2022).']],
+  ['Ho sbagliato un quiz: come diventa giusto?',['Apri «Rivedi l’argomento», leggi la slide e rifai la domanda. Quando rispondi bene, nei progressi conta tra i «recuperati».']],
+  ['Le slide sul telefono sono piccole',['Gira il telefono in orizzontale: la slide va a schermo intero. Oppure tocca ⛶ sulla slide.']],
+  ['Ho cambiato telefono',['In aula: entra con lo stesso nome e lo stesso codice personale e ritrovi tutto.','Se hai dimenticato il codice, chiedi all’istruttore un codice nuovo.','Telefono in prestito? A fine lezione: Progressi → «Esci da questo dispositivo».']],
+  ['Una lezione ha il lucchetto',['Si apre quando la fate in aula: l’istruttore la sblocca e la vedi entro mezzo minuto.']],
+  ['Posso studiare senza rete?',['Se il wifi dell’aula cade mentre studi, continua pure: quiz e slide viste restano sul telefono e si inviano da soli quando torna la connessione.','Non chiudere la scheda dell’app finché non sei di nuovo collegato.']],
+  ['Dove sono i miei dati?',['In aula sul computer dell’istruttore, fuori aula nel tuo account o su questo dispositivo.','Dal profilo puoi scaricarli o cancellare l’account.']],
+];
+function apriAiuto(){
+  chiudiSuggerimento('corso-aiuto-visto');
+  if(document.querySelector('.aiuto')) return;
+  const nome=curView&&curView.name, qui=AIUTO_QUI[nome]||(S&&S.nome?AIUTO_QUI.vHome:AIUTO_QUI.vRegistrazione);
+  const prima=document.activeElement;
+  const chiudi=()=>{ ov.remove(); pan.remove(); document.removeEventListener('keydown',esc); if(prima&&prima.focus) prima.focus(); };
+  const esc=e=>{ if(e.key==='Escape') chiudi(); };
+  const ov=el('div',{class:'aiuto-ov',onclick:chiudi});
+  const pan=el('div',{class:'aiuto',role:'dialog','aria-modal':'true','aria-label':'Aiuto'},
+    el('div',{class:'ah'},svgEl(ICONS.lifebuoy,'','0 0 100 100'),el('h2',{},'Aiuto'),el('button',{class:'ax','aria-label':'Chiudi l’aiuto',onclick:chiudi},svgEl(ICON_X,'','0 0 24 24'))),
+    el('div',{class:'ab'},
+      el('div',{class:'qui'},el('span',{class:'pill',style:'--hue:var(--sea)'},'In questa pagina'),el('h3',{style:'margin-top:8px'},qui[0]),el('ul',{},...qui[1].map(t=>el('li',{},t)))),
+      el('h3',{},'Guida e domande frequenti'),
+      ...AIUTO_GUIDA.map(([t,r])=>el('details',{},el('summary',{},t),r.length>1?el('ul',{},...r.map(x=>el('li',{},x))):el('p',{},r[0]))),
+      el('p',{class:'info'},'Corso Patente Nautica · app versione '+VERSIONE+' del '+RILASCIO+(C&&C.demo?' · versione dimostrativa':'')+'. Per problemi con l’app rivolgiti al tuo istruttore.')));
+  pan.querySelector('.ah svg').style.cssText='width:30px;height:30px';
+  document.body.append(ov,pan); document.addEventListener('keydown',esc);
+  pan.querySelector('.ax').focus();
+}
+// la prima volta, piccoli suggerimenti uno dopo l'altro: sotto il logo (apre il menu, solo dopo l'entrata) e sotto il pulsante ?;
+// ognuno compare una volta sola su questo dispositivo
+const SUGGERIMENTI=[
+  {chiave:'corso-menu-visto', id:'logo-h', testo:'Tocca il logo: si apre il menu con tutte le lezioni, i capitoli e i materiali.', serveNome:true},
+  {chiave:'corso-aiuto-visto', id:'nav-aiuto', testo:'Serve una mano? Qui trovi l’aiuto per ogni pagina.'}];
+const giaVisto=k=>{ try{ return !!localStorage.getItem(k); }catch(e){ return false; } };
+let suggTimer=null;
+// chiave: il suggerimento da non mostrare più (aperto il menu o l'aiuto); senza, chiude quello visibile
+function chiudiSuggerimento(chiave){
+  if(chiave){ try{ localStorage.setItem(chiave,'1'); }catch(e){} }
+  const s=document.querySelector('.suggerimento'); if(!s) return;
+  try{ localStorage.setItem(s.dataset.chiave,'1'); }catch(e){}
+  s.remove(); clearTimeout(suggTimer); suggTimer=setTimeout(suggerimento,800);   // poi il prossimo, se c'è
+}
+function suggerimento(){
+  if(document.querySelector('.suggerimento,.aiuto,.cassetto,.fs')) return;
+  const sg=SUGGERIMENTI.find(x=>!giaVisto(x.chiave)&&(!x.serveNome||(S&&S.nome))); if(!sg) return;
+  const b=document.getElementById(sg.id).getBoundingClientRect(); if(!b.width) return;
+  const sx=b.left+b.width/2<innerWidth/2;   // pulsante a sinistra: il fumetto parte da sinistra
+  const l=Math.max(12,Math.min(b.left-8,innerWidth-252));   // sul PC il logo non è sul bordo: il fumetto gli sta sotto
+  const t=el('div',{class:'suggerimento'+(sx?' sx':''),role:'status','data-chiave':sg.chiave,
+    style:'top:'+(b.bottom+10)+'px; '+(sx?'left:'+l+'px; --fl:'+Math.max(14,b.left+b.width/2-l-8):'--fr:'+Math.max(14,innerWidth-b.right+b.width/2-20-12))+'px'},
+    sg.testo,el('button',{'aria-label':'Chiudi',onclick:()=>chiudiSuggerimento()},'×'));
+  document.body.append(t); clearTimeout(suggTimer); suggTimer=setTimeout(()=>chiudiSuggerimento(),9000);
+}
+(async function start(){
+  try{ C=await (await fetch('corso.json')).json(); document.getElementById('versione').textContent='App versione '+VERSIONE+' · '+RILASCIO+(C.demo?' · demo':''); }
+  catch(e){ $app.replaceChildren(el('div',{class:'stack'},el('h1',{},'Non riesco a caricare il corso'),el('p',{class:'muted'},'Ricarica la pagina; se il problema resta, avvisa l’istruttore.'))); return; }
+  if(C.online) codiceDispositivo();
+  if(!await controllaAccesso()) return;
+  if(C.prova) document.getElementById('nav-mat').style.display='none';   // account di prova: niente schede né appendici
+  S=blank(); vRegistrazione();
+  S=conProfilo(await store.load()); applicaPreferenze(); renderWho();
+  if(mode==='aula'&&!offline&&S.nome) copia.scrivi(false);   // copia sul telefono subito, così si apre anche senza rete
+  // dati arrivati dall'altra app: a casa da «Porta a casa», in aula da «Invia all'aula»
+  try{
+    const daAula=daHash('da-aula'), daCasa=daHash('da-casa');
+    if(daAula&&C.casa){ const pk=await spacchetta(daAula); try{ localStorage.setItem(AULA_KEY,pk.aula); }catch(e){} riceviDati(pk,'aula'); pulisciHash(); }
+    if(daCasa){ try{ sessionStorage.setItem('corso-da-casa',daCasa); }catch(e){} pulisciHash(); }
+    const att=(()=>{ try{ return sessionStorage.getItem('corso-da-casa'); }catch(e){ return null; } })();
+    if(att&&mode==='aula'&&S.nome){ riceviDati(await spacchetta(att),'casa'); sessionStorage.removeItem('corso-da-casa'); }
+  }catch(e){ console.warn('dati dall’altra app non letti',e); }
+  if(S.nome) go(vHome); else vRegistrazione();
+  setTimeout(suggerimento,1200);
+  setTimeout(precarica,1500);
+})();
+})();
+</script>

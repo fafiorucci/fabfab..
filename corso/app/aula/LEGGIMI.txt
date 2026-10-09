@@ -1,0 +1,121 @@
+CORSO PATENTE NAUTICA · APP PER L'AULA
+Fabrizio Fiorucci · Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa
+=====================================================================================
+
+Con questo pacchetto il tuo computer diventa il "sito" del corso: gli allievi,
+collegati al wifi della scuola, aprono l'app dal telefono o dal tablet e i loro
+progressi restano salvati sul tuo computer. Tu, dalla tua pagina, vedi a che
+punto è ognuno.
+
+Non serve installare niente: dentro c'è già tutto (anche il programma Python
+che fa funzionare il server, nella cartella "python").
+
+
+PRIMA VOLTA (5 minuti)
+----------------------
+
+1. ESTRAI LO ZIP
+   Lo zip va "estratto", non aperto e basta.
+   - Cerca il file "Corso patente nautica - app aula.zip" (di solito in Download).
+   - Tasto destro sul file  →  "Estrai tutto..."  →  scegli dove (per esempio
+     Documenti)  →  "Estrai".
+   - Si apre la cartella "Corso patente nautica - app aula". Puoi spostarla dove
+     vuoi, ma tienila sempre intera.
+
+2. AVVIA IL SERVER
+   - Nella cartella fai doppio clic su  "Avvia (Windows).bat".
+   - Se compare la schermata blu "Windows ha protetto il PC":
+     clic su "Ulteriori informazioni"  →  "Esegui comunque".
+     (Succede con tutti i file scaricati da internet; è normale.)
+   - Si apre una finestra nera con scritto "server dell'aula", gli indirizzi
+     per gli allievi e il tuo PIN.
+   - Se compare l'avviso del firewall ("Windows Defender Firewall ha bloccato
+     alcune funzionalità"): spunta "Reti private" e premi "Consenti accesso".
+     Senza questo passo i telefoni non riescono a collegarsi.
+
+3. LA TUA PAGINA SI APRE DA SOLA
+   - Il browser apre "Area istruttore": scrivi il PIN che vedi nella finestra
+     nera (6 cifre) e premi "Entra".
+   - Il PIN si può cambiare: apri con il Blocco note il file
+     dati\config.json e sostituisci le cifre dopo "pin". Poi riavvia il server.
+
+
+OGNI LEZIONE
+------------
+
+1. Accendi il computer e collegalo al WIFI DELLA SCUOLA (lo stesso degli allievi).
+2. Doppio clic su "Avvia (Windows).bat".
+3. Nella tua pagina premi "Proietta per la classe": compare un grande QR code
+   con l'indirizzo. Gli allievi lo inquadrano con la fotocamera del telefono
+   (oppure scrivono l'indirizzo nel browser, per esempio http://192.168.1.20:8000).
+4. Ogni allievo scrive nome e cognome e sceglie un CODICE PERSONALE di 4 cifre.
+   Con lo stesso nome e codice ritrova i suoi progressi anche su un altro
+   telefono o tablet.
+5. Durante la lezione LASCIA APERTA LA FINESTRA NERA. Puoi ridurla a icona.
+   Se la chiudi, l'app smette di funzionare per tutti (i dati restano salvati).
+6. A fine lezione chiudi la finestra nera (o premi Ctrl+C dentro la finestra).
+
+
+LA TUA PAGINA (AREA ISTRUTTORE)
+-------------------------------
+
+Indirizzo sul tuo computer:  http://localhost:8000/docente
+
+- La classe: per ogni allievo l'ultimo accesso, le slide studiate e i quiz
+  giusti di ogni lezione, i quiz "recuperati" (sbagliati e poi rifatti giusti)
+  e quelli ancora da ripassare. Si aggiorna da sola ogni 20 secondi.
+- I quiz più sbagliati: le domande che la classe sbaglia di più, con la slide
+  che le spiega. Utili per riprenderle in aula.
+- Per ogni allievo vedi anche patente, data d'esame e contatti, se li ha messi nel
+  suo profilo; puoi ordinare la classe per data d'esame.
+- Clic su un allievo: i suoi errori (cosa ha risposto e cosa era giusto),
+  Gli allievi possono cancellare da soli il proprio account (Progressi → "Cancella il mio
+  account", con il loro codice).
+  "Nuovo codice personale" se l'ha dimenticato, "Azzera progressi" per
+  farlo ripartire da capo (nome e codice restano), "Elimina allievo".
+- Lezioni (pulsante in alto): le 15 lezioni del corso. All'inizio sono aperte
+  agli allievi solo la 1 e la 2; quando fai una lezione in aula premi "Apri agli
+  allievi" e la vedono entro mezzo minuto, con la sua scheda riassuntiva e le
+  appendici collegate. "Chiudi" la nasconde di nuovo (i progressi restano).
+- Presentazioni (pulsante in alto): presentazione della scuola, "Rotta verso
+  la patente", schede riassuntive e appendici A-M, da proiettare. Si aprono in
+  una nuova scheda: un clic per lo schermo intero, poi frecce, telecomando del
+  presentatore o clic a destra/sinistra; Esc per uscire. Si aprono solo dal
+  computer dove gira il server, non dai telefoni degli allievi.
+- "Scarica il riepilogo (CSV)": un file che si apre con Excel.
+
+
+SE QUALCOSA NON VA
+------------------
+
+- I telefoni non aprono la pagina:
+  · controlla che telefono e computer siano sullo STESSO wifi;
+  · rifai il passo del firewall: Start → scrivi "Consenti app tramite Windows
+    Firewall" → "Modifica impostazioni" → trova "python" → spunta "Privata";
+  · se il QR mostra un indirizzo sbagliato (capita con più schede di rete):
+    apri dati\config.json col Blocco note, scrivi l'indirizzo giusto dopo
+    "indirizzo" (per esempio "indirizzo": "192.168.1.29") e riavvia il server;
+  · alcuni wifi "ospiti" non lasciano parlare tra loro i dispositivi
+    ("isolamento client"): chiedi a chi gestisce il router di disattivarlo,
+    oppure usa l'hotspot di un telefono o un router tuo.
+- La finestra nera si chiude subito: probabilmente lo zip non è stato estratto
+  (passo 1). Estrai e riprova dalla cartella estratta.
+- L'indirizzo è cambiato da una volta all'altra: è normale, il router può dare
+  al computer un numero diverso. Usa sempre il QR o l'indirizzo scritto nella
+  finestra nera.
+- Un allievo non riesce a entrare ("nome già registrato con un altro codice"):
+  nella tua pagina clic sul suo nome → "Nuovo codice personale".
+
+
+DOVE SONO I DATI
+----------------
+
+Cartella "dati" (accanto a questo file):
+- allievi.json   nomi, codici protetti e progressi di tutti gli allievi;
+- config.json    il PIN dell'istruttore;
+- backup\        una copia al giorno, ultimi 30 giorni.
+Per spostare il corso su un altro computer copia l'intera cartella, dati compresi.
+I dati restano solo sul tuo computer: non vanno su internet.
+
+Mac: doppio clic su "Avvia (Mac).command" (la prima volta: tasto destro → Apri).
+Linux: ./avvia-linux.sh

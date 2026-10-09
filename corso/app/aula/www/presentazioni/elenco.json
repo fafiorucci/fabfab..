@@ -1,0 +1,188 @@
+[
+ {
+  "gruppo": "La scuola",
+  "titolo": "Presentazione della scuola",
+  "file": "presentazioni/scuola.html",
+  "slide": 29
+ },
+ {
+  "gruppo": "Il corso",
+  "titolo": "Rotta verso la patente · il corso in sintesi",
+  "file": "presentazioni/rotta.html",
+  "slide": 8
+ },
+ {
+  "gruppo": "Lezioni",
+  "titolo": "Lezione 01 · Teoria dello scafo",
+  "file": "presentazioni/lezione-01.html",
+  "slide": 57
+ },
+ {
+  "gruppo": "Lezioni",
+  "titolo": "Lezione 02 · Motori, elica e timone",
+  "file": "presentazioni/lezione-02.html",
+  "slide": 68
+ },
+ {
+  "gruppo": "Lezioni",
+  "titolo": "Lezione 03 · Ormeggi, ancoraggi, carte e segnali",
+  "file": "presentazioni/lezione-03.html",
+  "slide": 84
+ },
+ {
+  "gruppo": "Lezioni",
+  "titolo": "Lezione 04 · Carteggio e Navigazione primi calcoli, sottocosta, prora e rotta",
+  "file": "presentazioni/lezione-04.html",
+  "slide": 81
+ },
+ {
+  "gruppo": "Lezioni",
+  "titolo": "Lezione 05 · COLREG e prevenzione degli abbordi",
+  "file": "presentazioni/lezione-05.html",
+  "slide": 77
+ },
+ {
+  "gruppo": "Lezioni",
+  "titolo": "Lezione 06 · La sicurezza e i suoi elementi nella navigazione",
+  "file": "presentazioni/lezione-06.html",
+  "slide": 69
+ },
+ {
+  "gruppo": "Lezioni",
+  "titolo": "Lezione 07 · Meteorologia e Normativa",
+  "file": "presentazioni/lezione-07.html",
+  "slide": 80
+ },
+ {
+  "gruppo": "Lezioni",
+  "titolo": "Lezione 08 · Quiz ed esercizi di carteggio di navigazione entro le 12 miglia",
+  "file": "presentazioni/lezione-08.html",
+  "slide": 60
+ },
+ {
+  "gruppo": "Lezioni",
+  "titolo": "Lezione 09 · Vela",
+  "file": "presentazioni/lezione-09.html",
+  "slide": 61
+ },
+ {
+  "gruppo": "Lezioni",
+  "titolo": "Lezione 10 · Carteggio navigazione costiera",
+  "file": "presentazioni/lezione-10.html",
+  "slide": 108
+ },
+ {
+  "gruppo": "Lezioni",
+  "titolo": "Lezione 11 · Carteggio carburante e autonomia",
+  "file": "presentazioni/lezione-11.html",
+  "slide": 97
+ },
+ {
+  "gruppo": "Lezioni",
+  "titolo": "Lezione 12 · Carteggio lo scarroccio",
+  "file": "presentazioni/lezione-12.html",
+  "slide": 95
+ },
+ {
+  "gruppo": "Lezioni",
+  "titolo": "Lezione 13 · Carteggio le correnti (1)",
+  "file": "presentazioni/lezione-13.html",
+  "slide": 88
+ },
+ {
+  "gruppo": "Lezioni",
+  "titolo": "Lezione 14 · Carteggio le correnti (2)",
+  "file": "presentazioni/lezione-14.html",
+  "slide": 80
+ },
+ {
+  "gruppo": "Lezioni",
+  "titolo": "Lezione 15 · Carteggio sulla carta 42-D",
+  "file": "presentazioni/lezione-15.html",
+  "slide": 92
+ },
+ {
+  "gruppo": "Ripasso",
+  "titolo": "Schede riassuntive",
+  "file": "presentazioni/schede.html",
+  "slide": 35
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice A · I tre problemi della corrente",
+  "file": "presentazioni/appendice-a.html",
+  "slide": 13
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice B · I nomi della barca a vela",
+  "file": "presentazioni/appendice-b.html",
+  "slide": 26
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice C · I nodi marinari",
+  "file": "presentazioni/appendice-c.html",
+  "slide": 20
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice D · Prove d'esame simulate",
+  "file": "presentazioni/appendice-d.html",
+  "slide": 197
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice E · La prova pratica",
+  "file": "presentazioni/appendice-e.html",
+  "slide": 25
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice F · Schede IALA",
+  "file": "presentazioni/appendice-f.html",
+  "slide": 31
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice G · La normativa in tabelle",
+  "file": "presentazioni/appendice-g.html",
+  "slide": 30
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice H · La radio VHF",
+  "file": "presentazioni/appendice-h.html",
+  "slide": 26
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice I · Navigare sottocosta",
+  "file": "presentazioni/appendice-i.html",
+  "slide": 22
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice J · I bollettini meteo",
+  "file": "presentazioni/appendice-j.html",
+  "slide": 21
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice K · Il soccorso in mare",
+  "file": "presentazioni/appendice-k.html",
+  "slide": 23
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice L · L'ancoraggio",
+  "file": "presentazioni/appendice-l.html",
+  "slide": 22
+ },
+ {
+  "gruppo": "Appendici",
+  "titolo": "Appendice M · La portanza",
+  "file": "presentazioni/appendice-m.html",
+  "slide": 33
+ }
+]

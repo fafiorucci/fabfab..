@@ -1,0 +1,104 @@
+# Slide del corso esportate
+
+Slide in tre formati:
+
+- `html/` — pagina da aprire nel browser. Le slide si adattano alla finestra e ognuna ha sotto le note per l'istruttore.
+- `pdf/` — una slide per pagina (1920×1080).
+- `pdf-protetti/` — gli stessi PDF da dare agli allievi: filigrana «Fabrizio Fiorucci · vietata la duplicazione», avviso di proprietà intellettuale in basso, stampa, copia del testo e modifica bloccate (AES-256). Si aprono senza password; la password del proprietario la tiene Fabrizio e non è nel repository. Rigenerare: `PDF_OWNER_PW='…' strumenti/proteggi_tutti.sh`.
+- `pptx/` — PowerPoint 16:9. Ogni slide è un'immagine e le note per l'istruttore sono nelle note del relatore. Il testo non è modificabile.
+
+## Come scaricare i file
+
+Usa i link **PDF**, **PDF protetto**, **PPTX** e **HTML** dell'elenco qui sotto: scaricano direttamente il file.
+
+In alternativa, su GitHub clicca sul nome del file e poi sul pulsante **Download raw file** (la freccia in giù in alto a destra). Per scaricare tutto: **Code › Download ZIP** sul branch.
+
+> **Attenzione:** non usare il tasto destro › «Salva link con nome» sull'elenco dei file di GitHub. Così si salva la pagina web (circa 240 kB) con il nome del file, e PowerPoint risponde «ha rilevato un errore nel contenuto». Un file giusto pesa qualche MB: le presentazioni vanno da 1 a 30 MB.
+>
+> Se PowerPoint apre il file in *Visualizzazione protetta*, premi **Abilita modifica**.
+
+## Contenuto
+
+31 presentazioni, ciascuna in tre formati:
+
+- Addendum - Schede riassuntive · [PDF](pdf/Addendum%20-%20Schede%20riassuntive.pdf?raw=true) · [PDF protetto](pdf-protetti/Addendum%20-%20Schede%20riassuntive.pdf?raw=true) · [PPTX](pptx/Addendum%20-%20Schede%20riassuntive.pptx?raw=true) · [HTML](html/Addendum%20-%20Schede%20riassuntive.html?raw=true)
+- Appendice A - I tre problemi della corrente · [PDF](pdf/Appendice%20A%20-%20I%20tre%20problemi%20della%20corrente.pdf?raw=true) · [PDF protetto](pdf-protetti/Appendice%20A%20-%20I%20tre%20problemi%20della%20corrente.pdf?raw=true) · [PPTX](pptx/Appendice%20A%20-%20I%20tre%20problemi%20della%20corrente.pptx?raw=true) · [HTML](html/Appendice%20A%20-%20I%20tre%20problemi%20della%20corrente.html?raw=true)
+- Appendice B - I nomi della barca a vela · [PDF](pdf/Appendice%20B%20-%20I%20nomi%20della%20barca%20a%20vela.pdf?raw=true) · [PDF protetto](pdf-protetti/Appendice%20B%20-%20I%20nomi%20della%20barca%20a%20vela.pdf?raw=true) · [PPTX](pptx/Appendice%20B%20-%20I%20nomi%20della%20barca%20a%20vela.pptx?raw=true) · [HTML](html/Appendice%20B%20-%20I%20nomi%20della%20barca%20a%20vela.html?raw=true)
+- Appendice C - I nodi marinari · [PDF](pdf/Appendice%20C%20-%20I%20nodi%20marinari.pdf?raw=true) · [PDF protetto](pdf-protetti/Appendice%20C%20-%20I%20nodi%20marinari.pdf?raw=true) · [PPTX](pptx/Appendice%20C%20-%20I%20nodi%20marinari.pptx?raw=true) · [HTML](html/Appendice%20C%20-%20I%20nodi%20marinari.html?raw=true)
+- Appendice D - Prove d'esame simulate · [PDF](pdf/Appendice%20D%20-%20Prove%20d%27esame%20simulate.pdf?raw=true) · [PDF protetto](pdf-protetti/Appendice%20D%20-%20Prove%20d%27esame%20simulate.pdf?raw=true) · [PPTX](pptx/Appendice%20D%20-%20Prove%20d%27esame%20simulate.pptx?raw=true) · [HTML](html/Appendice%20D%20-%20Prove%20d%27esame%20simulate.html?raw=true)
+- Appendice E - La prova pratica · [PDF](pdf/Appendice%20E%20-%20La%20prova%20pratica.pdf?raw=true) · [PDF protetto](pdf-protetti/Appendice%20E%20-%20La%20prova%20pratica.pdf?raw=true) · [PPTX](pptx/Appendice%20E%20-%20La%20prova%20pratica.pptx?raw=true) · [HTML](html/Appendice%20E%20-%20La%20prova%20pratica.html?raw=true)
+- Appendice F - Schede IALA · [PDF](pdf/Appendice%20F%20-%20Schede%20IALA.pdf?raw=true) · [PDF protetto](pdf-protetti/Appendice%20F%20-%20Schede%20IALA.pdf?raw=true) · [PPTX](pptx/Appendice%20F%20-%20Schede%20IALA.pptx?raw=true) · [HTML](html/Appendice%20F%20-%20Schede%20IALA.html?raw=true)
+- Appendice G - La normativa in tabelle · [PDF](pdf/Appendice%20G%20-%20La%20normativa%20in%20tabelle.pdf?raw=true) · [PDF protetto](pdf-protetti/Appendice%20G%20-%20La%20normativa%20in%20tabelle.pdf?raw=true) · [PPTX](pptx/Appendice%20G%20-%20La%20normativa%20in%20tabelle.pptx?raw=true) · [HTML](html/Appendice%20G%20-%20La%20normativa%20in%20tabelle.html?raw=true)
+- Appendice H - La radio VHF · [PDF](pdf/Appendice%20H%20-%20La%20radio%20VHF.pdf?raw=true) · [PDF protetto](pdf-protetti/Appendice%20H%20-%20La%20radio%20VHF.pdf?raw=true) · [PPTX](pptx/Appendice%20H%20-%20La%20radio%20VHF.pptx?raw=true) · [HTML](html/Appendice%20H%20-%20La%20radio%20VHF.html?raw=true)
+- Appendice I - Navigare sottocosta · [PDF](pdf/Appendice%20I%20-%20Navigare%20sottocosta.pdf?raw=true) · [PDF protetto](pdf-protetti/Appendice%20I%20-%20Navigare%20sottocosta.pdf?raw=true) · [PPTX](pptx/Appendice%20I%20-%20Navigare%20sottocosta.pptx?raw=true) · [HTML](html/Appendice%20I%20-%20Navigare%20sottocosta.html?raw=true)
+- Appendice J - I bollettini meteo · [PDF](pdf/Appendice%20J%20-%20I%20bollettini%20meteo.pdf?raw=true) · [PDF protetto](pdf-protetti/Appendice%20J%20-%20I%20bollettini%20meteo.pdf?raw=true) · [PPTX](pptx/Appendice%20J%20-%20I%20bollettini%20meteo.pptx?raw=true) · [HTML](html/Appendice%20J%20-%20I%20bollettini%20meteo.html?raw=true)
+- Appendice K - Il soccorso in mare · [PDF](pdf/Appendice%20K%20-%20Il%20soccorso%20in%20mare.pdf?raw=true) · [PDF protetto](pdf-protetti/Appendice%20K%20-%20Il%20soccorso%20in%20mare.pdf?raw=true) · [PPTX](pptx/Appendice%20K%20-%20Il%20soccorso%20in%20mare.pptx?raw=true) · [HTML](html/Appendice%20K%20-%20Il%20soccorso%20in%20mare.html?raw=true)
+- Appendice L - L'ancoraggio · [PDF](pdf/Appendice%20L%20-%20L%27ancoraggio.pdf?raw=true) · [PDF protetto](pdf-protetti/Appendice%20L%20-%20L%27ancoraggio.pdf?raw=true) · [PPTX](pptx/Appendice%20L%20-%20L%27ancoraggio.pptx?raw=true) · [HTML](html/Appendice%20L%20-%20L%27ancoraggio.html?raw=true)
+- Appendice M - La portanza · [PDF](pdf/Appendice%20M%20-%20La%20portanza.pdf?raw=true) · [PDF protetto](pdf-protetti/Appendice%20M%20-%20La%20portanza.pdf?raw=true) · [PPTX](pptx/Appendice%20M%20-%20La%20portanza.pptx?raw=true) · [HTML](html/Appendice%20M%20-%20La%20portanza.html?raw=true)
+- Lezione 01 - Teoria dello scafo · [PDF](pdf/Lezione%2001%20-%20Teoria%20dello%20scafo.pdf?raw=true) · [PDF protetto](pdf-protetti/Lezione%2001%20-%20Teoria%20dello%20scafo.pdf?raw=true) · [PPTX](pptx/Lezione%2001%20-%20Teoria%20dello%20scafo.pptx?raw=true) · [HTML](html/Lezione%2001%20-%20Teoria%20dello%20scafo.html?raw=true)
+- Lezione 02 - Motori, elica e timone · [PDF](pdf/Lezione%2002%20-%20Motori%2C%20elica%20e%20timone.pdf?raw=true) · [PDF protetto](pdf-protetti/Lezione%2002%20-%20Motori%2C%20elica%20e%20timone.pdf?raw=true) · [PPTX](pptx/Lezione%2002%20-%20Motori%2C%20elica%20e%20timone.pptx?raw=true) · [HTML](html/Lezione%2002%20-%20Motori%2C%20elica%20e%20timone.html?raw=true)
+- Lezione 03 - Ormeggi, ancoraggi, carte e segnali · [PDF](pdf/Lezione%2003%20-%20Ormeggi%2C%20ancoraggi%2C%20carte%20e%20segnali.pdf?raw=true) · [PDF protetto](pdf-protetti/Lezione%2003%20-%20Ormeggi%2C%20ancoraggi%2C%20carte%20e%20segnali.pdf?raw=true) · [PPTX](pptx/Lezione%2003%20-%20Ormeggi%2C%20ancoraggi%2C%20carte%20e%20segnali.pptx?raw=true) · [HTML](html/Lezione%2003%20-%20Ormeggi%2C%20ancoraggi%2C%20carte%20e%20segnali.html?raw=true)
+- Lezione 04 - Carteggio e Navigazione primi calcoli, sottocosta, prora e rotta · [PDF](pdf/Lezione%2004%20-%20Carteggio%20e%20Navigazione%20primi%20calcoli%2C%20sottocosta%2C%20prora%20e%20rotta.pdf?raw=true) · [PDF protetto](pdf-protetti/Lezione%2004%20-%20Carteggio%20e%20Navigazione%20primi%20calcoli%2C%20sottocosta%2C%20prora%20e%20rotta.pdf?raw=true) · [PPTX](pptx/Lezione%2004%20-%20Carteggio%20e%20Navigazione%20primi%20calcoli%2C%20sottocosta%2C%20prora%20e%20rotta.pptx?raw=true) · [HTML](html/Lezione%2004%20-%20Carteggio%20e%20Navigazione%20primi%20calcoli%2C%20sottocosta%2C%20prora%20e%20rotta.html?raw=true)
+- Lezione 05 - COLREG e prevenzione degli abbordi · [PDF](pdf/Lezione%2005%20-%20COLREG%20e%20prevenzione%20degli%20abbordi.pdf?raw=true) · [PDF protetto](pdf-protetti/Lezione%2005%20-%20COLREG%20e%20prevenzione%20degli%20abbordi.pdf?raw=true) · [PPTX](pptx/Lezione%2005%20-%20COLREG%20e%20prevenzione%20degli%20abbordi.pptx?raw=true) · [HTML](html/Lezione%2005%20-%20COLREG%20e%20prevenzione%20degli%20abbordi.html?raw=true)
+- Lezione 06 - La sicurezza e i suoi elementi nella navigazione · [PDF](pdf/Lezione%2006%20-%20La%20sicurezza%20e%20i%20suoi%20elementi%20nella%20navigazione.pdf?raw=true) · [PDF protetto](pdf-protetti/Lezione%2006%20-%20La%20sicurezza%20e%20i%20suoi%20elementi%20nella%20navigazione.pdf?raw=true) · [PPTX](pptx/Lezione%2006%20-%20La%20sicurezza%20e%20i%20suoi%20elementi%20nella%20navigazione.pptx?raw=true) · [HTML](html/Lezione%2006%20-%20La%20sicurezza%20e%20i%20suoi%20elementi%20nella%20navigazione.html?raw=true)
+- Lezione 07 - Meteorologia e Normativa · [PDF](pdf/Lezione%2007%20-%20Meteorologia%20e%20Normativa.pdf?raw=true) · [PDF protetto](pdf-protetti/Lezione%2007%20-%20Meteorologia%20e%20Normativa.pdf?raw=true) · [PPTX](pptx/Lezione%2007%20-%20Meteorologia%20e%20Normativa.pptx?raw=true) · [HTML](html/Lezione%2007%20-%20Meteorologia%20e%20Normativa.html?raw=true)
+- Lezione 08 - Quiz ed esercizi di carteggio di navigazione entro le 12 miglia · [PDF](pdf/Lezione%2008%20-%20Quiz%20ed%20esercizi%20di%20carteggio%20di%20navigazione%20entro%20le%2012%20miglia.pdf?raw=true) · [PDF protetto](pdf-protetti/Lezione%2008%20-%20Quiz%20ed%20esercizi%20di%20carteggio%20di%20navigazione%20entro%20le%2012%20miglia.pdf?raw=true) · [PPTX](pptx/Lezione%2008%20-%20Quiz%20ed%20esercizi%20di%20carteggio%20di%20navigazione%20entro%20le%2012%20miglia.pptx?raw=true) · [HTML](html/Lezione%2008%20-%20Quiz%20ed%20esercizi%20di%20carteggio%20di%20navigazione%20entro%20le%2012%20miglia.html?raw=true)
+- Lezione 09 - Vela · [PDF](pdf/Lezione%2009%20-%20Vela.pdf?raw=true) · [PDF protetto](pdf-protetti/Lezione%2009%20-%20Vela.pdf?raw=true) · [PPTX](pptx/Lezione%2009%20-%20Vela.pptx?raw=true) · [HTML](html/Lezione%2009%20-%20Vela.html?raw=true)
+- Lezione 10 - Carteggio navigazione costiera · [PDF](pdf/Lezione%2010%20-%20Carteggio%20navigazione%20costiera.pdf?raw=true) · [PDF protetto](pdf-protetti/Lezione%2010%20-%20Carteggio%20navigazione%20costiera.pdf?raw=true) · [PPTX](pptx/Lezione%2010%20-%20Carteggio%20navigazione%20costiera.pptx?raw=true) · [HTML](html/Lezione%2010%20-%20Carteggio%20navigazione%20costiera.html?raw=true)
+- Lezione 11 - Carteggio carburante e autonomia · [PDF](pdf/Lezione%2011%20-%20Carteggio%20carburante%20e%20autonomia.pdf?raw=true) · [PDF protetto](pdf-protetti/Lezione%2011%20-%20Carteggio%20carburante%20e%20autonomia.pdf?raw=true) · [PPTX](pptx/Lezione%2011%20-%20Carteggio%20carburante%20e%20autonomia.pptx?raw=true) · [HTML](html/Lezione%2011%20-%20Carteggio%20carburante%20e%20autonomia.html?raw=true)
+- Lezione 12 - Carteggio lo scarroccio · [PDF](pdf/Lezione%2012%20-%20Carteggio%20lo%20scarroccio.pdf?raw=true) · [PDF protetto](pdf-protetti/Lezione%2012%20-%20Carteggio%20lo%20scarroccio.pdf?raw=true) · [PPTX](pptx/Lezione%2012%20-%20Carteggio%20lo%20scarroccio.pptx?raw=true) · [HTML](html/Lezione%2012%20-%20Carteggio%20lo%20scarroccio.html?raw=true)
+- Lezione 13 - Carteggio le correnti (1) · [PDF](pdf/Lezione%2013%20-%20Carteggio%20le%20correnti%20%281%29.pdf?raw=true) · [PDF protetto](pdf-protetti/Lezione%2013%20-%20Carteggio%20le%20correnti%20%281%29.pdf?raw=true) · [PPTX](pptx/Lezione%2013%20-%20Carteggio%20le%20correnti%20%281%29.pptx?raw=true) · [HTML](html/Lezione%2013%20-%20Carteggio%20le%20correnti%20%281%29.html?raw=true)
+- Lezione 14 - Carteggio le correnti (2) · [PDF](pdf/Lezione%2014%20-%20Carteggio%20le%20correnti%20%282%29.pdf?raw=true) · [PDF protetto](pdf-protetti/Lezione%2014%20-%20Carteggio%20le%20correnti%20%282%29.pdf?raw=true) · [PPTX](pptx/Lezione%2014%20-%20Carteggio%20le%20correnti%20%282%29.pptx?raw=true) · [HTML](html/Lezione%2014%20-%20Carteggio%20le%20correnti%20%282%29.html?raw=true)
+- Lezione 15 - Carteggio sulla carta 42-D · [PDF](pdf/Lezione%2015%20-%20Carteggio%20sulla%20carta%2042-D.pdf?raw=true) · [PDF protetto](pdf-protetti/Lezione%2015%20-%20Carteggio%20sulla%20carta%2042-D.pdf?raw=true) · [PPTX](pptx/Lezione%2015%20-%20Carteggio%20sulla%20carta%2042-D.pptx?raw=true) · [HTML](html/Lezione%2015%20-%20Carteggio%20sulla%20carta%2042-D.html?raw=true)
+- Patente nautica Vela-Motore entro le 12 miglia e senza limiti dalla costa - Fabrizio Fiorucci · [PDF](pdf/Patente%20nautica%20Vela-Motore%20entro%20le%2012%20miglia%20e%20senza%20limiti%20dalla%20costa%20-%20Fabrizio%20Fiorucci.pdf?raw=true) · [PDF protetto](pdf-protetti/Patente%20nautica%20Vela-Motore%20entro%20le%2012%20miglia%20e%20senza%20limiti%20dalla%20costa%20-%20Fabrizio%20Fiorucci.pdf?raw=true) · [PPTX](pptx/Patente%20nautica%20Vela-Motore%20entro%20le%2012%20miglia%20e%20senza%20limiti%20dalla%20costa%20-%20Fabrizio%20Fiorucci.pptx?raw=true) · [HTML](html/Patente%20nautica%20Vela-Motore%20entro%20le%2012%20miglia%20e%20senza%20limiti%20dalla%20costa%20-%20Fabrizio%20Fiorucci.html?raw=true)
+- Rotta verso la patente - Il corso in sintesi · [PDF](pdf/Rotta%20verso%20la%20patente%20-%20Il%20corso%20in%20sintesi.pdf?raw=true) · [PDF protetto](pdf-protetti/Rotta%20verso%20la%20patente%20-%20Il%20corso%20in%20sintesi.pdf?raw=true) · [PPTX](pptx/Rotta%20verso%20la%20patente%20-%20Il%20corso%20in%20sintesi.pptx?raw=true) · [HTML](html/Rotta%20verso%20la%20patente%20-%20Il%20corso%20in%20sintesi.html?raw=true)
+
+## App per l'aula
+
+- [Corso patente nautica - app aula (ZIP)](app/Corso%20patente%20nautica%20-%20app%20aula.zip?raw=true): l'app delle lezioni 1 e 2 da usare sul wifi della scuola, con l'area istruttore. Si estrae e si avvia con un doppio clic; istruzioni nel file LEGGIMI.txt dentro lo zip. Si rigenera con `python3 corso/app/aula/prepara_pacchetto.py --python <python-3.12.x-embed-amd64.zip>`.
+
+- [Corso patente nautica - demo (ZIP)](app/Corso%20patente%20nautica%20-%20demo.zip?raw=true): la demo dell'app con contenuti di esempio, da far vedere ad altre scuole. Si estrae e si apre con un doppio clic su `index.html`, anche senza internet. Si rigenera con `corso/app/demo/prepara_demo.py`.
+
+## Istruzioni
+
+- [Come entrare nell'app del corso (PDF)](istruzioni/Come%20entrare%20nell%E2%80%99app%20del%20corso.pdf?raw=true): per gli allievi.
+- [Linee guida dell'app del corso (PDF)](istruzioni/Linee%20guida%20dell'app%20del%20corso.pdf?raw=true): per l'istruttore. Indirizzi, iscrivere e togliere allievi, posti di Zero Trust, prove per altre scuole, demo, aula, limiti di Cloudflare, problemi frequenti. Testo in `istruzioni/Linee guida dell'app del corso.md` (lo stesso del documento «Linee guida dell'app del corso»); il PDF, con la grafica delle slide, il logo di Onda Portante Sailing e l'avviso a piè di pagina, si rifà con `python3 strumenti/documento_pdf.py "istruzioni/Linee guida dell'app del corso.md" "istruzioni/Linee guida dell'app del corso.pdf"`.
+
+## Rigenerare l'export
+
+Quando un deck cambia, si riscarica dall'artifact e si lancia
+`strumenti/esporta.sh <cartella_deck>` (procedura completa in `CLAUDE.md` alla radice).
+
+| Deck | Artifact |
+|---|---|
+| Indice del corso | https://claude.ai/artifact/KWJagMPHLrNsJ7wsAJTQ2c |
+| Presentazione per la scuola | https://claude.ai/artifact/FxjVMj32rr5eymmibB5Eec |
+| Lezione 01 | https://claude.ai/artifact/88qucRB9ShUjyy2Zcqi63o |
+| Lezione 02 | https://claude.ai/artifact/Pt6CpLG14fRT6oXxygkocd |
+| Lezione 03 | https://claude.ai/artifact/PFnQXEjrpjDEFMPQjCCM3B |
+| Lezione 04 | https://claude.ai/artifact/6MGv79yzKh2XkuvwFxQQiQ |
+| Lezione 05 | https://claude.ai/artifact/XZEiJ8kirirnR7Ys3FpjYT |
+| Lezione 06 | https://claude.ai/artifact/RsXdsFbux15NxGeKgby3fh |
+| Lezione 07 | https://claude.ai/artifact/2czz37ppZ21LU43Ajij4J7 |
+| Lezione 08 | https://claude.ai/artifact/FDFp7FksintFpbuEAdo4sx |
+| Lezione 09 | https://claude.ai/artifact/QDzUrT8vLw7EQj765Hyrxe |
+| Lezione 10 | https://claude.ai/artifact/64DeNcgDYeo8AtFEnDjbqG |
+| Lezione 11 | https://claude.ai/artifact/1dsfk73ddAt2WCCwMDhFnJ |
+| Lezione 12 | https://claude.ai/artifact/Y86JJdezDF7GdAPJPXaR7Q |
+| Lezione 13 | https://claude.ai/artifact/VmVgzwDkQx6w3Ckv8CKAsF |
+| Lezione 14 | https://claude.ai/artifact/8By1QqWNDmsZMKSeoRdtpS |
+| Lezione 15 | https://claude.ai/artifact/CHpFbvwVBv2BLp8fvbYpPx |
+| Appendice A | https://claude.ai/artifact/1hFQPJ6uzwJTcUD3iL8kQr |
+| Appendice B | https://claude.ai/artifact/WNpiYhrUGGtCF1b8x3HwqV |
+| Appendice C | https://claude.ai/artifact/SgD9AT2riGF8Qn3Y3nkBeE |
+| Appendice D | https://claude.ai/artifact/Lc3nDQhbwaT9W7StE9dSjE |
+| Appendice E | https://claude.ai/artifact/Mzyami3LS4DrJEUr91yHVB |
+| Appendice F | https://claude.ai/artifact/8r66WpwATcTvjUVVmMDkcF |
+| Appendice G | https://claude.ai/artifact/1rxQdsHj5KsKWbzfQywxYK |
+| Appendice H | https://claude.ai/artifact/5Cb5LD8J7BgGSoBQfL3SLm |
+| Appendice I | https://claude.ai/artifact/CL3ifXqfGFmb7rLVtJCVTL |
+| Appendice J | https://claude.ai/artifact/8DuhyYgsfK2SzSiiPjWWU7 |
+| Appendice K | https://claude.ai/artifact/RnDo7TYXGz52N73sXndC26 |
+| Appendice L | https://claude.ai/artifact/5N8Yqin6vPAdayCKswo4Ug |
+| Appendice M | https://claude.ai/artifact/Ap7Q1MUK6AqSZtf58LmStt |
+| Schede riassuntive | https://claude.ai/artifact/NEHjtWa3XgzS6NMc4K18vC |
