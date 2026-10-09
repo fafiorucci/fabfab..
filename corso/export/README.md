@@ -62,7 +62,7 @@ In alternativa, su GitHub clicca sul nome del file e poi sul pulsante **Download
 ## Istruzioni
 
 - [Come entrare nell'app del corso (PDF)](istruzioni/Come%20entrare%20nell%E2%80%99app%20del%20corso.pdf?raw=true): per gli allievi.
-- [Linee guida dell'app del corso (PDF)](istruzioni/Linee%20guida%20dell'app%20del%20corso.pdf?raw=true): per l'istruttore. Indirizzi, iscrivere e togliere allievi, posti di Zero Trust, prove per altre scuole, demo, aula, limiti di Cloudflare, problemi frequenti. Testo in `istruzioni/Linee guida dell'app del corso.md` (lo stesso del documento [Linee guida dell'app del corso](https://claude.ai/artifact/Vobm2Vk1CxQBc5F99v2uv4)); il PDF, con la grafica delle slide, il logo di Onda Portante Sailing e l'avviso a piè di pagina, si rifà con `python3 strumenti/documento_pdf.py "istruzioni/Linee guida dell'app del corso.md" "istruzioni/Linee guida dell'app del corso.pdf"`.
+- [Linee guida dell'app del corso (PDF)](istruzioni/Linee%20guida%20dell'app%20del%20corso.pdf?raw=true): per l'istruttore. Indirizzi, iscrivere e togliere allievi, posti di Zero Trust, prove per altre scuole, demo, aula, limiti di Cloudflare, problemi frequenti. Testo in `istruzioni/Linee guida dell'app del corso.md` (lo stesso del documento «Linee guida dell'app del corso»); il PDF, con la grafica delle slide, il logo di Onda Portante Sailing e l'avviso a piè di pagina, si rifà con `python3 strumenti/documento_pdf.py "istruzioni/Linee guida dell'app del corso.md" "istruzioni/Linee guida dell'app del corso.pdf"`.
 
 ## Rigenerare l'export
 

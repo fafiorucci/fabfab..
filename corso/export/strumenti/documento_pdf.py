@@ -8,7 +8,7 @@ Il Markdown comincia con «# Titolo», poi una riga con data e autore, poi il pa
 In copertina: riquadro blu notte con etichetta, titolo, onda gialla, apertura e il logo di Onda Portante Sailing.
 Ogni pagina: fondo carta con macchia e onde come le slide, a piè di pagina il logo, la dicitura del corso, il numero
 di pagina e l'avviso sulla proprietà intellettuale.
-Requisiti: Playwright con Chromium in /opt/pw-browsers, python-markdown, pymupdf, Pillow; rete per i Google Fonts.
+Requisiti: Playwright con Chromium in /opt/pw-browsers, python-markdown, pymupdf, Pillow.
 """
 import argparse, asyncio, base64, html, io, os, re, tempfile
 import markdown, pymupdf
@@ -17,6 +17,7 @@ from playwright.async_api import async_playwright
 
 QUI = os.path.dirname(os.path.abspath(__file__))
 CORSO = os.path.dirname(os.path.dirname(QUI))
+FONTS = os.path.join(CORSO, 'app', 'aula', 'www', 'fonts')   # gli stessi dell'app in aula (scarica_caratteri.py)
 LOGO = os.path.join(CORSO, 'app', 'casa', 'logo-accesso.png')   # Onda Portante Sailing
 DICITURA = 'Fabrizio Fiorucci · Patente nautica Vela/Motore entro le 12 miglia e senza limiti dalla costa'
 AVVISO = ('La proprietà intellettuale di questo documento è di Fabrizio Fiorucci, '
@@ -60,7 +61,7 @@ def corpo_html(corpo):
 
 
 PAGINA = """<!doctype html><html lang="it"><head><meta charset="utf-8"><title>{titolo}</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito+Sans:wght@400;600;700;800;900&display=block">
+<link rel="stylesheet" href="file://{fonts}/fonts.css">
 <style>
 @page {{ size: A4; margin: 15mm 17mm 27mm 17mm }}
 :root {{ --ink:#1B2A41; --body:#34465E; --soft:#5E6E82; --line:#EDE5D6; --navy:#16324F; --sun:#FFC145; --coral:#E4572E; --sea:#0B8A99 }}
@@ -137,9 +138,7 @@ PIEDE = """<style>*{{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 
 async def stampa(pagina_html, fondo_html, piede, pdf, fondo_pdf):
     async with async_playwright() as p:
-        # caratteri da Google Fonts (dietro il proxy, se c'è): quelli locali dell'aula hanno Nunito Sans solo extra-grassetto
-        proxy = {'proxy': {'server': os.environ['HTTPS_PROXY']}} if os.environ.get('HTTPS_PROXY') else {}
-        b = await p.chromium.launch(args=['--ignore-certificate-errors'], **proxy, **({'executable_path': CHROMIUM} if CHROMIUM else {}))
+        b = await p.chromium.launch(**({'executable_path': CHROMIUM} if CHROMIUM else {}))
         pg = await b.new_page()
         with tempfile.TemporaryDirectory() as t:
             for nome, testo, uscita, opz in (('d.html', pagina_html, pdf, dict(display_header_footer=True, header_template='<span></span>', footer_template=piede)),
@@ -155,7 +154,7 @@ def main():
     a.add_argument('--etichetta', default='Linee guida · per l’istruttore')
     x = a.parse_args()
     titolo, data, apertura, corpo = leggi(open(x.md, encoding='utf-8').read())
-    pagina = PAGINA.format(titolo=html.escape(titolo), etichetta=html.escape(x.etichetta),
+    pagina = PAGINA.format(titolo=html.escape(titolo), fonts=FONTS, etichetta=html.escape(x.etichetta),
                            onda_gialla=onda('#FFC145', 150), apertura=html.escape(apertura), data=html.escape(data),
                            logo=png64(LOGO, 360), corpo=corpo_html(corpo))
     piede = PIEDE.format(logo=png64(LOGO, 80), dicitura=html.escape(DICITURA),

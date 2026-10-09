@@ -14,9 +14,9 @@ Gli allievi usano l'app online; l'istruttore la segue da /docente. Le altre scuo
 | Area istruttore (online) | [corsonautico-ondaportante.fafiorucci.workers.dev/docente](https://corsonautico-ondaportante.fafiorucci.workers.dev/docente) | Solo fafiorucci@gmail.com |
 | Sito delle prove per altre scuole | corso-nautico-prova.fafiorucci.workers.dev/?p=codice | Chi ha il link personale creato nella scheda «Prove» |
 | App in aula senza internet | corso/export/app/Corso patente nautica - app aula.zip | Allievi sul wifi della scuola; istruttore con il PIN |
-| Demo online | [Demo dell'app](https://claude.ai/artifact/TS7HycJgEtA3ugZTLMdsZm) | Privata: va condivisa dal menu Condividi della pagina |
+| Demo online | Pagina «Corso Nautico Demo» | Privata: va condivisa dal menu Condividi della pagina |
 | Demo da chiavetta | corso/export/app/Corso patente nautica - demo.zip | Chiunque abbia lo zip |
-| Istruzioni per gli allievi | corso/export/istruzioni/Come entrare nell'app del corso.pdf ([pagina](https://claude.ai/artifact/SWYRL6DnEeQdGX8ajcF4nX)) | Da mandare a ogni nuovo allievo |
+| Istruzioni per gli allievi | corso/export/istruzioni/Come entrare nell'app del corso.pdf | Da mandare a ogni nuovo allievo |
 
 Attenzione all'indirizzo dell'area istruttore: è /docente per intero (/docent dà «pagina non trovata»).
 
@@ -71,7 +71,7 @@ Una prova con l'email invece del link funziona come un allievo: l'email va aggiu
 
 La demo mostra l'app con contenuti di esempio: lezione 1 fino al capitolo 1, la sua scheda, i numeri d'oro, le appendici C ed E e un'area istruttore con allievi inventati.
 
-- **Online:** [Demo dell'app](https://claude.ai/artifact/TS7HycJgEtA3ugZTLMdsZm). È privata: per farla vedere va condivisa dal menu Condividi della pagina.
+- **Online:** la pagina «Corso Nautico Demo». È privata: per farla vedere va condivisa dal menu Condividi della pagina.
 - **Da chiavetta o senza internet:** scompatta «Corso patente nautica - demo.zip» e fai doppio clic su index.html (Chrome, Edge, Firefox o Safari). La cartella va tenuta intera; dentro c'è un LEGGIMI.txt.
 - I progressi della demo restano solo nel browser di chi la prova.
 
