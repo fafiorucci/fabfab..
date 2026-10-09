@@ -4,7 +4,7 @@
 	import { type GeoJSONSource, type ImageSource, type StyleSpecification } from 'maplibre-gl';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
-	import type { Grid } from '#lib/meteo/api.ts';
+	import type { BBox, Grid } from '#lib/meteo/api.ts';
 	import type { LayerInfo } from '#lib/meteo/layers.ts';
 	import { arrowFeatures, arrowImage, bboxCorners, renderField } from '#lib/map/field.ts';
 	import { Particles } from '#lib/map/particles.ts';
@@ -12,20 +12,22 @@
 	export type Base = 'light' | 'satellite';
 
 	interface Props {
-		grid: Grid | null;
-		field: ArrayLike<number> | null;
+		/** Zona dell'uscita: inquadrata all'apertura e con il tasto "casa". */
+		home: BBox | null;
+		/** Ogni livello porta la propria griglia: durante il caricamento di una nuova zona resta visibile la precedente. */
+		field: { grid: Grid; values: ArrayLike<number> } | null;
 		layer: LayerInfo;
-		arrows: { dir: ArrayLike<number>; value: ArrayLike<number> } | null;
-		wind: { u: ArrayLike<number>; v: ArrayLike<number> } | null;
+		arrows: { grid: Grid; dir: ArrayLike<number>; value: ArrayLike<number> } | null;
+		wind: { grid: Grid; u: ArrayLike<number>; v: ArrayLike<number> } | null;
 		base: Base;
 		seamarks: boolean;
 		particles: boolean;
 		point: { lat: number; lon: number } | null;
 		onpick?: (lat: number, lon: number) => void;
-		onview?: (bbox: [number, number, number, number]) => void;
+		onview?: (bbox: BBox) => void;
 	}
 
-	let { grid, field, layer, arrows, wind, base, seamarks, particles, point, onpick, onview }: Props = $props();
+	let { home, field, layer, arrows, wind, base, seamarks, particles, point, onpick, onview }: Props = $props();
 
 	let container: HTMLDivElement;
 	let overlay: HTMLCanvasElement;
@@ -67,8 +69,7 @@
 	function installOverlays() {
 		const m = map!;
 		const before = firstSymbolLayer();
-		const corners = grid ? bboxCorners(grid) : bboxCorners({ lats: [0, 0.1], lons: [0, 0.1], bbox: [0, 0, 0.1, 0.1] });
-		m.addSource('field', { type: 'image', url: EMPTY_PNG, coordinates: corners });
+		m.addSource('field', { type: 'image', url: EMPTY_PNG, coordinates: bboxCorners({ lats: [0, 0.1], lons: [0, 0.1], bbox: [0, 0, 0.1, 0.1] }) });
 		m.addLayer({ id: 'field', type: 'raster', source: 'field', paint: { 'raster-opacity': 0.62, 'raster-fade-duration': 0, 'raster-resampling': 'linear' } }, before);
 		m.addSource('seamarks', {
 			type: 'raster',
@@ -77,8 +78,6 @@
 			attribution: 'Segnali © OpenSeaMap'
 		});
 		m.addLayer({ id: 'seamarks', type: 'raster', source: 'seamarks', minzoom: 8, layout: { visibility: seamarks ? 'visible' : 'none' } });
-		m.addSource('area', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
-		m.addLayer({ id: 'area', type: 'line', source: 'area', paint: { 'line-color': '#ff7a1a', 'line-width': 2, 'line-dasharray': [2, 2] } });
 		if (!m.hasImage('arrow')) m.addImage('arrow', arrowImage(), { sdf: true });
 		m.addSource('arrows', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
 		m.addLayer({
@@ -104,8 +103,7 @@
 		map = new maplibregl.Map({
 			container,
 			style: base === 'satellite' ? SAT_STYLE : LIGHT_STYLE,
-			center: grid ? [(grid.bbox[0] + grid.bbox[2]) / 2, (grid.bbox[1] + grid.bbox[3]) / 2] : [12.5, 40],
-			zoom: 7,
+			...(home ? { bounds: home, fitBoundsOptions: { padding: 24 } } : { center: [12.5, 40] as [number, number], zoom: 5 }),
 			attributionControl: { compact: true },
 			canvasContextAttributes: { preserveDrawingBuffer: true }
 		});
@@ -141,35 +139,29 @@
 		map.setStyle(b === 'satellite' ? SAT_STYLE : LIGHT_STYLE);
 	});
 
-	// Area dell'uscita e inquadratura iniziale.
-	let fittedFor: Grid | null = null;
+	// Nuova uscita: inquadra la sua zona (la mappa poi segnala la vista e arrivano i dati).
+	let homeKey = '';
 	$effect(() => {
-		if (!styleReady || !map || !grid) return;
-		const [w, s, e, n] = grid.bbox;
-		(map.getSource('area') as GeoJSONSource).setData({
-			type: 'Feature',
-			properties: {},
-			geometry: { type: 'LineString', coordinates: [[w, s], [e, s], [e, n], [w, n], [w, s]] }
-		});
-		if (fittedFor !== grid) {
-			fittedFor = grid;
-			map.fitBounds([[w, s], [e, n]], { padding: 24, duration: 0 });
-		}
+		const key = home?.join(',') ?? '';
+		if (!map || !home || key === homeKey) return;
+		const first = homeKey === '';
+		homeKey = key;
+		if (!first) goHome(0);
 	});
 
 	$effect(() => {
 		if (!styleReady || !map) return;
 		const src = map.getSource('field') as ImageSource;
-		if (!grid || !field) {
+		if (!field) {
 			src.updateImage({ url: EMPTY_PNG });
 			return;
 		}
-		src.updateImage({ url: renderField(fieldCanvas, grid, field, layer), coordinates: bboxCorners(grid) });
+		src.updateImage({ url: renderField(fieldCanvas, field.grid, field.values, layer), coordinates: bboxCorners(field.grid) });
 	});
 
 	$effect(() => {
 		if (!styleReady || !map) return;
-		const fc = grid && arrows ? arrowFeatures(grid, arrows.dir, arrows.value) : { type: 'FeatureCollection' as const, features: [] };
+		const fc = arrows ? arrowFeatures(arrows.grid, arrows.dir, arrows.value) : { type: 'FeatureCollection' as const, features: [] };
 		(map.getSource('arrows') as GeoJSONSource).setData(fc);
 		map.setPaintProperty('arrows', 'icon-color', base === 'satellite' ? '#ffffff' : '#0b1d2c');
 		map.setPaintProperty('arrows', 'icon-halo-color', base === 'satellite' ? '#0b1d2c' : '#ffffff');
@@ -182,7 +174,7 @@
 
 	$effect(() => {
 		if (!parts) return;
-		parts.setField(grid, wind?.u ?? null, wind?.v ?? null);
+		parts.setField(wind?.grid ?? null, wind?.u ?? null, wind?.v ?? null);
 		if (particles && wind) parts.start();
 		else parts.stop();
 	});
@@ -205,6 +197,12 @@
 		} catch {
 			return null;
 		}
+	}
+
+	/** Torna alla zona dell'uscita. */
+	export function goHome(duration = 600) {
+		if (!map || !home) return;
+		map.fitBounds([[home[0], home[1]], [home[2], home[3]]], { padding: 24, duration });
 	}
 
 	export function flyTo(lat: number, lon: number) {

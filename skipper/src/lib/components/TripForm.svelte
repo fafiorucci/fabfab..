@@ -96,7 +96,7 @@
 	</div>
 
 	<label>
-		<span>Ampiezza area: ±{draft.radius}° (circa {Math.round(draft.radius * 60)} miglia)</span>
+		<span>Zona iniziale sulla mappa: ±{draft.radius}° (circa {Math.round(draft.radius * 60)} miglia attorno al porto)</span>
 		<input type="range" bind:value={draft.radius} min="0.5" max="2" step="0.25" />
 	</label>
 
