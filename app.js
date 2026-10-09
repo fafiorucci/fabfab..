@@ -93,8 +93,17 @@ async function fetchForecast(place) {
     daily: 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,sunrise,sunset,uv_index_max',
   });
   const res = await fetch(`${FORECAST_URL}?${params}`);
-  if (!res.ok) throw new Error(`Errore del servizio meteo (${res.status})`);
+  if (!res.ok) throw new Error(await errorMessage(res));
   return res.json();
+}
+
+// Traduce gli errori di Open-Meteo in un messaggio comprensibile.
+async function errorMessage(res) {
+  const reason = (await res.json().catch(() => null))?.reason ?? '';
+  if (/minutely/i.test(reason)) return 'Troppe richieste in un minuto verso il servizio meteo (Open-Meteo). Riprova tra un minuto.';
+  if (/hourly/i.test(reason)) return "Limite orario di richieste a Open-Meteo raggiunto da questa rete. Riprova tra un po'.";
+  if (/daily/i.test(reason) || res.status === 429) return 'Limite giornaliero di richieste a Open-Meteo raggiunto da questa rete (anche da altre app sulla stessa connessione). Riprova domani o da un\'altra rete.';
+  return `Errore del servizio meteo (${res.status}${reason ? `: ${reason}` : ''})`;
 }
 
 async function searchPlaces(query, signal) {

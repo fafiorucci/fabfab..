@@ -9,13 +9,18 @@
 	import Footer from '#lib/components/Footer.svelte';
 	import { BRAND } from '#lib/brand.ts';
 	import {
-		fetchAtmoGrid,
+		fetchAtmoGrids,
+		fetchExtraGrid,
+		type ExtraGrid,
+		type Series,
+		onRateWait,
 		fetchMarineGrid,
 		fetchPoint,
 		fetchPointMarine,
 		callsToday,
 		DAILY_LIMIT,
 		gridForView,
+		gridCovers,
 		gridKey,
 		homeBox,
 		type AtmoGrid,
@@ -26,9 +31,10 @@
 		type PointSeries
 	} from '#lib/meteo/api.ts';
 	import { assess } from '#lib/meteo/assess.ts';
-	import { areaSeries, cellsIn, dayLabel, frame, localParts, nCells, pick, seaMask, spread, stats, timeIndex } from '#lib/meteo/grid.ts';
+	import { areaSeries, cellsIn, dayLabel, frame, localParts, nCells, pick, sample, seaMask, spread, stats, timeIndex } from '#lib/meteo/grid.ts';
 	import { LAYERS, cssGradient, type LayerId } from '#lib/meteo/layers.ts';
 	import { MODELS, modelById } from '#lib/meteo/models.ts';
+	import { arrow, cardinal, num, windName } from '#lib/meteo/format.ts';
 	import { decodeTrip, defaultTrip, inviteUrl, loadSavedTrip, saveTrip, type Trip } from '#lib/trip.ts';
 	import { reportImage, reportText, shareReport } from '#lib/report.ts';
 
@@ -40,12 +46,16 @@
 	let atmo: Record<string, AtmoGrid> = $state.raw({});
 	let atmoErr: Record<string, string> = $state.raw({});
 	let marine: MarineGrid | null = $state.raw(null);
+	/** Pressione e pioggia del modello mostrato (scaricate solo con quei livelli attivi). */
+	let extra: ExtraGrid | null = $state.raw(null);
 	let gen = 0;
 	let marineErr: string | null = $state(null);
 	let loading = $state(0);
 	/** Griglia dei dati: segue la zona inquadrata sulla mappa. */
 	let grid = $state.raw<Grid | null>(null);
 	let calls = $state(0);
+	let rateWait: number | null = $state(null);
+	onRateWait((s) => (rateWait = s));
 	let viewTimer: ReturnType<typeof setTimeout> | undefined;
 
 	// ----- Vista -----
@@ -98,6 +108,7 @@
 		atmoErr = {};
 		marine = null;
 		marineErr = null;
+		extra = null;
 		grid = null;
 		ti = -1;
 		calls = callsToday();
@@ -110,8 +121,8 @@
 		clearTimeout(viewTimer);
 		viewTimer = setTimeout(() => {
 			if (!trip) return;
+			if (grid && gridCovers(grid, b)) return;
 			const g = gridForView(b);
-			if (grid && gridKey(g) === gridKey(grid)) return;
 			grid = g;
 			load($state.snapshot(trip) as Trip, g);
 		}, 900); // si attende che la mappa sia ferma: zoom e spostamenti di fila non sprecano chiamate
@@ -121,18 +132,21 @@
 		const my = ++gen;
 		atmoErr = {};
 		marineErr = null;
-		// Il modello mostrato sulla mappa per primo, così il campo compare subito.
-		const order = [modelId, ...t.models.filter((m) => m !== modelId)].filter((m) => t.models.includes(m));
-		const jobs: Promise<void>[] = order.map(async (m) => {
-			try {
-				const d = await fetchAtmoGrid(t, m, g);
-				if (gen !== my) return;
-				atmo = { ...atmo, [m]: d };
-				if (ti < 0) ti = startIndex(d.times, d.utcOffset);
-			} catch (e) {
-				if (gen === my) atmoErr = { ...atmoErr, [m]: (e as Error).message };
-			}
-		});
+		const jobs: Promise<void>[] = [
+			(async () => {
+				try {
+					const got = await fetchAtmoGrids(t, t.models, g);
+					if (gen !== my) return;
+					atmo = { ...atmo, ...got };
+					const missing = t.models.filter((m) => !got[m]);
+					atmoErr = Object.fromEntries(missing.map((m) => [m, 'nessun dato per questa zona o per queste date']));
+					const first = Object.values(got)[0];
+					if (first && ti < 0) ti = startIndex(first.times, first.utcOffset);
+				} catch (e) {
+					if (gen === my) atmoErr = Object.fromEntries(t.models.map((m) => [m, (e as Error).message]));
+				}
+			})()
+		];
 		jobs.push(
 			(async () => {
 				try {
@@ -176,7 +190,7 @@
 	const layer = $derived(LAYERS[layerId]);
 	const home = $derived(trip ? homeBox(trip) : null);
 
-	const at = (g: AtmoGrid | MarineGrid) => timeIndex(g, now);
+	const at = (g: Series) => timeIndex(g, now);
 
 	const field = $derived.by(() => {
 		if (!times.length) return null;
@@ -186,7 +200,23 @@
 			const frames = loadedModels.map((m) => frame(atmo[m], 'wind', at(atmo[m])));
 			return { grid, values: spread(frames, nCells(grid)) };
 		}
+		if (layerId === 'pressure' || layerId === 'precip') return extra ? { grid: extra.grid, values: frame(extra, layerId, at(extra)) } : null;
 		return mapModel ? { grid: mapModel.grid, values: frame(mapModel, layerId, at(mapModel)) } : null;
+	});
+
+	// Livelli Pressione/Pioggia: scarica la griglia extra per il modello mostrato quando serve.
+	$effect(() => {
+		if ((layerId !== 'pressure' && layerId !== 'precip') || !trip || !grid) return;
+		if (extra && extra.model === modelId && isCurrent(extra)) return;
+		const t = $state.snapshot(trip) as Trip;
+		const g = grid;
+		const m = modelId;
+		fetchExtraGrid(t, m, g)
+			.then((d) => {
+				if (grid === g && modelId === m) extra = d;
+				calls = callsToday();
+			})
+			.catch((e) => flash(`Pressione/pioggia non disponibili: ${(e as Error).message}`));
 	});
 
 	const arrows = $derived.by(() => {
@@ -261,11 +291,10 @@
 		pointLoading = true;
 		pointData = [];
 		pointMarine = null;
-		const res = await Promise.allSettled(t.models.map((m) => fetchPoint(t, lat, lon, m)));
-		const pm = await fetchPointMarine(t, lat, lon).catch(() => null);
+		const [pd, pm] = await Promise.all([fetchPoint(t, lat, lon, t.models).catch(() => []), fetchPointMarine(t, lat, lon).catch(() => null)]);
 		if (my !== pointGen) return;
-		pointData = res.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : []));
-		pointMarine = pm;
+		pointData = pd;
+		pointMarine = pm && pm.wave.some((x) => !Number.isNaN(x)) ? pm : null;
 		pointLoading = false;
 	}
 
@@ -315,6 +344,86 @@
 		pointData.map((p) => ({ label: (modelById(p.model)?.label ?? p.model) + ' raffiche', color: modelById(p.model)?.color ?? '#888', values: p.gust, dashed: true }))
 	);
 	const fmt = (x: number, d = 0) => (Number.isNaN(x) ? '—' : x.toFixed(d).replace('.', ','));
+
+	// ----- Valori nel punto toccato, all'ora selezionata -----
+	interface PointRow {
+		model: string;
+		label: string;
+		color: string;
+		wind: number;
+		dir: number;
+		gust: number;
+		precip: number;
+		pressure: number;
+	}
+
+	/** Prima i valori interpolati dalla griglia (subito), poi quelli esatti del punto quando arrivano. */
+	const pointNow = $derived.by(() => {
+		if (!point || !now) return null;
+		const { lat, lon } = point;
+		let rows: PointRow[];
+		if (pointData.length) {
+			rows = pointData.map((p) => {
+				const k = timeIndex(p, now);
+				const info = modelById(p.model);
+				return { model: p.model, label: info?.label ?? p.model, color: info?.color ?? '#888', wind: p.wind[k], dir: p.dir[k], gust: p.gust[k], precip: p.precip[k], pressure: p.pressure[k] };
+			});
+		} else {
+			rows = loadedModels.map((m) => {
+				const g = atmo[m];
+				const k = at(g);
+				const val = (v: 'wind' | 'gust' | 'precip' | 'pressure' | 'u' | 'v') => sample(g.grid, frame(g, v, k), lon, lat);
+				const u = val('u');
+				const v = val('v');
+				const dir = (Math.atan2(-u, -v) * 180) / Math.PI;
+				const info = modelById(m)!;
+				return { model: m, label: info.label, color: info.color, wind: val('wind'), dir: (dir + 360) % 360, gust: val('gust'), precip: val('precip'), pressure: val('pressure') };
+			});
+		}
+		let sea: { wave: number; waveDir: number; period: number; swell: number } | null = null;
+		if (pointMarine) {
+			const k = timeIndex(pointMarine, now);
+			sea = { wave: pointMarine.wave[k], waveDir: pointMarine.waveDir[k], period: pointMarine.period[k], swell: pointMarine.swell[k] };
+		} else if (marine && !pointLoading && !pointData.length) {
+			const k = at(marine);
+			const f = (v: 'wave' | 'waveDir' | 'wavePeriod' | 'swell') => sample(marine!.grid, frame(marine!, v, k), lon, lat);
+			if (!Number.isNaN(f('wave'))) sea = { wave: f('wave'), waveDir: f('waveDir'), period: f('wavePeriod'), swell: f('swell') };
+		}
+		return { rows, sea, exact: pointData.length > 0 };
+	});
+
+	const popup = $derived.by(() => {
+		if (!pointNow) return null;
+		const lim = trip!.limits;
+		const over = (x: number, l: number) => (x > l ? ' class="over"' : '');
+		const rows = pointNow.rows
+			.map(
+				(r) =>
+					`<tr><td><i style="background:${r.color}"></i>${r.label}</td><td${over(r.wind, lim.wind)}>${num(r.wind)} ${arrow(r.dir)} ${cardinal(r.dir)}</td><td${over(r.gust, lim.gust)}>${num(r.gust)}</td><td>${num(r.precip, 1)}</td><td>${num(r.pressure)}</td></tr>`
+			)
+			.join('');
+		const sea = pointNow.sea
+			? `<p class="sea"><b>Onda</b> <span${over(pointNow.sea.wave, lim.wave)}>${num(pointNow.sea.wave, 1)} m</span> ${arrow(pointNow.sea.waveDir)} ${cardinal(pointNow.sea.waveDir)} · periodo ${num(pointNow.sea.period, 1)} s · mare lungo ${num(pointNow.sea.swell, 1)} m</p>`
+			: '<p class="sea muted">Onda: nessun dato (terraferma?)</p>';
+		const dirs = pointNow.rows.map((r) => r.dir).filter(Number.isFinite);
+		const name = dirs.length ? windName(dirs[0]) : '';
+		// Riassunto per schermi piccoli: intervallo tra i modelli.
+		const range = (xs: number[], d = 0) => {
+			const v = xs.filter(Number.isFinite);
+			if (!v.length) return '—';
+			const lo = Math.min(...v);
+			const hi = Math.max(...v);
+			return lo.toFixed(d) === hi.toFixed(d) ? num(lo, d) : `${num(lo, d)}–${num(hi, d)}`;
+		};
+		const R = pointNow.rows;
+		const compact = `<p><b>Vento</b> ${range(R.map((r) => r.wind))} kn ${dirs.length ? `${arrow(dirs[0])} ${cardinal(dirs[0])}` : ''} · <b>raffiche</b> ${range(R.map((r) => r.gust))} kn</p>
+<p><b>Pioggia</b> ${range(R.map((r) => r.precip), 1)} mm · <b>pressione</b> ${range(R.map((r) => r.pressure))} hPa</p>
+${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow.sea.waveDir)} ${cardinal(pointNow.sea.waveDir)} · ${num(pointNow.sea.period, 1)} s</p>` : ''}
+<p class="muted">${R.length} modelli · dettaglio sotto la mappa</p>`;
+		return `<div class="pp"><p class="pp-h"><b>${timeLabel}</b>${name ? ` · ${name}` : ''}</p>
+<div class="pp-full"><table><thead><tr><th>Modello</th><th>Vento kn (da)</th><th>Raff.</th><th>Pioggia mm</th><th>hPa</th></tr></thead><tbody>${rows}</tbody></table>${sea}</div>
+<div class="pp-compact">${compact}</div></div>`;
+	});
 </script>
 
 <svelte:head>
@@ -324,7 +433,7 @@
 <div class="app">
 	<header class="top" class:has-trip={trip && !editing}>
 		<div class="brand">
-			<svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><path d="M16 3 L16 24 L6 24 Z" fill="#ff7a1a" /><path d="M18 7 L18 24 L26 24 Z" fill="#fff" opacity=".9" /><path d="M4 26 Q16 31 28 26" stroke="#5fc2d6" stroke-width="2.5" fill="none" /></svg>
+			<img class="logo" src="./{BRAND.logo}" alt="{BRAND.org}" width="34" height="34" />
 			<span>Skipper <b>Meteo</b> <small class="org">{BRAND.org}</small></span>
 		</div>
 		{#if trip && !editing}
@@ -362,7 +471,9 @@
 					{seamarks}
 					particles={particlesOn}
 					{point}
+					{popup}
 					onpick={pickPoint}
+					onclosepoint={() => (point = null)}
 					onview={onView}
 				/>
 
@@ -407,7 +518,11 @@
 					</div>
 				</div>
 
-				{#if loading > 0}<div class="loading">Carico i modelli… ({loading})</div>{/if}
+				{#if rateWait}
+					<div class="loading">Attendo il limite al minuto di Open-Meteo… {rateWait} s</div>
+				{:else if loading > 0}
+					<div class="loading">Carico i modelli…</div>
+				{/if}
 			</section>
 
 			<aside class="panel">
@@ -486,6 +601,10 @@
 							<b>{point.lat.toFixed(3)}°N {point.lon.toFixed(3)}°E</b>
 							<button class="link" onclick={() => (point = null)}>rimuovi</button>
 						</p>
+						{#if popup}
+							<div class="point-now">{@html popup}</div>
+							<p class="muted small">{pointNow?.exact ? 'Valori nel punto' : 'Valori interpolati dalla griglia, in attesa dei dati esatti del punto'}. Sposta la barra del tempo per cambiare ora.</p>
+						{/if}
 						{#if pointLoading}<p class="muted">Carico…</p>{/if}
 						{#if pointData.length}
 							<h4>Vento medio (linee) e raffiche (tratteggio)</h4>
@@ -503,12 +622,27 @@
 								{#each pointData as p (p.model)}<span><i style="background: {modelById(p.model)?.color}"></i>{modelById(p.model)?.label}</span>{/each}
 							</div>
 						{/if}
+						{#if pointData.length}
+							<h4>Pioggia (mm/h)</h4>
+							<LineChart
+								times={pointData[0].times}
+								utcOffset={pointData[0].utcOffset}
+								lines={pointData.map((p) => ({ label: p.model, color: modelById(p.model)?.color ?? '#888', values: p.precip }))}
+								unit="mm"
+								cursor={ti}
+								onseek={(i) => (ti = i)}
+								height={110}
+							/>
+						{/if}
 						{#if pointMarine}
-							<h4>Onda significativa</h4>
+							<h4>Onda significativa (linea) e mare lungo (tratteggio)</h4>
 							<LineChart
 								times={pointMarine.times}
 								utcOffset={pointMarine.utcOffset}
-								lines={[{ label: 'Onda', color: '#0f4c5c', values: pointMarine.wave }]}
+								lines={[
+									{ label: 'Onda', color: '#0f4c5c', values: pointMarine.wave },
+									{ label: 'Mare lungo', color: '#5fc2d6', values: pointMarine.swell, dashed: true }
+								]}
 								unit="m"
 								limit={trip.limits.wave}
 								cursor={ti}
@@ -521,7 +655,7 @@
 					{/if}
 				{/if}
 				<p class="budget" class:warn={calls > DAILY_LIMIT * 0.8}>
-					Chiamate Open-Meteo oggi da questo dispositivo: ~{calls.toLocaleString('it-IT')} / {DAILY_LIMIT.toLocaleString('it-IT')}
+					Chiamate Open-Meteo oggi da questo dispositivo: ~{Math.round(calls).toLocaleString('it-IT')} / {DAILY_LIMIT.toLocaleString('it-IT')}
 				</p>
 				<Footer />
 			</aside>
@@ -536,6 +670,12 @@
 		min-height: 100dvh;
 		display: flex;
 		flex-direction: column;
+	}
+	/* Su schermi larghi l'app occupa esattamente lo schermo: mappa fissa, pannello che scorre. */
+	@media (min-width: 901px) {
+		.app:has(.layout) {
+			height: 100dvh;
+		}
 	}
 	.top {
 		display: flex;
@@ -556,6 +696,11 @@
 	}
 	.brand b {
 		color: var(--accent);
+	}
+	.brand .logo {
+		width: 34px;
+		height: 34px;
+		flex: none;
 	}
 	.brand .org {
 		display: block;
@@ -618,14 +763,16 @@
 		flex: 1;
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) 400px;
+		/* La riga resta alta quanto lo schermo: il pannello scorre, la mappa non si deforma. */
+		grid-template-rows: minmax(0, 1fr);
 		min-height: 0;
-		height: calc(100dvh - 58px);
 	}
 	.mapcol {
 		position: relative;
 		min-height: 0;
 	}
 	.panel {
+		min-height: 0;
 		overflow-y: auto;
 		padding: 12px 14px 24px;
 		background: var(--bg);
@@ -851,6 +998,11 @@
 	.errors ul {
 		margin: 6px 0 0;
 		padding-left: 18px;
+	}
+	.point-now {
+		background: var(--panel);
+		border-radius: 10px;
+		padding: 8px 10px;
 	}
 	.budget {
 		margin: 8px 0 0;

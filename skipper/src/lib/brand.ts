@@ -8,5 +8,5 @@ export const BRAND = {
 	 * Logo di Onda Portante: mettere il file in `static/` e indicarne qui il nome
 	 * (es. 'logo-onda-portante.svg'). Finché è null si mostra il nome in testo.
 	 */
-	logo: null as string | null
+	logo: 'logo-onda-portante.png' as string | null
 };
