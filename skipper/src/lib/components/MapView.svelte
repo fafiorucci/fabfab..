@@ -23,17 +23,22 @@
 		seamarks: boolean;
 		particles: boolean;
 		point: { lat: number; lon: number } | null;
+		/** Contenuto HTML del riquadro con i valori nel punto toccato. */
+		popup: string | null;
 		onpick?: (lat: number, lon: number) => void;
+		/** Il riquadro del punto è stato chiuso con la ×. */
+		onclosepoint?: () => void;
 		onview?: (bbox: BBox) => void;
 	}
 
-	let { home, field, layer, arrows, wind, base, seamarks, particles, point, onpick, onview }: Props = $props();
+	let { home, field, layer, arrows, wind, base, seamarks, particles, point, popup, onpick, onclosepoint, onview }: Props = $props();
 
 	let container: HTMLDivElement;
 	let overlay: HTMLCanvasElement;
 	let map: maplibregl.Map | undefined;
 	let parts: Particles | undefined;
 	let marker: maplibregl.Marker | undefined;
+	let pop: maplibregl.Popup | undefined;
 	let styleReady = $state(0);
 	const fieldCanvas = document.createElement('canvas');
 	const EMPTY_PNG = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
@@ -188,6 +193,24 @@
 		}
 		if (!marker) marker = new maplibregl.Marker({ color: '#ff7a1a' });
 		marker.setLngLat([point.lon, point.lat]).addTo(map);
+	});
+
+	$effect(() => {
+		if (!map) return;
+		if (!point || !popup) {
+			pop?.remove();
+			pop = undefined;
+			return;
+		}
+		if (!pop) {
+			pop = new maplibregl.Popup({ closeOnClick: false, closeButton: true, maxWidth: '340px', offset: 34, className: 'point-popup' });
+			pop.on('close', () => {
+				pop = undefined;
+				onclosepoint?.();
+			});
+		}
+		pop.setLngLat([point.lon, point.lat]).setHTML(popup);
+		if (!pop.isOpen()) pop.addTo(map);
 	});
 
 	/** Istantanea PNG della mappa (per il report). */

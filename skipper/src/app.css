@@ -84,3 +84,80 @@ button {
 	opacity: 0.5;
 	cursor: default;
 }
+
+/* Valori nel punto toccato: riquadro sulla mappa e pannello "Punto" */
+.pp {
+	font-size: 0.78rem;
+	color: var(--text);
+	font-variant-numeric: tabular-nums;
+}
+.pp p {
+	margin: 0 0 4px;
+}
+.pp table {
+	width: 100%;
+	border-collapse: collapse;
+}
+.pp th {
+	text-align: left;
+	color: var(--muted);
+	font-weight: 600;
+	font-size: 0.7rem;
+}
+.pp td,
+.pp th {
+	padding: 2px 4px;
+	border-top: 1px solid var(--line);
+	white-space: nowrap;
+}
+.pp i {
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	border-radius: 2px;
+	margin-right: 5px;
+}
+.pp .over {
+	color: var(--nogo);
+	font-weight: 700;
+}
+.pp .sea {
+	margin-top: 6px;
+}
+.pp .muted {
+	color: var(--muted);
+}
+.dir-arrow {
+	font-weight: 700;
+	color: var(--accent);
+}
+.point-popup {
+	z-index: 3;
+}
+.pp-compact {
+	display: none;
+}
+/* Sul telefono la mappa mostra il riassunto; la tabella completa è nel pannello sotto. */
+@media (max-width: 900px) {
+	.point-popup .pp-full {
+		display: none;
+	}
+	.point-popup .pp-compact {
+		display: block;
+	}
+}
+.point-popup .maplibregl-popup-content {
+	background: var(--panel);
+	color: var(--text);
+	border-radius: 12px;
+	padding: 10px 12px 8px;
+	box-shadow: var(--shadow);
+}
+.point-popup .maplibregl-popup-tip {
+	border-top-color: var(--panel) !important;
+}
+.point-popup .maplibregl-popup-close-button {
+	color: var(--muted);
+	font-size: 18px;
+	padding: 0 6px;
+}

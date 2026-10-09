@@ -57,17 +57,18 @@ export async function reportImage(trip: Trip, verdicts: DayVerdict[], mapPng: st
 	ctx.fillStyle = '#ffffff';
 	ctx.font = font(26, 600);
 	ctx.fillText('SKIPPER METEO', 48, 56);
-	ctx.textAlign = 'right';
-	ctx.fillStyle = '#8fb4c8';
-	ctx.font = font(22, 700);
-	ctx.fillText(BRAND.org.toUpperCase(), W - 48, 56);
-	ctx.textAlign = 'left';
-	ctx.fillStyle = '#ffffff';
+	if (BRAND.logo) {
+		try {
+			ctx.drawImage(await loadImage(`./${BRAND.logo}`), W - 160, 26, 128, 128);
+		} catch {
+			/* logo non disponibile */
+		}
+	}
 	ctx.font = font(44, 700);
-	ctx.fillText(trip.name, 48, 112);
+	ctx.fillText(trip.name, 48, 112, W - 260);
 	ctx.font = font(26);
 	ctx.fillStyle = '#b9cad8';
-	ctx.fillText(`${trip.place} · limiti ${trip.limits.wind}/${trip.limits.gust} kn, ${fmt(trip.limits.wave, 1)} m`, 48, 152);
+	ctx.fillText(`${trip.place} · limiti ${trip.limits.wind}/${trip.limits.gust} kn, ${fmt(trip.limits.wave, 1)} m`, 48, 152, W - 260);
 
 	let y = 210;
 	if (mapPng) {

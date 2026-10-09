@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { gridForView, gridKey, MAX_POINTS, type AtmoGrid, type Grid, type AtmoVar, type MarineGrid, type MarineVar } from './api';
+import { gridCovers, gridForView, gridKey, MAX_POINTS, type AtmoGrid, type Grid, type AtmoVar, type MarineGrid, type MarineVar } from './api';
 import { assess } from './assess';
 import { cellsIn, localParts, sample, spread, stats, timeIndex } from './grid';
 import { decodeTrip, defaultTrip, encodeTrip, validateTrip } from '../trip';
@@ -31,13 +31,13 @@ function marine(wave: number): MarineGrid {
 }
 
 describe('griglia della vista', () => {
-	it('copre tutta la zona inquadrata con un margine', () => {
+	it('copre tutta la zona inquadrata', () => {
 		const view: [number, number, number, number] = [8.3, 41.1, 12.9, 44.2];
 		const g = gridForView(view);
-		expect(g.bbox[0]).toBeLessThan(view[0]);
-		expect(g.bbox[1]).toBeLessThan(view[1]);
-		expect(g.bbox[2]).toBeGreaterThan(view[2]);
-		expect(g.bbox[3]).toBeGreaterThan(view[3]);
+		expect(g.bbox[0]).toBeLessThanOrEqual(view[0]);
+		expect(g.bbox[1]).toBeLessThanOrEqual(view[1]);
+		expect(g.bbox[2]).toBeGreaterThanOrEqual(view[2]);
+		expect(g.bbox[3]).toBeGreaterThanOrEqual(view[3]);
 		expect(g.lats.length * g.lons.length).toBeLessThanOrEqual(MAX_POINTS);
 	});
 
@@ -50,10 +50,11 @@ describe('griglia della vista', () => {
 		for (const g of [wide, close]) expect(g.lats.length * g.lons.length).toBeLessThanOrEqual(MAX_POINTS);
 	});
 
-	it('riusa la stessa griglia per piccoli spostamenti', () => {
-		const a = gridForView([9.2, 41.6, 11.3, 43.3]);
-		const b = gridForView([9.25, 41.65, 11.35, 43.35]); // spostamento di ~3 miglia
-		expect(gridKey(b)).toBe(gridKey(a));
+	it('riusa la griglia se la nuova vista ci sta dentro, la infittisce zoomando', () => {
+		const g = gridForView([9.2, 41.6, 11.3, 43.3]);
+		expect(gridCovers(g, [9.3, 41.7, 11.2, 43.2])).toBe(true); // piccolo spostamento interno
+		expect(gridCovers(g, [8.0, 41.6, 10.1, 43.3])).toBe(false); // esce a ovest
+		expect(gridCovers(g, [10.0, 42.5, 10.3, 42.7])).toBe(false); // zoom su un golfo: serve più dettaglio
 	});
 });
 
