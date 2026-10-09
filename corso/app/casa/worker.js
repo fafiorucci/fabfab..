@@ -264,6 +264,45 @@ function allieviInventati(C, attive) {
     });
 }
 
+// registro degli accessi inventato per l'area istruttore di prova (come demo/demo-dati.js): tre segnalazioni di esempio
+function accessiInventati(allievi) {
+  const prima = minuti => new Date(Date.now() - minuti * 60e3).toISOString().slice(0, 19);
+  const LUOGHI = ['Roma', 'Milano', 'Napoli', 'Torino', 'Firenze', 'Bologna'];
+  const TIPI = ['iPhone · Safari', 'Android · Chrome', 'Windows · Chrome', 'Mac · Safari', 'iPad · Safari', 'Android · Samsung Internet'];
+  const giorni = {};
+  allievi.forEach((a, i) => {
+    const ip = `93.${40 + i}.${11 + 3 * i}.${20 + i}`, citta = LUOGHI[i % 6];
+    const disp = [{ id: 'd' + i + 'a1b2c3', ua: TIPI[i % 6] }, { id: 'd' + i + 'e4f5g6', ua: TIPI[(i + 2) % 6] }];
+    if (i === 0) disp.push({ id: 'd0h7i8j9', ua: 'Android · Chrome' }, { id: 'd0k1l2m3', ua: 'Windows · Chrome' });
+    const gg = [];
+    for (let d = 0; d < 21; d++) {
+      if ((d + i) % 3 === 2) continue;
+      const ora = prima(d * 1440 + 20 + 47 * i + (13 * d) % 90), usati = i === 0 && d < 5 ? disp : disp.slice(0, d % 4 === 0 ? 2 : 1);
+      const g = { data: ora.slice(0, 10), n: { app: 1 + (d + i) % 3, slide: 6 + (5 * d + 3 * i) % 18, quiz: (d + i) % 4 === 0 ? 0 : 2 + (d * i) % 6 },
+                  ip: [{ ip, luogo: citta, n: 4 + (d + i) % 9, primo: ora, ultimo: ora }],
+                  disp: usati.map(x => ({ id: x.id, ua: x.ua, n: 2 + (d + i) % 5, ultimo: ora, ip })) };
+      if ((d + i) % 5 === 0) g.n.appendice = 3; if ((d + i) % 4 === 1) g.n.scheda = 2;
+      gg.push(g);
+    }
+    if (i === 1 && gg[0]) gg[0].ip.push({ ip: '151.20.33.7', luogo: 'Roma', n: 3, primo: prima(110), ultimo: prima(95) });
+    if (i === 5 && gg[0]) gg[0].ip.push({ ip: '88.12.4.90', luogo: 'Barcellona, Spagna', n: 2, primo: prima(200), ultimo: prima(185) });
+    giorni[a.id] = gg;
+  });
+  const segn = (i, tipo, testo, minuti) => { const a = allievi[i]; if (!a) return null;
+    const ip = new Map(), dd = new Map();
+    for (const g of giorni[a.id].slice(0, 7)) { for (const x of g.ip) if (!ip.has(x.ip)) ip.set(x.ip, x); for (const x of g.disp) if (!dd.has(x.id)) dd.set(x.id, x); }
+    return { id: 'esempio' + i, email: a.id, nome: a.nome, tipo, testo, creato: prima(minuti), stato: 'aperta',
+             ip: [...ip.values()].map(x => ({ ip: x.ip, luogo: x.luogo, ultimo: x.ultimo, n: x.n })), disp: [...dd.values()] }; };
+  return { giorni, blocchi: {}, segn: [segn(1, 'viaggio', 'Accessi da due luoghi lontani 477 km nella stessa ora: Milano e Roma', 90),
+    segn(0, 'dispositivi', '4 dispositivi diversi negli ultimi 7 giorni', 25), segn(5, 'estero', 'Accesso dall’estero: Barcellona, Spagna', 180)].filter(Boolean) };
+}
+function riassuntoInventato(gg, n) {
+  const da = new Date(Date.now() - (n - 1) * 864e5).toISOString().slice(0, 10), t = { n: {}, ip: new Set(), disp: new Set(), luoghi: new Set() };
+  for (const g of gg.filter(g => g.data >= da)) { for (const [k, v] of Object.entries(g.n)) t.n[k] = (t.n[k] || 0) + v;
+    g.ip.forEach(x => { t.ip.add(x.ip); t.luoghi.add(x.luogo); }); g.disp.forEach(x => t.disp.add(x.id)); }
+  return { n: t.n, ip: t.ip.size, disp: t.disp.size, luoghi: [...t.luoghi] };
+}
+
 const linkProva = (env, e) => String(env.PROVA_URL || '').replace(/\/?$/, '/') + '?p=' + e.slice(5);
 
 const giornoISO = (n = 0) => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10);
@@ -449,10 +488,33 @@ export class Corso extends DurableObject {
     const indirizzi = [req.headers.get('x-origine') + '/'];
     if (d) {   // area istruttore di prova: allievi inventati più sé stesso come allievo; le lezioni 1-2 si aprono e chiudono solo per sé
       const C = corsoProva(await this.corso());
+      // registro degli accessi inventato, uno per account di prova (in memoria: blocchi e archiviazioni si possono provare)
+      if (!this.accProva) this.accProva = new Map();
+      if (!this.accProva.has(email)) this.accProva.set(email, accessiInventati(allieviInventati(C, d.attive)));
+      const R = this.accProva.get(email), aperte = R.segn.filter(s => s.stato === 'aperta');
       if (p === '/api/docente/allievi') {
         const elenco = allieviInventati(C, d.attive);
         if (a) elenco.unshift({ id: email, nome: a.nome + ' (tu)', creato: a.creato, ultimo: a.ultimo, stato: a.stato });
-        return json({ allievi: elenco, indirizzi, attive: d.attive, prova: { scade: d.scade } });
+        return json({ allievi: elenco, indirizzi, attive: d.attive, prova: { scade: d.scade },
+                      accessi: { aperte: aperte.length, segnalati: [...new Set(aperte.map(s => s.email))] } });
+      }
+      if (p === '/api/docente/accessi')
+        return json({ email: false, giorni: GIORNI_REGISTRO, segnalazioni: aperte.concat(R.segn.filter(s => s.stato !== 'aperta')),
+          allievi: allieviInventati(C, d.attive).map(x => { const gg = R.giorni[x.id] || [];
+            return { id: x.id, nome: x.nome, ultimo: gg[0] ? gg[0].ip.map(y => y.ultimo).sort().pop() : null,
+                     d7: riassuntoInventato(gg, 7), d30: riassuntoInventato(gg, 30), blocco: R.blocchi[x.id] || null }; }) });
+      if (p === '/api/docente/accessi-allievo') return json({ giorni: R.giorni[String(dati.id || '')] || [], blocco: R.blocchi[String(dati.id || '')] || null });
+      if (p === '/api/docente/segnalazione') { const s = R.segn.find(x => x.id === dati.sid); if (s) s.stato = 'archiviata'; return json({ ok: true }); }
+      if (p === '/api/docente/blocca' || p === '/api/docente/sblocca') {
+        const id = String(dati.id || ''), tipo = String(dati.tipo || ''), val = String(dati.valore || '');
+        if (!R.giorni[id] || !['tutto', 'ip', 'disp'].includes(tipo)) return errore(400, 'Richiesta non valida.');
+        const b = R.blocchi[id] || { tutto: false, ip: {}, disp: {} };
+        if (p === '/api/docente/blocca') { if (tipo === 'tutto') b.tutto = adesso(); else b[tipo][val] = adesso(); }
+        else { if (tipo === 'tutto') b.tutto = false; else delete b[tipo][val]; }
+        R.blocchi[id] = b.tutto || Object.keys(b.ip).length || Object.keys(b.disp).length ? b : null;
+        const s = dati.sid && R.segn.find(x => x.id === dati.sid);
+        if (s && p === '/api/docente/blocca') { s.stato = 'bloccata'; s.azione = tipo === 'tutto' ? 'allievo bloccato' : (tipo === 'ip' ? 'IP ' : 'dispositivo ') + val + ' bloccato'; }
+        return json({ ok: true, blocco: R.blocchi[id] });
       }
       if (p === '/api/docente/lezione') {
         const id = String(dati.id || '');

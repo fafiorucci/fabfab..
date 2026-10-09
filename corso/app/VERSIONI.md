@@ -7,6 +7,9 @@ Numerazione `MAGGIORE.MINORE.CORREZIONE`:
 Il numero è in `corso/app/index.html` (`VERSIONE`, `RILASCIO`) e in `corso/app/aula/server.py` (`VERSIONE`): si cambiano insieme.
 Si vede in fondo all'app, nell'aiuto, nell'area istruttore e nella finestra del server.
 
+## 0.14.1 · 9 ottobre 2026
+- Scheda «Accessi» anche nella demo e nell'area istruttore del sito delle prove, con un registro di esempio (tre segnalazioni, IP, dispositivi, blocchi e sblocchi da provare).
+
 ## 0.14.0 · 9 ottobre 2026
 - App online: registro degli accessi per 90 giorni. Per allievo e giorno: aperture dell'app, slide, schede, appendici e quiz; indirizzi IP con la località stimata da Cloudflare; dispositivi (codice casuale dell'app nel cookie `corso_disp`, con tipo di telefono o computer e browser). Il MAC non arriva al server.
 - Segnalazioni dei casi sospetti: più di 3 dispositivi in 7 giorni, accesso dall'estero, due luoghi a più di 300 km nella stessa ora. Nuova scheda «Accessi» nell'area istruttore, con il numero delle segnalazioni aperte e il pallino rosso nella «Classe»; il link `…/docente?segnalazione=<id>` apre la segnalazione.
