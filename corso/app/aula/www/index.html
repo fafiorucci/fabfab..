@@ -318,7 +318,7 @@ const $app=document.getElementById('app'), $who=document.getElementById('who');
 let C=null, S=null, uid=null, me=null, db=null, mode='local', aula=null, offline=false;
 const KEY='corso-nautico-v1';
 // versione dell'app: 0.x durante la prova con gli allievi, 1.0.0 al lancio; seconda cifra = novità, terza = correzioni
-const VERSIONE='0.13.3', RILASCIO='9 ottobre 2026';
+const VERSIONE='0.14.0', RILASCIO='9 ottobre 2026';
 const blank=()=>({nome:'',consenso:false,creato:null,visti:{},risposte:{},profilo:{},diario:{}});
 const HUES=['var(--coral)','var(--sea)','var(--purple)','var(--blue)','var(--green)'];
 const TINTS=['var(--coral-t)','var(--sea-t)','var(--lilac-t)','var(--blue-t)','var(--green-t)'];
@@ -357,6 +357,7 @@ const tok={get(){try{return localStorage.getItem(TOKEN_KEY)}catch(e){return null
 async function api(path,body,keepalive){
   const r=await fetch('api/'+path,{method:body===undefined?'GET':'POST',keepalive:!!keepalive,headers:{'Content-Type':'application/json','X-Token':tok.get()||''},body:body===undefined?undefined:JSON.stringify(body)});
   const j=await r.json().catch(()=>({}));
+  if(r.status===403&&j.sospeso) accessoSospeso();   // l'istruttore ha bloccato questo allievo, IP o dispositivo
   if(!r.ok) throw Object.assign(new Error(j.errore||('errore '+r.status)),{status:r.status,dati:j});
   return j;
 }
@@ -665,7 +666,8 @@ function vRegistrazione(){
     head(mode==='aula'&&!C.online?'In aula':'Primo accesso',mode==='aula'&&!C.online?'Entra nel corso':'Registrati','var(--sea)','lifebuoy',false),
     el('label',{class:'fld',for:'f-nome'},'Il tuo nome',nome),
     mode==='aula'&&!C.online?el('label',{class:'fld',for:'f-cod'},'Il tuo codice personale',cod,el('span',{class:'muted',style:'font-weight:600; font-size:14px'},'La prima volta lo scegli tu; poi, con lo stesso nome e codice, ritrovi i progressi anche su un altro telefono o tablet.')):null,
-    el('label',{class:'check',for:'f-cons'},cons,el('span',{},'Acconsento al salvataggio del mio nome e dei miei progressi (slide viste, quiz risposti) per seguire il corso. Posso cancellarli in ogni momento dalla pagina Progressi. So che slide, testi e immagini sono proprietà intellettuale di Fabrizio Fiorucci e mi impegno a non divulgarli né duplicarli.')),
+    el('label',{class:'check',for:'f-cons'},cons,el('span',{},'Acconsento al salvataggio del mio nome e dei miei progressi (slide viste, quiz risposti) per seguire il corso. Posso cancellarli in ogni momento dalla pagina Progressi. So che slide, testi e immagini sono proprietà intellettuale di Fabrizio Fiorucci e mi impegno a non divulgarli né duplicarli.'+
+      (C&&C.online?' Per proteggere i materiali, il server registra per 90 giorni i miei accessi: data e ora, indirizzo IP con la località approssimativa, tipo di dispositivo e browser, file aperti; li vede solo l’istruttore.':''))),
     msg,
     el('button',{class:'btn sea',type:'submit',style:'align-self:flex-start'},'Inizia il corso'));
   $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
@@ -1146,7 +1148,8 @@ const registraSW=()=>{ if(!regSW&&'serviceWorker' in navigator) regSW=navigator.
 async function esitoAccesso(){
   const ac=new AbortController(), t=setTimeout(()=>ac.abort(),8000);
   try{ const r=await fetch(C.accesso+'?t='+Date.now(),{cache:'no-store',redirect:'manual',signal:ac.signal});
-    if(r.type==='opaqueredirect'||r.status===401||r.status===403) return 'no';   // rimanda al login: sessione scaduta o email tolta
+    if(r.status===403){ try{ if((await r.clone().json()).sospeso) return 'sospeso'; }catch(x){} return 'no'; }   // bloccato dall'istruttore
+    if(r.type==='opaqueredirect'||r.status===401) return 'no';   // rimanda al login: sessione scaduta o email tolta
     if(!r.ok) return 'rete';
     try{ const j=await r.json(); return j&&j.ok?'si':'no'; }catch(e){ return 'no'; } }
   catch(e){ return 'rete'; }
@@ -1165,6 +1168,16 @@ async function togliContenuti(){
   try{ localStorage.removeItem(VERIFICA_KEY); }catch(e){}
   try{ if(regSW) await regSW; for(const r of await navigator.serviceWorker.getRegistrations()) await r.unregister(); }catch(e){}
   try{ for(const k of await caches.keys()) if(k.startsWith('corso-casa-')) await caches.delete(k); }catch(e){}
+}
+function accessoSospeso(){
+  blocco('Accesso sospeso',['Il tuo accesso all’app del corso è stato sospeso dall’istruttore.','Per chiarimenti rivolgiti a Fabrizio Fiorucci.'],null,null);
+  togliContenuti();
+}
+// app online: un codice casuale per questo dispositivo, in un cookie, così il registro degli accessi distingue i dispositivi
+function codiceDispositivo(){
+  let id=''; try{ id=localStorage.getItem('corso-dispositivo')||''; }catch(e){}
+  if(!/^[a-z0-9]{12,40}$/.test(id)){ id=[...crypto.getRandomValues(new Uint8Array(16))].map(x=>(x%36).toString(36)).join(''); try{ localStorage.setItem('corso-dispositivo',id); }catch(e){} }
+  document.cookie='corso_disp='+id+'; Path=/; Max-Age=34560000; SameSite=Lax'+(location.protocol==='https:'?'; Secure':'');
 }
 function accessoNegato(){
   if(C.prova){ blocco('Prova terminata',['Il periodo di prova dell’app del corso è terminato. Grazie per averla provata!','Per informazioni contatta Fabrizio Fiorucci.'],null,null); togliContenuti(); return; }
@@ -1196,6 +1209,7 @@ async function controllaAccesso(){
   const verifica=esitoAccesso().then(e=>{
     if(e==='si'){ try{ localStorage.setItem(VERIFICA_KEY,String(Date.now())); }catch(x){} registraSW(); return true; }
     if(e==='no'){ accessoNegato(); return false; }
+    if(e==='sospeso'){ accessoSospeso(); return false; }
     if(!recente){ blocco('Collegati a internet',['Per sicurezza l’app va verificata con la rete almeno una volta ogni '+GIORNI_OFFLINE+' giorni.',
       'Accendi i dati o il wifi e riprova: ci vuole un attimo.'],'Riprova',()=>location.reload()); return false; }
     return true; });
@@ -1340,6 +1354,7 @@ function suggerimento(){
 (async function start(){
   try{ C=await (await fetch('corso.json')).json(); document.getElementById('versione').textContent='App versione '+VERSIONE+' · '+RILASCIO+(C.demo?' · demo':''); }
   catch(e){ $app.replaceChildren(el('div',{class:'stack'},el('h1',{},'Non riesco a caricare il corso'),el('p',{class:'muted'},'Ricarica la pagina; se il problema resta, avvisa l’istruttore.'))); return; }
+  if(C.online) codiceDispositivo();
   if(!await controllaAccesso()) return;
   if(C.prova) document.getElementById('nav-mat').style.display='none';   // account di prova: niente schede né appendici
   S=blank(); vRegistrazione();

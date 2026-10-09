@@ -2,7 +2,7 @@
 
 9 ottobre 2026 · Fabrizio Fiorucci
 
-Dove si entra, come si iscrivono e si tolgono gli allievi, come far provare l'app ad altre scuole e quali sono i limiti di Cloudflare. App alla versione 0.13.2.
+Dove si entra, come si iscrivono e si tolgono gli allievi, come far provare l'app ad altre scuole e quali sono i limiti di Cloudflare. App alla versione 0.14.0.
 
 ## Indirizzi
 
@@ -54,6 +54,16 @@ Per un allievo che lascia il corso:
 A fine corso basta il passo 3 su tutti gli allievi con il posto Active. Chi rientra riprende un posto da solo.
 
 In automatico: Zero Trust → Settings → Admin controls → «Remove inactive users from seats» → Edit, con un periodo da 1 mese a 1 anno. Ogni giorno Cloudflare libera i posti di chi non entra da quel periodo; per corsi di qualche mese vanno bene 1 o 2 mesi.
+
+## Accessi e blocchi
+
+L'app online registra per 90 giorni gli accessi di ogni allievo e segnala i casi sospetti; si vedono nella scheda «Accessi» dell'area istruttore.
+
+- **Cosa registra:** per ogni giorno quante volte l'allievo apre l'app, le slide, le schede, le appendici e i quiz; gli indirizzi IP con la località stimata; i dispositivi (tipo di telefono o computer e browser). Il MAC non si può avere: lo sostituisce un codice casuale che l'app dà a ogni dispositivo.
+- **Segnalazioni:** più di 3 dispositivi in 7 giorni, un accesso dall'estero, due luoghi lontani più di 300 km nella stessa ora. Compaiono in cima alla scheda «Accessi», con il numero sulla scheda e un pallino rosso accanto all'allievo nella «Classe».
+- **Blocchi:** «Blocca allievo» sospende tutto il suo accesso (l'app mostra «Accesso sospeso» e toglie slide e quiz dal telefono; i progressi restano); «Blocca IP» e «Blocca dispositivo» fermano solo quell'indirizzo o quel telefono, e solo per quell'allievo. «È tutto a posto» archivia la segnalazione. Si sblocca dal dettaglio dell'allievo.
+- **Email di avviso:** ogni segnalazione può arrivare per email con il link diretto, se su Cloudflare c'è un dominio attivato in Email Service (Email Routing); finché non c'è, le segnalazioni restano nell'area istruttore.
+- **Privacy:** gli allievi lo accettano nel consenso dell'app e lo trovano nel PDF «Come entrare nell'app del corso». Dopo 90 giorni i dati si cancellano da soli.
 
 ## Far provare l'app a un'altra scuola
 
@@ -112,6 +122,7 @@ Con 30-40 allievi si resta largamente nei limiti; il momento più pesante è qua
 | Novità dell'app non visibili | Chiudere e riaprire l'app due volte |
 | La demo dallo zip dice che non carica il corso | Scompattare tutta la cartella e aprire index.html da lì |
 | Una lezione ha il lucchetto | Aprirla dall'area istruttore, scheda «Lezioni» |
+| Un allievo vede «Accesso sospeso» | È bloccato lui, un suo IP o un suo dispositivo: scheda «Accessi» → il suo nome → «Sblocca» |
 
 ## Fonti
 

@@ -33,6 +33,9 @@ PROVA_LEZIONI, PROVA_SLIDE = ('L01', 'L02'), 3                               # c
 DOCENTE = 'fafiorucci@gmail.com'
 TEAM = 'ondaportante'                                                         # <team>.cloudflareaccess.com
 AUD = '492a093cc98e6ec93175617027cc6a35752c59b076b7ed02430ebff84ade1c01'      # applicazione Access del sito
+# email delle segnalazioni di accessi sospetti: il mittente deve essere su un dominio attivato in Cloudflare Email Service
+# (Email Routing) e DOCENTE un indirizzo verificato. Vuoto = niente email, le segnalazioni restano nell'area istruttore.
+EMAIL_DA = ''
 
 shutil.rmtree(OUT, ignore_errors=True)
 os.makedirs(PUB)
@@ -119,6 +122,8 @@ open(PUB + '/sw.js', 'w', encoding='utf-8').write(sw)
 os.makedirs(OUT + '/src')
 open(OUT + '/src/worker.js', 'w', encoding='utf-8').write(
     open(os.path.join(QUI, 'worker.js'), encoding='utf-8').read().replace('__VERSIONE__', versione))
+VAR_EMAIL = f', "EMAIL_DA": "{EMAIL_DA}"' if EMAIL_DA else ''
+CON_EMAIL = f',\n  "send_email": [{{ "name": "EMAIL", "destination_address": "{DOCENTE}" }}]' if EMAIL_DA else ''
 open(OUT + '/wrangler.jsonc', 'w', encoding='utf-8').write(f'''// Generato da corso/app/casa/prepara_casa.py: non modificare a mano.
 {{
   "name": "{WORKER}",
@@ -133,7 +138,7 @@ open(OUT + '/wrangler.jsonc', 'w', encoding='utf-8').write(f'''// Generato da co
   }},
   "durable_objects": {{ "bindings": [{{ "name": "CORSO", "class_name": "Corso" }}] }},
   "migrations": [{{ "tag": "v1", "new_sqlite_classes": ["Corso"] }}],
-  "vars": {{ "DOCENTE": "{DOCENTE}", "TEAM": "{TEAM}", "AUD": "{AUD}", "PROVA_URL": "{PROVA_URL}" }}
+  "vars": {{ "DOCENTE": "{DOCENTE}", "TEAM": "{TEAM}", "AUD": "{AUD}", "PROVA_URL": "{PROVA_URL}"{VAR_EMAIL} }}{CON_EMAIL}
 }}
 ''')
 

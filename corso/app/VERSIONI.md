@@ -7,6 +7,13 @@ Numerazione `MAGGIORE.MINORE.CORREZIONE`:
 Il numero è in `corso/app/index.html` (`VERSIONE`, `RILASCIO`) e in `corso/app/aula/server.py` (`VERSIONE`): si cambiano insieme.
 Si vede in fondo all'app, nell'aiuto, nell'area istruttore e nella finestra del server.
 
+## 0.14.0 · 9 ottobre 2026
+- App online: registro degli accessi per 90 giorni. Per allievo e giorno: aperture dell'app, slide, schede, appendici e quiz; indirizzi IP con la località stimata da Cloudflare; dispositivi (codice casuale dell'app nel cookie `corso_disp`, con tipo di telefono o computer e browser). Il MAC non arriva al server.
+- Segnalazioni dei casi sospetti: più di 3 dispositivi in 7 giorni, accesso dall'estero, due luoghi a più di 300 km nella stessa ora. Nuova scheda «Accessi» nell'area istruttore, con il numero delle segnalazioni aperte e il pallino rosso nella «Classe»; il link `…/docente?segnalazione=<id>` apre la segnalazione.
+- Blocchi: tutto l'allievo, un suo IP o un suo dispositivo (solo per lui); l'app mostra «Accesso sospeso» e toglie slide e quiz dal telefono, i progressi restano. Sblocco dal dettaglio dell'allievo.
+- Email di avviso con il link diretto, se c'è un dominio attivato in Cloudflare Email Service (`EMAIL_DA` in `casa/prepara_casa.py`).
+- Consenso dell'app e PDF per gli allievi con la riga sulla registrazione degli accessi.
+
 ## 0.13.3 · 9 ottobre 2026
 - Caratteri senza internet (app in aula, app online, demo da chiavetta): Nunito Sans e Fredoka con tutti i pesi. Prima Nunito Sans c'era solo in extra-grassetto e tutto il testo usciva in grassetto. Si riscaricano con `aula/scarica_caratteri.py`.
 

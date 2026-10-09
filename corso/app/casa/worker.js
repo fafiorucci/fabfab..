@@ -12,7 +12,11 @@
    - con MODO = "prova" (Worker «corso-nautico-prova», senza Cloudflare Access e con i soli file della prova) si entra
      con il link personale …/?p=<codice> creato dall'istruttore: il codice resta in un cookie e vale fino alla scadenza.
    - account di prova per altre scuole (li crea l'istruttore, con scadenza): app con le lezioni 1-2 e area istruttore
-     con allievi inventati; mai i dati veri. Scaduta la prova non si apre più niente. */
+     con allievi inventati; mai i dati veri. Scaduta la prova non si apre più niente.
+   - registro degli accessi degli allievi (per 90 giorni): per allievo e giorno quante volte apre l'app, slide, schede,
+     appendici e quiz, da quali IP (con paese e città stimati da Cloudflare) e da quali dispositivi (codice casuale
+     dell'app nel cookie corso_disp). Segnalazioni dei casi sospetti all'istruttore, anche per email se c'è il
+     collegamento EMAIL (mittente EMAIL_DA); blocco dell'allievo, di un suo IP o di un suo dispositivo. */
 import { DurableObject } from 'cloudflare:workers';
 
 const VERSIONE = '__VERSIONE__';
@@ -49,6 +53,34 @@ async function emailDa(req, env) {
     if (!ok || dati.iss !== `https://${env.TEAM}.cloudflareaccess.com` || !aud.includes(env.AUD) || !(dati.exp * 1000 > Date.now())) return null;
     return dati.email ? String(dati.email).toLowerCase() : null;
   } catch (e) { return null; }
+}
+
+/* ---------- registro degli accessi: chi, da dove, con cosa ---------- */
+const GIORNI_REGISTRO = 90;          // poi i dati degli accessi si cancellano da soli
+const SOGLIA_DISPOSITIVI = 3;        // più di 3 dispositivi in 7 giorni: segnalazione
+const SOGLIA_KM = 300;               // due luoghi più lontani di così entro un'ora: segnalazione
+const categoria = (p, metodo) => p === '/accesso.json' ? 'app' : /^\/slides\/L\d+-/.test(p) ? 'slide' : /^\/slides\/SR-/.test(p) ? 'scheda'
+  : /^\/slides\/A[A-Z]-/.test(p) || p.startsWith('/appendici/') ? 'appendice' : null;
+// «iPhone · Safari», «Windows · Chrome»…: abbastanza per riconoscere un dispositivo a colpo d'occhio
+function dispositivo(ua) {
+  ua = String(ua || '');
+  const so = /iPhone/.test(ua) ? 'iPhone' : /iPad/.test(ua) ? 'iPad' : /Android/.test(ua) ? (/Mobile/.test(ua) ? 'Android' : 'tablet Android')
+    : /Windows/.test(ua) ? 'Windows' : /Macintosh|Mac OS X/.test(ua) ? 'Mac' : /CrOS/.test(ua) ? 'Chromebook' : /Linux/.test(ua) ? 'Linux' : 'altro';
+  const br = /Edg\//.test(ua) ? 'Edge' : /SamsungBrowser/.test(ua) ? 'Samsung Internet' : /Firefox|FxiOS/.test(ua) ? 'Firefox'
+    : /Chrome|CriOS/.test(ua) ? 'Chrome' : /Safari/.test(ua) ? 'Safari' : 'browser';
+  return so + ' · ' + br;
+}
+function visita(req, env, p) {
+  const cf = req.cf || {}, prova = env.PROVA_EMAIL ? req.headers : null;   // in locale si può simulare IP e luogo
+  const m = (req.headers.get('cookie') || '').match(/(?:^|;\s*)corso_disp=([a-z0-9]{8,40})/);
+  return {
+    cat: categoria(p, req.method),
+    ip: String((prova && prova.get('x-prova-ip')) || req.headers.get('cf-connecting-ip') || '').slice(0, 45),
+    paese: String((prova && prova.get('x-prova-paese')) || cf.country || '').slice(0, 2),
+    citta: corto((prova && prova.get('x-prova-citta')) || cf.city || '', 40), regione: corto(cf.region || '', 40),
+    lat: parseFloat((prova && prova.get('x-prova-lat')) || cf.latitude) || null, lon: parseFloat((prova && prova.get('x-prova-lon')) || cf.longitude) || null,
+    disp: m ? m[1] : '', ua: dispositivo(req.headers.get('user-agent')),
+  };
 }
 
 /* ---------- lezioni aperte: slide, schede e appendici ---------- */
@@ -132,9 +164,12 @@ export default {
       return p.startsWith('/api/') || p === '/accesso.json' ? errore(403, 'Il periodo di prova è terminato.')
         : pagina(403, 'Il periodo di prova dell’app del corso è terminato. Grazie per averla provata! Per informazioni contatta Fabrizio Fiorucci.');
 
+    // allievi veri: ogni accesso va nel registro e si controlla che non sia bloccato
+    const allievo = ruolo === 'allievo' && !sitoProva, V = allievo ? visita(req, env, p) : null;
     if (p.startsWith('/api/')) {
       if (p.startsWith('/api/docente/') && !istruttore) return errore(403, 'Area riservata all’istruttore.');
       const h = new Headers(req.headers); h.set('x-email', email); h.set('x-ruolo', ruolo); h.set('x-origine', url.origin);
+      h.delete('x-visita'); if (V) h.set('x-visita', encodeURIComponent(JSON.stringify(V)));   // le intestazioni vogliono solo ASCII
       return archivio.fetch(new Request(req.url, { method: req.method, headers: h, body: req.method === 'POST' ? await req.text() : undefined }));
     }
     if (p === '/docente' || p === '/docente/' || p === '/docente.html') {
@@ -157,6 +192,11 @@ export default {
       const C = corsoProva(await corso(env, url)), m = p.match(/^\/slides\/(L\d+)-(\d+)\.jpg$/);
       const l = m && R.attive.includes(m[1]) && C.lezioni.find(x => x.id === m[1]);
       if (!l || !l.capitoli.some(c => c.pagine.includes(+m[2]))) return pagina(403, 'Nella prova questa slide non è disponibile.');
+    } else if (allievo && (p === '/accesso.json' || p.startsWith('/slides/') || p.startsWith('/appendici/'))) {
+      const r = await (await archivio.fetch(new Request(url.origin + '/interno/accesso', { method: 'POST',
+        headers: { 'x-email': email, 'x-origine': url.origin }, body: JSON.stringify(V) }))).json();
+      if (r.bloccato) return p === '/accesso.json' ? json({ ok: false, sospeso: true }, 403) : pagina(403, 'Accesso sospeso: rivolgiti all’istruttore.');
+      if (p !== '/accesso.json' && !(await aperto(p, r.attive, await corso(env, url)))) return pagina(403, 'Questa lezione non è ancora aperta.');
     } else if (ruolo !== 'docente' && (p.startsWith('/slides/') || p.startsWith('/appendici/'))) {
       const attive = await (await archivio.fetch(new Request(url.origin + '/interno/attive'))).json();
       if (!(await aperto(p, attive, await corso(env, url)))) return pagina(403, 'Questa lezione non è ancora aperta.');
@@ -226,8 +266,114 @@ function allieviInventati(C, attive) {
 
 const linkProva = (env, e) => String(env.PROVA_URL || '').replace(/\/?$/, '/') + '?p=' + e.slice(5);
 
+const giornoISO = (n = 0) => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10);
+function km(a, b) {   // distanza sulla sfera, in km
+  const r = Math.PI / 180, x = Math.sin((b.lat - a.lat) * r / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin((b.lon - a.lon) * r / 2) ** 2;
+  return 12742 * Math.asin(Math.sqrt(x));
+}
+const vuoto = () => ({ n: {}, ip: {}, disp: {} });
+// somma un giorno di accessi a un altro (b dentro a); tiene i 40 IP e i 20 dispositivi più recenti
+function somma(a, b) {
+  for (const [k, v] of Object.entries(b.n)) a.n[k] = (a.n[k] || 0) + v;
+  for (const t of ['ip', 'disp']) {
+    for (const [k, v] of Object.entries(b[t])) {
+      const x = a[t][k];
+      if (!x) a[t][k] = { ...v };
+      else { x.n += v.n; if (v.primo < x.primo) x.primo = v.primo; if (v.ultimo > x.ultimo) { x.ultimo = v.ultimo; if (v.ip) x.ip = v.ip; } }
+    }
+    const tieni = t === 'ip' ? 40 : 20, chiavi = Object.keys(a[t]);
+    if (chiavi.length > tieni) for (const k of chiavi.sort((x, y) => a[t][y].ultimo.localeCompare(a[t][x].ultimo)).slice(tieni)) delete a[t][k];
+  }
+  return a;
+}
+const NOMI_PAESI = new Intl.DisplayNames(['it'], { type: 'region' });
+const paese = c => { try { return c ? NOMI_PAESI.of(c) : ''; } catch (e) { return c; } };
+const luogo = x => [x.citta, x.paese && x.paese !== 'IT' ? paese(x.paese) : ''].filter(Boolean).join(', ') || 'luogo sconosciuto';
+
 export class Corso extends DurableObject {
+  constructor(ctx, env) { super(ctx, env); this.coda = new Map(); this.toccati = new Set(); this.blocchi = null; }
   async corso() { return (await this.env.ASSETS.fetch('https://corso/corso.json')).json(); }
+
+  /* ----- registro degli accessi: in memoria, poi nell'archivio ogni 20 secondi (un salvataggio per allievo e giorno) ----- */
+  registra(email, v, quiz = 0) {
+    const k = 'acc:' + giornoISO() + ':' + email, r = this.coda.get(k) || vuoto(), ora = adesso();
+    if (v.cat) r.n[v.cat] = (r.n[v.cat] || 0) + 1;
+    if (quiz) r.n.quiz = (r.n.quiz || 0) + quiz;
+    if (v.ip) { const x = r.ip[v.ip] || (r.ip[v.ip] = { n: 0, paese: v.paese, citta: v.citta, regione: v.regione, lat: v.lat, lon: v.lon, primo: ora }); x.n++; x.ultimo = ora; }
+    if (v.disp) { const x = r.disp[v.disp] || (r.disp[v.disp] = { n: 0, ua: v.ua, primo: ora }); x.n++; x.ultimo = ora; if (v.ip) x.ip = v.ip; }
+    this.coda.set(k, r); this.toccati.add(email);
+    if (!this.sveglia) { this.sveglia = true; this.ctx.storage.setAlarm(Date.now() + 20e3); }
+  }
+  async scarica() {
+    const coda = this.coda, toccati = this.toccati; this.coda = new Map(); this.toccati = new Set();
+    for (const [k, d] of coda) await this.ctx.storage.put(k, somma((await this.ctx.storage.get(k)) || vuoto(), d));
+    for (const e of toccati) await this.controlla(e);
+  }
+  async alarm() {
+    this.sveglia = false;
+    await this.scarica();
+    if (this.pulito !== giornoISO()) {   // una volta al giorno: via gli accessi e le segnalazioni più vecchi di 90 giorni
+      this.pulito = giornoISO();
+      const limite = giornoISO(GIORNI_REGISTRO), st = this.ctx.storage;
+      const vecchi = [...(await st.list({ prefix: 'acc:', end: 'acc:' + limite })).keys()];
+      for (const s of (await st.list({ prefix: 'segn:' })).values()) if (s.creato.slice(0, 10) < limite) vecchi.push('segn:' + s.id);
+      for (let i = 0; i < vecchi.length; i += 128) await st.delete(vecchi.slice(i, i + 128));
+    }
+  }
+  // gli ultimi 7 giorni di un allievo: casi sospetti
+  async controlla(email) {
+    const st = this.ctx.storage, chiavi = [...Array(7)].map((_, i) => 'acc:' + giornoISO(i) + ':' + email);
+    const giorni = [...(await st.get(chiavi)).values()], tutti = giorni.reduce((a, g) => somma(a, g), vuoto());
+    const ips = Object.entries(tutti.ip).map(([ip, x]) => ({ ip, ...x })).sort((a, b) => b.ultimo.localeCompare(a.ultimo));
+    const disp = Object.entries(tutti.disp).map(([id, x]) => ({ id, ...x })).sort((a, b) => b.ultimo.localeCompare(a.ultimo));
+    if (disp.length > SOGLIA_DISPOSITIVI)
+      await this.segnala(email, 'dispositivi', disp.length + ' dispositivi diversi negli ultimi 7 giorni', ips, disp);
+    for (const x of ips.filter(x => x.paese && x.paese !== 'IT'))
+      await this.segnala(email, 'estero:' + x.paese, 'Accesso dall’estero: ' + luogo(x), ips, disp);
+    const oggi = ips.filter(x => x.lat != null && x.lon != null && x.ultimo.slice(0, 10) === giornoISO());
+    for (let i = 0; i < oggi.length; i++) for (let j = i + 1; j < oggi.length; j++) {
+      const a = oggi[i], b = oggi[j], d = km(a, b);
+      const distacco = Math.max(Date.parse(a.primo) - Date.parse(b.ultimo), Date.parse(b.primo) - Date.parse(a.ultimo), 0);
+      if (d > SOGLIA_KM && distacco <= 3600e3)
+        return this.segnala(email, 'viaggio', 'Accessi da due luoghi lontani ' + Math.round(d) + ' km nella stessa ora: ' + luogo(a) + ' e ' + luogo(b), ips, disp);
+    }
+  }
+  // una segnalazione per tipo e allievo ogni 7 giorni
+  async segnala(email, tipo, testo, ips, disp) {
+    const st = this.ctx.storage, chiave = 'segnchiave:' + email + ':' + tipo, prima = await st.get(chiave);
+    if (prima && Date.now() - prima < 7 * 864e5) return;
+    await st.put(chiave, Date.now());
+    const a = await st.get('allievo:' + email), id = [...crypto.getRandomValues(new Uint8Array(10))].map(x => (x % 36).toString(36)).join('');
+    const s = { id, email, nome: a ? a.nome : email, tipo: tipo.split(':')[0], testo, creato: adesso(), stato: 'aperta',
+                ip: ips.slice(0, 10).map(x => ({ ip: x.ip, luogo: luogo(x), ultimo: x.ultimo, n: x.n })),
+                disp: disp.slice(0, 10).map(x => ({ id: x.id, ua: x.ua, ultimo: x.ultimo, n: x.n, ip: x.ip || '' })) };
+    await this.avvisa(s);
+    await st.put('segn:' + id, s);
+  }
+  // email all'istruttore con il link diretto alla segnalazione (se c'è il collegamento EMAIL e il mittente EMAIL_DA)
+  async avvisa(s) {
+    const env = this.env;
+    if (!env.EMAIL || !env.EMAIL_DA || !env.DOCENTE) return;
+    const link = (this.origine || await this.ctx.storage.get('origine') || '') + '/docente?segnalazione=' + s.id;
+    const righe = ['Allievo: ' + s.nome + ' (' + s.email + ')', s.testo, '',
+      'Ultimi IP: ' + s.ip.slice(0, 5).map(x => x.ip + ' (' + x.luogo + ')').join(', '),
+      'Dispositivi: ' + s.disp.slice(0, 5).map(x => x.ua).join(', '), '',
+      'Apri la segnalazione per bloccare l’allievo, un IP o un dispositivo, oppure archiviarla:', link];
+    try {
+      await env.EMAIL.send({ from: env.EMAIL_DA, to: env.DOCENTE, subject: 'App del corso: accesso sospetto di ' + s.nome, text: righe.join('\n'),
+        html: '<p>' + righe.map(t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;')).join('<br>').replace(link.replace(/&/g, '&amp;'), '<a href="' + link + '">' + link + '</a>') + '</p>' });
+      s.avviso = 'email inviata';
+    } catch (e) { s.avviso = 'email non inviata: ' + String(e && (e.code || e.message) || e).slice(0, 120); }
+  }
+  /* ----- blocchi: tutto l'allievo, un suo IP o un suo dispositivo ----- */
+  async blocchiTutti() {
+    if (!this.blocchi) this.blocchi = new Map([...(await this.ctx.storage.list({ prefix: 'blocco:' }))].map(([k, v]) => [k.slice(7), v]));
+    return this.blocchi;
+  }
+  async bloccato(email, v) {
+    const b = (await this.blocchiTutti()).get(email);
+    return !!(b && (b.tutto || (v && v.ip && b.ip[v.ip]) || (v && v.disp && b.disp[v.disp])));
+  }
   async attive() {
     let a = await this.ctx.storage.get('attive');
     if (!a) {
@@ -239,7 +385,15 @@ export class Corso extends DurableObject {
   }
   async fetch(req) {
     const p = new URL(req.url).pathname, email = req.headers.get('x-email');
+    const origine = req.headers.get('x-origine');
+    if (origine && origine !== this.origine) { this.origine = origine; await this.ctx.storage.put('origine', origine); }
     if (p === '/interno/attive') return json(await this.attive());
+    if (p === '/interno/accesso') {   // file statici degli allievi: registro e blocchi
+      const v = JSON.parse(await req.text() || '{}');
+      if (await this.bloccato(email, v)) return json({ bloccato: true });
+      this.registra(email, v);
+      return json({ attive: await this.attive() });
+    }
     if (p === '/interno/ruolo') {
       const d = await this.ctx.storage.get('prova:' + email);
       if (!d) return json({ ruolo: 'allievo' });
@@ -251,6 +405,18 @@ export class Corso extends DurableObject {
     if (req.method === 'POST') { try { dati = JSON.parse(await req.text() || '{}'); } catch (e) { return errore(400, 'Richiesta non valida.'); } }
     const st = this.ctx.storage, chiave = 'allievo:' + email;
     const a = await st.get(chiave);
+
+    // allievo: bloccato? Le risposte ai quiz nuove contano nel registro
+    const V = ruolo === 'allievo' && req.headers.get('x-visita') ? JSON.parse(decodeURIComponent(req.headers.get('x-visita'))) : null;
+    if (V) {
+      if (await this.bloccato(email, V)) return json({ errore: 'Accesso sospeso: rivolgiti all’istruttore.', sospeso: true }, 403);
+      let quiz = 0;
+      if (p === '/api/progresso' && req.method === 'POST' && a && dati.risposte && typeof dati.risposte === 'object') {
+        const prima = (a.stato && a.stato.risposte) || {};
+        for (const [q, r] of Object.entries(dati.risposte)) if (r && (!prima[q] || prima[q].ts !== String(r.ts ?? '').slice(0, 32))) quiz++;
+      }
+      this.registra(email, V, Math.min(quiz, 500));
+    }
 
     const d = ruolo === 'prova' ? await st.get('prova:' + email) : null;   // account di prova: lezioni e scadenza suoi
     if (p === '/api/info') return json({ aula: true, online: true, attive: d ? d.attive : await this.attive(), versione: VERSIONE,
@@ -302,7 +468,9 @@ export class Corso extends DurableObject {
       const elenco = [...(await st.list({ prefix: 'allievo:' })).values()]
         .filter(x => x.email !== String(this.env.DOCENTE || '').toLowerCase() && !escluse.has(x.email))   // l'istruttore e le prove non sono in classe
         .map(x => ({ id: x.email, nome: x.nome, creato: x.creato, ultimo: x.ultimo, stato: x.stato }));
+      const aperte = [...(await st.list({ prefix: 'segn:' })).values()].filter(s => s.stato === 'aperta');
       return json({ allievi: elenco, indirizzi, attive: await this.attive(),
+                    accessi: { aperte: aperte.length, segnalati: [...new Set(aperte.map(s => s.email))] },
                     prove: await Promise.all([...prove.values()].map(async x => ({ email: x.email, nota: x.nota || '', creato: x.creato, scade: x.scade,
                                                                                 link: x.email.startsWith('link:') ? linkProva(this.env, x.email) : null,
                                                                                 usata: !!(await st.get('allievo:' + x.email)) }))) });
@@ -325,6 +493,53 @@ export class Corso extends DurableObject {
       await st.delete('prova:' + e); await st.delete('allievo:' + e);
       return json({ ok: true });
     }
+    if (p.startsWith('/api/docente/accessi') || ['/api/docente/blocca', '/api/docente/sblocca', '/api/docente/segnalazione'].includes(p)) {
+      if (ruolo !== 'docente') return errore(403, 'Solo per l’istruttore.');
+      await this.scarica();
+      const blocchi = await this.blocchiTutti();
+      if (p === '/api/docente/accessi') {
+        const giorni = new Map();   // email → giorni (dal più recente)
+        for (const [k, g] of await st.list({ prefix: 'acc:' })) { const [, data, e] = k.split(/:(\d{4}-\d{2}-\d{2}):/); (giorni.get(e) || giorni.set(e, []).get(e)).push({ data, ...g }); }
+        const allievi = [...(await st.list({ prefix: 'allievo:' })).values()].filter(x => x.email !== String(this.env.DOCENTE || '').toLowerCase() && !x.email.startsWith('link:'));
+        const riassunto = (gg, n) => { const da = giornoISO(n - 1), t = gg.filter(g => g.data >= da).reduce((a, g) => somma(a, g), vuoto());
+          return { n: t.n, ip: Object.keys(t.ip).length, disp: Object.keys(t.disp).length,
+                   luoghi: [...new Set(Object.values(t.ip).map(luogo))].slice(0, 6) }; };
+        const segn = [...(await st.list({ prefix: 'segn:' })).values()].sort((a, b) => b.creato.localeCompare(a.creato));
+        return json({
+          email: !!(this.env.EMAIL && this.env.EMAIL_DA), giorni: GIORNI_REGISTRO,
+          segnalazioni: segn.filter(s => s.stato === 'aperta').concat(segn.filter(s => s.stato !== 'aperta').slice(0, 30)),
+          allievi: allievi.map(x => { const gg = (giorni.get(x.email) || []).sort((a, b) => b.data.localeCompare(a.data)), ult = gg[0];
+            const ora = ult ? [...Object.values(ult.ip), ...Object.values(ult.disp)].map(y => y.ultimo).sort().pop() : null;
+            return { id: x.email, nome: x.nome, ultimo: ora || null, d7: riassunto(gg, 7), d30: riassunto(gg, 30), blocco: blocchi.get(x.email) || null }; }),
+        });
+      }
+      if (p === '/api/docente/accessi-allievo') {
+        const e = String(dati.id || '').toLowerCase(), gg = [];
+        for (const [k, g] of await st.list({ prefix: 'acc:' })) if (k.endsWith(':' + e)) gg.push({ data: k.slice(4, 14), n: g.n,
+          ip: Object.entries(g.ip).map(([ip, x]) => ({ ip, luogo: luogo(x), n: x.n, primo: x.primo, ultimo: x.ultimo })),
+          disp: Object.entries(g.disp).map(([id, x]) => ({ id, ua: x.ua, n: x.n, ultimo: x.ultimo, ip: x.ip || '' })) });
+        return json({ giorni: gg.sort((a, b) => b.data.localeCompare(a.data)), blocco: blocchi.get(e) || null });
+      }
+      if (p === '/api/docente/segnalazione') {
+        const s = await st.get('segn:' + String(dati.sid || ''));
+        if (!s) return errore(404, 'Segnalazione non trovata.');
+        s.stato = dati.stato === 'aperta' ? 'aperta' : 'archiviata'; s.chiusa = adesso(); await st.put('segn:' + s.id, s);
+        return json({ ok: true });
+      }
+      // blocca / sblocca: tipo «tutto», «ip» (valore = indirizzo) o «disp» (valore = codice del dispositivo)
+      const e = String(dati.id || '').toLowerCase(), tipo = String(dati.tipo || ''), val = String(dati.valore || '').slice(0, 45);
+      if (!e || !['tutto', 'ip', 'disp'].includes(tipo) || (tipo !== 'tutto' && !val)) return errore(400, 'Richiesta non valida.');
+      const b = blocchi.get(e) || { tutto: false, ip: {}, disp: {} };
+      if (p === '/api/docente/blocca') { if (tipo === 'tutto') b.tutto = adesso(); else b[tipo][val] = adesso(); }
+      else { if (tipo === 'tutto') b.tutto = false; else delete b[tipo][val]; }
+      const resta = b.tutto || Object.keys(b.ip).length || Object.keys(b.disp).length;
+      if (resta) { blocchi.set(e, b); await st.put('blocco:' + e, b); } else { blocchi.delete(e); await st.delete('blocco:' + e); }
+      if (dati.sid && p === '/api/docente/blocca') {
+        const s = await st.get('segn:' + String(dati.sid));
+        if (s) { s.stato = 'bloccata'; s.chiusa = adesso(); s.azione = tipo === 'tutto' ? 'allievo bloccato' : (tipo === 'ip' ? 'IP ' : 'dispositivo ') + val + ' bloccato'; await st.put('segn:' + s.id, s); }
+      }
+      return json({ ok: true, blocco: resta ? b : null });
+    }
     if (p === '/api/docente/lezione') {
       const C = await (await this.env.ASSETS.fetch('https://corso/corso.json')).json();
       const id = String(dati.id || '');
@@ -341,7 +556,7 @@ export class Corso extends DurableObject {
       b.stato = { visti: {}, risposte: {}, profilo: b.stato.profilo || {}, diario: {} }; b.giro = (b.giro || 0) + 1;
       await st.put(k, b); return json({ ok: true });
     }
-    if (p === '/api/docente/elimina') { await st.delete(k); return json({ ok: true }); }
+    if (p === '/api/docente/elimina') { await st.delete(k); await st.delete('blocco:' + b.email); if (this.blocchi) this.blocchi.delete(b.email); return json({ ok: true }); }
     return errore(404, 'Non trovato.');
   }
 }

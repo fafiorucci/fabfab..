@@ -49,6 +49,7 @@ input[type=password]:focus,input[type=search]:focus{outline:none; border-color:v
     <button class="navb" id="nav-pres"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4 H21 M4 4 V15 H20 V4 M12 15 V19 M8 21 L12 19 L16 21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Presentazioni</span></button>
     <button class="navb" id="nav-lez"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11 V7 a7 7 0 0 1 14 0 M4 11 H20 V21 H4 Z M12 15 V17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Lezioni</span></button>
     <button class="navb" id="nav-prove" style="display:none"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 L20 7 V12 C20 17 16.5 20 12 21 C7.5 20 4 17 4 12 V7 Z M9 12 L11 14 L15 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Prove</span></button>
+    <button class="navb" id="nav-accessi" style="display:none"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12 C5 6.5 8.5 4.5 12 4.5 S19 6.5 22 12 C19 17.5 15.5 19.5 12 19.5 S5 17.5 2 12 Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="2.2"/></svg><span>Accessi</span><b id="nav-accessi-n" style="display:none; margin-left:2px; min-width:20px; padding:0 6px; border-radius:10px; background:#E4572E; color:#fff; font-size:12px; line-height:20px; text-align:center"></b></button>
     <button class="navb" id="nav-aiuto" aria-label="Aiuto" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M9.3 9.4a2.8 2.8 0 1 1 3.9 2.6c-.8.4-1.2.9-1.2 1.8v.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17.4" r="1.3" fill="currentColor"/></svg><span>Aiuto</span></button>
   </nav>
 </div><svg class="waves" viewBox="0 0 960 14" preserveAspectRatio="none" aria-hidden="true"><path id="wv-h" fill="#12A4B5" fill-opacity=".45"/></svg></header>
@@ -65,6 +66,8 @@ const PIN_KEY='corso-aula-pin';
 let C=null, A=[], indirizzi=[], aperto=null, timer=null, vista='classe', P=null, ATT=new Set();
 // app online: PROVE = account di prova per altre scuole (li vede solo l'istruttore); PROVA = chi guarda è un account di prova
 let PROVE=null, PROVA=null;
+// app online: registro degli accessi (segnalazioni aperte e allievi segnalati)
+let ACCESSI=null, SEGNALATI=new Set(), ACC=null, SEGN_QUI=null;
 const LA=()=>C.lezioni.filter(l=>ATT.has(l.id));   // lezioni aperte agli allievi
 const dove=r=>r[0]==='SR'?'Schede · i numeri d’oro':C.lezioni.find(l=>l.id===r[0]).num+' · slide '+r[1];
 
@@ -123,13 +126,17 @@ function vPin(msg){
 
 async function carica(primo){
   try{ const j=await api('docente/allievi'); A=j.allievi; indirizzi=j.indirizzi; ATT=new Set(j.attive||[]); PROVE=j.prove||null; PROVA=j.prova||null;
-    document.getElementById('nav-prove').style.display=PROVE?'':'none'; }
+    document.getElementById('nav-prove').style.display=PROVE?'':'none';
+    ACCESSI=j.accessi||null; SEGNALATI=new Set(ACCESSI?ACCESSI.segnalati:[]);
+    document.getElementById('nav-accessi').style.display=ACCESSI?'':'none';
+    const nb=document.getElementById('nav-accessi-n'); nb.textContent=ACCESSI&&ACCESSI.aperte?String(ACCESSI.aperte):''; nb.style.display=ACCESSI&&ACCESSI.aperte?'inline-block':'none'; }
   catch(e){ clearInterval(timer); timer=null; pin.set(null); return vPin(e.status===403?'PIN errato.':'Server non raggiungibile.'); }
   document.getElementById('nav').hidden=false;
   if(!timer) timer=setInterval(()=>carica(false),20000);
   if(vista==='pres') return primo?vPresentazioni():undefined;
   if(vista==='lez') return vLezioni();
   if(vista==='prove') return primo?vProve():undefined;   // non si ridisegna mentre si scrive
+  if(vista==='accessi') return primo?vAccessi():undefined;
   if(aperto){ const a=A.find(x=>x.id===aperto); if(a) return vAllievo(a,!primo); aperto=null; }
   vClasse(!primo);
 }
@@ -162,7 +169,7 @@ function vClasse(silenzioso){
       ordine==='ultimo'?String(b.ultimo||'').localeCompare(String(a.ultimo||'')):a.nome.localeCompare(b.nome,'it'));
     corpo.replaceChildren(...righe.map(a=>{const t=totale(a.stato);
       return el('tr',{tabindex:'0',onclick:()=>vAllievo(a),onkeydown:e=>{if(e.key==='Enter')vAllievo(a);}},
-        el('td',{style:'font-weight:800'},el('span',{class:'row',style:'gap:8px; flex-wrap:nowrap'},el('span',{class:'av',style:'width:28px; height:28px; font-size:12px; border-width:0; background:'+(PR(a).colore||'#0B8A99')},((PR(a).nome||a.nome)[0]+((PR(a).cognome||'')[0]||'')).toUpperCase()),a.nome)),
+        el('td',{style:'font-weight:800'},el('span',{class:'row',style:'gap:8px; flex-wrap:nowrap'},SEGNALATI.has(a.id)?el('span',{title:'Accesso sospetto: vedi la scheda Accessi',style:'width:10px; height:10px; border-radius:50%; background:#E4572E; flex:none'}):null,el('span',{class:'av',style:'width:28px; height:28px; font-size:12px; border-width:0; background:'+(PR(a).colore||'#0B8A99')},((PR(a).nome||a.nome)[0]+((PR(a).cognome||'')[0]||'')).toUpperCase()),a.nome)),
         el('td',{},patente(a)),
         el('td',{style:'white-space:nowrap'},esame(a)),
         el('td',{},quando(a.ultimo)),
@@ -271,7 +278,91 @@ function esporta(){
   const a=el('a',{href:URL.createObjectURL(new Blob([csv],{type:'text/csv'})),download:'classe-'+new Date().toISOString().slice(0,10)+'.csv'});
   document.body.append(a); a.click(); a.remove();
 }
-function navCur(k){ for(const [id,v] of [['nav-classe','classe'],['nav-qr','qr'],['nav-pres','pres'],['nav-lez','lez'],['nav-prove','prove']]) document.getElementById(id).toggleAttribute('aria-current',k===v); }
+function navCur(k){ for(const [id,v] of [['nav-classe','classe'],['nav-qr','qr'],['nav-pres','pres'],['nav-lez','lez'],['nav-prove','prove'],['nav-accessi','accessi']]) document.getElementById(id).toggleAttribute('aria-current',k===v); }
+
+/* ---------- accessi degli allievi (app online): segnalazioni e blocchi ---------- */
+const NOMI_CONTI=[['app','aperture app'],['slide','slide'],['scheda','schede'],['appendice','appendici'],['quiz','quiz']];
+const conti=n=>NOMI_CONTI.filter(([k])=>n&&n[k]).map(([k,t])=>n[k]+' '+t).join(' · ')||'—';
+const volte=n=>n+(n===1?' accesso':' accessi');
+const sigla=id=>' (#'+String(id).slice(0,4)+')';   // per distinguere dispositivi dello stesso tipo
+const TIPI={dispositivi:'Troppi dispositivi',estero:'Accesso dall’estero',viaggio:'Luoghi lontani'};
+async function blocca(id,tipo,valore,sid,nome){
+  const cosa=tipo==='tutto'?'tutto l’accesso di '+nome:tipo==='ip'?'l’IP '+valore+' per '+nome:'questo dispositivo di '+nome;
+  if(!confirm('Bloccare '+cosa+'?'+(tipo==='tutto'?' L’app gli mostrerà «Accesso sospeso» e toglierà slide e quiz dal suo telefono; i progressi restano.':''))) return false;
+  try{ await api('docente/blocca',{id,tipo,valore,sid}); return true; }catch(e){ alert(e.message); return false; }
+}
+async function sblocca(id,tipo,valore){ try{ await api('docente/sblocca',{id,tipo,valore}); return true; }catch(e){ alert(e.message); return false; } }
+async function vAccessi(sid){
+  vista='accessi'; aperto=null; navCur('accessi');
+  if(sid) SEGN_QUI=sid;
+  try{ ACC=await api('docente/accessi'); }catch(e){ $app.replaceChildren(el('p',{class:'errmsg'},e.message)); return; }
+  const y=window.scrollY, rid=()=>{ vAccessi().then(()=>window.scrollTo({top:y})); carica(false); };
+  const aperte=ACC.segnalazioni.filter(s=>s.stato==='aperta'), chiuse=ACC.segnalazioni.filter(s=>s.stato!=='aperta');
+  const scheda=s=>{ const qui=s.id===SEGN_QUI;
+    return el('div',{class:'card stack','data-segn':s.id,style:'--hue:var(--coral); gap:10px'+(qui?'; outline:3px solid var(--sun); outline-offset:3px':'')},
+      el('div',{class:'row',style:'justify-content:space-between'},el('span',{class:'pill',style:'--hue:var(--coral)'},TIPI[s.tipo]||'Segnalazione'),el('span',{class:'muted',style:'font-size:13px'},quando(s.creato)+(s.avviso?' · '+s.avviso:''))),
+      el('h3',{},s.nome),el('p',{style:'font-weight:700'},s.testo),
+      el('div',{class:'stack',style:'gap:6px'},el('b',{style:'font-size:13px'},'Indirizzi IP (ultimi 7 giorni)'),
+        ...s.ip.map(x=>el('div',{class:'row',style:'gap:8px; justify-content:space-between'},el('span',{},el('span',{class:'addr',style:'font-size:13px'},x.ip),' · '+x.luogo+' · '+quando(x.ultimo)+' · '+volte(x.n)),
+          el('button',{class:'btn ghost',onclick:async()=>{ if(await blocca(s.email,'ip',x.ip,s.id,s.nome)) rid(); }},'Blocca IP')))),
+      s.disp.length?el('div',{class:'stack',style:'gap:6px'},el('b',{style:'font-size:13px'},'Dispositivi (ultimi 7 giorni)'),
+        ...s.disp.map(x=>el('div',{class:'row',style:'gap:8px; justify-content:space-between'},el('span',{},x.ua+sigla(x.id)+' · '+quando(x.ultimo)+(x.ip?' · ultimo IP '+x.ip:'')+' · '+volte(x.n)),
+          el('button',{class:'btn ghost',onclick:async()=>{ if(await blocca(s.email,'disp',x.id,s.id,s.nome)) rid(); }},'Blocca dispositivo')))):null,
+      el('div',{class:'row'},
+        el('button',{class:'btn coral',onclick:async()=>{ if(await blocca(s.email,'tutto','',s.id,s.nome)) rid(); }},'Blocca allievo'),
+        el('button',{class:'btn ghost',onclick:async()=>{ try{ await api('docente/segnalazione',{sid:s.id,stato:'archiviata'}); rid(); }catch(e){ alert(e.message); } }},'È tutto a posto')));
+  };
+  const righe=ACC.allievi.slice().sort((a,b)=>String(b.ultimo||'').localeCompare(String(a.ultimo||''))).map(a=>{ const b=a.blocco;
+    const ni=b?Object.keys(b.ip).length:0, nd=b?Object.keys(b.disp).length:0;
+    const nb=b?(b.tutto?'bloccato':[ni?ni+(ni===1?' IP bloccato':' IP bloccati'):'',nd?nd+(nd===1?' dispositivo bloccato':' dispositivi bloccati'):''].filter(Boolean).join(', ')):'';
+    return el('tr',{tabindex:'0',onclick:()=>vAccessiAllievo(a),onkeydown:e=>{ if(e.key==='Enter') vAccessiAllievo(a); }},
+      el('td',{style:'font-weight:800'},a.nome,nb?el('span',{class:'chip ko',style:'margin-left:8px'},nb):null,SEGNALATI.has(a.id)?el('span',{class:'chip ko',style:'margin-left:8px'},'segnalato'):null),
+      el('td',{},quando(a.ultimo)),el('td',{},conti(a.d7.n)),el('td',{class:'num'},a.d30.disp),el('td',{class:'num'},a.d30.ip),el('td',{},a.d30.luoghi.join(', ')||'—')); });
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:24px'},
+    head('Sicurezza','Accessi degli allievi','var(--coral)','flag',true),
+    el('p',{class:'muted',style:'font-weight:700'},'Il registro degli ultimi '+ACC.giorni+' giorni: quante volte ogni allievo apre l’app, le slide, le schede, le appendici e i quiz, da quali indirizzi IP (con la località stimata) e da quali dispositivi. Una segnalazione nasce con più di 3 dispositivi in 7 giorni, con un accesso dall’estero o con due luoghi lontani più di 300 km nella stessa ora.'),
+    el('p',{class:'notice'+(ACC.email?' net':'')},ACC.email?'Le nuove segnalazioni ti arrivano anche per email, con il link diretto qui.':'Email di avviso non ancora attiva: le segnalazioni le trovi qui e nel pallino rosso della scheda.'),
+    head('Da guardare','Segnalazioni aperte','var(--coral)','flag',false),
+    ...(aperte.length?aperte.map(scheda):[el('p',{class:'muted'},'Nessuna segnalazione aperta.')]),
+    head('Gli allievi','Accessi per allievo','var(--purple)','chart',false),
+    el('div',{class:'card tbl',style:'--hue:var(--purple)'},el('table',{},
+      el('thead',{},el('tr',{},el('th',{},'Allievo'),el('th',{},'Ultimo accesso'),el('th',{},'Ultimi 7 giorni'),el('th',{class:'num'},'Dispositivi 30 gg'),el('th',{class:'num'},'IP 30 gg'),el('th',{},'Luoghi 30 gg'))),
+      el('tbody',{},...(righe.length?righe:[el('tr',{},el('td',{colspan:'6',class:'muted'},'Ancora nessun accesso registrato.'))])))),
+    el('p',{class:'muted'},'Clicca un allievo per il dettaglio giorno per giorno e per bloccare o sbloccare l’allievo, un suo IP o un suo dispositivo.'),
+    chiuse.length?el('details',{class:'card',style:'--hue:var(--line)'},el('summary',{style:'font-weight:800; cursor:pointer'},'Segnalazioni chiuse ('+chiuse.length+')'),
+      ...chiuse.map(s=>el('p',{style:'margin-top:8px'},el('b',{},s.nome),' · '+s.testo+' · '+quando(s.creato)+' · ',el('span',{class:'chip '+(s.stato==='bloccata'?'ko':'')},s.stato==='bloccata'?(s.azione||'bloccata'):'archiviata')))):null));
+  if(SEGN_QUI){ const c=$app.querySelector('[data-segn="'+SEGN_QUI+'"]'); if(c) c.scrollIntoView({block:'center'}); SEGN_QUI=null; }
+}
+async function vAccessiAllievo(a){
+  vista='accessi'; aperto=null; navCur('accessi'); window.scrollTo({top:0});
+  let D; try{ D=await api('docente/accessi-allievo',{id:a.id}); }catch(e){ alert(e.message); return; }
+  const rid=()=>vAccessiAllievo(a), b=D.blocco||{tutto:false,ip:{},disp:{}};
+  const ip=new Map(), disp=new Map();
+  for(const g of D.giorni){ for(const x of g.ip) if(!ip.has(x.ip)) ip.set(x.ip,x); for(const x of g.disp) if(!disp.has(x.id)) disp.set(x.id,x); }
+  for(const k of Object.keys(b.ip)) if(!ip.has(k)) ip.set(k,{ip:k,luogo:'',ultimo:null});
+  const voce=(testo,bloccato,tipo,valore)=>el('div',{class:'row',style:'gap:8px; justify-content:space-between'},el('span',{},testo),bloccato?
+    el('button',{class:'btn ghost',onclick:async()=>{ if(await sblocca(a.id,tipo,valore)) rid(); }},'Sblocca'):
+    el('button',{class:'btn ghost',onclick:async()=>{ if(await blocca(a.id,tipo,valore,null,a.nome)) rid(); }},tipo==='ip'?'Blocca IP':'Blocca dispositivo'));
+  $app.replaceChildren(el('div',{class:'stack',style:'gap:20px'},
+    el('button',{class:'link',onclick:()=>{ vAccessi(); window.scrollTo({top:0}); }},'← Accessi degli allievi'),
+    head('Accessi',a.nome,'var(--purple)','chart',true),
+    el('div',{class:'card row',style:'--hue:'+(b.tutto?'var(--coral)':'var(--green)')+'; justify-content:space-between'},
+      el('p',{style:'font-weight:800'},b.tutto?'Accesso sospeso ('+quando(b.tutto)+'): l’app gli mostra «Accesso sospeso».':'Accesso attivo.'),
+      b.tutto?el('button',{class:'btn sea',onclick:async()=>{ if(await sblocca(a.id,'tutto','')) rid(); }},'Sblocca allievo'):
+        el('button',{class:'btn coral',onclick:async()=>{ if(await blocca(a.id,'tutto','',null,a.nome)) rid(); }},'Blocca allievo')),
+    head('Da dove','Indirizzi IP','var(--blue)','flag',false),
+    el('div',{class:'card stack',style:'--hue:var(--blue); gap:8px'},...(ip.size?[...ip.values()].map(x=>voce(el('span',{},el('span',{class:'addr',style:'font-size:13px'},x.ip),(x.luogo?' · '+x.luogo:'')+(x.ultimo?' · ultimo '+quando(x.ultimo):'')+(b.ip[x.ip]?' · bloccato':'')),!!b.ip[x.ip],'ip',x.ip)):[el('p',{class:'muted'},'Nessun IP registrato.')])),
+    head('Con cosa','Dispositivi','var(--sea)','book',false),
+    el('div',{class:'card stack',style:'--hue:var(--sea); gap:8px'},...(disp.size||Object.keys(b.disp).length?[...disp.values()].map(x=>voce(x.ua+sigla(x.id)+' · ultimo '+quando(x.ultimo)+(x.ip?' · '+x.ip:'')+(b.disp[x.id]?' · bloccato':''),!!b.disp[x.id],'disp',x.id))
+      .concat(Object.keys(b.disp).filter(k=>!disp.has(k)).map(k=>voce('Dispositivo bloccato (non più nel registro)',true,'disp',k))):[el('p',{class:'muted'},'Nessun dispositivo registrato.')])),
+    head('Giorno per giorno','Ultimi '+(ACC?ACC.giorni:90)+' giorni','var(--green)','chart',false),
+    el('div',{class:'card tbl',style:'--hue:var(--green)'},el('table',{},
+      el('thead',{},el('tr',{},el('th',{},'Giorno'),el('th',{},'Cosa ha aperto'),el('th',{},'IP e luoghi'),el('th',{},'Dispositivi'))),
+      el('tbody',{},...(D.giorni.length?D.giorni.map(g=>el('tr',{},el('td',{style:'white-space:nowrap; font-weight:800'},new Date(g.data+'T12:00').toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'})),
+        el('td',{},conti(g.n)),el('td',{},g.ip.map(x=>x.ip+' ('+x.luogo+')').join(', ')||'—'),el('td',{},g.disp.map(x=>x.ua+sigla(x.id)).join(', ')||'—'))):
+        [el('tr',{},el('td',{colspan:'4',class:'muted'},'Nessun accesso registrato.'))]))))));
+}
+document.getElementById('nav-accessi').addEventListener('click',()=>{ window.scrollTo({top:0}); vAccessi(); });
 
 /* ---------- account di prova per altre scuole (app online) ---------- */
 function vProve(){
@@ -358,6 +449,7 @@ const AIUTO={
   classe:['La classe',['Il QR e l’indirizzo per far collegare gli allievi; «Proietta per la classe» li mostra in grande.','I quattro riquadri: allievi registrati, attivi oggi, slide studiate in media, risposte giuste.','La tabella: patente, esame, ultimo accesso e andamento nelle lezioni aperte. Si ordina per nome, data d’esame o ultimo accesso; clicca un allievo per il dettaglio.','«I quiz più sbagliati»: le domande da riprendere in aula, con la slide che le spiega.','«Scarica il riepilogo (CSV)» si apre con Excel.']],
   allievo:['Un allievo',['In alto patente, data d’esame, email e telefono (se li ha messi nel profilo).','La tabella per lezione e i quiz sbagliati, con cosa ha risposto e cosa era giusto.','«Nuovo codice personale» se l’ha dimenticato; «Azzera progressi» lo fa ripartire (il profilo resta); «Elimina allievo» cancella tutto.']],
   pres:['Presentazioni',['Si aprono in questa pagina: un clic per lo schermo intero; «← Elenco» per tornare qui.','Avanti e indietro con le frecce, il telecomando del presentatore o un clic a destra/sinistra; Esc per uscire.','Si aprono solo da questo computer, non dai telefoni degli allievi.']],
+  accessi:['Accessi degli allievi',['In cima le segnalazioni aperte: più di 3 dispositivi in 7 giorni, un accesso dall’estero, due luoghi lontani nella stessa ora.','«Blocca allievo» sospende tutto il suo accesso; «Blocca IP» e «Blocca dispositivo» solo quell’indirizzo o quel telefono/PC, e solo per lui. «È tutto a posto» archivia la segnalazione.','Sotto, gli accessi per allievo: clicca un nome per il dettaglio di 90 giorni e per sbloccare.','Il registro si cancella da solo dopo 90 giorni.']],
   lez:['Lezioni aperte',['«Apri agli allievi» quando hai fatto la lezione in aula: la vedono entro mezzo minuto, con la sua scheda riassuntiva e le appendici collegate.','«Chiudi» la blocca di nuovo; i progressi restano.']],
 };
 const GUIDA=[
@@ -388,6 +480,9 @@ document.getElementById('nav-qr').addEventListener('click',proietta);
   catch(e){ $app.replaceChildren(el('h1',{},'Non trovo il corso: controlla la cartella www.')); return; }
   // di ritorno da una presentazione si riapre l'elenco delle presentazioni
   try{ if(sessionStorage.getItem('corso-aula-vista')==='pres'){ vista='pres'; sessionStorage.removeItem('corso-aula-vista'); } }catch(e){}
+  // dal link dell'email di avviso: …/docente?segnalazione=<id> apre la scheda Accessi su quella segnalazione
+  const sq=new URLSearchParams(location.search).get('segnalazione');
+  if(sq&&/^[a-z0-9]{6,20}$/.test(sq)){ vista='accessi'; SEGN_QUI=sq; history.replaceState(null,'',location.pathname); }
   if(pin.get()) carica(true); else vPin();
 })();
 })();
