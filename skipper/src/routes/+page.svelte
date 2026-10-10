@@ -11,6 +11,7 @@
 	import ModuleMenu from '#lib/components/ModuleMenu.svelte';
 	import Locked from '#lib/components/Locked.svelte';
 	import { DEMO } from '#lib/demo.ts';
+	import { lastFetch, server } from '#lib/meteo/dataserver.svelte.ts';
 	import { BRAND } from '#lib/brand.ts';
 	import {
 		fetchAtmoGrids,
@@ -715,8 +716,19 @@ ${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow
 						{/if}
 					{/if}
 				{/if}
+				{#if server.url}
+					<p class="budget" class:warn={lastFetch.fallback}>
+						{#if lastFetch.source === 'proprio'}
+							Dati dal tuo server · ultima risposta in {(lastFetch.ms / 1000).toFixed(1).replace('.', ',')} s
+						{:else if lastFetch.fallback}
+							Tuo server non disponibile ({lastFetch.error}): dati da Open-Meteo pubblico
+						{:else}
+							Server dati: {server.url}
+						{/if}
+					</p>
+				{/if}
 				<p class="budget" class:warn={calls > DAILY_LIMIT * 0.8}>
-					Chiamate Open-Meteo oggi da questo dispositivo: ~{Math.round(calls).toLocaleString('it-IT')} / {DAILY_LIMIT.toLocaleString('it-IT')}
+					Chiamate Open-Meteo pubblico oggi da questo dispositivo: ~{Math.round(calls).toLocaleString('it-IT')} / {DAILY_LIMIT.toLocaleString('it-IT')}
 				</p>
 				<Footer />
 			</aside>

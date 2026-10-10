@@ -1,0 +1,46 @@
+# Server Open-Meteo per Skipper WebApp — si avvia con: docker compose up -d
+# L'app lo usa da Impostazioni → Server dei dati meteo → http://<indirizzo-del-PC>:8080
+services:
+  open-meteo:
+    image: ghcr.io/open-meteo/open-meteo
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # I dati dei modelli si leggono dall'archivio pubblico di Open-Meteo su Amazon (gratuito, senza limiti di chiamate)
+      REMOTE_DATA_DIRECTORY: https://openmeteo.s3.amazonaws.com/data/
+      # Memoria su disco per i dati già scaricati: più è grande, più richieste partono subito
+      CACHE_SIZE: 20GB
+    volumes:
+      - open-meteo-data:/app/data
+
+  # Riscaldamento: ogni ora chiede al server le zone e i modelli usati dall'app,
+  # così quando apri l'app i dati sono già in memoria e la risposta è immediata.
+  riscaldamento:
+    image: curlimages/curl
+    restart: unless-stopped
+    depends_on: [open-meteo]
+    entrypoint: ["/bin/sh", "/riscaldamento.sh"]
+    environment:
+      SERVER: http://open-meteo:8080
+      # Zona ampia da tenere pronta (ovest sud est nord) e suo passo in gradi
+      ZONA: "6 36 20 45"
+      PASSO: "0.25"
+      # Zona abituale a maglia fine (default: da Argentario a Ponza, attorno a Fiumicino)
+      ZONA_FINE: "10.8 40.6 13.6 42.6"
+      PASSO_FINE: "0.1"
+      OGNI_MINUTI: "60"
+    volumes:
+      - ./riscaldamento.sh:/riscaldamento.sh:ro
+
+  # Accesso da fuori casa (telefono, barca) con Cloudflare Tunnel: facoltativo.
+  # Si attiva con: docker compose --profile tunnel up -d  (serve il TOKEN nel file .env)
+  tunnel:
+    image: cloudflare/cloudflared
+    profiles: [tunnel]
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
+    depends_on: [open-meteo]
+
+volumes:
+  open-meteo-data:

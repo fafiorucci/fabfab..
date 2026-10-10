@@ -2,6 +2,15 @@
 
 La versione in uso si legge nel menu del logo e in fondo a ogni pagina.
 
+## 0.6.0 — navigazione in tempo reale, sessioni, server meteo proprio
+- Nuovo modulo **Navigazione**: posizione GPS del telefono o del PC sulla mappa nautica, velocità e rotta (SOG/COG), registrazione della traccia con schermo sempre acceso, rotta a waypoint (toccando la mappa o importando un file GPX, per esempio da Navionics) con rilevamento, distanza, arrivo stimato e fuori rotta verso il prossimo waypoint; passaggio automatico al waypoint successivo all'arrivo o al traverso; esportazione GPX di rotta e traccia (per Navionics e chartplotter); posizione nel log book e condivisione.
+- **Check-in e check-out**: archivio delle sessioni sul dispositivo (salva, nuova, apri, duplica per la stessa barca, verbale di ogni sessione, esporta e importa file).
+- Nuova pagina **Impostazioni**: server dei dati meteo. Con un server Open-Meteo proprio (cartella `server-meteo`, con Docker) l'app chiede prima a lui e, se non risponde entro il tempo impostato, passa da sola a Open-Meteo pubblico; prova e confronto dei tempi di risposta; indicatore della fonte dei dati nella pagina meteo.
+- Menu dei moduli scorrevole.
+
+## 0.5.2 — menu scorrevole
+- Il menu dei moduli scorre con la sua barra verticale quando non entra nello schermo (telefono, finestre basse).
+
 ## 0.5.1 — aggiornamento automatico
 - Le pagine si scaricano sempre fresche dal sito e, quando esce una nuova versione, l'app si ricarica da sola: niente più versione vecchia rimasta in memoria sul telefono o sul browser.
 - Corretto il service worker, che non si installava (la pagina iniziale compariva due volte nella lista da salvare): ora l'app funziona davvero anche offline con le pagine e i dati già visti.
