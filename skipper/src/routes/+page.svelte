@@ -7,6 +7,7 @@
 	import TripForm from '#lib/components/TripForm.svelte';
 	import Verdicts from '#lib/components/Verdicts.svelte';
 	import Footer from '#lib/components/Footer.svelte';
+	import ModuleMenu from '#lib/components/ModuleMenu.svelte';
 	import { BRAND } from '#lib/brand.ts';
 	import {
 		fetchAtmoGrids,
@@ -35,6 +36,7 @@
 	import { LAYERS, cssGradient, type LayerId } from '#lib/meteo/layers.ts';
 	import { MODELS, modelById } from '#lib/meteo/models.ts';
 	import { arrow, cardinal, num, windName } from '#lib/meteo/format.ts';
+	import { isobars } from '#lib/map/isobars.ts';
 	import { decodeTrip, defaultTrip, inviteUrl, loadSavedTrip, saveTrip, type Trip } from '#lib/trip.ts';
 	import { reportImage, reportText, shareReport } from '#lib/report.ts';
 
@@ -64,7 +66,11 @@
 	let base: Base = $state('light');
 	let seamarks = $state(true);
 	let particlesOn = $state(true);
-	let tab: 'verdict' | 'area' | 'point' = $state('verdict');
+	let isobarsOn = $state(true);
+	/** Menu della barra strumenti aperto. */
+	let menu: 'layer' | 'model' | 'map' | null = $state(null);
+	const toggleMenu = (m: 'layer' | 'model' | 'map') => (menu = menu === m ? null : m);
+	let tab: 'verdict' | 'area' | 'point' | 'synoptic' = $state('verdict');
 	let areaMetric: 'wind' | 'gust' | 'wave' = $state('wind');
 	let view: [number, number, number, number] | null = $state(null);
 	let ti = $state(0);
@@ -204,9 +210,15 @@
 		return mapModel ? { grid: mapModel.grid, values: frame(mapModel, layerId, at(mapModel)) } : null;
 	});
 
-	// Livelli Pressione/Pioggia: scarica la griglia extra per il modello mostrato quando serve.
+	// Sinottica: isobare dalla pressione del modello mostrato, all'ora selezionata.
+	const isobarFc = $derived.by(() => {
+		if (!isobarsOn || !extra) return null;
+		return isobars(extra.grid, frame(extra, 'pressure', at(extra)));
+	});
+
+	// Livelli Pressione/Pioggia e isobare: scarica la griglia extra per il modello mostrato quando serve.
 	$effect(() => {
-		if ((layerId !== 'pressure' && layerId !== 'precip') || !trip || !grid) return;
+		if ((layerId !== 'pressure' && layerId !== 'precip' && !isobarsOn) || !trip || !grid) return;
 		if (extra && extra.model === modelId && isCurrent(extra)) return;
 		const t = $state.snapshot(trip) as Trip;
 		const g = grid;
@@ -432,10 +444,7 @@ ${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow
 
 <div class="app">
 	<header class="top" class:has-trip={trip && !editing}>
-		<div class="brand">
-			<img class="logo" src="./{BRAND.logo}" alt="{BRAND.org}" width="34" height="34" />
-			<span>Skipper <b>Meteo</b> <small class="org">{BRAND.org}</small></span>
-		</div>
+		<ModuleMenu compact={!!trip && !editing} />
 		{#if trip && !editing}
 			<button class="trip" onclick={() => (editing = true)} title="Modifica uscita">
 				<strong>{trip.name}</strong>
@@ -472,50 +481,70 @@ ${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow
 					particles={particlesOn}
 					{point}
 					{popup}
-					onpick={pickPoint}
+					isobars={isobarFc}
+					onpick={(lat, lon) => (menu ? (menu = null) : pickPoint(lat, lon))}
 					onclosepoint={() => (point = null)}
 					onview={onView}
 				/>
 
-				<div class="ctrl layers">
-					{#each Object.values(LAYERS) as l (l.id)}
-						<button class:on={layerId === l.id} onclick={() => (layerId = l.id)} disabled={l.id === 'spread' && loadedModels.length < 2}>{l.label}</button>
-					{/each}
-				</div>
+				<!-- Barra verticale compatta: ogni icona apre un piccolo menu a fianco. -->
+				<div class="toolbar">
+					<button class="tb" class:on={menu === 'layer'} onclick={() => toggleMenu('layer')} title="Livello: {layer.label}" aria-label="Livello">
+						<svg viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 10-5-10-5Zm-10 9 10 5 10-5M2 16l10 5 10-5" /></svg>
+					</button>
+					<button class="tb" class:on={menu === 'model'} onclick={() => toggleMenu('model')} title="Modello" aria-label="Modello">
+						<svg viewBox="0 0 24 24"><path d="M4 19V5l8 8 8-8v14" /></svg>
+					</button>
+					<button class="tb" class:on={menu === 'map'} onclick={() => toggleMenu('map')} title="Mappa e sovrapposizioni" aria-label="Mappa">
+						<svg viewBox="0 0 24 24"><path d="m3 6 6-2 6 2 6-2v14l-6 2-6-2-6 2V6Zm6-2v14m6-12v14" /></svg>
+					</button>
+					<button class="tb" onclick={() => mapView?.goHome()} title="Torna alla zona dell'uscita" aria-label="Zona dell'uscita">
+						<svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7M5 10v10h14V10" /></svg>
+					</button>
 
-				<div class="ctrl models">
-					{#if layerId === 'spread'}
-						<span class="hint">Deviazione tra {loadedModels.length} modelli</span>
-					{:else if layerId === 'wave'}
-						<span class="hint">Onda: miglior modello disponibile</span>
-					{:else}
-						<select bind:value={modelId} aria-label="Modello sulla mappa">
-							{#each trip.models as m (m)}
-								<option value={m} disabled={!atmo[m]}>{modelById(m)?.label ?? m}{atmoErr[m] ? ' (non disp.)' : !atmo[m] ? ' …' : ''}</option>
-							{/each}
-						</select>
+					{#if menu}
+						<div class="flyout" role="menu">
+							{#if menu === 'layer'}
+								<p class="fl-h">Livello</p>
+								{#each Object.values(LAYERS) as l (l.id)}
+									<button class="fl-item" class:on={layerId === l.id} disabled={l.id === 'spread' && loadedModels.length < 2} onclick={() => ((layerId = l.id), (menu = null))}>
+										<span class="sw" style="background: {cssGradient(l)}"></span>{l.label}
+									</button>
+								{/each}
+							{:else if menu === 'model'}
+								<p class="fl-h">Modello sulla mappa</p>
+								{#if layerId === 'spread'}<p class="fl-note">Il livello "Disaccordo" usa tutti i modelli.</p>{/if}
+								{#if layerId === 'wave'}<p class="fl-note">L'onda usa il miglior modello marino.</p>{/if}
+								{#each trip.models as m (m)}
+									<button class="fl-item" class:on={modelId === m} disabled={!atmo[m]} onclick={() => ((modelId = m), (menu = null))}>
+										<i style="background: {modelById(m)?.color}"></i>{modelById(m)?.label ?? m}
+										<small>{atmoErr[m] ? 'non disp.' : !atmo[m] ? '…' : `${modelById(m)?.km} km`}</small>
+									</button>
+								{/each}
+							{:else if menu === 'map'}
+								<p class="fl-h">Mappa</p>
+								<div class="fl-seg">
+									<button class:on={base === 'light'} onclick={() => (base = 'light')}>Chiara</button>
+									<button class:on={base === 'satellite'} onclick={() => (base = 'satellite')}>Satellite</button>
+								</div>
+								<label class="fl-check"><input type="checkbox" bind:checked={isobarsOn} /> Isobare (sinottica)</label>
+								<label class="fl-check"><input type="checkbox" bind:checked={particlesOn} /> Particelle del vento</label>
+								<label class="fl-check"><input type="checkbox" bind:checked={seamarks} /> Segnali nautici</label>
+							{/if}
+						</div>
 					{/if}
 				</div>
 
-				<div class="ctrl basemap">
-					<button class:on={base === 'light'} onclick={() => (base = 'light')}>Mappa</button>
-					<button class:on={base === 'satellite'} onclick={() => (base = 'satellite')}>Satellite</button>
-					<button class:on={seamarks} onclick={() => (seamarks = !seamarks)} title="Segnali nautici OpenSeaMap">⚓</button>
-					<button class:on={particlesOn} onclick={() => (particlesOn = !particlesOn)} title="Particelle del vento">〰</button>
-					<button onclick={() => mapView?.goHome()} title="Torna alla zona dell'uscita">⌂</button>
-				</div>
-
 				<div class="timeline">
-					<div class="legend">
-						<span>{layer.label} ({layer.unit})</span>
-						<span class="bar" style="background: {cssGradient(layer)}"></span>
-						<span class="lim">{layer.stops[0][0]}–{layer.stops[layer.stops.length - 1][0]}</span>
-					</div>
-					<div class="tl-row">
-						<button class="play" onclick={togglePlay} aria-label={playing ? 'Pausa' : 'Riproduci'}>{playing ? '❚❚' : '▶'}</button>
+					<button class="play" onclick={togglePlay} aria-label={playing ? 'Pausa' : 'Riproduci'}>{playing ? '❚❚' : '▶'}</button>
+					<div class="tl-mid">
 						<input type="range" min="0" max={Math.max(0, times.length - 1)} bind:value={ti} aria-label="Ora" />
-						<span class="when">{timeLabel}</span>
+						<div class="legend" title="{layer.label} ({layer.unit})">
+							<span class="bar" style="background: {cssGradient(layer)}"></span>
+							<span class="lim">{layer.stops[0][0]}–{layer.stops[layer.stops.length - 1][0]} {layer.unit}</span>
+						</div>
 					</div>
+					<span class="when">{timeLabel}</span>
 				</div>
 
 				{#if rateWait}
@@ -528,8 +557,9 @@ ${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow
 			<aside class="panel">
 				<nav class="tabs">
 					<button class:on={tab === 'verdict'} onclick={() => (tab = 'verdict')}>Valutazione</button>
-					<button class:on={tab === 'area'} onclick={() => (tab = 'area')}>Area inquadrata</button>
+					<button class:on={tab === 'area'} onclick={() => (tab = 'area')}>Area</button>
 					<button class:on={tab === 'point'} onclick={() => (tab = 'point')}>Punto</button>
+					<button class:on={tab === 'synoptic'} onclick={() => (tab = 'synoptic')}>Sinottica</button>
 				</nav>
 
 				{#if Object.keys(atmoErr).length || marineErr}
@@ -554,6 +584,26 @@ ${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow
 					{:else}
 						<p class="muted">Nessun dato disponibile per la valutazione.</p>
 					{/if}
+				{:else if tab === 'synoptic'}
+					<div class="syn">
+						<h4>Isobare del modello sulla mappa</h4>
+						<p class="small">
+							Isobare ogni 2–4 hPa e centri di <b class="hi">A</b>lta e <b class="lo">B</b>assa pressione di {modelById(modelId)?.label}, all'ora della barra del tempo:
+							premi ▶ per vedere i sistemi muoversi. Zooma indietro per la visione d'insieme.
+						</p>
+						<label class="fl-check"><input type="checkbox" bind:checked={isobarsOn} /> Mostra le isobare</label>
+						<h4>Analisi al suolo ufficiale (DWD)</h4>
+						<a href="https://www.dwd.de/DE/leistungen/hobbymet_wk_europa/hobbyeuropakarten.html" target="_blank" rel="noopener">
+							<img class="chart-img" src="https://www.dwd.de/DWD/wetter/wv_spez/hobbymet/wetterkarten/bwk_bodendruck_na_ana.png" alt="Analisi della pressione al suolo, Nord Atlantico ed Europa" loading="lazy" />
+						</a>
+						<p class="small muted">Analisi più recente del Deutscher Wetterdienst (fronti e isobare). Fonte: DWD.</p>
+						<h4>Carte e bollettini ufficiali</h4>
+						<ul class="links">
+							<li><a href="https://weather.metoffice.gov.uk/maps-and-charts/surface-pressure" target="_blank" rel="noopener">Met Office — analisi e previsioni al suolo fino a 5 giorni</a></li>
+							<li><a href="https://www.dwd.de/DE/leistungen/hobbymet_wk_europa/hobbyeuropakarten.html" target="_blank" rel="noopener">DWD — carte del tempo per l'Europa</a></li>
+							<li><a href="https://www.meteoam.it/it/meteo-mare" target="_blank" rel="noopener">Aeronautica Militare — bollettino del mare</a></li>
+						</ul>
+					</div>
 				{:else if tab === 'area'}
 					<div class="seg">
 						<button class:on={areaMetric === 'wind'} onclick={() => (areaMetric = 'wind')}>Vento</button>
@@ -687,29 +737,6 @@ ${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow
 		color: #fff;
 		border-bottom: 3px solid var(--accent);
 	}
-	.brand {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		font-size: 1.05rem;
-		white-space: nowrap;
-	}
-	.brand b {
-		color: var(--accent);
-	}
-	.brand .logo {
-		width: 34px;
-		height: 34px;
-		flex: none;
-	}
-	.brand .org {
-		display: block;
-		font-size: 0.62rem;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: #8fb4c8;
-		line-height: 1;
-	}
 	.trip {
 		min-width: 0;
 		flex: 1;
@@ -782,17 +809,6 @@ ${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow
 		gap: 10px;
 	}
 
-	.ctrl {
-		position: absolute;
-		z-index: 2;
-		display: flex;
-		gap: 4px;
-		background: var(--panel);
-		border-radius: 12px;
-		padding: 4px;
-		box-shadow: var(--shadow);
-	}
-	.ctrl button,
 	.seg button,
 	.tabs button {
 		border: 0;
@@ -803,92 +819,191 @@ ${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow
 		font-size: 0.85rem;
 		white-space: nowrap;
 	}
-	.ctrl button.on,
 	.seg button.on {
 		background: var(--brand-2);
 		color: #fff;
 	}
-	.ctrl button:disabled {
-		opacity: 0.4;
-	}
-	.layers {
+
+	/* Barra degli strumenti verticale, discreta. */
+	.toolbar {
+		position: absolute;
+		z-index: 4;
 		top: 10px;
 		left: 10px;
-		right: 60px;
-		width: max-content;
-		max-width: calc(100% - 70px);
-		overflow-x: auto;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
 	}
-	.models {
-		top: 58px;
-		left: 10px;
+	.tb {
+		width: 38px;
+		height: 38px;
+		display: grid;
+		place-items: center;
+		border: 0;
+		border-radius: 10px;
+		background: var(--panel);
+		color: var(--text);
+		box-shadow: var(--shadow);
+		padding: 0;
 	}
-	.models select {
+	.tb svg {
+		width: 20px;
+		height: 20px;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.8;
+		stroke-linejoin: round;
+		stroke-linecap: round;
+	}
+	.tb.on {
+		background: var(--brand-2);
+		color: #fff;
+	}
+	.flyout {
+		position: absolute;
+		left: 46px;
+		top: 0;
+		min-width: 190px;
+		max-height: 60vh;
+		overflow-y: auto;
+		background: var(--panel);
+		border-radius: 12px;
+		box-shadow: var(--shadow);
+		padding: 6px;
+		display: grid;
+		gap: 2px;
+	}
+	.fl-h {
+		margin: 2px 6px 4px;
+		font-size: 0.7rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--muted);
+	}
+	.fl-note {
+		margin: 0 6px 4px;
+		font-size: 0.75rem;
+		color: var(--muted);
+	}
+	.fl-item {
+		display: flex;
+		align-items: center;
+		gap: 8px;
 		border: 0;
 		background: none;
 		color: var(--text);
-		font: inherit;
+		padding: 7px 8px;
+		border-radius: 8px;
 		font-size: 0.85rem;
-		padding: 4px 6px;
+		text-align: left;
 	}
-	.hint {
-		font-size: 0.8rem;
-		padding: 4px 8px;
+	.fl-item small {
+		margin-left: auto;
 		color: var(--muted);
+		font-size: 0.72rem;
 	}
-	.basemap {
-		top: 104px;
-		left: 10px;
+	.fl-item.on {
+		background: var(--accent-soft);
+		font-weight: 600;
 	}
+	.fl-item:disabled {
+		opacity: 0.4;
+	}
+	.fl-item .sw {
+		width: 22px;
+		height: 8px;
+		border-radius: 4px;
+		margin: 0;
+	}
+	.fl-item i {
+		width: 9px;
+		height: 9px;
+		border-radius: 2px;
+	}
+	.fl-seg {
+		display: flex;
+		gap: 4px;
+		padding: 0 4px 4px;
+	}
+	.fl-seg button {
+		flex: 1;
+		border: 1px solid var(--line-strong);
+		background: none;
+		color: var(--text);
+		border-radius: 8px;
+		padding: 6px;
+		font-size: 0.82rem;
+	}
+	.fl-seg button.on {
+		background: var(--brand-2);
+		border-color: var(--brand-2);
+		color: #fff;
+	}
+	.fl-check {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 8px;
+		font-size: 0.85rem;
+	}
+
+	/* Barra del tempo compatta: play, cursore con scala colori sotto, ora. */
 	.timeline {
 		position: absolute;
 		z-index: 2;
 		left: 10px;
 		right: 10px;
-		bottom: 30px;
-		background: var(--panel);
-		border-radius: 12px;
-		padding: 8px 10px;
+		bottom: 28px;
+		max-width: 640px;
+		margin: 0 auto;
+		background: color-mix(in srgb, var(--panel) 92%, transparent);
+		border-radius: 22px;
+		padding: 4px 12px 4px 4px;
 		box-shadow: var(--shadow);
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+	.tl-mid {
+		flex: 1;
 		display: grid;
-		gap: 4px;
+		gap: 1px;
+		min-width: 0;
+	}
+	.tl-mid input {
+		width: 100%;
+		margin: 0;
+		accent-color: var(--accent);
 	}
 	.legend {
 		display: flex;
 		align-items: center;
-		gap: 8px;
-		font-size: 0.75rem;
+		gap: 6px;
+		font-size: 0.66rem;
 		color: var(--muted);
 	}
 	.legend .bar {
 		flex: 1;
-		height: 8px;
-		border-radius: 4px;
-	}
-	.tl-row {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-	}
-	.tl-row input {
-		flex: 1;
-		accent-color: var(--accent);
+		height: 4px;
+		border-radius: 2px;
 	}
 	.play {
-		width: 38px;
-		height: 38px;
+		flex: none;
+		width: 32px;
+		height: 32px;
 		border-radius: 50%;
 		border: 0;
 		background: var(--accent);
 		color: #fff;
-		font-size: 0.9rem;
+		font-size: 0.75rem;
 	}
 	.when {
+		flex: none;
 		font-variant-numeric: tabular-nums;
 		font-weight: 600;
-		min-width: 110px;
 		text-align: right;
-		font-size: 0.9rem;
+		font-size: 0.8rem;
 		text-transform: capitalize;
 	}
 	.loading {
@@ -999,6 +1114,28 @@ ${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow
 		margin: 6px 0 0;
 		padding-left: 18px;
 	}
+	.syn h4 {
+		margin: 10px 0 4px;
+	}
+	.syn .hi {
+		color: #2f6fdb;
+	}
+	.syn .lo {
+		color: #d64545;
+	}
+	.chart-img {
+		width: 100%;
+		border-radius: 10px;
+		display: block;
+		background: var(--panel);
+	}
+	.links {
+		margin: 0;
+		padding-left: 18px;
+		font-size: 0.85rem;
+		display: grid;
+		gap: 4px;
+	}
 	.point-now {
 		background: var(--panel);
 		border-radius: 10px;
@@ -1036,12 +1173,17 @@ ${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow
 		.panel {
 			border-left: 0;
 		}
-		.has-trip .brand span {
-			display: none;
+		.timeline {
+			left: 6px;
+			right: 6px;
+			bottom: 22px;
 		}
 		.when {
-			min-width: 0;
-			font-size: 0.8rem;
+			font-size: 0.72rem;
+		}
+		.tb {
+			width: 34px;
+			height: 34px;
 		}
 	}
 </style>

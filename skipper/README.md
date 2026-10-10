@@ -4,19 +4,19 @@ Webapp per valutare il meteo prima di un'uscita in mare: confronta più modelli 
 
 Primo modulo della futura **Skipper WebApp**. Lo studio completo è in [`../docs/studio-skipper-meteo.md`](../docs/studio-skipper-meteo.md).
 
-## Cosa fa (MVP 1)
+## Moduli (versione 0.4.0)
 
-- **Uscita**: porto o zona (ricerca), data, giorni (1–7), ampiezza area, limiti di vento, raffiche e onda, modelli da confrontare.
-- **Mappa reale** chiara (OpenFreeMap) o satellite (Esri), con segnali nautici OpenSeaMap.
-- **Animazione oraria** con barra del tempo: vento con particelle, raffiche, onda, pressione, pioggia.
-- **6 modelli**: ECMWF IFS, ICON, GFS, ARPEGE/AROME, UKMO, ICON-2I (2 km); onda dal miglior modello marino.
-- **Disaccordo tra modelli**: mappa della deviazione standard del vento tra i modelli.
-- **Area inquadrata**: zoomando, minimo, media e massimo per modello sulla zona visibile (solo mare) e curve orarie a confronto.
-- **Punto**: tocchi la mappa e ottieni il meteogramma di tutti i modelli e l'onda.
-- **Valutazione**: semaforo per giorno, con il motivo (90° percentile su mare aperto, ore 7–20).
-- **Invita**: link con tutta l'uscita dentro, da mandare agli amici (nessun account).
-- **Report**: immagine PNG con mappa e semafori, condivisa con il menu nativo (WhatsApp, Mail, AirDrop) o scaricata.
-- **PWA**: si installa sulla schermata Home; i dati e le mappe già visti restano disponibili offline.
+Si scelgono dal menu nel logo. Il registro delle versioni è in [`CHANGELOG.md`](CHANGELOG.md).
+
+- **Meteo**: confronto di 17 modelli sulla zona inquadrata, semaforo per giorno, disaccordo tra modelli, valori nel punto toccato, sinottica con isobare animate e analisi ufficiale DWD, report e link di invito.
+- **Rotta**: weather routing a isocrone con polari tipo o importate (.pol/.txt/.csv), rendimento e motore.
+- **Check-in / Check-out**: checklist con note e verbale condivisibile.
+- **Guasti**: segnalazioni con impianto, priorità e stato.
+- **Log book**: annotazioni con posizione GPS, esportazione CSV.
+- **Contatti**: numeri di emergenza (1530, 112) e contatti personali.
+- **Emergenze**: posizione GPS in gradi e primi, testo MAYDAY precompilato, procedure uomo a mare, incendio, via d'acqua, abbandono, PAN-PAN.
+
+I dati dei moduli di bordo restano sul dispositivo (localStorage).
 
 ## Sviluppo
 

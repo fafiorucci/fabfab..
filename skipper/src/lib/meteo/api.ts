@@ -68,11 +68,11 @@ function gridOn(bbox: BBox, step: number): Grid {
 }
 
 /** Griglia che copre (con un piccolo margine) la zona inquadrata [ovest, sud, est, nord]. */
-export function gridForView(bbox: BBox): Grid {
+export function gridForView(bbox: BBox, maxPoints = MAX_POINTS): Grid {
 	let g = gridOn(bbox, STEPS[STEPS.length - 1]);
 	for (const step of STEPS) {
 		g = gridOn(bbox, step);
-		if (g.lats.length * g.lons.length <= MAX_POINTS) break;
+		if (g.lats.length * g.lons.length <= maxPoints) break;
 	}
 	return g;
 }

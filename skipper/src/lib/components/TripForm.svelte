@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { MODELS } from '#lib/meteo/models.ts';
+	import { MAIN_MODELS, MODELS, callsPerView } from '#lib/meteo/models.ts';
 	import { searchPlaces, type Place } from '#lib/meteo/api.ts';
 	import { MAX_DAYS, MAX_LEAD_DAYS, addDays, isoDate, validateTrip, type Trip } from '#lib/trip.ts';
 
@@ -110,16 +110,26 @@
 	</fieldset>
 
 	<fieldset>
-		<legend>Modelli da confrontare</legend>
-		<div class="models">
-			{#each MODELS as m (m.id)}
-				<label class="chip" style="--c: {m.color}">
-					<input type="checkbox" checked={draft.models.includes(m.id)} onchange={() => toggleModel(m.id)} />
-					<span>{m.label}</span>
-					<small>{m.source} · {m.km} km · {m.days} gg</small>
-				</label>
-			{/each}
+		<legend>Modelli da confrontare ({draft.models.length} di {MODELS.length})</legend>
+		<div class="model-actions">
+			<button type="button" class="ghost tiny" onclick={() => (draft.models = [...MAIN_MODELS])}>Principali</button>
+			<button type="button" class="ghost tiny" onclick={() => (draft.models = MODELS.map((m) => m.id))}>Tutti</button>
+			<small class:warn={callsPerView(draft.models.length) > 300}>
+				≈ {callsPerView(draft.models.length)} chiamate Open-Meteo per zona nuova (limite gratuito 600 al minuto, 10.000 al giorno)
+			</small>
 		</div>
+		{#each [['global', 'Globali'], ['regional', 'Europei e locali ad alta risoluzione']] as [g, title] (g)}
+			<p class="group">{title}</p>
+			<div class="models">
+				{#each MODELS.filter((m) => m.group === g) as m (m.id)}
+					<label class="chip" style="--c: {m.color}">
+						<input type="checkbox" checked={draft.models.includes(m.id)} onchange={() => toggleModel(m.id)} />
+						<span>{m.label}</span>
+						<small>{m.source} · {m.km} km · {m.days} gg</small>
+					</label>
+				{/each}
+			</div>
+		{/each}
 	</fieldset>
 
 	{#if error}<p class="error" role="alert">{error}</p>{/if}
@@ -231,6 +241,32 @@
 		grid-column: 2;
 		color: var(--muted);
 		font-size: 0.72rem;
+	}
+	.model-actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 4px;
+	}
+	.model-actions small {
+		color: var(--muted);
+		font-size: 0.72rem;
+	}
+	.model-actions small.warn {
+		color: var(--caution);
+	}
+	.tiny {
+		padding: 4px 10px;
+		font-size: 0.8rem;
+	}
+	.group {
+		margin: 8px 0 4px;
+		font-size: 0.72rem;
+		font-weight: 700;
+		color: var(--muted);
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
 	}
 	.error {
 		color: var(--nogo);
