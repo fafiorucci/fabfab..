@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { persisted, shareText } from '#lib/persist.svelte.ts';
+	import { persisted, shareText, uid } from '#lib/persist.svelte.ts';
 	import Locked from './Locked.svelte';
 	import { DEMO } from '#lib/demo.ts';
 
@@ -29,6 +29,8 @@
 	let { key, title, groups, highFive = false }: Props = $props();
 
 	interface Data {
+		/** Identificativo della sessione nell'archivio (assente finché non la si salva) */
+		id?: string;
 		checked: Record<string, boolean>;
 		notes: Record<string, string>;
 		meta: { when: string; boat: string; place: string; fuel: string; water: string; engine: string; remarks: string };
@@ -50,31 +52,134 @@
 	let openTip: string | null = $state(null);
 	let toast: string | null = $state(null);
 
-	function reset() {
-		if (confirm('Azzerare la checklist?')) store.value = empty();
+	// ----- Sessioni: archivio dei check-in/check-out salvati sul dispositivo -----
+	interface Saved {
+		id: string;
+		savedAt: string;
+		data: Data;
+	}
+	// svelte-ignore state_referenced_locally
+	const archive = persisted<Saved[]>(`${key}:sessioni`, []);
+	let showArchive = $state(false);
+	let fileInput: HTMLInputElement | undefined = $state();
+
+	const hasContent = (x: Data) =>
+		Object.values(x.checked).some(Boolean) || Object.values(x.notes).some(Boolean) || Object.values(x.meta).some(Boolean);
+	const doneOf = (x: Data) => all.filter((i) => x.checked[i]).length;
+	const fmtWhen = (w: string) => (w ? new Date(w).toLocaleString('it-IT', { dateStyle: 'short', timeStyle: 'short' }) : '');
+	const titleOf = (x: Data) => [x.meta.boat || 'Barca senza nome', x.meta.place, fmtWhen(x.meta.when)].filter(Boolean).join(' · ');
+	const saved = $derived(d.id ? archive.value.find((x) => x.id === d.id) : undefined);
+	/** Confronto indipendente dall'ordine delle chiavi e dalle voci vuote o tolte. */
+	const sig = (x: Data) => {
+		const pick = (o: Record<string, unknown>) =>
+			Object.keys(o)
+				.filter((k) => o[k] !== false && o[k] !== '' && o[k] != null)
+				.sort()
+				.map((k) => [k, o[k]]);
+		return JSON.stringify([pick(x.checked), pick(x.notes), pick(x.meta)]);
+	};
+	const dirty = $derived(!saved || sig(saved.data) !== sig(d));
+
+	function flash(t: string) {
+		toast = t;
+		setTimeout(() => (toast = null), 2500);
 	}
 
-	async function share() {
-		const m = d.meta;
+	/** Salva (o aggiorna) la sessione corrente nell'archivio. */
+	function saveSession(quiet = false) {
+		if (!store.value.id) store.value.id = uid();
+		if (!store.value.meta.when) store.value.meta.when = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+		const data = $state.snapshot(store.value) as Data;
+		archive.value = [{ id: data.id!, savedAt: new Date().toISOString(), data }, ...archive.value.filter((x) => x.id !== data.id)];
+		if (!quiet) flash('Sessione salvata nell’archivio');
+	}
+
+	/** Chiude la sessione corrente e ne apre una vuota. */
+	function newSession() {
+		if (hasContent(d) && dirty) {
+			if (confirm('Salvare la sessione corrente nell’archivio prima di iniziarne una nuova?')) saveSession(true);
+			else if (!confirm('Le modifiche non salvate andranno perse. Continuare?')) return;
+		}
+		store.value = empty();
+		flash('Nuova sessione');
+	}
+
+	function openSession(x: Saved) {
+		if (x.id === d.id && !dirty) return void (showArchive = false);
+		if (hasContent(d) && dirty && confirm('La sessione aperta ha modifiche non salvate: salvarle prima di aprire l’altra?')) saveSession(true);
+		store.value = $state.snapshot(x.data) as Data;
+		showArchive = false;
+		flash(`Aperta: ${titleOf(x.data)}`);
+	}
+
+	function duplicateSession(x: Saved) {
+		const data = $state.snapshot(x.data) as Data;
+		data.id = undefined;
+		data.checked = {};
+		data.meta = { ...data.meta, when: '', fuel: '', water: '', engine: '', remarks: '' };
+		data.notes = {};
+		if (hasContent(d) && dirty) saveSession(true);
+		store.value = data;
+		showArchive = false;
+		flash('Nuova sessione con gli stessi dati della barca');
+	}
+
+	function deleteSession(x: Saved) {
+		if (!confirm(`Eliminare la sessione «${titleOf(x.data)}»?`)) return;
+		archive.value = archive.value.filter((y) => y.id !== x.id);
+		if (d.id === x.id) store.value.id = undefined;
+	}
+
+	/** Esporta tutte le sessioni in un file, da conservare o da aprire su un altro dispositivo. */
+	function exportFile() {
+		if (dirty && hasContent(d)) saveSession(true);
+		const blob = new Blob([JSON.stringify({ app: 'skipper', kind: key, title, exported: new Date().toISOString(), sessions: archive.value }, null, 1)], {
+			type: 'application/json'
+		});
+		const a = document.createElement('a');
+		a.href = URL.createObjectURL(blob);
+		a.download = `${key}-sessioni-${new Date().toISOString().slice(0, 10)}.json`;
+		a.click();
+		setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+	}
+
+	async function importFile(e: Event) {
+		const f = (e.currentTarget as HTMLInputElement).files?.[0];
+		if (!f) return;
+		try {
+			const j = JSON.parse(await f.text());
+			if (j.app !== 'skipper' || !Array.isArray(j.sessions)) throw new Error();
+			if (j.kind !== key && !confirm(`Il file contiene sessioni di «${j.title ?? j.kind}». Importarle comunque qui?`)) return;
+			const incoming = (j.sessions as Saved[]).filter((x) => x?.id && x.data?.checked && x.data?.meta);
+			const ids = new Set(incoming.map((x) => x.id));
+			archive.value = [...incoming, ...archive.value.filter((x) => !ids.has(x.id))].sort((a, b) => b.savedAt.localeCompare(a.savedAt));
+			showArchive = true;
+			flash(`${incoming.length} sessioni importate`);
+		} catch {
+			alert('File non valido: scegli un file di sessioni esportato da Skipper.');
+		} finally {
+			(e.currentTarget as HTMLInputElement).value = '';
+		}
+	}
+
+	async function share(x: Data = d) {
+		const m = x.meta;
 		const lines = [
 			`${title} — ${m.boat || 'barca'}`,
 			[m.when && `Data: ${m.when.replace('T', ' ')}`, m.place && `Luogo: ${m.place}`].filter(Boolean).join(' · '),
 			[m.fuel && `Carburante ${m.fuel}%`, m.water && `Acqua ${m.water}%`, m.engine && `Contaore ${m.engine} h`].filter(Boolean).join(' · '),
-			`Completate ${done}/${all.length} voci`
+			`Completate ${doneOf(x)}/${all.length} voci`
 		].filter(Boolean);
 		for (const g of groups) {
 			lines.push('', `=== ${g.title.toUpperCase()} ===`);
 			for (const a of g.ambiti) {
 				lines.push(`■ ${a.title}${a.high5 ? ' (HIGH FIVE)' : ''}`);
-				for (const i of a.items) lines.push(`${d.checked[k(a, i)] ? '✔' : '✘'} ${i}${d.notes[k(a, i)] ? ` — ${d.notes[k(a, i)]}` : ''}`);
+				for (const i of a.items) lines.push(`${x.checked[k(a, i)] ? '✔' : '✘'} ${i}${x.notes[k(a, i)] ? ` — ${x.notes[k(a, i)]}` : ''}`);
 			}
 		}
 		if (m.remarks) lines.push('', `Note e danni: ${m.remarks}`);
 		const r = await shareText(title, lines.join('\n'));
-		if (r === 'copied') {
-			toast = 'Testo copiato negli appunti';
-			setTimeout(() => (toast = null), 2500);
-		}
+		if (r === 'copied') flash('Testo copiato negli appunti');
 	}
 </script>
 
@@ -139,6 +244,52 @@
 {/if}
 
 <Locked label="Checklist completa, Safety plan e verbale nella versione completa">
+	<section class="card session">
+		<div class="s-head">
+			<div class="s-title">
+				<small>Sessione {d.id ? '' : 'nuova'}</small>
+				<b>{hasContent(d) ? titleOf(d) : 'Nessun dato inserito'}</b>
+				<span class="s-state" class:warn={dirty && hasContent(d)}>
+					{#if saved && !dirty}Salvata il {fmtWhen(saved.savedAt)}{:else if hasContent(d)}Modifiche non salvate in archivio{:else}Compila e poi salva{/if}
+				</span>
+			</div>
+			<div class="s-actions">
+				<button class="primary small" onclick={() => saveSession()} disabled={!hasContent(d) || !dirty}>Salva</button>
+				<button class="ghost small" onclick={newSession}>Nuova</button>
+				<button class="ghost small" onclick={() => (showArchive = !showArchive)} aria-expanded={showArchive}>Archivio ({archive.value.length})</button>
+			</div>
+		</div>
+		{#if showArchive}
+			<div class="archive">
+				{#if archive.value.length}
+					<ul>
+						{#each archive.value as x (x.id)}
+							<li class:current={x.id === d.id}>
+								<button class="s-open" onclick={() => openSession(x)}>
+									<b>{titleOf(x.data)}</b>
+									<small>{doneOf(x.data)}/{all.length} voci · salvata {fmtWhen(x.savedAt)}{x.id === d.id ? ' · aperta' : ''}</small>
+								</button>
+								<span class="s-row">
+									<button class="ghost small" onclick={() => share(x.data)} title="Condividi il verbale">Verbale</button>
+									<button class="ghost small" onclick={() => duplicateSession(x)} title="Nuova sessione con la stessa barca">Duplica</button>
+									<button class="ghost small danger" onclick={() => deleteSession(x)} aria-label="Elimina">✕</button>
+								</span>
+							</li>
+						{/each}
+					</ul>
+				{:else}
+					<p class="m-muted">Nessuna sessione salvata. Premi «Salva» per conservare questo {title.toLowerCase()} e ritrovarlo qui.</p>
+				{/if}
+				<div class="s-file">
+					<button class="ghost small" onclick={exportFile} disabled={!archive.value.length && !hasContent(d)}>Esporta file</button>
+					<button class="ghost small" onclick={() => fileInput?.click()}>Importa file</button>
+					<input bind:this={fileInput} type="file" accept="application/json,.json" hidden onchange={importFile} />
+					<small>Il file serve come copia di sicurezza o per passare le sessioni su un altro dispositivo.</small>
+				</div>
+			</div>
+		{/if}
+	</section>
+
 	<section class="card meta">
 		<div class="grid">
 			<label><span>Data e ora</span><input type="datetime-local" bind:value={d.meta.when} /></label>
@@ -164,13 +315,104 @@
 	</section>
 
 	<div class="bar">
-		<button class="ghost" onclick={reset}>Azzera</button>
-		<button class="primary" onclick={share}>Condividi verbale</button>
+		<button class="ghost" onclick={newSession}>Nuova sessione</button>
+		<button class="ghost" onclick={() => saveSession()} disabled={!hasContent(d) || !dirty}>Salva sessione</button>
+		<button class="primary" onclick={() => share()}>Condividi verbale</button>
 	</div>
 </Locked>
 {#if toast}<p class="toast">{toast}</p>{/if}
 
 <style>
+	button.small {
+		padding: 5px 10px;
+		font-size: 0.82rem;
+	}
+	.session {
+		border-left: 5px solid var(--brand-2);
+	}
+	.s-head {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+	}
+	.s-title {
+		display: grid;
+		min-width: 0;
+	}
+	.s-title small {
+		font-size: 0.7rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--muted);
+	}
+	.s-title b {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.s-state {
+		font-size: 0.8rem;
+		color: var(--go);
+	}
+	.s-state.warn {
+		color: var(--caution);
+	}
+	.s-actions,
+	.s-row,
+	.s-file {
+		display: flex;
+		gap: 6px;
+		flex-wrap: wrap;
+		align-items: center;
+	}
+	.archive {
+		margin-top: 10px;
+		border-top: 1px solid var(--line);
+		padding-top: 8px;
+	}
+	.archive ul {
+		list-style: none;
+		margin: 0 0 8px;
+		padding: 0;
+		display: grid;
+		gap: 6px;
+		max-height: 320px;
+		overflow-y: auto;
+	}
+	.archive li {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		border: 1px solid var(--line);
+		border-radius: 10px;
+		padding: 6px 8px;
+	}
+	.archive li.current {
+		border-color: var(--brand-2);
+		background: var(--accent-soft);
+	}
+	.s-open {
+		display: grid;
+		text-align: left;
+		border: 0;
+		background: none;
+		color: var(--text);
+		padding: 0;
+		flex: 1;
+		min-width: 180px;
+	}
+	.s-open small,
+	.s-file small {
+		color: var(--muted);
+		font-size: 0.75rem;
+	}
+	.danger {
+		color: var(--nogo);
+	}
 	.card {
 		background: var(--panel);
 		border-radius: 14px;
