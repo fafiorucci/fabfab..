@@ -82,7 +82,10 @@ sw.addEventListener('fetch', (event) => {
 		return;
 	}
 	if (req.mode === 'navigate') {
-		event.respondWith(fetch(req).catch(async () => (await caches.match(scope)) ?? Response.error()));
+		// Offline: la pagina del modulo richiesto (anche senza .html), altrimenti il Meteo.
+		event.respondWith(
+			fetch(req).catch(async () => (await caches.match(req)) ?? (await caches.match(req.url.replace(/\/?(\?.*)?$/, '.html'))) ?? (await caches.match(scope)) ?? Response.error())
+		);
 		return;
 	}
 	event.respondWith(caches.match(req).then((hit) => hit ?? fetch(req)));

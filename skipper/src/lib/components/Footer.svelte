@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { BRAND } from '#lib/brand.ts';
+	import { APP_VERSION } from '#lib/modules.ts';
 </script>
 
 <footer class="notes">
@@ -34,7 +35,7 @@
 			NOAA, Météo-France, Met Office e ItaliaMeteo-ARPAE. Mappe © OpenStreetMap, OpenFreeMap, Esri, OpenSeaMap.
 		</li>
 	</ul>
-	<p class="copy">© {BRAND.year} {BRAND.author} · {BRAND.org}</p>
+	<p class="copy">© {BRAND.year} {BRAND.author} · {BRAND.org} · versione {APP_VERSION}</p>
 </footer>
 
 <style>

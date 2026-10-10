@@ -1,4 +1,4 @@
-import { MODELS } from './meteo/models';
+import { MAIN_MODELS, modelById } from './meteo/models';
 
 export interface Limits {
 	/** Vento medio massimo accettabile (nodi) */
@@ -49,7 +49,7 @@ export function defaultTrip(): Trip {
 		days: 2,
 		radius: 1,
 		limits: { wind: 20, gust: 28, wave: 1.5 },
-		models: MODELS.map((m) => m.id)
+		models: [...MAIN_MODELS]
 	};
 }
 
@@ -91,7 +91,7 @@ export function decodeTrip(s: string): Trip | null {
 			...base,
 			...raw,
 			limits: { ...base.limits, ...(raw.limits ?? {}) },
-			models: Array.isArray(raw.models) ? raw.models.filter((m: unknown) => typeof m === 'string') : base.models
+			models: Array.isArray(raw.models) ? raw.models.filter((m: unknown) => typeof m === 'string' && modelById(m)) : base.models
 		};
 		if (typeof t.lat !== 'number' || typeof t.lon !== 'number' || typeof t.date !== 'string') return null;
 		return t;

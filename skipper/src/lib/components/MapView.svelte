@@ -4,6 +4,7 @@
 	import { type GeoJSONSource, type ImageSource, type StyleSpecification } from 'maplibre-gl';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
+	import type { FeatureCollection } from 'geojson';
 	import type { BBox, Grid } from '#lib/meteo/api.ts';
 	import type { LayerInfo } from '#lib/meteo/layers.ts';
 	import { arrowFeatures, arrowImage, bboxCorners, renderField } from '#lib/map/field.ts';
@@ -23,6 +24,10 @@
 		seamarks: boolean;
 		particles: boolean;
 		point: { lat: number; lon: number } | null;
+		/** Isobare e centri di alta/bassa pressione (sinottica), o null per nasconderle. */
+		isobars: FeatureCollection | null;
+		/** Sovrapposizione libera (rotta, isocrone, partenza/arrivo) */
+		overlay?: FeatureCollection | null;
 		/** Contenuto HTML del riquadro con i valori nel punto toccato. */
 		popup: string | null;
 		onpick?: (lat: number, lon: number) => void;
@@ -31,10 +36,10 @@
 		onview?: (bbox: BBox) => void;
 	}
 
-	let { home, field, layer, arrows, wind, base, seamarks, particles, point, popup, onpick, onclosepoint, onview }: Props = $props();
+	let { home, field, layer, arrows, wind, base, seamarks, particles, point, isobars, overlay = null, popup, onpick, onclosepoint, onview }: Props = $props();
 
 	let container: HTMLDivElement;
-	let overlay: HTMLCanvasElement;
+	let particleCanvas: HTMLCanvasElement;
 	let map: maplibregl.Map | undefined;
 	let parts: Particles | undefined;
 	let marker: maplibregl.Marker | undefined;
@@ -46,6 +51,7 @@
 	const LIGHT_STYLE = 'https://tiles.openfreemap.org/styles/positron';
 	const SAT_STYLE: StyleSpecification = {
 		version: 8,
+		glyphs: 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf',
 		sources: {
 			sat: {
 				type: 'raster',
@@ -83,6 +89,88 @@
 			attribution: 'Segnali © OpenSeaMap'
 		});
 		m.addLayer({ id: 'seamarks', type: 'raster', source: 'seamarks', minzoom: 8, layout: { visibility: seamarks ? 'visible' : 'none' } });
+		// Sinottica: isobare con il valore scritto lungo la linea, centri A/B.
+		m.addSource('isobars', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+		m.addLayer({
+			id: 'isobars',
+			type: 'line',
+			source: 'isobars',
+			filter: ['==', ['get', 'kind'], 'isobar'],
+			paint: {
+				'line-color': base === 'satellite' ? '#ffffff' : '#1d2b3a',
+				'line-width': ['case', ['get', 'major'], 1.6, 0.9],
+				'line-opacity': 0.75
+			}
+		});
+		m.addLayer({
+			id: 'isobar-labels',
+			type: 'symbol',
+			source: 'isobars',
+			filter: ['==', ['get', 'kind'], 'isobar'],
+			layout: {
+				'symbol-placement': 'line',
+				'symbol-spacing': 260,
+				'text-field': ['to-string', ['get', 'p']],
+				'text-font': ['Noto Sans Regular'],
+				'text-size': 11
+			},
+			paint: { 'text-color': '#1d2b3a', 'text-halo-color': '#ffffff', 'text-halo-width': 1.6 }
+		});
+		m.addLayer({
+			id: 'pressure-centers',
+			type: 'symbol',
+			source: 'isobars',
+			filter: ['in', ['get', 'kind'], ['literal', ['high', 'low']]],
+			layout: {
+				'text-field': ['get', 'label'],
+				'text-font': ['Noto Sans Bold'],
+				'text-size': 15,
+				'text-line-height': 1.05,
+				'text-allow-overlap': true
+			},
+			paint: {
+				'text-color': ['case', ['==', ['get', 'kind'], 'low'], '#d64545', '#2f6fdb'],
+				'text-halo-color': '#ffffff',
+				'text-halo-width': 2
+			}
+		});
+		// Rotta e isocrone del modulo Rotta.
+		m.addSource('overlay', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+		m.addLayer({
+			id: 'ov-iso',
+			type: 'line',
+			source: 'overlay',
+			filter: ['==', ['get', 'kind'], 'iso'],
+			paint: { 'line-color': '#5fc2d6', 'line-width': 1, 'line-opacity': 0.7 }
+		});
+		m.addLayer({
+			id: 'ov-route-halo',
+			type: 'line',
+			source: 'overlay',
+			filter: ['==', ['get', 'kind'], 'route'],
+			layout: { 'line-cap': 'round', 'line-join': 'round' },
+			paint: { 'line-color': '#ffffff', 'line-width': 7, 'line-opacity': 0.9 }
+		});
+		m.addLayer({
+			id: 'ov-route',
+			type: 'line',
+			source: 'overlay',
+			filter: ['==', ['get', 'kind'], 'route'],
+			layout: { 'line-cap': 'round', 'line-join': 'round' },
+			paint: { 'line-color': ['case', ['get', 'motor'], '#6b7a8c', '#ff7a1a'], 'line-width': 4 }
+		});
+		m.addLayer({
+			id: 'ov-pts',
+			type: 'circle',
+			source: 'overlay',
+			filter: ['in', ['get', 'kind'], ['literal', ['start', 'end', 'step']]],
+			paint: {
+				'circle-radius': ['match', ['get', 'kind'], 'step', 3, 8],
+				'circle-color': ['match', ['get', 'kind'], 'start', '#2e9d5b', 'end', '#d64545', '#ff7a1a'],
+				'circle-stroke-color': '#ffffff',
+				'circle-stroke-width': 2
+			}
+		});
 		if (!m.hasImage('arrow')) m.addImage('arrow', arrowImage(), { sdf: true });
 		m.addSource('arrows', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
 		m.addLayer({
@@ -122,7 +210,7 @@
 		};
 		map.on('moveend', emitView);
 		map.once('load', emitView);
-		parts = new Particles(map, overlay);
+		parts = new Particles(map, particleCanvas);
 	});
 
 	onDestroy(() => {
@@ -175,6 +263,17 @@
 	$effect(() => {
 		if (!styleReady || !map) return;
 		map.setLayoutProperty('seamarks', 'visibility', seamarks ? 'visible' : 'none');
+	});
+
+	$effect(() => {
+		if (!styleReady || !map) return;
+		(map.getSource('overlay') as GeoJSONSource).setData(overlay ?? { type: 'FeatureCollection', features: [] });
+	});
+
+	$effect(() => {
+		if (!styleReady || !map) return;
+		(map.getSource('isobars') as GeoJSONSource).setData(isobars ?? { type: 'FeatureCollection', features: [] });
+		map.setPaintProperty('isobars', 'line-color', base === 'satellite' ? '#ffffff' : '#1d2b3a');
 	});
 
 	$effect(() => {
@@ -235,7 +334,7 @@
 
 <div class="wrap">
 	<div class="map" bind:this={container}></div>
-	<canvas class="particles" bind:this={overlay}></canvas>
+	<canvas class="particles" bind:this={particleCanvas}></canvas>
 </div>
 
 <style>
