@@ -42,9 +42,9 @@ export function addDays(date: string, n: number): string {
 export function defaultTrip(): Trip {
 	return {
 		name: 'Uscita',
-		place: 'Portoferraio, Isola d’Elba',
-		lat: 42.81,
-		lon: 10.33,
+		place: 'Fiumicino, Lazio',
+		lat: 41.771,
+		lon: 12.217,
 		date: addDays(isoDate(new Date()), 1),
 		days: 2,
 		radius: 1,

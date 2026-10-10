@@ -35,7 +35,7 @@
 					<span><b>{m.label}</b><small>{m.desc}</small></span>
 				</a>
 			{/each}
-			<p class="ver">Versione {APP_VERSION} · {BRAND.org}</p>
+			<p class="ver"><b>{BRAND.org}</b> · a cura di {BRAND.author}<br />Versione {APP_VERSION}</p>
 		</div>
 	{/if}
 </div>
