@@ -2,6 +2,10 @@
 
 La versione in uso si legge nel menu del logo e in fondo a ogni pagina.
 
+## 0.5.1 — aggiornamento automatico
+- Le pagine si scaricano sempre fresche dal sito e, quando esce una nuova versione, l'app si ricarica da sola: niente più versione vecchia rimasta in memoria sul telefono o sul browser.
+- Corretto il service worker, che non si installava (la pagina iniziale compariva due volte nella lista da salvare): ora l'app funziona davvero anche offline con le pagine e i dati già visti.
+
 ## 0.5.0 — carte sinottiche, check-in High Five, safety plan, briefing, memo, demo pubblica
 - In fondo al menu: «Onda Portante · a cura di Fabrizio Fiorucci». Partenza predefinita: Fiumicino.
 - Nuovo modulo **Carte sinottiche** (icona anche nella barra della mappa): isobare e centri A/B su Europa e Mediterraneo ogni 12 ore UTC dall'analisi fino a +5 giorni, animabili; confronto fino a 3 di 7 modelli sovrapposti; analisi DWD e collegamenti a Met Office e Aeronautica Militare.
