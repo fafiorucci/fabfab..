@@ -6,7 +6,9 @@
   "scripts": {
     "prepare": "svelte-kit sync || echo ''",
     "dev": "vite dev",
+    "dev:demo": "DEMO=1 vite dev",
     "build": "vite build",
+    "build:demo": "DEMO=1 vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "test": "vitest run"

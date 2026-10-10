@@ -1,8 +1,13 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import '../../app.css';
+	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
 	import ModuleMenu from './ModuleMenu.svelte';
 	import Footer from './Footer.svelte';
+	import Locked from './Locked.svelte';
+	import { DEMO, DEMO_MODULES } from '#lib/demo.ts';
+	import { MODULES } from '#lib/modules.ts';
 
 	interface Props {
 		title: string;
@@ -13,6 +18,11 @@
 	}
 
 	let { title, actions, children, wide = false }: Props = $props();
+
+	const here = $derived(page.url.pathname.replace(/(\.html)?\/?$/, ''));
+	const module = $derived(MODULES.find((m) => resolve(m.path as '/').replace(/\/$/, '') === here));
+	/** Nella demo i moduli non dimostrativi si vedono ma non si usano. */
+	const locked = $derived(DEMO && !!module && !DEMO_MODULES.includes(module.id));
 </script>
 
 <svelte:head>
@@ -23,10 +33,14 @@
 	<header class="top">
 		<ModuleMenu />
 		<div class="spacer"></div>
-		{#if actions}<div class="actions">{@render actions()}</div>{/if}
+		{#if actions && !locked}<div class="actions">{@render actions()}</div>{/if}
 	</header>
 	<main class:wide>
-		{@render children()}
+		{#if locked}
+			<Locked label="{module?.label} è disponibile nella versione completa">{@render children()}</Locked>
+		{:else}
+			{@render children()}
+		{/if}
 		{#if !wide}<Footer />{/if}
 	</main>
 </div>

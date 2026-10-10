@@ -2,6 +2,16 @@
 
 La versione in uso si legge nel menu del logo e in fondo a ogni pagina.
 
+## 0.5.0 — carte sinottiche, check-in High Five, safety plan, briefing, memo, demo pubblica
+- In fondo al menu: «Onda Portante · a cura di Fabrizio Fiorucci». Partenza predefinita: Fiumicino.
+- Nuovo modulo **Carte sinottiche** (icona anche nella barra della mappa): isobare e centri A/B su Europa e Mediterraneo ogni 12 ore UTC dall'analisi fino a +5 giorni, animabili; confronto fino a 3 di 7 modelli sovrapposti; analisi DWD e collegamenti a Met Office e Aeronautica Militare.
+- **Check-in** riorganizzato come da documentazione Onda Portante: Documenti, poi Esterno (prima fuori) e Interno (poi dentro); l'**High Five** (salpa ancora, sentine, batterie, motore, timoneria) in testa con l'avviso che senza uno di questi non si lascia l'ormeggio; principi e linee guida. Check-out con la stessa struttura.
+- Nuovo modulo **Safety plan**: tipo di barca e pianta degli interni (o foto propria), su cui segnare batterie, serbatoi e scambio serbatoi, prese a mare dei bagni, estintori, pronto soccorso, attrezzi e altro; condivisibile come immagine.
+- Nuovo modulo **Briefing equipaggio** in due parti, vita di bordo e sicurezza, esteso per i clienti; spunte e invio del testo all'equipaggio.
+- Nuovo modulo **Controlli WOBBLE** per il motore, con registro giornaliero.
+- Nuovo modulo **Skipper memo**: COLREG (precedenze, fanali, suoni), IALA regione A e ritmi delle luci, bandiere del Codice internazionale con alfabeto e numeri, Beaufort e Douglas, VHF, MARPOL; con ricerca. Sarà allineato al memorandum dello skipper.
+- **Demo pubblica**: il sito su GitHub Pages mostra solo meteo sulla zona di esempio, carte sinottiche e l'High Five del check-in; gli altri moduli sono visibili ma bloccati. La versione completa si usa in locale.
+
 ## 0.4.0 — moduli di bordo, sinottica, weather routing
 - Menu dei moduli nel logo: Meteo, Rotta, Check-in, Check-out, Guasti, Log book, Contatti, Emergenze.
 - Mappa meteo più pulita: barra verticale di icone con menu a comparsa; barra del tempo compatta.

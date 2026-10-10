@@ -9,6 +9,8 @@
 	import Verdicts from '#lib/components/Verdicts.svelte';
 	import Footer from '#lib/components/Footer.svelte';
 	import ModuleMenu from '#lib/components/ModuleMenu.svelte';
+	import Locked from '#lib/components/Locked.svelte';
+	import { DEMO } from '#lib/demo.ts';
 	import { BRAND } from '#lib/brand.ts';
 	import {
 		fetchAtmoGrids,
@@ -88,6 +90,8 @@
 	let pointGen = 0;
 
 	onMount(() => {
+		// Demo: sempre la zona di esempio (Fiumicino), senza modificare l'uscita.
+		if (DEMO) return setTrip(defaultTrip());
 		const fromUrl = new URL(location.href).searchParams.get('u');
 		const shared = fromUrl ? decodeTrip(fromUrl) : null;
 		const t = shared ?? loadSavedTrip();
@@ -447,14 +451,16 @@ ${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow
 	<header class="top" class:has-trip={trip && !editing}>
 		<ModuleMenu compact={!!trip && !editing} />
 		{#if trip && !editing}
-			<button class="trip" onclick={() => (editing = true)} title="Modifica uscita">
-				<strong>{trip.name}</strong>
+			<button class="trip" onclick={() => (editing = !DEMO)} disabled={DEMO} title={DEMO ? 'Zona di esempio della demo' : 'Modifica uscita'}>
+				<strong>{DEMO ? 'Demo · zona di esempio' : trip.name}</strong>
 				<small>{trip.place} · {dayLabel(trip.date)} · {trip.days} gg</small>
 			</button>
-			<div class="actions">
-				<button class="ghost small" onclick={invite}>Invita</button>
-				<button class="primary small" onclick={report} disabled={sharing || !verdicts.length}>{sharing ? '…' : 'Report'}</button>
-			</div>
+			<Locked compact label="">
+				<div class="actions">
+					<button class="ghost small" onclick={invite}>Invita</button>
+					<button class="primary small" onclick={report} disabled={sharing || !verdicts.length}>{sharing ? '…' : 'Report'}</button>
+				</div>
+			</Locked>
 		{/if}
 	</header>
 
@@ -741,6 +747,10 @@ ${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow
 		background: var(--brand);
 		color: #fff;
 		border-bottom: 3px solid var(--accent);
+	}
+	.trip:disabled {
+		opacity: 1;
+		cursor: default;
 	}
 	.trip {
 		min-width: 0;
