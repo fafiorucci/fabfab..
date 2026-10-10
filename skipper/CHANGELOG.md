@@ -2,6 +2,9 @@
 
 La versione in uso si legge nel menu del logo e in fondo a ogni pagina.
 
+## 0.5.2 — menu scorrevole
+- Il menu dei moduli scorre con la sua barra verticale quando non entra nello schermo (telefono, finestre basse).
+
 ## 0.5.1 — aggiornamento automatico
 - Le pagine si scaricano sempre fresche dal sito e, quando esce una nuova versione, l'app si ricarica da sola: niente più versione vecchia rimasta in memoria sul telefono o sul browser.
 - Corretto il service worker, che non si installava (la pagina iniziale compariva due volte nella lista da salvare): ora l'app funziona davvero anche offline con le pagine e i dati già visti.

@@ -114,6 +114,24 @@
 		padding: 6px;
 		display: grid;
 		gap: 2px;
+		/* Su schermi bassi il menu scorre con la sua barra verticale */
+		max-height: calc(100dvh - 76px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: thin;
+		scrollbar-color: var(--line-strong) transparent;
+	}
+	.menu::-webkit-scrollbar {
+		width: 8px;
+	}
+	.menu::-webkit-scrollbar-thumb {
+		background: var(--line-strong);
+		border-radius: 8px;
+	}
+	.menu::-webkit-scrollbar-track {
+		background: transparent;
+		margin: 10px 0;
 	}
 	.menu-h {
 		margin: 4px 8px 6px;
