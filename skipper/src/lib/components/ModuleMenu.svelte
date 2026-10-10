@@ -3,6 +3,7 @@
 	import { page } from '$app/state';
 	import { BRAND } from '#lib/brand.ts';
 	import { APP_VERSION, MODULES } from '#lib/modules.ts';
+	import { DEMO, DEMO_MODULES } from '#lib/demo.ts';
 
 	/** Su schermi piccoli mostra solo il logo (l'intestazione ha altri comandi). */
 	let { compact = false }: { compact?: boolean } = $props();
@@ -28,14 +29,22 @@
 	{#if open}
 		<button class="scrim" aria-label="Chiudi menu" onclick={() => (open = false)}></button>
 		<div class="menu" role="menu">
-			<p class="menu-h">Skipper WebApp</p>
+			<p class="menu-h">Skipper WebApp{#if DEMO}<span class="demo">Demo</span>{/if}</p>
 			{#each MODULES as m (m.id)}
-				<a role="menuitem" href={href(m.path)} class:on={m.id === current.id} onclick={() => (open = false)}>
-					<span class="ic" aria-hidden="true">{m.icon}</span>
-					<span><b>{m.label}</b><small>{m.desc}</small></span>
-				</a>
+				{#if DEMO && !DEMO_MODULES.includes(m.id)}
+					<span role="menuitem" class="off" aria-disabled="true" title="Disponibile nella versione completa">
+						<span class="ic" aria-hidden="true">{m.icon}</span>
+						<span><b>{m.label}</b><small>Versione completa</small></span>
+						<span class="lock" aria-hidden="true">🔒</span>
+					</span>
+				{:else}
+					<a role="menuitem" href={href(m.path)} class:on={m.id === current.id} onclick={() => (open = false)}>
+						<span class="ic" aria-hidden="true">{m.icon}</span>
+						<span><b>{m.label}</b><small>{m.desc}</small></span>
+					</a>
+				{/if}
 			{/each}
-			<p class="ver">Versione {APP_VERSION} · {BRAND.org}</p>
+			<p class="ver"><b>{BRAND.org}</b> · a cura di {BRAND.author}<br />Versione {APP_VERSION}{DEMO ? ' · demo' : ''}</p>
 		</div>
 	{/if}
 </div>
@@ -114,7 +123,8 @@
 		letter-spacing: 0.06em;
 		color: var(--muted);
 	}
-	.menu a {
+	.menu a,
+	.menu .off {
 		display: flex;
 		align-items: center;
 		gap: 10px;
@@ -130,8 +140,24 @@
 		background: var(--accent-soft);
 		box-shadow: inset 3px 0 0 var(--accent);
 	}
-	.menu a span:last-child {
+	.menu a span:last-child,
+	.off > span:nth-child(2) {
 		display: grid;
+	}
+	.off {
+		opacity: 0.45;
+		cursor: not-allowed;
+	}
+	.lock {
+		margin-left: auto;
+		font-size: 0.8rem;
+	}
+	.demo {
+		margin-left: 6px;
+		background: var(--accent);
+		color: #fff;
+		border-radius: 6px;
+		padding: 1px 6px;
 	}
 	.menu small {
 		color: var(--muted);

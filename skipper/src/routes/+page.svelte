@@ -2,12 +2,15 @@
 	import '../app.css';
 	import { onDestroy, onMount } from 'svelte';
 	import { replaceState } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import MapView, { type Base } from '#lib/components/MapView.svelte';
 	import LineChart, { type Line } from '#lib/components/LineChart.svelte';
 	import TripForm from '#lib/components/TripForm.svelte';
 	import Verdicts from '#lib/components/Verdicts.svelte';
 	import Footer from '#lib/components/Footer.svelte';
 	import ModuleMenu from '#lib/components/ModuleMenu.svelte';
+	import Locked from '#lib/components/Locked.svelte';
+	import { DEMO } from '#lib/demo.ts';
 	import { BRAND } from '#lib/brand.ts';
 	import {
 		fetchAtmoGrids,
@@ -87,6 +90,8 @@
 	let pointGen = 0;
 
 	onMount(() => {
+		// Demo: sempre la zona di esempio (Fiumicino), senza modificare l'uscita.
+		if (DEMO) return setTrip(defaultTrip());
 		const fromUrl = new URL(location.href).searchParams.get('u');
 		const shared = fromUrl ? decodeTrip(fromUrl) : null;
 		const t = shared ?? loadSavedTrip();
@@ -446,14 +451,16 @@ ${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow
 	<header class="top" class:has-trip={trip && !editing}>
 		<ModuleMenu compact={!!trip && !editing} />
 		{#if trip && !editing}
-			<button class="trip" onclick={() => (editing = true)} title="Modifica uscita">
-				<strong>{trip.name}</strong>
+			<button class="trip" onclick={() => (editing = !DEMO)} disabled={DEMO} title={DEMO ? 'Zona di esempio della demo' : 'Modifica uscita'}>
+				<strong>{DEMO ? 'Demo · zona di esempio' : trip.name}</strong>
 				<small>{trip.place} · {dayLabel(trip.date)} · {trip.days} gg</small>
 			</button>
-			<div class="actions">
-				<button class="ghost small" onclick={invite}>Invita</button>
-				<button class="primary small" onclick={report} disabled={sharing || !verdicts.length}>{sharing ? '…' : 'Report'}</button>
-			</div>
+			<Locked compact label="">
+				<div class="actions">
+					<button class="ghost small" onclick={invite}>Invita</button>
+					<button class="primary small" onclick={report} disabled={sharing || !verdicts.length}>{sharing ? '…' : 'Report'}</button>
+				</div>
+			</Locked>
 		{/if}
 	</header>
 
@@ -498,6 +505,9 @@ ${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow
 					<button class="tb" class:on={menu === 'map'} onclick={() => toggleMenu('map')} title="Mappa e sovrapposizioni" aria-label="Mappa">
 						<svg viewBox="0 0 24 24"><path d="m3 6 6-2 6 2 6-2v14l-6 2-6-2-6 2V6Zm6-2v14m6-12v14" /></svg>
 					</button>
+					<a class="tb" href={resolve('/sinottica')} title="Carte sinottiche" aria-label="Carte sinottiche">
+						<svg viewBox="0 0 24 24"><path d="M3 12c3-6 6-6 9 0s6 6 9 0M3 6c3-3 6-3 9 0s6 3 9 0M3 18c3-3 6-3 9 0s6 3 9 0" /></svg>
+					</a>
 					<button class="tb" onclick={() => mapView?.goHome()} title="Torna alla zona dell'uscita" aria-label="Zona dell'uscita">
 						<svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7M5 10v10h14V10" /></svg>
 					</button>
@@ -592,6 +602,7 @@ ${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow
 							premi ▶ per vedere i sistemi muoversi. Zooma indietro per la visione d'insieme.
 						</p>
 						<label class="fl-check"><input type="checkbox" bind:checked={isobarsOn} /> Mostra le isobare</label>
+						<p class="small"><a href={resolve('/sinottica')}>Apri le carte sinottiche</a> per Europa e Mediterraneo con più modelli sovrapposti.</p>
 						<h4>Analisi al suolo ufficiale (DWD)</h4>
 						<a href="https://www.dwd.de/DE/leistungen/hobbymet_wk_europa/hobbyeuropakarten.html" target="_blank" rel="noopener">
 							<img class="chart-img" src="https://www.dwd.de/DWD/wetter/wv_spez/hobbymet/wetterkarten/bwk_bodendruck_na_ana.png" alt="Analisi della pressione al suolo, Nord Atlantico ed Europa" loading="lazy" />
@@ -736,6 +747,10 @@ ${pointNow.sea ? `<p><b>Onda</b> ${num(pointNow.sea.wave, 1)} m ${arrow(pointNow
 		background: var(--brand);
 		color: #fff;
 		border-bottom: 3px solid var(--accent);
+	}
+	.trip:disabled {
+		opacity: 1;
+		cursor: default;
 	}
 	.trip {
 		min-width: 0;

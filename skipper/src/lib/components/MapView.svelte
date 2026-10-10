@@ -97,16 +97,17 @@
 			source: 'isobars',
 			filter: ['==', ['get', 'kind'], 'isobar'],
 			paint: {
-				'line-color': base === 'satellite' ? '#ffffff' : '#1d2b3a',
+				// Colore per modello quando se ne sovrappongono più di uno (carte sinottiche).
+				'line-color': ['coalesce', ['get', 'color'], base === 'satellite' ? '#ffffff' : '#1d2b3a'],
 				'line-width': ['case', ['get', 'major'], 1.6, 0.9],
-				'line-opacity': 0.75
+				'line-opacity': 0.8
 			}
 		});
 		m.addLayer({
 			id: 'isobar-labels',
 			type: 'symbol',
 			source: 'isobars',
-			filter: ['==', ['get', 'kind'], 'isobar'],
+			filter: ['all', ['==', ['get', 'kind'], 'isobar'], ['!=', ['get', 'secondary'], true]],
 			layout: {
 				'symbol-placement': 'line',
 				'symbol-spacing': 260,
@@ -120,7 +121,7 @@
 			id: 'pressure-centers',
 			type: 'symbol',
 			source: 'isobars',
-			filter: ['in', ['get', 'kind'], ['literal', ['high', 'low']]],
+			filter: ['all', ['in', ['get', 'kind'], ['literal', ['high', 'low']]], ['!=', ['get', 'secondary'], true]],
 			layout: {
 				'text-field': ['get', 'label'],
 				'text-font': ['Noto Sans Bold'],
@@ -273,7 +274,7 @@
 	$effect(() => {
 		if (!styleReady || !map) return;
 		(map.getSource('isobars') as GeoJSONSource).setData(isobars ?? { type: 'FeatureCollection', features: [] });
-		map.setPaintProperty('isobars', 'line-color', base === 'satellite' ? '#ffffff' : '#1d2b3a');
+		map.setPaintProperty('isobars', 'line-color', ['coalesce', ['get', 'color'], base === 'satellite' ? '#ffffff' : '#1d2b3a']);
 	});
 
 	$effect(() => {
