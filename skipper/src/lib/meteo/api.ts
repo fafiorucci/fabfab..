@@ -1,5 +1,6 @@
 import type { Trip } from '#lib/trip.ts';
 import { addDays } from '#lib/trip.ts';
+import { lastFetch, server, toOwn } from './dataserver.svelte.ts';
 
 const FORECAST_URL = 'https://api.open-meteo.com/v1/forecast';
 const MARINE_URL = 'https://marine-api.open-meteo.com/v1/marine';
@@ -174,6 +175,45 @@ async function throttle(n: number) {
 }
 
 async function request(url: string): Promise<unknown> {
+	const own = toOwn(url);
+	if (own) {
+		const t0 = performance.now();
+		try {
+			const body = await requestOwn(own);
+			Object.assign(lastFetch, { source: 'proprio', ms: performance.now() - t0, fallback: false, error: null });
+			return body;
+		} catch (e) {
+			// Server proprio spento, irraggiungibile o lento: si ripiega su Open-Meteo pubblico.
+			lastFetch.error = (e as Error).message;
+		}
+		const t1 = performance.now();
+		const body = await requestPublic(url);
+		Object.assign(lastFetch, { source: 'pubblico', ms: performance.now() - t1, fallback: true });
+		return body;
+	}
+	const t0 = performance.now();
+	const body = await requestPublic(url);
+	Object.assign(lastFetch, { source: 'pubblico', ms: performance.now() - t0, fallback: false, error: null });
+	return body;
+}
+
+/** Richiesta al server Open-Meteo proprio: niente limiti di chiamate, ma un tempo massimo di attesa. */
+async function requestOwn(url: string): Promise<unknown> {
+	const ctrl = new AbortController();
+	const timer = setTimeout(() => ctrl.abort(), server.timeout * 1000);
+	try {
+		const res = await fetch(url, { signal: ctrl.signal });
+		const body = await res.json().catch(() => null);
+		if (!res.ok || !body || body.error) throw new Error(body?.reason ?? `HTTP ${res.status}`);
+		return body;
+	} catch (e) {
+		throw new Error(ctrl.signal.aborted ? `nessuna risposta in ${server.timeout} s` : (e as Error).message || 'non raggiungibile');
+	} finally {
+		clearTimeout(timer);
+	}
+}
+
+async function requestPublic(url: string): Promise<unknown> {
 	const n = callWeight(url);
 	await throttle(n);
 	let res: Response;

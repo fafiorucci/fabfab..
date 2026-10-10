@@ -1,7 +1,7 @@
 /** Moduli della Skipper WebApp, raggiungibili dal menu nel logo. */
 export interface ModuleInfo {
 	id: string;
-	path: '/' | '/sinottica' | '/rotta' | '/briefing' | '/wobble' | '/memo' | '/safety' | '/checkin' | '/checkout' | '/guasti' | '/contatti' | '/emergenze' | '/logbook';
+	path: '/' | '/sinottica' | '/rotta' | '/briefing' | '/wobble' | '/memo' | '/safety' | '/checkin' | '/checkout' | '/guasti' | '/contatti' | '/emergenze' | '/logbook' | '/impostazioni';
 	label: string;
 	icon: string;
 	desc: string;
@@ -20,7 +20,8 @@ export const MODULES: ModuleInfo[] = [
 	{ id: 'logbook', path: '/logbook', label: 'Log book', icon: '📓', desc: 'Giornale di bordo' },
 	{ id: 'contatti', path: '/contatti', label: 'Contatti', icon: '📞', desc: 'Marina, tecnici, equipaggio, soccorso' },
 	{ id: 'memo', path: '/memo', label: 'Skipper memo', icon: '📘', desc: 'COLREG, IALA, MARPOL, bandiere, scale' },
-	{ id: 'emergenze', path: '/emergenze', label: 'Emergenze', icon: '🆘', desc: 'MAYDAY, uomo a mare, incendio, falla' }
+	{ id: 'emergenze', path: '/emergenze', label: 'Emergenze', icon: '🆘', desc: 'MAYDAY, uomo a mare, incendio, falla' },
+	{ id: 'impostazioni', path: '/impostazioni', label: 'Impostazioni', icon: '🛠️', desc: 'Server dei dati meteo e confronto dei tempi' }
 ];
 
 export const APP_VERSION: string = typeof __APP_VERSION__ === 'string' ? __APP_VERSION__ : 'dev';
