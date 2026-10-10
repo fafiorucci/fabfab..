@@ -4,17 +4,19 @@ Webapp di Onda Portante, a cura di Fabrizio Fiorucci. Valuta il meteo prima di u
 
 Nato come **Skipper Meteo**. Lo studio completo è in [`../docs/studio-skipper-meteo.md`](../docs/studio-skipper-meteo.md).
 
-## Moduli (versione 0.5.0)
+## Moduli (versione 0.6.0)
 
 Si scelgono dal menu nel logo. Il registro delle versioni è in [`CHANGELOG.md`](CHANGELOG.md).
 
 - **Meteo**: confronto di 17 modelli sulla zona inquadrata (partenza predefinita: Fiumicino), semaforo per giorno, disaccordo tra modelli, valori nel punto toccato, isobare animate, report e link di invito.
 - **Carte sinottiche**: isobare e centri di alta e bassa pressione su Europa e Mediterraneo ogni 12 ore, fino a 3 modelli sovrapposti; analisi ufficiale DWD e collegamenti a Met Office e Aeronautica Militare.
+- **Navigazione**: posizione GPS, traccia, rotta a waypoint con rilevamento, distanza, arrivo stimato e fuori rotta; GPX da e per Navionics e chartplotter.
 - **Rotta**: weather routing a isocrone con polari tipo o importate (.pol/.txt/.csv), rendimento e motore.
-- **Check-in**: documenti, poi esterno e interno, con l'**High Five** (salpa ancora, sentine, batterie, motore, timoneria) in evidenza; verbale condivisibile. **Check-out** con la stessa struttura.
+- **Check-in**: archivio delle sessioni; documenti, poi esterno e interno, con l'**High Five** (salpa ancora, sentine, batterie, motore, timoneria) in evidenza; verbale condivisibile. **Check-out** con la stessa struttura.
 - **Safety plan**: pianta della barca (tipi di scafo o foto propria) su cui segnare batterie, serbatoi, prese a mare, estintori, pronto soccorso, attrezzi; condivisibile come immagine.
 - **Briefing equipaggio**: vita di bordo e sicurezza, da spuntare e mandare all'equipaggio.
 - **Controlli WOBBLE**: controlli giornalieri del motore con registro.
+- **Impostazioni**: server dei dati meteo proprio (vedi [`server-meteo/LEGGIMI.md`](server-meteo/LEGGIMI.md)) con ripiego automatico su Open-Meteo pubblico.
 - **Skipper memo**: COLREG, IALA, bandiere e alfabeto, Beaufort e Douglas, VHF, MARPOL.
 - **Guasti**: segnalazioni con impianto, priorità e stato.
 - **Log book**: annotazioni con posizione GPS, esportazione CSV.

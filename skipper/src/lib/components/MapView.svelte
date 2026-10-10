@@ -172,7 +172,42 @@
 				'circle-stroke-width': 2
 			}
 		});
+		// Navigazione: traccia percorsa, rotta pianificata, tratto verso il prossimo waypoint, waypoint e barca
+		const ov = (kind: string) => ['==', ['get', 'kind'], kind] as maplibregl.FilterSpecification;
+		m.addLayer({ id: 'ov-plan', type: 'line', source: 'overlay', filter: ov('plan'), layout: { 'line-join': 'round' }, paint: { 'line-color': '#ff7a1a', 'line-width': 3, 'line-dasharray': [2, 1.5] } });
+		m.addLayer({ id: 'ov-leg', type: 'line', source: 'overlay', filter: ov('leg'), paint: { 'line-color': '#d64545', 'line-width': 2, 'line-dasharray': [1, 1.5] } });
+		m.addLayer({ id: 'ov-track', type: 'line', source: 'overlay', filter: ov('track'), layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#1e6fd9', 'line-width': 3.5 } });
+		m.addLayer({
+			id: 'ov-wp',
+			type: 'circle',
+			source: 'overlay',
+			filter: ov('wp'),
+			paint: { 'circle-radius': 9, 'circle-color': ['case', ['get', 'active'], '#d64545', '#ff7a1a'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 }
+		});
+		m.addLayer({
+			id: 'ov-wp-label',
+			type: 'symbol',
+			source: 'overlay',
+			filter: ov('wp'),
+			layout: { 'text-field': ['get', 'label'], 'text-font': ['Noto Sans Bold'], 'text-size': 11, 'text-allow-overlap': true },
+			paint: { 'text-color': '#ffffff' }
+		});
+		m.addLayer({
+			id: 'ov-boat',
+			type: 'circle',
+			source: 'overlay',
+			filter: ov('boat'),
+			paint: { 'circle-radius': 11, 'circle-color': '#0b1d2c', 'circle-stroke-color': '#ffffff', 'circle-stroke-width': 3 }
+		});
 		if (!m.hasImage('arrow')) m.addImage('arrow', arrowImage(), { sdf: true });
+		m.addLayer({
+			id: 'ov-boat-dir',
+			type: 'symbol',
+			source: 'overlay',
+			filter: ['all', ['==', ['get', 'kind'], 'boat'], ['has', 'rot']],
+			layout: { 'icon-image': 'arrow', 'icon-rotate': ['get', 'rot'], 'icon-rotation-alignment': 'map', 'icon-allow-overlap': true, 'icon-size': 0.55 },
+			paint: { 'icon-color': '#ffffff' }
+		});
 		m.addSource('arrows', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
 		m.addLayer({
 			id: 'arrows',
@@ -326,6 +361,16 @@
 	export function goHome(duration = 600) {
 		if (!map || !home) return;
 		map.fitBounds([[home[0], home[1]], [home[2], home[3]]], { padding: 24, duration });
+	}
+
+	/** Inquadra un riquadro [ovest, sud, est, nord]. */
+	export function fitTo(b: BBox, maxZoom = 13) {
+		map?.fitBounds([[b[0], b[1]], [b[2], b[3]]], { padding: 50, maxZoom, duration: 600 });
+	}
+
+	/** Centra la mappa senza cambiare lo zoom (modalità «segui la barca»). */
+	export function centerOn(lat: number, lon: number) {
+		map?.easeTo({ center: [lon, lat], duration: 500 });
 	}
 
 	export function flyTo(lat: number, lon: number) {

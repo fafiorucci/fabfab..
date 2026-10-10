@@ -23,9 +23,12 @@ services:
     entrypoint: ["/bin/sh", "/riscaldamento.sh"]
     environment:
       SERVER: http://open-meteo:8080
-      # Zona da tenere pronta: ovest, sud, est, nord (Mediterraneo centrale)
+      # Zona ampia da tenere pronta (ovest sud est nord) e suo passo in gradi
       ZONA: "6 36 20 45"
       PASSO: "0.25"
+      # Zona abituale a maglia fine (default: da Argentario a Ponza, attorno a Fiumicino)
+      ZONA_FINE: "10.8 40.6 13.6 42.6"
+      PASSO_FINE: "0.1"
       OGNI_MINUTI: "60"
     volumes:
       - ./riscaldamento.sh:/riscaldamento.sh:ro

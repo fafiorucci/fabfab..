@@ -26,6 +26,15 @@ chiedi() { # $1 = descrizione, $2 = url
 sleep 20
 while true; do
   echo "--- riscaldamento $(date '+%d/%m %H:%M') ---"
+  # 1) zona abituale a maglia fine: prepara anche i modelli ad alta risoluzione (AROME, ICON-2I, ICON-D2)
+  if [ -n "$ZONA_FINE" ]; then
+    set -- $ZONA_FINE
+    blocchi "$1" "$2" "$3" "$4" "${PASSO_FINE:-0.1}" | while IFS=';' read -r LA LO; do
+      chiedi "zona fine: vento" "$SERVER/v1/forecast?latitude=$LA&longitude=$LO&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m&models=$MODELLI&forecast_days=7"
+      chiedi "zona fine: onda" "$SERVER/v1/marine?latitude=$LA&longitude=$LO&hourly=wave_height,wave_direction,wave_period,swell_wave_height&forecast_days=7"
+    done
+  fi
+  # 2) zona ampia a maglia larga
   blocchi "$W" "$S" "$E" "$N" "$PASSO" | while IFS=';' read -r LA LO; do
     chiedi "vento e pressione" "$SERVER/v1/forecast?latitude=$LA&longitude=$LO&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m&models=$MODELLI&forecast_days=7"
     chiedi "pressione e pioggia" "$SERVER/v1/forecast?latitude=$LA&longitude=$LO&hourly=pressure_msl,precipitation&models=$MODELLI&forecast_days=7"
