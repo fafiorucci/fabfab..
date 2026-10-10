@@ -6,7 +6,7 @@ const MARINE_URL = 'https://marine-api.open-meteo.com/v1/marine';
 const GEO_URL = 'https://geocoding-api.open-meteo.com/v1/search';
 
 /** Passi possibili della griglia, in gradi: si sceglie il più fine compatibile con il numero di punti. */
-export const STEPS = [0.1, 0.125, 0.25, 0.5, 1, 2, 4] as const;
+export const STEPS = [0.1, 0.125, 0.25, 0.5, 1, 2, 3, 4] as const;
 /**
  * Punti massimi per vista. Ogni punto conta come una chiamata Open-Meteo per modello:
  * Con 64 punti una zona nuova costa circa 180 chiamate (vento di 6 modelli + onda): 3 zone al minuto
@@ -342,6 +342,41 @@ export async function fetchMarineGrid(trip: Trip, grid: Grid): Promise<MarineGri
 		}
 	});
 	return { grid, times, utcOffset: list[0].utc_offset_seconds, values: v };
+}
+
+/** Pressione al livello del mare di più modelli su una griglia, per le carte sinottiche (orari UTC). */
+export interface PressureSet extends Series {
+	grid: Grid;
+	/** Per modello: valori [t * nCelle + cella] in hPa, NaN dove mancante */
+	byModel: Record<string, Float32Array>;
+}
+
+export async function fetchPressureGrids(models: string[], grid: Grid, startDate: string, days: number): Promise<PressureSet> {
+	const pts = gridPoints(grid);
+	const params = new URLSearchParams({
+		latitude: pts.lat.join(','),
+		longitude: pts.lon.join(','),
+		hourly: 'pressure_msl',
+		models: models.join(','),
+		timezone: 'GMT',
+		timeformat: 'unixtime',
+		start_date: startDate,
+		end_date: addDays(startDate, days - 1)
+	});
+	const list = asList(await getJson(`${FORECAST_URL}?${params}`));
+	const times = list[0].hourly.time;
+	const T = times.length;
+	const N = list.length;
+	const byModel: Record<string, Float32Array> = {};
+	for (const m of models) {
+		const arr = new Float32Array(T * N).fill(NaN);
+		list.forEach((loc, c) => {
+			const col = loc.hourly[key('pressure_msl', m, models)] ?? [];
+			for (let t = 0; t < T; t++) arr[t * N + c] = col[t] ?? NaN;
+		});
+		byModel[m] = arr;
+	}
+	return { grid, times, utcOffset: 0, byModel };
 }
 
 export interface PointSeries extends Series {
