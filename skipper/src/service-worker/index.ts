@@ -12,7 +12,8 @@ const DATA = 'meteo-data-v1';
 const TILES = 'map-tiles-v1';
 const MAX_TILES = 3000;
 
-const ASSETS = [...immutable, ...assets, ...prerendered].map((f) => abs(f.path)).concat(scope);
+// Senza doppioni: addAll fallisce (e il worker non si installa) se la stessa pagina compare due volte.
+const ASSETS = [...new Set([...immutable, ...assets, ...prerendered].map((f) => abs(f.path)).concat(scope))];
 
 sw.addEventListener('install', (event) => {
 	event.waitUntil(caches.open(SHELL).then((c) => c.addAll(ASSETS)).then(() => sw.skipWaiting()));
@@ -82,9 +83,10 @@ sw.addEventListener('fetch', (event) => {
 		return;
 	}
 	if (req.mode === 'navigate') {
+		// Sempre la pagina più recente dal sito (senza la copia del browser), così una nuova versione arriva subito.
 		// Offline: la pagina del modulo richiesto (anche senza .html), altrimenti il Meteo.
 		event.respondWith(
-			fetch(req).catch(async () => (await caches.match(req)) ?? (await caches.match(req.url.replace(/\/?(\?.*)?$/, '.html'))) ?? (await caches.match(scope)) ?? Response.error())
+			fetch(req, { cache: 'no-cache' }).catch(async () => (await caches.match(req)) ?? (await caches.match(req.url.replace(/\/?(\?.*)?$/, '.html'))) ?? (await caches.match(scope)) ?? Response.error())
 		);
 		return;
 	}
